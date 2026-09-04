@@ -42,7 +42,10 @@ export function getToolcraftResetMediaPatch(
     return null;
   }
 
-  const defaultMediaState = createToolcraftDefaultMediaState(state.schema);
+  const defaultMediaState = createToolcraftDefaultMediaState(
+    state.schema,
+    state.canvas,
+  );
   const defaultTargetMediaAssets = defaultMediaState.mediaAssets.filter((asset) =>
     asset.sourceTarget ? fileDropTargets.has(asset.sourceTarget) : false,
   );

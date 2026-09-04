@@ -41,6 +41,7 @@ function createSchema({
 const inventoryEntry = {
   entity: "Appearance",
   entityId: "appearance",
+  finiteSelectors: [],
   groupingReason: "These controls define the visible appearance of the output.",
   id: "appearance",
   targets: ["appearance.opacity"],
@@ -48,6 +49,47 @@ const inventoryEntry = {
 } as const;
 
 describe("Toolcraft Control Section Inventory identity", () => {
+  it("composes exhaustive finite selector validation", () => {
+    const schema = defineToolcraft({
+      canvas: { enabled: true },
+      panels: {
+        controls: {
+          sections: [
+            {
+              controls: {
+                mode: {
+                  applicability: { mode: "always" },
+                  defaultValue: "soft",
+                  options: [
+                    { label: "Soft", value: "soft" },
+                    { label: "Sharp", value: "sharp" },
+                  ],
+                  target: "appearance.mode",
+                  type: "select",
+                },
+              },
+              id: "appearance",
+              title: "Appearance",
+            },
+          ],
+          title: "Controls",
+        },
+      },
+    });
+
+    expect(
+      getToolcraftControlSectionInventoryErrors(schema, [
+        {
+          ...inventoryEntry,
+          finiteSelectors: [],
+          targets: ["appearance.mode"],
+        },
+      ]),
+    ).toContain(
+      'Finite selector "appearance.mode" must be classified exactly once; found 0 entries.',
+    );
+  });
+
   it("matches inventory by id when a section title is renamed", () => {
     expect(
       getToolcraftControlSectionInventoryErrors(
@@ -89,6 +131,14 @@ describe("Toolcraft Control Section Inventory identity", () => {
     const backgroundInventory = {
       entity: "Output background",
       entityId: "output-background",
+      finiteSelectors: [
+        {
+          affectedTargets: ["appearance.background"],
+          reason: "Background inclusion determines whether its color affects output.",
+          role: "branch",
+          target: "export.includeBackground",
+        },
+      ],
       groupingReason:
         "Inclusion and color jointly define the exported background.",
       id: "background",

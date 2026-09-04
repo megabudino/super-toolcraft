@@ -65,14 +65,14 @@ export async function exportToolcraftVideoArtifact(
   const durationSeconds = request.state.timeline.durationSeconds;
   const schedule = createToolcraftVideoFrameSchedule(durationSeconds);
   const framePlan = createToolcraftVideoArtifactFramePlan(request.state, schedule);
-  const frame = resolveToolcraftVideoArtifactFrame({
+  const scenePlan = resolveToolcraftVideoArtifactFrame({
     boundsProvider: request.boundsProvider,
     framePlan,
-    productSceneRequired: request.productSceneRequired,
+    productSceneRequired: request.exportRenderer !== undefined,
     visibility: request.visibility,
   });
   const size = getToolcraftVideoExportSize({
-    frame,
+    frame: scenePlan.outputFrame,
     resolution: settings.resolution,
     state: request.state,
   });
@@ -96,14 +96,15 @@ export async function exportToolcraftVideoArtifact(
       requestedFormat: settings.format,
       width: size.width,
     });
-    for (const entry of framePlan) {
+    for (const entry of scenePlan.framePlan) {
       await renderToolcraftArtifactFrame({
         backgroundColor:
           getToolcraftRuntimeBackgroundColor(entry.state) ?? "#000000",
         canvas,
-        frame,
         includeBackground: true,
+        outputFrame: scenePlan.outputFrame,
         pixelRatio: size.pixelRatio,
+        productFrame: entry.productFrame,
         renderProductFrame: request.exportRenderer?.renderFrame ?? null,
         renderRuntimeScene: request.renderRuntimeScene,
         rendererPipeline: request.rendererPipeline,

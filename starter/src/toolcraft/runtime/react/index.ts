@@ -5,17 +5,20 @@ export * from "./app-shell/toolcraft-app";
 export { useToolcraftMediaPresentationUrls } from "./app-shell/toolcraft-media-presentation";
 export * from "./app-shell/use-toolcraft-pipeline";
 export * from "./app-shell/use-toolcraft-pipeline-pass";
+export * from "./app-shell/use-toolcraft-viewport-interaction-active";
 export * from "./canvas/canvas-shell";
-export {
-  useToolcraftProductSceneFrame,
-  type ToolcraftProductSceneFrame,
-} from "./canvas/product-scene-surface";
+export { useToolcraftProductSceneFrame } from "./canvas/product-scene-surface";
+export type { ToolcraftProductSceneFrame } from "../scene";
 export * from "./controls-panel/control-renderers";
 export * from "./controls-panel/controls-panel";
 export * from "./layers/layers-panel";
 export { isToolcraftLayerVisibleInTree } from "./layers/layer-tree";
 export * from "./model-rendering/model-display-fit";
-export * from "./model-rendering/model-export";
+export { renderToolcraftModelsToCanvas } from "./model-rendering/model-export";
+export type {
+  ToolcraftModelExportOptions,
+  ToolcraftRenderModelsToCanvas,
+} from "./model-rendering/model-export";
 export * from "./model-rendering/model-render-binding";
 export * from "./model-rendering/model-presentation-consumer";
 export * from "./model-rendering/model-presentation-mode";

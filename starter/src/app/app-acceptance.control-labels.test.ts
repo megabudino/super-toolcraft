@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  createContractSectionInventoryFixture,
   defineContractSchemaFixture,
   validateContractAcceptance,
 } from "./app-acceptance.contract-fixtures";
@@ -259,8 +260,81 @@ describe("starter acceptance control label contract", () => {
       }),
     ).toEqual(
       expect.arrayContaining([
-        'Accent Shades / accent1 uses visible label "Color 1" for a palette variation color. When colors only add variety to one shared palette, set label: false or use collectionActions with unlabeled items. Keep visible labels only when each color edits a distinct user-facing entity such as Fill, Stroke, Background, Connector, or Object color.',
-        'Accent Shades / accent2 uses visible label "Color 2" for a palette variation color. When colors only add variety to one shared palette, set label: false or use collectionActions with unlabeled items. Keep visible labels only when each color edits a distinct user-facing entity such as Fill, Stroke, Background, Connector, or Object color.',
+        'Accent Shades / accent1 uses visible label "Color 1" for one of multiple sibling colors. Set label: false when the colors form one shared bank, or use a distinct user-facing role such as Fill, Stroke, Background, Connector, or Object color.',
+        'Accent Shades / accent2 uses visible label "Color 2" for one of multiple sibling colors. Set label: false when the colors form one shared bank, or use a distinct user-facing role such as Fill, Stroke, Background, Connector, or Object color.',
+      ]),
+    );
+  });
+
+  it("rejects sequential labels for sibling colors without palette keywords", () => {
+    const schemaWithSpectrumColors = defineContractSchemaFixture({
+      canvas: { enabled: true },
+      panels: {
+        controls: {
+          sections: [
+            {
+              controls: {
+                spectrum: {
+                  defaultValue: "custom",
+                  label: "Spectrum",
+                  options: [{ label: "Custom", value: "custom" }],
+                  target: "dispersion.spectrum",
+                  type: "select",
+                },
+                customColorA: {
+                  defaultValue: { hex: "#A65F15" },
+                  label: "Color 1",
+                  semanticGroup: "custom-spectrum",
+                  target: "dispersion.customColorA",
+                  type: "color",
+                },
+                customColorB: {
+                  defaultValue: { hex: "#371C4D" },
+                  label: "Color 2",
+                  semanticGroup: "custom-spectrum",
+                  target: "dispersion.customColorB",
+                  type: "color",
+                },
+                customColorC: {
+                  defaultValue: { hex: "#375B75" },
+                  label: "Color 3",
+                  semanticGroup: "custom-spectrum",
+                  target: "dispersion.customColorC",
+                  type: "color",
+                },
+                customColorD: {
+                  defaultValue: { hex: "#2A343E" },
+                  label: "Color 4",
+                  semanticGroup: "custom-spectrum",
+                  target: "dispersion.customColorD",
+                  type: "color",
+                },
+              },
+              title: "Spectrum",
+            },
+          ],
+          title: "Controls",
+        },
+      },
+    });
+
+    expect(
+      validateContractAcceptance({
+        schema: schemaWithSpectrumColors,
+        acceptance: [
+          makeControlAcceptance("dispersion.spectrum", "select"),
+          makeControlAcceptance("dispersion.customColorA", "color"),
+          makeControlAcceptance("dispersion.customColorB", "color"),
+          makeControlAcceptance("dispersion.customColorC", "color"),
+          makeControlAcceptance("dispersion.customColorD", "color"),
+        ],
+      }),
+    ).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining('customColorA uses visible label "Color 1"'),
+        expect.stringContaining('customColorB uses visible label "Color 2"'),
+        expect.stringContaining('customColorC uses visible label "Color 3"'),
+        expect.stringContaining('customColorD uses visible label "Color 4"'),
       ]),
     );
   });
@@ -312,7 +386,7 @@ describe("starter acceptance control label contract", () => {
     ).toEqual(
       expect.arrayContaining([
         "Accent Shades mixes labeled and unlabeled color items in one palette variation group. Decide label visibility for the whole group: omit all per-item labels when colors only add variety, or label every item only when each color has a distinct user-facing role.",
-        'Accent Shades / accent2 uses visible label "Color 2" for a palette variation color. When colors only add variety to one shared palette, set label: false or use collectionActions with unlabeled items. Keep visible labels only when each color edits a distinct user-facing entity such as Fill, Stroke, Background, Connector, or Object color.',
+        'Accent Shades / accent2 uses visible label "Color 2" for one of multiple sibling colors. Set label: false when the colors form one shared bank, or use a distinct user-facing role such as Fill, Stroke, Background, Connector, or Object color.',
       ]),
     );
   });
@@ -328,12 +402,14 @@ describe("starter acceptance control label contract", () => {
                 accent1: {
                   defaultValue: { hex: "#9CE6FF" },
                   label: false,
+                  semanticGroup: "accent-palette",
                   target: "palette.accent1",
                   type: "color",
                 },
                 accent2: {
                   defaultValue: { hex: "#FF7A90" },
                   label: false,
+                  semanticGroup: "accent-palette",
                   target: "palette.accent2",
                   type: "color",
                 },
@@ -347,6 +423,7 @@ describe("starter acceptance control label contract", () => {
                   unit: "%",
                 },
               },
+              id: "accent-shades",
               title: "Accent Shades",
             },
             {
@@ -364,6 +441,7 @@ describe("starter acceptance control label contract", () => {
                   type: "color",
                 },
               },
+              id: "object-colors",
               title: "Object Colors",
             },
           ],
@@ -382,6 +460,25 @@ describe("starter acceptance control label contract", () => {
           makeControlAcceptance("object.fill", "color"),
           makeControlAcceptance("object.stroke", "color"),
         ],
+        sectionInventory: createContractSectionInventoryFixture(
+          schemaWithUsefulColorLabels,
+          [
+            {
+              entity: "Accent shades",
+              entityId: "accent-shades",
+              finiteSelectors: [],
+              groupingReason: "Accent colors and spread define one color variation bank.",
+              id: "accent-shades",
+            },
+            {
+              entity: "Object colors",
+              entityId: "object-colors",
+              finiteSelectors: [],
+              groupingReason: "Fill and stroke define the rendered object colors.",
+              id: "object-colors",
+            },
+          ],
+        ),
       }),
     ).toEqual([]);
   });

@@ -107,7 +107,10 @@ describe("appSchema", () => {
       appAcceptance.find((entry) => entry.id === "persistence.reload"),
     ).toMatchObject({
       automated: true,
-      browser: true,
+      browser: {
+        budget: "extended-io",
+        file: "e2e/app-persistence.spec.ts",
+      },
       evidence: "persistence-state",
       kind: "runtime",
       persistenceCoverage: "reload",

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  createContractSectionInventoryFixture,
   defineContractSchemaFixture,
   validateContractAcceptance,
 } from "./app-acceptance.contract-fixtures";
@@ -26,6 +27,7 @@ describe("starter acceptance control label context contract", () => {
                   variant: "continuous",
                 },
               },
+              id: "animation",
               title: "Animation",
             },
           ],
@@ -38,6 +40,16 @@ describe("starter acceptance control label context contract", () => {
       validateContractAcceptance({
         schema: schemaWithSemanticLabelContext,
         acceptance: [makeControlAcceptance("motion.speed", "slider")],
+        sectionInventory: createContractSectionInventoryFixture(
+          schemaWithSemanticLabelContext,
+          [{
+            entity: "Animation",
+            entityId: "animation",
+            finiteSelectors: [],
+            groupingReason: "Speed controls the decorative animation output.",
+            id: "animation",
+          }],
+        ),
         transferMode: {
           animationIntent: {
             behaviorCoverage: [
@@ -52,6 +64,7 @@ describe("starter acceptance control label context contract", () => {
             reason: "The motion speed is a decorative self-running effect and does not expose product time transport.",
           },
           mode: "new-toolcraft-app",
+          referenceInputs: [],
         },
       }),
     ).toEqual([]);

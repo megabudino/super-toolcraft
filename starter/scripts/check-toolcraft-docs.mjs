@@ -7,9 +7,10 @@ import {
   toolcraftDecisionRuleIds,
 } from "./toolcraft-contract-manifest.mjs";
 import {
-  getToolcraftWorkflowRouteFailures,
+  getToolcraftBrowserSurfaceRoutingFailures,
   toolcraftWorkflowRequiredDocPaths,
 } from "./toolcraft-workflow-routes.mjs";
+import { getToolcraftWorkflowRouteFailures } from "./toolcraft-workflow-route-validation.mjs";
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(scriptDir, "..");
@@ -25,6 +26,7 @@ const requiredDocs = [
   "renderer-technique.md",
   "agent-worklog.md",
   "custom-controls.md",
+  "custom-control-visuals.md",
   "component-rules.md",
 ];
 
@@ -63,6 +65,7 @@ const requiredWorkflowTerms = [
   "Open exactly one listed document per terminal or tool read",
   "coherent user-visible delivery batch",
   "pnpm verify:delivery",
+  "pnpm test:feature",
 ];
 
 const repoScope = "@repo";
@@ -167,6 +170,17 @@ failures.push(
     requiredDocPaths: requiredWorkflowDocPaths,
     workflowSource,
   })),
+  ...getToolcraftBrowserSurfaceRoutingFailures({
+    agents: [
+      {
+        label: "AGENTS.md",
+        source: agentsSource,
+        workflowPath: "docs/toolcraft/workflow.md",
+      },
+    ],
+    workflowLabel: "docs/toolcraft/workflow.md",
+    workflowSource,
+  }),
 );
 
 for (const pattern of forbiddenTextPatterns) {

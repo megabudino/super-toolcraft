@@ -6,7 +6,10 @@ import type {
   ToolcraftMediaLifecycleCoverage,
   ToolcraftProductReadiness,
 } from "./acceptance/types";
-import { validateContractAcceptance } from "./app-acceptance.contract-fixtures";
+import {
+  createContractSectionInventoryFixture,
+  validateContractAcceptance,
+} from "./app-acceptance.contract-fixtures";
 import {
   createFileDropAcceptance,
   createModelFileDropSchema,
@@ -17,6 +20,7 @@ import {
 const layeredMediaProductReadiness: ToolcraftProductReadiness = {
   exportIntent: {
     image: { mode: "toolcraft-default" },
+    svg: { mode: "not-requested" },
     video: { mode: "not-requested" },
   },
   interactionOwnership: [
@@ -37,6 +41,28 @@ const layeredMediaProductReadiness: ToolcraftProductReadiness = {
         "Layers is the single surface for image selection, ordering, and transforms.",
       surface: "panel",
       target: "media.sources",
+    },
+    {
+      alternative: {
+        reason:
+          "Canvas transform buttons would duplicate precise actions already owned by Layers.",
+        surface: "canvas",
+      },
+      capability: "property-edit",
+      evidence: {
+        detail:
+          "The product requires transforms to apply only to the layer selected in Layers.",
+        source: "user-request",
+      },
+      id: "layers-selected-transform",
+      reason:
+        "The Layers property action remains bound to the explicitly selected image.",
+      selectionScope: {
+        mode: "selected-entity",
+        selectionInteractionId: "layers-media-management",
+      },
+      surface: "panel",
+      target: "selectedLayer.transform",
     },
   ],
   mode: "product",
@@ -67,8 +93,11 @@ function createLayerAcceptance({
   return {
     automated: true,
     automatedTestName: `${id} changes layered media output`,
-    browser: true,
-    browserTestName: `browser: ${id} changes layered media output`,
+    browser: {
+      budget: "standard",
+      file: "e2e/app-controls.spec.ts",
+      testName: `browser: ${id} changes layered media output`,
+    },
     componentType:
       layerCoverage === "selected-layer-controls"
         ? "selected-layer-actions"
@@ -84,6 +113,10 @@ function createLayerAcceptance({
     kind: "runtime",
     layerCoverage,
     mediaLifecycleCoverage,
+    selectionScopeCoverage:
+      layerCoverage === "selected-layer-controls"
+        ? "two-entity-isolation"
+        : undefined,
     target,
     userAction: `Exercise ${id} through the runtime Layers panel.`,
   };
@@ -97,7 +130,7 @@ function createLayeredMediaAcceptance({
   return [
     createFileDropAcceptance({
       automatedTestName: "source images upload remove and reset",
-      browserTestName: "browser: source images upload remove and reset",
+      browserProofTestName: "browser: source images upload remove and reset",
       expectedObservable:
         "Upload adds source images while remove and Reset clear source media.",
       fixture: "source images fixture",
@@ -131,6 +164,7 @@ function createLayeredMediaAcceptance({
       ? [
           createLayerAcceptance({
             id: "layers.selected-transform",
+            interactionId: "layers-selected-transform",
             layerCoverage: "selected-layer-controls",
             mediaLifecycleCoverage: [
               "rotate",
@@ -154,13 +188,23 @@ describe("Toolcraft media upload acceptance coverage", () => {
         acceptance: [
           createFileDropAcceptance({
             automatedTestName: "source image upload and clear update media",
-            browserTestName: "browser: source image upload and clear update media",
+            browserProofTestName: "browser: source image upload and clear update media",
             expectedObservable: "Uploading a source image changes the media preview and Clear removes it.",
             fixture: "source image fixture",
             mediaLifecycleCoverage: ["upload", "remove"],
             userAction: "Upload a source image, then clear the preview.",
           }),
         ],
+        sectionInventory: createContractSectionInventoryFixture(
+          fileDropSchema,
+          [{
+            entity: "Source",
+            entityId: "source",
+            finiteSelectors: [],
+            groupingReason: "Source controls manage the uploaded product images.",
+            id: "source",
+          }],
+        ),
       }),
     ).toEqual(
       expect.arrayContaining([
@@ -179,7 +223,7 @@ describe("Toolcraft media upload acceptance coverage", () => {
         acceptance: [
           createFileDropAcceptance({
             automatedTestName: "source image upload reset lifecycle",
-            browserTestName: "browser: source image upload reset lifecycle",
+            browserProofTestName: "browser: source image upload reset lifecycle",
             expectedObservable: "Upload, clear, reset, rotate, and flip update the source preview and renderer.",
             fixture: "source image fixture",
             mediaLifecycleCoverage: [
@@ -207,7 +251,7 @@ describe("Toolcraft media upload acceptance coverage", () => {
       acceptance: [
         createFileDropAcceptance({
           automatedTestName: "source image upload clear and reset update media",
-          browserTestName: "browser: source image upload clear and reset update media",
+          browserProofTestName: "browser: source image upload clear and reset update media",
           expectedObservable: "El resultado visual refleja el ciclo de medios completo.",
           fixture: "source image fixture",
           mediaLifecycleCoverage: [
@@ -237,7 +281,7 @@ describe("Toolcraft media upload acceptance coverage", () => {
         acceptance: [
           createFileDropAcceptance({
             automatedTestName: "source images upload clear reset and transform",
-            browserTestName: "browser: source images upload clear reset and transform",
+            browserProofTestName: "browser: source images upload clear reset and transform",
             expectedObservable: "Uploading source images changes the media preview; rotate and flip actions update runtime media transform metadata and rendered output; Clear and Reset controls remove media.",
             fixture: "source images fixture",
             id: "media.sources",
@@ -266,7 +310,7 @@ describe("Toolcraft media upload acceptance coverage", () => {
         acceptance: [
           createFileDropAcceptance({
             automatedTestName: "source images upload reorder transform and reset",
-            browserTestName: "browser: source images upload reorder transform and reset",
+            browserProofTestName: "browser: source images upload reorder transform and reset",
             expectedObservable: "Uploading source images changes the preview; drag reorder updates runtime media order used by rendered output; rotate and flip update runtime media transform metadata used by export; Clear, section reset, and global Reset controls remove media.",
             fixture: "source images fixture",
             id: "media.sources",
@@ -284,6 +328,16 @@ describe("Toolcraft media upload acceptance coverage", () => {
             userAction: "Upload two source images, drag to reorder thumbnails, rotate and flip the selected image, clear them, then use section reset and Reset controls.",
           }),
         ],
+        sectionInventory: createContractSectionInventoryFixture(
+          fileDropSchema,
+          [{
+            entity: "Source",
+            entityId: "source",
+            finiteSelectors: [],
+            groupingReason: "Source controls manage the uploaded product images.",
+            id: "source",
+          }],
+        ),
       }),
     ).toEqual([]);
   });
@@ -296,7 +350,7 @@ describe("Toolcraft media upload acceptance coverage", () => {
       acceptance: [
         createFileDropAcceptance({
           automatedTestName: "source files add and remove slots",
-          browserTestName: "browser: source files add and remove slots",
+          browserProofTestName: "browser: source files add and remove slots",
           expectedObservable:
             "Compact plus adds an empty upload slot and compact minus removes the final slot or attached file.",
           fixture: "source file fixture",
@@ -364,7 +418,7 @@ describe("Toolcraft media upload acceptance coverage", () => {
       acceptance: [
         createFileDropAcceptance({
           automatedTestName: "model import lifecycle",
-          browserTestName: "browser: model import lifecycle",
+          browserProofTestName: "browser: model import lifecycle",
           expectedObservable: "The imported model is analyzed and rendered.",
           fixture: "model fixtures",
           id: "media.model",
@@ -387,7 +441,7 @@ describe("Toolcraft media upload acceptance coverage", () => {
       acceptance: [
         createFileDropAcceptance({
           automatedTestName: "model import lifecycle",
-          browserTestName: "browser: model import lifecycle",
+          browserProofTestName: "browser: model import lifecycle",
           expectedObservable: "Every advertised geometry format follows the same analyzed model lifecycle and rendered output.",
           fixture: "clean repairable fatal and persisted model fixtures",
           id: "media.model",

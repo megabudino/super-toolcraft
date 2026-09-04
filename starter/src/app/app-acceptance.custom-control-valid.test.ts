@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  createContractSectionInventoryFixture,
   defineContractSchemaFixture,
   validateContractAcceptance,
 } from "./app-acceptance.contract-fixtures";
@@ -22,6 +23,7 @@ describe("starter acceptance valid custom control contract", () => {
                   type: "glyphRamp",
                 } as never,
               },
+              id: "glyphs",
               title: "Glyphs",
             },
           ],
@@ -37,8 +39,11 @@ describe("starter acceptance valid custom control contract", () => {
           {
             automated: true,
             automatedTestName: "glyph ramp changes output",
-            browser: true,
-            browserTestName: "browser: glyph ramp changes output",
+            browser: {
+              budget: "standard",
+              file: "e2e/app-controls.spec.ts",
+              testName: "browser: glyph ramp changes output",
+            },
             builtInFitCheck: {
               capabilities: [
                 "collection",
@@ -70,6 +75,13 @@ describe("starter acceptance valid custom control contract", () => {
             userAction: "Upload, reorder, and remove glyphs.",
           },
         ],
+        sectionInventory: createContractSectionInventoryFixture(schema, [{
+          entity: "Glyphs",
+          entityId: "glyphs",
+          finiteSelectors: [],
+          groupingReason: "Glyph controls edit one rendered glyph ramp.",
+          id: "glyphs",
+        }]),
       }),
     ).toEqual([]);
   });

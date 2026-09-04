@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  createContractSectionInventoryFixture,
   defineContractSchemaFixture,
   validateContractAcceptance,
 } from "./app-acceptance.contract-fixtures";
@@ -22,6 +23,7 @@ describe("starter acceptance custom control collection contract", () => {
                   type: "maskEditor",
                 } as never,
               },
+              id: "masks",
               title: "Masks",
             },
           ],
@@ -37,8 +39,11 @@ describe("starter acceptance custom control collection contract", () => {
           {
             automated: true,
             automatedTestName: "mask editor changes output",
-            browser: true,
-            browserTestName: "browser: mask editor changes output",
+            browser: {
+              budget: "standard",
+              file: "e2e/app-controls.spec.ts",
+              testName: "browser: mask editor changes output",
+            },
             builtInFitCheck: {
               capabilities: [
                 "collection",
@@ -69,6 +74,13 @@ describe("starter acceptance custom control collection contract", () => {
             userAction: "Add each mask shape, select a mask in the list, delete one mask, drag a canvas mask handle, and resize a selected mask.",
           },
         ],
+        sectionInventory: createContractSectionInventoryFixture(schema, [{
+          entity: "Masks",
+          entityId: "masks",
+          finiteSelectors: [],
+          groupingReason: "Mask controls edit one collection of rendered masks.",
+          id: "masks",
+        }]),
       }),
     ).toEqual([
       "Masks / maskEditor (masks) builtInFitCheck.checkedBuiltIns must include sourceCollection when the custom control owns a repeated runtime item set whose cardinality could be source-owned.",
@@ -93,6 +105,7 @@ describe("starter acceptance custom control collection contract", () => {
                   type: "patternSetEditor",
                 } as never,
               },
+              id: "pattern",
               title: "Pattern",
             },
           ],
@@ -108,8 +121,11 @@ describe("starter acceptance custom control collection contract", () => {
           {
             automated: true,
             automatedTestName: "pattern set changes output",
-            browser: true,
-            browserTestName: "browser: pattern set changes output",
+            browser: {
+              budget: "standard",
+              file: "e2e/app-controls.spec.ts",
+              testName: "browser: pattern set changes output",
+            },
             builtInFitCheck: {
               capabilities: ["collection", "selection", "custom-value-model"],
               checkedBuiltIns: ["select", "vector"],
@@ -134,6 +150,13 @@ describe("starter acceptance custom control collection contract", () => {
             userAction: "Edit the selected entry.",
           },
         ],
+        sectionInventory: createContractSectionInventoryFixture(schema, [{
+          entity: "Pattern",
+          entityId: "pattern",
+          finiteSelectors: [],
+          groupingReason: "Pattern controls edit one rendered pattern collection.",
+          id: "pattern",
+        }]),
       }),
     ).toEqual([
       "Pattern / patternSet (pattern.set) builtInFitCheck.checkedBuiltIns must include sourceCollection when the custom control owns a repeated runtime item set whose cardinality could be source-owned.",
@@ -157,6 +180,7 @@ describe("starter acceptance custom control collection contract", () => {
                   type: "focalPointPad",
                 } as never,
               },
+              id: "focus",
               title: "Focus",
             },
           ],
@@ -172,8 +196,11 @@ describe("starter acceptance custom control collection contract", () => {
           {
             automated: true,
             automatedTestName: "focal point changes output",
-            browser: true,
-            browserTestName: "browser: focal point changes output",
+            browser: {
+              budget: "standard",
+              file: "e2e/app-controls.spec.ts",
+              testName: "browser: focal point changes output",
+            },
             builtInFitCheck: {
               capabilities: ["custom-interaction"],
               checkedBuiltIns: ["vector"],
@@ -198,6 +225,13 @@ describe("starter acceptance custom control collection contract", () => {
             userAction: "Drag the focal point.",
           },
         ],
+        sectionInventory: createContractSectionInventoryFixture(schema, [{
+          entity: "Focus",
+          entityId: "focus",
+          finiteSelectors: [],
+          groupingReason: "Focus controls position the rendered focal point.",
+          id: "focus",
+        }]),
       }),
     ).toEqual([]);
   });

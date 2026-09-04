@@ -43,8 +43,11 @@ describe("starter acceptance curves control rules", () => {
         {
           automated: true,
           automatedTestName: "easing curve changes motion output",
-          browser: true,
-          browserTestName: "browser: easing curve changes motion output",
+          browser: {
+            budget: "standard",
+            file: "e2e/app-controls.spec.ts",
+            testName: "browser: easing curve changes motion output",
+          },
           componentType: "curves",
           controlPartCoverage: ["curves.points"],
           evidence: "product-output",
@@ -115,8 +118,11 @@ describe("starter acceptance curves control rules", () => {
         {
           automated: true,
           automatedTestName: "bend curve changes geometry output",
-          browser: true,
-          browserTestName: "browser: bend curve changes geometry output",
+          browser: {
+            budget: "standard",
+            file: "e2e/app-controls.spec.ts",
+            testName: "browser: bend curve changes geometry output",
+          },
           componentType: "curves",
           controlPartCoverage: ["curves.activeChannel", "curves.points"],
           evidence: "product-output",

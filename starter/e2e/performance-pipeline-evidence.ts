@@ -58,6 +58,21 @@ export type ToolcraftPipelineInvariantAction = (
   phase: ToolcraftPerformancePipelinePhase,
 ) => Promise<void>;
 
+export type ToolcraftPipelineInvariantLifecycle = Readonly<{
+  preparePhase?: ToolcraftPipelineInvariantAction;
+  runPhase: ToolcraftPipelineInvariantAction;
+  settlePreparedPhase?: ToolcraftPipelineInvariantAction;
+}>;
+
+async function settlePreparedPipelinePhase(page: Page): Promise<void> {
+  await page.evaluate(
+    () =>
+      new Promise<void>((resolve) => {
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+      }),
+  );
+}
+
 export async function expectToolcraftPipelinePassExecutions(
   page: Page,
   appPerformance: ToolcraftPerformanceConfig,
@@ -101,7 +116,7 @@ export async function expectToolcraftPipelineInvariant(
   page: Page,
   appPerformance: ToolcraftPerformanceConfig,
   pathId: string,
-  action: ToolcraftPipelineInvariantAction,
+  lifecycle: ToolcraftPipelineInvariantLifecycle,
 ): Promise<void> {
   if (!isToolcraftRendererPipelineRegistration(appPerformance.rendererPipeline)) {
     throw new Error(
@@ -122,13 +137,19 @@ export async function expectToolcraftPipelineInvariant(
     appPerformance.rendererPipeline,
   );
   for (const phase of TOOLCRAFT_PERFORMANCE_PIPELINE_PHASES) {
+    await lifecycle.preparePhase?.(phase);
+    if (lifecycle.settlePreparedPhase) {
+      await lifecycle.settlePreparedPhase(phase);
+    } else {
+      await settlePreparedPipelinePhase(page);
+    }
     const before = initialRender
       ? canonicalZeroSnapshot
       : await readToolcraftPipelineSnapshot(page);
     const documentTimeOriginBefore = initialRender
       ? await readDocumentTimeOrigin(page)
       : undefined;
-    await action(phase);
+    await lifecycle.runPhase(phase);
     if (
       initialRender &&
       (await readDocumentTimeOrigin(page)) === documentTimeOriginBefore

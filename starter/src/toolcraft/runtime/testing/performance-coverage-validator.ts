@@ -34,7 +34,7 @@ export function validateToolcraftPerformanceCoverage(
   };
   return [
     ...workloadEnvelopeErrors,
-    ...getRendererTechniqueErrors(config),
+    ...getRendererTechniqueErrors(context),
     ...getRendererPipelineErrorsForEnvelopeContext(context, policy),
     ...getToolcraftPerformanceProfileErrors(context.paths),
     ...getToolcraftPerformancePathCoverageErrors(context),

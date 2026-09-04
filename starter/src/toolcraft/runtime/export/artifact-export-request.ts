@@ -10,7 +10,6 @@ import type { ToolcraftProductExportRenderer } from "./product-export-renderer";
 export type ToolcraftArtifactExportRequest = Readonly<{
   boundsProvider: ToolcraftProductSceneBoundsProvider | undefined;
   exportRenderer: ToolcraftProductExportRenderer | undefined;
-  productSceneRequired: boolean;
   renderRuntimeScene: (
     canvas: HTMLCanvasElement,
     frame: ToolcraftExportFrame,

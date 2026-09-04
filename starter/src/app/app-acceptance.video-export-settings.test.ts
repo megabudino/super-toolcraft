@@ -83,6 +83,7 @@ describe("Toolcraft video export settings acceptance contract", () => {
         evidence: "The user explicitly removed image delivery.",
         mode: "user-removed",
       },
+      svg: { mode: "not-requested" },
       video: {
         evidence: "The user explicitly requested video delivery.",
         mode: "user-requested",
@@ -107,8 +108,11 @@ describe("Toolcraft video export settings acceptance contract", () => {
         actionCoverage: ["export.video"],
         automated: true,
         automatedTestName: "exports segmented-format video output",
-        browser: true,
-        browserTestName: "browser: exports segmented-format video output",
+        browser: {
+          budget: "standard",
+          file: "e2e/app-controls.spec.ts",
+          testName: "browser: exports segmented-format video output",
+        },
         componentType: "panelActions",
         evidence: "exported-bytes",
         expectedObservable: "Export Video creates validated video bytes.",
@@ -296,8 +300,11 @@ describe("Toolcraft video export settings acceptance contract", () => {
             actionCoverage: ["export.video"],
             automated: true,
             automatedTestName: "exports video output",
-            browser: true,
-            browserTestName: "browser: exports video output",
+            browser: {
+              budget: "standard",
+              file: "e2e/app-controls.spec.ts",
+              testName: "browser: exports video output",
+            },
             componentType: "panelActions",
             evidence: "exported-bytes",
             expectedObservable: "Export Video creates validated video bytes.",
@@ -314,6 +321,7 @@ describe("Toolcraft video export settings acceptance contract", () => {
             evidence: "The user explicitly removed image delivery.",
             mode: "user-removed",
           },
+          svg: { mode: "not-requested" },
           video: {
             evidence: "The user explicitly requested video delivery.",
             mode: "user-requested",

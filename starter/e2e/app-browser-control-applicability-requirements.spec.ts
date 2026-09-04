@@ -53,8 +53,11 @@ test("conditional controls derive case-specific visibility and outcome evidence"
   const requirements = deriveToolcraftBrowserRuntimeRequirements(
     [
       {
-        browser: true,
-        browserTestName: "browser: conditional amount",
+        browser: {
+          budget: "standard",
+          file: "e2e/app-controls.spec.ts",
+          testName: "browser: conditional amount",
+        },
         evidence: "product-output",
         id: "feature.amount",
         kind: "control",
@@ -113,8 +116,11 @@ test("finite siblings expand outcomes even when always-applicability omits the s
     },
   });
   const acceptance = {
-    browser: true,
-    browserTestName: "browser: feature amount",
+    browser: {
+      budget: "standard",
+      file: "e2e/app-controls.spec.ts",
+      testName: "browser: feature amount",
+    },
     evidence: "product-output" as const,
     id: "feature.amount",
     kind: "control" as const,

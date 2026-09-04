@@ -277,6 +277,7 @@ export type ToolcraftActionRole =
   | "copy-output"
   | "download-output"
   | "export-image"
+  | "export-svg"
   | "export-video";
 
 export type ToolcraftActionSchema = {
@@ -372,19 +373,57 @@ export type ToolcraftMediaTransformSchema = {
   rotationDeg?: 0 | 90 | 180 | 270;
 };
 
-export type ToolcraftDefaultImageOrFileAssetSchema = {
-  assetKind?: ToolcraftMediaAssetKind;
+type ToolcraftDefaultBinaryAssetSchema = {
   dataUrl: string;
   fileName: string;
   id?: string;
   layerId?: string;
   layerName?: string;
   mimeType?: string;
-  position?: ToolcraftMediaPositionSchema;
-  size?: ToolcraftCanvasSize;
   sourceTarget?: string;
-  transform?: ToolcraftMediaTransformSchema;
 };
+
+export type ToolcraftDefaultFileAssetSchema =
+  ToolcraftDefaultBinaryAssetSchema & {
+    assetKind: "file";
+    position?: ToolcraftMediaPositionSchema;
+  };
+
+export type ToolcraftDefaultLegacyImageAssetSchema =
+  ToolcraftDefaultBinaryAssetSchema & {
+    assetKind?: "image";
+    ingressPolicy?: "legacy-record";
+    position?: ToolcraftMediaPositionSchema;
+    size?: ToolcraftCanvasSize;
+    sourceSize?: ToolcraftCanvasSize;
+    transform?: ToolcraftMediaTransformSchema;
+  };
+
+export type ToolcraftDefaultPreparedImageAssetSchema =
+  ToolcraftDefaultBinaryAssetSchema & {
+    assetKind?: "image";
+    ingressPolicy: "prepared-source";
+    position: ToolcraftMediaPositionSchema;
+    size?: never;
+    sourceSize: ToolcraftCanvasSize;
+    transform?: ToolcraftMediaTransformSchema;
+  };
+
+export type ToolcraftDefaultCanonicalImageAssetSchema =
+  ToolcraftDefaultBinaryAssetSchema & {
+    assetKind?: "image";
+    ingressPolicy: "canonical-runtime";
+    position: ToolcraftMediaPositionSchema;
+    size: ToolcraftCanvasSize;
+    sourceSize: ToolcraftCanvasSize;
+    transform?: ToolcraftMediaTransformSchema;
+  };
+
+export type ToolcraftDefaultImageOrFileAssetSchema =
+  | ToolcraftDefaultCanonicalImageAssetSchema
+  | ToolcraftDefaultFileAssetSchema
+  | ToolcraftDefaultLegacyImageAssetSchema
+  | ToolcraftDefaultPreparedImageAssetSchema;
 
 export type ToolcraftDefaultModelAssetSchema = {
   assetKind: "model";

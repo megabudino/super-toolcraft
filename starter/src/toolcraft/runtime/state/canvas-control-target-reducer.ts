@@ -315,15 +315,6 @@ export function getToolcraftCanvasResetPatch(
     after["canvas.mode"] = defaultMode;
   }
 
-  if (
-    resetsMode &&
-    state.canvas.mode === "infinite" &&
-    (state.canvas.offset.x !== 0 || state.canvas.offset.y !== 0)
-  ) {
-    before["canvas.offset"] = state.canvas.offset;
-    after["canvas.offset"] = { x: 0, y: 0 };
-  }
-
   if (resetsSize) {
     const resetSize = getToolcraftResetCanvasSize(state);
 

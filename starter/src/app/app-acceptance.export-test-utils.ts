@@ -11,7 +11,7 @@ export function makeExportSettingsProductReadiness(
     interactionOwnership: [],
     mode: "product",
     productName: "Export settings fixture",
-    productSummary: "A synthetic product for image and video export settings.",
+    productSummary: "A synthetic product for image, SVG, and video export settings.",
     requestedBehavior: "Export the explicitly requested artifact types.",
     viewInteraction: {
       mode: "non-spatial",
@@ -45,6 +45,7 @@ export function makeBackgroundSection() {
         layout: "inline",
       },
     ],
+    id: "background",
     title: "Background",
   } as const;
 }
@@ -81,6 +82,7 @@ export function makeImageExportSection() {
         layout: "inline",
       },
     ],
+    id: "image-export",
     title: "Image Export",
   } as const;
 }
@@ -116,6 +118,7 @@ export function makeVideoExportSection() {
         layout: "inline",
       },
     ],
+    id: "video-export",
     title: "Video Export",
   } as const;
 }
@@ -126,4 +129,8 @@ export function textLooksLikePngExport(text: string): boolean {
 
 export function textLooksLikeVideoExport(text: string): boolean {
   return /\b(export|download)\b/i.test(text) && /\b(video|mp4|webm|mov)\b/i.test(text);
+}
+
+export function textLooksLikeSvgExport(text: string): boolean {
+  return /\b(export|download)\b/i.test(text) && /\bsvg\b|\bvector\b/i.test(text);
 }

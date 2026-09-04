@@ -69,6 +69,8 @@ If a custom value is keyframe-capable, the renderer must work with runtime keyfr
 
 ## Visual Rules
 
+Use `custom-control-visuals.md` for the product-geometry token vocabulary, area limits, state semantics, geometry composition, and browser self-check before styling a custom control.
+
 Custom controls should use Toolcraft tokens, spacing, focus states, disabled opacity, and interaction patterns. A custom control should look like it belongs in the controls panel.
 
 Custom controls must render the minimum UI needed to understand the value, context, and available actions. Do not add decorative metadata or text that repeats the section title, control label, or obvious item state.

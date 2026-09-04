@@ -70,15 +70,15 @@ function ownership({
   source?: ToolcraftInteractionOwnershipEntry["evidence"]["source"];
   surface: ToolcraftInteractionSurface;
 }): ToolcraftInteractionOwnershipEntry {
-  return {
+  const base = {
     alternative: {
       reason:
         surface === "canvas"
           ? "A panel copy would separate the same operation from visible output without adding a useful capability."
           : "A canvas copy would add output chrome without improving this non-spatial operation.",
-      surface: surface === "canvas" ? "panel" : "canvas",
+      surface: (surface === "canvas" ? "panel" : "canvas") as
+        ToolcraftInteractionSurface,
     },
-    capability,
     evidence: {
       detail:
         source === "reference"
@@ -94,6 +94,19 @@ function ownership({
     surface,
     target: "output.position",
   };
+
+  if (
+    capability === "precise-value-entry" ||
+    capability === "property-edit"
+  ) {
+    return {
+      ...base,
+      capability,
+      selectionScope: { mode: "global" },
+    };
+  }
+
+  return { ...base, capability };
 }
 
 function readiness(
@@ -102,6 +115,7 @@ function readiness(
   return {
     exportIntent: {
       image: { mode: "toolcraft-default" },
+      svg: { mode: "not-requested" },
       video: { mode: "not-requested" },
     },
     interactionOwnership,
@@ -128,12 +142,14 @@ function acceptance({
   return {
     automated: true,
     automatedTestName: `${id} changes runtime state`,
-    browser: true,
-    browserTestName: `browser: ${id} changes output`,
+    browser: {
+      budget: "standard",
+      file: "e2e/app-controls.spec.ts",
+      testName: `browser: ${id} changes output`,
+    },
     ...(kind === "canvas-handle"
       ? {
           canvasHandle: {
-            exportCleanTestName: `${id} stays out of export`,
             outputObservable: "The output position changes after the gesture.",
             testId: id,
             writesTarget: "output.position",
@@ -157,6 +173,7 @@ describe("Toolcraft interaction surface ownership", () => {
     const productReadiness = {
       exportIntent: {
         image: { mode: "toolcraft-default" },
+        svg: { mode: "not-requested" },
         video: { mode: "not-requested" },
       },
       mode: "product",
@@ -182,6 +199,7 @@ describe("Toolcraft interaction surface ownership", () => {
     const productReadiness = {
       exportIntent: {
         image: { mode: "toolcraft-default" },
+        svg: { mode: "not-requested" },
         video: { mode: "not-requested" },
       },
       mode: "product",

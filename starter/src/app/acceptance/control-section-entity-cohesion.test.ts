@@ -24,6 +24,7 @@ function makeSection({
   return {
     entity,
     entityId,
+    finiteSelectors: [],
     groupingReason: `The ${id} controls edit one coherent part of the entity.`,
     id,
     splitReason,

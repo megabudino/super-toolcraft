@@ -12,6 +12,9 @@ import {
 import type {
   ToolcraftFileAsset,
   ToolcraftImageAsset,
+  ToolcraftInitialImageAssetIngress,
+  ToolcraftInitialMediaAsset,
+  ToolcraftLegacyRuntimeImageAsset,
   ToolcraftMediaAsset,
   ToolcraftMediaTransform,
   ToolcraftModelAsset,
@@ -92,7 +95,7 @@ function readMediaTransform(value: unknown): ToolcraftMediaTransform | undefined
 function readImageAsset(
   value: Record<string, unknown>,
   base: PersistedMediaBase,
-): ToolcraftImageAsset | undefined {
+): ToolcraftImageAsset | ToolcraftInitialImageAssetIngress | undefined {
   const position = readPoint(value.position);
 
   const resourceRef =
@@ -107,16 +110,32 @@ function readImageAsset(
   }
 
   const size = readCanvasSize(value.size);
+  const sourceSize = readCanvasSize(value.sourceSize);
   const transform = readMediaTransform(value.transform);
 
-  return {
+  const asset: ToolcraftLegacyRuntimeImageAsset = {
     ...base,
     assetKind: "image",
     lifecycle: "restoring",
     position,
     resourceRef,
     ...(size ? { size } : {}),
+    ...(sourceSize ? { sourceSize } : {}),
     ...(transform ? { transform } : {}),
+  };
+
+  if (size && sourceSize) {
+    return {
+      ...asset,
+      position,
+      size,
+      sourceSize,
+    };
+  }
+
+  return {
+    asset,
+    policy: "legacy-record",
   };
 }
 
@@ -305,7 +324,7 @@ function readModelAsset(
   };
 }
 
-function readMediaAsset(value: unknown): ToolcraftMediaAsset | undefined {
+function readMediaAsset(value: unknown): ToolcraftInitialMediaAsset | undefined {
   if (!isToolcraftPersistenceRecord(value)) {
     return undefined;
   }
@@ -329,7 +348,9 @@ function readMediaAsset(value: unknown): ToolcraftMediaAsset | undefined {
   }
 }
 
-export function readMediaAssets(value: unknown): ToolcraftMediaAsset[] | undefined {
+export function readMediaAssets(
+  value: unknown,
+): ToolcraftInitialMediaAsset[] | undefined {
   if (!Array.isArray(value)) {
     return undefined;
   }

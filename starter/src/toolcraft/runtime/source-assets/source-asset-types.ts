@@ -5,6 +5,7 @@ import type { ToolcraftCanvasFrame } from "../state/canvas-frame";
 import type {
   ToolcraftMediaAsset,
   ToolcraftMediaAssetDraft,
+  ToolcraftPreparedSourceImageAssetDraft,
 } from "../state/types";
 import type { ToolcraftBinaryAssetPutOptions } from "./repository/binary-asset-repository";
 
@@ -89,9 +90,13 @@ type ToolcraftPreparedDraft<
   ? Omit<Draft, "id" | "layerId">
   : never;
 
+type ToolcraftPreparedSourceAssetDraft =
+  | Exclude<ToolcraftMediaAssetDraft, { assetKind: "image" }>
+  | ToolcraftPreparedSourceImageAssetDraft;
+
 export type ToolcraftPreparedSourceAssetRecord<
   Kind extends ToolcraftSourceAssetKind,
-> = ToolcraftPreparedDraft<ToolcraftMediaAssetDraft, Kind>;
+> = ToolcraftPreparedDraft<ToolcraftPreparedSourceAssetDraft, Kind>;
 
 export type ToolcraftSourceAssetPrepareContext = {
   batch: ToolcraftSourceAssetBatch;

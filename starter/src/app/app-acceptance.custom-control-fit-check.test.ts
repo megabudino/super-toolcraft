@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  createContractSectionInventoryFixture,
   defineContractSchemaFixture,
   validateContractAcceptance,
 } from "./app-acceptance.contract-fixtures";
@@ -22,6 +23,7 @@ describe("starter acceptance custom control built-in fit contract", () => {
                   type: "glyphRamp",
                 } as never,
               },
+              id: "glyphs",
               title: "Glyphs",
             },
           ],
@@ -37,8 +39,11 @@ describe("starter acceptance custom control built-in fit contract", () => {
           {
             automated: true,
             automatedTestName: "glyph ramp changes output",
-            browser: true,
-            browserTestName: "browser: glyph ramp changes output",
+            browser: {
+              budget: "standard",
+              file: "e2e/app-controls.spec.ts",
+              testName: "browser: glyph ramp changes output",
+            },
             builtInFitCheck: {
               capabilities: [],
               checkedBuiltIns: ["imaginaryPicker" as never],
@@ -63,6 +68,13 @@ describe("starter acceptance custom control built-in fit contract", () => {
             userAction: "Upload, reorder, and remove glyphs.",
           },
         ],
+        sectionInventory: createContractSectionInventoryFixture(schema, [{
+          entity: "Glyphs",
+          entityId: "glyphs",
+          finiteSelectors: [],
+          groupingReason: "Glyph controls edit one rendered glyph ramp.",
+          id: "glyphs",
+        }]),
       }),
     ).toEqual([
       "Glyphs / glyphRamp (glyph.ramp) builtInFitCheck.capabilities must declare the product capabilities that require custom UI; prose labels are not capability evidence.",
@@ -82,12 +94,13 @@ describe("starter acceptance custom control built-in fit contract", () => {
               controls: {
                 shapeButtons: {
                   defaultValue: "rect",
-                  label: "Shape",
+                  label: false,
                   orderRole: "style",
                   target: "shape.kind",
                   type: "shapeButtons",
                 } as never,
               },
+              id: "shape",
               title: "Shape",
             },
           ],
@@ -103,8 +116,11 @@ describe("starter acceptance custom control built-in fit contract", () => {
           {
             automated: true,
             automatedTestName: "shape buttons change output",
-            browser: true,
-            browserTestName: "browser: shape buttons change output",
+            browser: {
+              budget: "standard",
+              file: "e2e/app-controls.spec.ts",
+              testName: "browser: shape buttons change output",
+            },
             builtInFitCheck: {
               capabilities: ["commands"],
               checkedBuiltIns: ["actions", "segmented", "select"],
@@ -129,6 +145,13 @@ describe("starter acceptance custom control built-in fit contract", () => {
             userAction: "Choose each shape icon button.",
           },
         ],
+        sectionInventory: createContractSectionInventoryFixture(schema, [{
+          entity: "Shape",
+          entityId: "shape",
+          finiteSelectors: [],
+          groupingReason: "Shape controls choose one rendered product geometry.",
+          id: "shape",
+        }]),
       }),
     ).toEqual([
       "Shape / shapeButtons (shape.kind) builtInFitCheck.capabilities must include custom-interaction, custom-value-model, or custom-visualization; collection or command chrome alone is not enough to justify custom UI.",

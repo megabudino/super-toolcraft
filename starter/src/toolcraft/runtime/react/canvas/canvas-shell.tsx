@@ -10,7 +10,7 @@ import { getToolcraftInfiniteCanvasBackgroundColor } from "../../state/canvas-ba
 import type { ToolcraftState } from "../../state/types";
 import { CanvasDefaultMediaLayer, getVisibleCanvasImageAssets } from "./canvas-default-media-layer";
 import { CanvasViewportWorld } from "./canvas-viewport-world";
-import { CanvasSceneSlot, CanvasSceneSurface } from "./canvas-scene-surface";
+import { CanvasSceneSurface } from "./canvas-scene-surface";
 import {
   useCanvasDropImport,
   type ToolcraftCanvasUploadPresentationState,
@@ -115,11 +115,18 @@ export function CanvasShell({
     uploadPresentation.feedback ??
     (uploadPresentation.directOperation ? (directCanvasPresentation?.feedback ?? null) : null);
   const uploadEnabled = canvasSchema.upload;
-  const { handlePointerDown, handlePointerMove, handlePointerUp, viewportRef } =
-    useCanvasViewportInteractions({
-      draggable: canvasSchema.draggable,
-      store,
-    });
+  const {
+    handlePointerDown,
+    handlePointerDownCapture,
+    handlePointerMove,
+    handlePointerMoveCapture,
+    handlePointerUp,
+    handlePointerUpCapture,
+    viewportRef,
+  } = useCanvasViewportInteractions({
+    draggable: canvasSchema.draggable,
+    store,
+  });
   const handleDrop = useCanvasDropImport({
     coordinator: sourceAssetCoordinator,
     onPresentationChange: setUploadPresentation,
@@ -162,9 +169,13 @@ export function CanvasShell({
       onDragOver={beginDragOver}
       onDrop={handleDrop}
       onPointerCancel={handlePointerUp}
+      onPointerCancelCapture={handlePointerUpCapture}
       onPointerDown={handlePointerDown}
+      onPointerDownCapture={handlePointerDownCapture}
       onPointerMove={handlePointerMove}
+      onPointerMoveCapture={handlePointerMoveCapture}
       onPointerUp={handlePointerUp}
+      onPointerUpCapture={handlePointerUpCapture}
       ref={viewportRef}
       role="application"
       style={
@@ -185,7 +196,6 @@ export function CanvasShell({
         {renderEditableCanvas ? (
           <CanvasSceneSurface frame={canvasFrame}>
             <ToolcraftModelCanvasLayers
-              canvasFrame={canvasFrame}
               dispatch={dispatch}
               operationTargets={directCanvasModelOperationTargets}
               operationSource={sourceAssetCoordinator}
@@ -194,7 +204,6 @@ export function CanvasShell({
             {renderDefaultMedia
               ? visibleMediaAssets.map((mediaAsset) => (
                   <CanvasDefaultMediaLayer
-                    canvasFrame={canvasFrame}
                     dispatch={dispatch}
                     key={mediaAsset.id}
                     mediaAsset={mediaAsset}
@@ -203,13 +212,9 @@ export function CanvasShell({
                 ))
               : null}
             {children ? (
-              <CanvasSceneSlot frame={canvasFrame}>
-                <ToolcraftProductSceneSurface
-                  frame={canvasFrame}
-                >
-                  {children}
-                </ToolcraftProductSceneSurface>
-              </CanvasSceneSlot>
+              <ToolcraftProductSceneSurface frame={canvasFrame}>
+                {children}
+              </ToolcraftProductSceneSurface>
             ) : null}
           </CanvasSceneSurface>
         ) : null}

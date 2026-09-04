@@ -11,7 +11,7 @@ type FileDropSchemaOptions = {
 
 type FileDropAcceptanceOptions = {
   automatedTestName: string;
-  browserTestName: string;
+  browserProofTestName: string;
   expectedObservable: string;
   fixture: string;
   id?: string;
@@ -51,6 +51,7 @@ export function createSingleFileDropSchema({
                 type: "fileDrop",
               },
             },
+            id: "source",
             title: "Source",
           },
         ],
@@ -86,6 +87,7 @@ export function createMultipleFileDropSchema({
                 type: "fileDrop",
               },
             },
+            id: "source",
             title: "Source",
           },
         ],
@@ -111,6 +113,7 @@ export function createModelFileDropSchema() {
                 type: "fileDrop",
               },
             },
+            id: "model",
             title: "Model",
           },
         ],
@@ -122,7 +125,7 @@ export function createModelFileDropSchema() {
 
 export function createFileDropAcceptance({
   automatedTestName,
-  browserTestName,
+  browserProofTestName,
   expectedObservable,
   fixture,
   id = "media.source",
@@ -134,8 +137,11 @@ export function createFileDropAcceptance({
   return {
     automated: true,
     automatedTestName,
-    browser: true,
-    browserTestName,
+    browser: {
+      budget: "standard",
+      file: "e2e/app-controls.spec.ts",
+      testName: browserProofTestName,
+    },
     componentType: "fileDrop",
     evidence: "media-lifecycle",
     expectedObservable,

@@ -34,8 +34,11 @@ describe("starter acceptance custom control coverage contract", () => {
           {
             automated: true,
             automatedTestName: "glyph ramp changes output",
-            browser: true,
-            browserTestName: "browser: glyph ramp changes output",
+            browser: {
+              budget: "standard",
+              file: "e2e/app-controls.spec.ts",
+              testName: "browser: glyph ramp changes output",
+            },
             componentType: "glyphRamp",
             evidence: "product-output",
             expectedObservable: "Choosing and ordering glyphs changes the rendered product output.",
@@ -83,8 +86,11 @@ describe("starter acceptance custom control coverage contract", () => {
           {
             automated: true,
             automatedTestName: "glyph ramp changes output",
-            browser: true,
-            browserTestName: "browser: glyph ramp changes output",
+            browser: {
+              budget: "standard",
+              file: "e2e/app-controls.spec.ts",
+              testName: "browser: glyph ramp changes output",
+            },
             componentType: "glyphRamp",
             customControlCoverage: [
               "built-in-gap",

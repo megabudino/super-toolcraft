@@ -2,14 +2,13 @@
 
 > Reading route: start with `workflow.md`. Core generated-app rules live in `core/*`; this file is a focused acceptance reference for the topic below.
 
-Every visible product entity must prove it works. A control is not accepted because it renders; it is accepted only when tests prove user interaction changes runtime state and the final product output, command side effect, timeline frame, layer result, media lifecycle, or canvas viewport.
+Every visible product entity must prove it works. Tests prove interaction changes state and output, a command side effect, timeline frame, layer result, media lifecycle, or viewport.
 
 ## Required Files
 
 - `src/app/app-acceptance-data.ts`
 - app-specific tests under `src/app` outside the reserved `app-acceptance.*` framework namespace
 - `src/app/app-performance.ts`
-- `src/app/app-verification-impact.json` (presentation, functional, and performance ownership with nearest acceptance ids and exact performance pass ids)
 - `src/app/app-performance.test.ts`
 - `docs/toolcraft/agent-worklog.md`
 - `e2e/app-browser-acceptance.spec.ts`
@@ -18,7 +17,7 @@ Every visible product entity must prove it works. A control is not accepted beca
 - `e2e/app-kernel-benchmarks.ts`
 - `e2e/product-observable-helpers.ts`
 
-Use focused checks during edits. First delivery and later delivery run bare `pnpm verify:delivery` per `workflow.md`. Performance complaint authority adds an iteration; explicit full audit authority permits `pnpm verify:perf`.
+Lifecycle execution is defined under **Proof Boundaries**. Performance complaint authority adds one targeted iteration; explicit full-audit authority permits `pnpm verify:perf`.
 
 ## Product Readiness
 
@@ -30,23 +29,23 @@ The exported starter may keep `appProductReadiness.mode: "starter"` only while i
 - required `exportIntent`;
 - `viewInteraction`.
 
-`productReadiness.exportIntent` is the typed authority for artifact delivery. Acceptance, schema actions, and export settings must correspond exactly to its resolved image and video capabilities. The evidence-bearing modes and decision sequence live in `core/setup-export.md`; do not infer export intent from animation or timeline state.
+`productReadiness.exportIntent` owns artifact delivery. Acceptance, actions, and applicable settings must match its image, SVG, and video capabilities. SVG has no settings section and means self-contained editable vectors. See `core/setup-export.md`; never infer intent from renderer technology, animation, or timeline state.
 
 `viewInteraction` classifies the product as `non-spatial`, `orbit`,
 `fixed-camera`, or `timeline-camera`. Editable spatial scenes default to orbit;
 fixed/timeline modes require explicit request/reference evidence.
 
-Product readiness also requires product surface: controls, layers, timeline, `canvasContent`, or acceptance coverage. A renamed product folder must not pass tests as a neutral starter.
+Product readiness requires controls, layers, timeline, `canvasContent`, or acceptance coverage. A renamed product cannot pass as a neutral starter.
 
 ## Implementation Worklog
 
-Product apps must update `docs/toolcraft/agent-worklog.md` before final delivery. The file records why the app chose its renderer, view interaction mode, timeline mode, layer policy, control grouping, export behavior, and performance strategy.
+Update `docs/toolcraft/agent-worklog.md` before delivery and after material decisions. Record renderer, view, timeline, layers, controls, export, and performance choices.
 
-The worklog must declare `Mode: product`. Every `Decision Trail` records human intent: `Request:`, `Task type:`, `User-visible result:`, `Source/reference checked:`, `Reference inputs:`, `Docs/contracts read:`, `Contract rules applied:`, `View interaction intent:`, `Interaction ownership:`, `Decision:`, `Alternatives rejected:`, `State/output mapping:`, `Performance intent:`, bare-delivery `Verification:`, and `Risks:`. Steering within one request stays in that batch. `Reference inputs:` lists every prompt/reference asset or `None`; `State/output mapping:` connects state to visible output or export.
+The worklog declares `Mode: product`. Every `Decision Trail` records `Request:`, `Task type:`, `User-visible result:`, `Source/reference checked:`, `Reference inputs:`, `Docs/contracts read:`, `Contract rules applied:`, `View interaction intent:`, `Interaction ownership:`, `Decision:`, `Alternatives rejected:`, `State/output mapping:`, `Performance intent:`, bare-delivery `Verification:`, and `Risks:`. Steering stays in its request batch. Reference inputs list every asset or `None`; state/output mapping links state to output or export.
 
-Each decision section (`Renderer`, `View Interaction`, `Interaction Ownership`, `Timeline`, `Layers`, `Controls`, `Export`, `Performance`) includes `Decision:`, `Reason:`, and `Evidence:`. View interaction records mode, source, alternatives, and orientation targets. Performance records the modeled workload, pass lifecycle, assessment, and affected paths. A complaint adds an exact `Performance request evidence:` quote and unique canonical `Performance paths:`.
+The `Renderer`, `View Interaction`, `Interaction Ownership`, `Timeline`, `Layers`, `Controls`, `Export`, and `Performance` sections each include `Decision:`, `Reason:`, and `Evidence:`. View interaction adds mode, source, alternatives, and targets. Performance adds workload, lifecycle, assessment, paths, and for complaints exact `Performance request evidence:` plus unique canonical `Performance paths:`.
 
-Protected receipts own changed files, the immutable plan, executed checks, reports, measurements, and pass/fail evidence. A Decision Trail does not duplicate those fields or supply command-shaped authority. `Risks` includes either `Risk:` entries or `None:` with a reason.
+Protected receipts own changed files, plan, checks, reports, measurements, and results. Decision Trails do not duplicate them or supply command-shaped authority. `Risks` uses `Risk:` entries or `None:` with a reason.
 
 The acceptance gate fails if the worklog is missing, still says `Mode: starter`, or lacks concrete decision evidence.
 
@@ -65,7 +64,7 @@ Each row should name:
 - expected product-level observable;
 - evidence type;
 - exact `automatedTestName`;
-- exact `browserTestName`, the stable browser check name used by the agent-browser evidence and fallback Playwright test.
+- exact browser descriptor `{ file, testName, budget }`: the product-owned spec path, stable browser test name, and protected semantic budget.
 - `controlPartCoverage` when the control is compound.
 - `canvasSizingCoverage: "fixed-output-size"` only for non-product/internal `fixed-output` fixtures.
 - `canvasSizingCoverage: "intrinsic-media-size"` only for explicit media-viewer/source-native upload apps where imported media natural dimensions intentionally own `canvas.size`.
@@ -81,9 +80,15 @@ Protected Vitest and Playwright reporters evaluate passed runner results plus ma
 
 The `e2e/app-browser-*` prefix is reserved for signed framework specs.
 
-## Semantic Proof Ownership
+## Proof Boundaries
 
-Every runtime production module/resource has a direct owner in `src/app/app-verification-impact.json`; proof and test paths cannot own them. Each browser file owns one acceptance domain (the first ID segment). Later delivery compares semantic models and selects changed contracts, owners/domains, and product-unit tests—not filenames or reverse imports. Additive owner deltas select only new IDs; other deltas retain affected IDs.
+The immutable initial delivery receipt is the lifecycle boundary. Before it exists, first delivery runs one complete bare `pnpm verify:delivery` and no measured performance. First delivery may still collect the complete product catalog. Later edits after receipt run the exact unit/component test while developing and `pnpm test:feature -- <acceptance-id>` once after the behavior is stable. On failure, diagnose and rerun only the failed acceptance ID.
+
+Do not automatically run typecheck, AI/code-health, build, raw full browser, delivery, export/reload/theme/DPR matrices, framework tests, benchmarks, or measured performance. Each conditional extra requires a direct reason tied to the changed behavior. A repeated bare delivery is a protected no-op.
+
+The command loads current app source once through Vite and starts one Playwright process restricted to the selected file set. It does not run Playwright `--list` or collect the global Playwright catalog; unrelated specs stay unloaded. Invalid IDs, titles, or plans fail before browser startup.
+
+Every browser proof uses the exact descriptor `{ file, testName, budget }`. `standard` is 30 seconds; semantic `extended-io` is 120 seconds and requires declared I/O evidence. Product code cannot set arbitrary browser timeouts.
 
 Classifier output establishes complaint authority only; unresolved localization creates no intent/path regardless of result. Only localized/clarified work starts an iteration.
 
@@ -91,7 +96,7 @@ Contract docs are signed except product-owned `agent-worklog.md` and optional `w
 
 Framework meta-tests are product-invariant: their synthetic validator cases use protected neutral contract fixtures, never the editable app schema, product acceptance rows, transfer intent, or section inventory. Put exact product targets, defaults, option values, and product-specific expectations in separate app-owned tests. The product gates still read `app-schema.ts`, `app-acceptance-data.ts`, product test names, worklog evidence, and browser scenarios dynamically.
 
-The same ownership split applies to performance: edit `app-performance.ts`, `app-verification-impact.json`, product performance path adapters, and the kernel candidate harness when assessment requires it. Do not edit supplied `app-performance.*` meta-tests, protected reporters, receipt writers, or `app-performance-test-utils.ts`; they validate product inputs and own execution evidence.
+For performance work, edit `app-performance.ts`, product performance path adapters, and the kernel candidate harness when assessment requires it. Do not edit supplied `app-performance.*` meta-tests, protected reporters, receipt writers, or `app-performance-test-utils.ts`; they validate product inputs and own execution evidence.
 
 Slider and range slider rows must prove live behavior. Browser tests should drag the real thumb and assert the runtime value and product-level canvas observable update during the drag, not only after pointer release, blur, an Apply action, or a final commit. Performance-sensitive sliders still need this live acceptance; jank is handled through renderer optimization and targeted performance coverage, not by making the slider deferred by default.
 
@@ -99,7 +104,7 @@ Slider and range slider rows must prove live behavior. Browser tests should drag
 
 ## Infinity Canvas Coverage
 
-Every editable-output app proves `infinityCanvasCoverage`. Background proof covers color, viewport, disable/restore, and finite size. Preview checks the runtime scene against its exact `sceneBoundsProvider` union and real edge pixels; app selectors fail. Raster backing follows `useToolcraftProductSceneFrame`, not dormant finite size. Image/video decode the same bounds; video unions scheduled states. Fixed recipes cover excluded, empty, unavailable, and oversized scenes. See `core/setup-export.md`.
+Editable output proves `infinityCanvasCoverage: "mode-continuity-and-restoration"`; its dedicated evidence is `infinity-mode-continuity`. Both toggles prove only boundary, clipping, and size controls change. View, world frames, renderer identity, `useToolcraftProductSceneFrame` backing, and provider rect stay stable; disabling restores size/clipping without centering. Live/export share that rect; fallback is finite-only. Source pixels are not image scene geometry. Infinity export proves contributor-union crop and typed failures.
 
 ## Render Scale Coverage
 
@@ -179,7 +184,7 @@ High-confidence wrong-substitution cases:
 
 ## Interaction Ownership Evidence
 
-Product readiness declares `interactionOwnership`. Canvas handles, custom interactions, and panel controls sharing a canvas target bind `interactionId`. Acceptance rejects one id on both surfaces, renamed copies of the same target/capability, bad links, or choices lacking evidence and an alternate-surface reason. Distinct capabilities may share state across surfaces and are proved separately.
+`interactionOwnership` gives each operation one surface; linked canvas/panel operations must be complementary, not renamed copies. Property edits declare global or selected `selectionScope`; selected properties name a selection owner and `selectionScopeCoverage: "two-entity-isolation"`. Protected Canvas/Panel pixels prove selection is inert, editing A changes only A, editing B changes only B, and the control rebinds. `selectedLayer.*` reuses this recipe; whole-canvas/signature/direct-command proof is invalid.
 
 `fileDrop` rows prove upload/admission, clear/remove, reset/default restoration, and binary/model lifecycle. Without Layers ownership they also prove image rotate/flip and `multiple` reorder. With `panels.layers` and typed media-management ownership, omit those claims from `fileDrop`: runtime `layerCoverage: "reorder"` and `"selected-layer-controls"` rows prove order and selected-transform output. Clear-only proof is invalid; Reset restores defaults or removes uploaded media.
 
@@ -203,7 +208,7 @@ Custom controls cannot be justified by icons, layout, styling, compactness, or c
 Valid acceptance evidence includes:
 
 - rendered product pixels;
-- exported image/video bytes;
+- exported image/SVG/video bytes;
 - canvas hash or DOM-visible product result;
 - clipboard, file, or blob payload;
 - cleared media preview and canvas;
@@ -212,7 +217,7 @@ Valid acceptance evidence includes:
 - changed timeline playback state plus rendered frame.
 - restored persisted value or product output after browser reload.
 
-Product apps include artifact acceptance only for the delivery enabled by `productReadiness.exportIntent`. Image-only products prove complete image coverage; image-plus-video products prove both; video-only products prove complete video coverage; explicit no-export products have no image/video artifact rows. Timeline playback, keyframes, or animation never add video acceptance. Clipboard copy can be tested as an additional behavior, but it cannot substitute for the recorded artifact intent.
+Artifact acceptance follows `productReadiness.exportIntent`. Image/video use complete artifact coverage; requested SVG adds `all-required-svg-export-behavior` and protected exact-download vector proof. Explicit no-export products have no artifact rows. Renderer technology never adds SVG, and timeline behavior never adds video. Clipboard proof cannot replace recorded artifact intent.
 
 Export-content proof is distinct from export mechanics: content inspects selected artifact semantics; mechanics proves lifecycle, format, dimensions, transport, and errors. Neither substitutes.
 
@@ -230,7 +235,7 @@ Local `actions` acceptance must click every visible action and prove the nearby 
 
 Image export proves background changes in preview/artifact/infinite viewport; Background off restores finite mode, disables Infinity, hides bounded preview background, and makes PNG transparent while JPEG/video stay opaque. Restoring it enables Infinity availability without entering that mode. Protected proof decodes real type, selected dimensions, product bounds/pixels, and pixel hash; bytes or dimensions alone are insufficient.
 
-Hard acceptance semantics are typed, not inferred from English prose. Control applicability derives exact pairwise cases from the control's section-inventory peers for both `always` and `conditional` controls. Each non-matching case requires target absence. Each matching case requires target presence plus every existing product outcome on that acceptance row, under a canonical case-suffixed requirement ID. A missing predicate therefore cannot hide behind a passing default branch. The `export.includeBackground` row separately declares `backgroundOutputCoverage` for preview exclusion and transparent image alpha, plus preserved video background when the schema exposes video export. Its protected recipe verifies the preview transition, decodes a non-empty image artifact and checks background alpha, and inspects video background behavior when applicable. `expectedObservable` and `userAction` remain human-readable context and may use any language; matching words such as “hidden”, “PNG”, or “video” never satisfy these requirements by themselves.
+Hard acceptance semantics are typed, not inferred from prose. Both selector roles come from required `finiteSelectors`. Applicability cases come only from a `branch` selector's exact `affectedTargets` plus explicit `applicability` predicates; no section-wide fanout exists. A `parameter` still proves its own accepted outcome and option coverage but adds no peer cases. Predicate owners are branches, preserving missing-predicate detection. Non-matches prove absence; matches and declared branch peers prove presence plus the row's existing product outcomes under canonical case-suffixed requirement IDs. The `export.includeBackground` row separately declares `backgroundOutputCoverage` for preview exclusion, transparent image alpha, and preserved video background when exposed. Its protected recipe verifies those preview and artifact semantics. `expectedObservable` and `userAction` remain human-readable context; words such as “hidden”, “PNG”, or “video” never satisfy evidence by themselves.
 
 Invalid final acceptance evidence:
 
@@ -245,16 +250,16 @@ If a behavior cannot be proven through product output or a side effect, remove t
 
 ## Browser Gate
 
-Browser tests must open the running app and interact with the real UI by pointer, keyboard, file upload, canvas drag, toolbar click, timeline scrub, or layer drag.
+Browser proof uses real UI/stable canvas; direct commands are for command APIs.
 
-Do not dispatch runtime commands directly for browser acceptance unless the entity is itself a command API. Browser tests must exercise what the user actually sees.
-
-Every browser test should prove:
-
-- the interaction is possible;
-- runtime state changes through the expected target;
-- product output or command side effect changes;
-- canvas zoom, offset, and output dimensions do not jump unexpectedly.
+See [VGPU setup](renderer-technique.md#opt-in-vgpu-setup).
+`rendererTechnique.gpu.preview` proves provider, public `canvas-surface` or
+`target-readback`, backing/pixels, unsupported, teardown;
+`rendererTechnique.gpu.export` proves offscreen target-readback pixels/typed
+rejection; preview-only VGPU selection: no export proof;
+export-only VGPU selection: no preview proof; asynchronous retained-resource
+feedback/storage apps settle `operation-started`/`operation-settled`
+and `retirement-started`/`retirement-settled`.
 
 Acceptance rows with `product-output`, `rendered-pixels`, or `timeline-output` evidence use protected `expectToolcraftProductObservableToChange` with the row `id` as `requirementId`. The generic `expectToolcraftAcceptanceOutcome` is intentionally limited to `command-side-effect`; it cannot emit media, persistence, viewport, layer, timeline, or compound-control evidence. Use `expectToolcraftMediaLifecycle`, `expectToolcraftPersistenceState`, and `expectToolcraftViewportSideEffect` for those state semantics. These recipes require an exact expected outcome after the real action and a bounded stability window; persistence additionally requires a real reload, media requires changed item ids plus product-output semantics, and viewport requires changed offset/zoom while output dimensions stay stable. Generic changed-output proof first samples a stable pre-action baseline. If the product output is autonomous or animated, pause/fix its phase or observe a stable expected semantic result; the next unrelated animation frame is not action evidence. A transient or merely different value is not proof. `getToolcraftProductObservableSnapshot` may establish a baseline, but a snapshot read alone is not mutation evidence. Product tests must not import the internal attachment recorder or reserved evidence contract directly or through product-owned bridges.
 
@@ -268,16 +273,17 @@ Animated viewport tests must also prove that canvas drag, pan, pinch, zoom, and 
 
 ## Video References
 
-When a video, GIF, screen recording, contact sheet, or extracted-frame sequence is used as a reference, acceptance is driven by `appTransferMode.videoReferenceStudy`.
+When a video, GIF, screen recording, contact sheet, or extracted-frame sequence
+is used as a reference, acceptance is driven by typed
+`appTransferMode.referenceInputs`. Each authored behavior points to one
+observable acceptance row, and that row owns the exact reverse
+`motionReferenceCoverage` pair plus browser `reference-parity` evidence. The
+semantic validator requires complete phases and exactly one classification for
+every detected event. Follow `core/reference-study.md` for preprocessing,
+sampling, artifacts, timing, worklog records, and the no-reference fast path.
 
-- `storyboard` records timecoded frames with visible state and behavior observations;
-- `transitionAnalysis` records frame-to-frame deltas, not only isolated frame descriptions;
-- `behaviorDecomposition` states which observed behaviors must be copied;
-- `acceptanceMapping` maps each observed video behavior to a real acceptance row;
-- mapped acceptance rows must be automated, browser-backed, and observable in product output, timeline output, export output, or a real command side effect;
-- `agent-worklog.md` records Video Reference Study evidence when `Reference inputs`, `Source/reference checked`, or `Source reviewed` cites video, GIF, screen recording, contact sheet, or extracted frames.
-
-Do not accept a video reference implementation proved only by a single screenshot, a visual summary, generic canvas hashes, or static style checks.
+Do not accept a motion-reference implementation proved only by a single
+screenshot, a visual summary, generic canvas hashes, or static style checks.
 
 ## Reference Clone
 
@@ -318,6 +324,6 @@ Performance browser tests use the derived path matrix. Each path has one browser
 
 ## Fixtures
 
-Use fixtures that make each behavior visible. For example, background character-size controls need visible background characters, transparency needs alpha-sensitive pixels, selected-layer controls need multiple layers, timeline controls need deterministic playback or keyframe fixtures, and mode-specific controls need fixtures for every mode branch. Applicability coverage proves matching controls visible, non-matching controls absent, values preserved after switching away and back, and the accepted renderer/export outcome in every visible finite sibling branch. Count-controlled control banks prove the numeric boundary states; the test fails if inactive controls remain visible or a visible control is ignored by the renderer.
+Use fixtures that make each behavior visible. For example, background character-size controls need visible background characters, transparency needs alpha-sensitive pixels, selected-layer controls need multiple layers, timeline controls need deterministic playback or keyframe fixtures, and mode-specific controls need fixtures for every mode branch. Applicability coverage proves matching controls visible, non-matching controls absent, values preserved after switching away and back, and the accepted renderer/export outcome in every derived branch or predicate case. Count-controlled control banks prove the numeric boundary states; the test fails if inactive controls remain visible or a visible control is ignored by the renderer.
 
 Generic hash differences are not enough for semantic controls. If a control promises a direction, test that direction.

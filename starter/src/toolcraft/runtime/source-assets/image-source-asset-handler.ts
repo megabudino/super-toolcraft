@@ -99,7 +99,7 @@ export const toolcraftImageSourceAssetHandler: ToolcraftSourceAssetHandler<
           position: context.batch.position
             ? { ...context.batch.position }
             : { x: 0, y: 0 },
-          size: imported.size,
+          sourceSize: imported.size,
           resourceRef,
           ...(context.plan.sourceTarget
             ? { sourceTarget: context.plan.sourceTarget }

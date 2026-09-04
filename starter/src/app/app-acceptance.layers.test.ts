@@ -68,8 +68,11 @@ describe("starter acceptance layers contract", () => {
           {
             automated: true,
             automatedTestName: "opacity changes rendered output",
-            browser: true,
-            browserTestName: "browser: opacity slider changes rendered output",
+            browser: {
+              budget: "standard",
+              file: "e2e/app-controls.spec.ts",
+              testName: "browser: opacity slider changes rendered output",
+            },
             componentType: "slider",
             evidence: "rendered-pixels",
             expectedObservable: "Changing Opacity changes layer transparency.",
@@ -125,8 +128,11 @@ describe("starter acceptance layers contract", () => {
           {
             automated: true,
             automatedTestName: "layer selection changes selected runtime layer",
-            browser: true,
-            browserTestName: "browser: layers selection changes selected runtime layer",
+            browser: {
+              budget: "standard",
+              file: "e2e/app-controls.spec.ts",
+              testName: "browser: layers selection changes selected runtime layer",
+            },
             componentType: "layers",
             evidence: "product-output",
             expectedObservable: "Selecting another layer changes which output layer is edited.",
@@ -139,8 +145,11 @@ describe("starter acceptance layers contract", () => {
           {
             automated: true,
             automatedTestName: "layer visibility hides nested layer output",
-            browser: true,
-            browserTestName: "browser: layers visibility hides nested layer output",
+            browser: {
+              budget: "standard",
+              file: "e2e/app-controls.spec.ts",
+              testName: "browser: layers visibility hides nested layer output",
+            },
             componentType: "layers",
             evidence: "product-output",
             expectedObservable: "Toggling layer visibility removes that layer from output.",
@@ -153,8 +162,11 @@ describe("starter acceptance layers contract", () => {
           {
             automated: true,
             automatedTestName: "layer reorder changes render order",
-            browser: true,
-            browserTestName: "browser: layers reorder changes render order",
+            browser: {
+              budget: "standard",
+              file: "e2e/app-controls.spec.ts",
+              testName: "browser: layers reorder changes render order",
+            },
             componentType: "layers",
             evidence: "product-output",
             expectedObservable: "Dragging a layer changes composited render order.",
@@ -167,8 +179,11 @@ describe("starter acceptance layers contract", () => {
           {
             automated: true,
             automatedTestName: "layer grouping nests layer output",
-            browser: true,
-            browserTestName: "browser: layers grouping nests layer output",
+            browser: {
+              budget: "standard",
+              file: "e2e/app-controls.spec.ts",
+              testName: "browser: layers grouping nests layer output",
+            },
             componentType: "layers",
             evidence: "product-output",
             expectedObservable: "Dragging a layer into a group nests it and group visibility affects the nested output.",
@@ -181,8 +196,11 @@ describe("starter acceptance layers contract", () => {
           {
             automated: true,
             automatedTestName: "opacity changes rendered output",
-            browser: true,
-            browserTestName: "browser: opacity slider changes rendered output",
+            browser: {
+              budget: "standard",
+              file: "e2e/app-controls.spec.ts",
+              testName: "browser: opacity slider changes rendered output",
+            },
             componentType: "slider",
             evidence: "rendered-pixels",
             expectedObservable: "Changing Opacity changes layer transparency.",
@@ -196,7 +214,8 @@ describe("starter acceptance layers contract", () => {
       }),
     ).toEqual(
       expect.arrayContaining([
-        'Layer / opacity (selectedLayer.opacity) targets selectedLayer.* and must have acceptance layerCoverage "selected-layer-controls" proving the control edits the currently selected layer output.',
+        'selectedLayer.opacity must declare selectionScopeCoverage "two-entity-isolation" proving edits stay on the selected entity.',
+        'selectedLayer.opacity targets selectedLayer.* and must declare layerCoverage "selected-layer-controls" together with two-entity isolation.',
       ]),
     );
   });

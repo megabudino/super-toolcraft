@@ -27,6 +27,7 @@ describe("starter acceptance reference-runtime foundation", () => {
             "renderer-loop",
           ],
           mode: "reference-runtime-clone",
+          referenceInputs: [],
           referenceName: "legacy badge wall",
           sourceOfTruth: "reference-runtime",
         } as never,
@@ -57,6 +58,7 @@ describe("starter acceptance reference-runtime foundation", () => {
         transferMode: {
           behaviorCoverage: ["canvas-sizing", "control-mapping", "renderer-state"],
           mode: "reference-runtime-clone",
+          referenceInputs: [],
           referenceName: "legacy badge wall",
           referenceTimeline: { behaviorCoverage: [], mode: "none" },
           sourceOfTruth: "reference-runtime",
@@ -86,6 +88,7 @@ describe("starter acceptance reference-runtime foundation", () => {
         transferMode: {
           behaviorCoverage: ["canvas-sizing", "control-mapping", "renderer-state"],
           mode: "reference-runtime-clone",
+          referenceInputs: [],
           referenceFeatureInventory: makeReferenceFeatureInventory(),
           referenceName: "legacy badge wall",
           referenceTimeline: { behaviorCoverage: [], mode: "none" },
@@ -110,6 +113,7 @@ describe("starter acceptance reference-runtime foundation", () => {
         transferMode: {
           behaviorCoverage: ["canvas-sizing", "control-mapping", "renderer-state"],
           mode: "reference-runtime-clone",
+          referenceInputs: [],
           referenceFeatureInventory: makeReferenceFeatureInventory(),
           referenceName: "legacy badge wall",
           referenceStudy: {
@@ -141,6 +145,7 @@ describe("starter acceptance reference-runtime foundation", () => {
         transferMode: {
           behaviorCoverage: ["canvas-sizing", "control-mapping", "renderer-state"],
           mode: "reference-runtime-clone",
+          referenceInputs: [],
           referenceFeatureInventory: [
             {
               acceptanceId: "appearance.opacity",
@@ -180,6 +185,7 @@ describe("starter acceptance reference-runtime foundation", () => {
         transferMode: {
           behaviorCoverage: ["canvas-sizing", "control-mapping", "renderer-state"],
           mode: "reference-runtime-clone",
+          referenceInputs: [],
           referenceFeatureInventory: [
             { ...makeReferenceFeatureInventory()[0], behaviorEvidence: "" },
             ...makeReferenceFeatureInventory().slice(1),
@@ -208,6 +214,7 @@ describe("starter acceptance reference-runtime foundation", () => {
         transferMode: {
           behaviorCoverage: ["canvas-sizing", "control-mapping", "renderer-state"],
           mode: "reference-runtime-clone",
+          referenceInputs: [],
           referenceFeatureInventory: [
             {
               ...makeReferenceFeatureInventory()[0],
@@ -249,8 +256,11 @@ describe("starter acceptance reference-runtime foundation", () => {
           {
             automated: true,
             automatedTestName: "reference canvas size matches legacy renderer",
-            browser: true,
-            browserTestName: "browser: reference canvas size matches legacy renderer",
+            browser: {
+              budget: "standard",
+              file: "e2e/app-controls.spec.ts",
+              testName: "browser: reference canvas size matches legacy renderer",
+            },
             componentType: "custom-renderer",
             evidence: "rendered-pixels",
             expectedObservable: "The Toolcraft renderer uses the same output dimensions as the reference runtime.",
@@ -263,8 +273,11 @@ describe("starter acceptance reference-runtime foundation", () => {
           {
             automated: true,
             automatedTestName: "reference control mapping preserves legacy output",
-            browser: true,
-            browserTestName: "browser: reference control mapping preserves legacy output",
+            browser: {
+              budget: "standard",
+              file: "e2e/app-controls.spec.ts",
+              testName: "browser: reference control mapping preserves legacy output",
+            },
             componentType: "custom-renderer",
             evidence: "product-output",
             expectedObservable: "Changing each mapped control updates the same renderer parameter as the reference app.",
@@ -277,8 +290,11 @@ describe("starter acceptance reference-runtime foundation", () => {
           {
             automated: true,
             automatedTestName: "reference renderer state preserves legacy lifecycle",
-            browser: true,
-            browserTestName: "browser: reference renderer state preserves legacy lifecycle",
+            browser: {
+              budget: "standard",
+              file: "e2e/app-controls.spec.ts",
+              testName: "browser: reference renderer state preserves legacy lifecycle",
+            },
             componentType: "custom-renderer",
             evidence: "product-output",
             expectedObservable: "The renderer preserves the reference runtime mutable state lifecycle across frames.",
@@ -292,6 +308,7 @@ describe("starter acceptance reference-runtime foundation", () => {
         transferMode: {
           behaviorCoverage: ["canvas-sizing", "control-mapping", "renderer-state"],
           mode: "reference-runtime-clone",
+          referenceInputs: [],
           referenceName: "legacy iframe shell",
           referenceTimeline: { behaviorCoverage: [], mode: "none" },
           sourceOfTruth: "reference-runtime",

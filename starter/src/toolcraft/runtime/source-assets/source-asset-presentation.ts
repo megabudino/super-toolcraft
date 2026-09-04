@@ -133,7 +133,7 @@ export function createToolcraftSourceAssetPresentation(
     id: asset.id,
     ...(asset.assetKind === "image"
       ? {
-          size: asset.size,
+          size: asset.sourceSize,
           transform: asset.transform,
         }
       : {}),

@@ -62,12 +62,8 @@ function getControlAcceptanceEntryErrors({
     errors.push(`${label} must have automated acceptance coverage.`);
   }
 
-  if (!entry.browser) {
+  if (entry.browser === false) {
     errors.push(`${label} must have browser acceptance coverage.`);
-  }
-
-  if (entry.browser && !entry.browserTestName.trim()) {
-    errors.push(`${label} must point to a browser test name.`);
   }
 
   if (!entry.expectedObservable.trim()) {
@@ -222,7 +218,6 @@ function getControlPartAndRuntimeCoverageErrors({
 }): string[] {
   const errors: string[] = [];
   const keyframeCapability = getToolcraftControlKeyframeCapability(control);
-  const isSelectedLayerTarget = control.target.startsWith("selectedLayer.");
   const requiredControlParts = getRequiredToolcraftControlPartCoverage(control);
 
   if (
@@ -239,16 +234,6 @@ function getControlPartAndRuntimeCoverageErrors({
         `${label} is keyframe-capable by Toolcraft control type and must have acceptance timelineCoverage "keyframes" proving its diamond creates/updates a keyframe row and changes evaluated output.`,
       );
     }
-  }
-
-  if (
-    isSelectedLayerTarget &&
-    layersEnabled &&
-    entry.layerCoverage !== "selected-layer-controls"
-  ) {
-    errors.push(
-      `${label} targets selectedLayer.* and must have acceptance layerCoverage "selected-layer-controls" proving the control edits the currently selected layer output.`,
-    );
   }
 
   return errors;

@@ -11,6 +11,7 @@ import { makeControlAcceptance } from "./app-acceptance.test-utils";
 const imageExportProductReadiness: ToolcraftProductReadiness = {
   exportIntent: {
     image: { mode: "toolcraft-default" },
+    svg: { mode: "not-requested" },
     video: { mode: "not-requested" },
   },
   interactionOwnership: [],
@@ -28,6 +29,7 @@ const videoExportProductReadiness: ToolcraftProductReadiness = {
   ...imageExportProductReadiness,
   exportIntent: {
     image: { mode: "toolcraft-default" },
+    svg: { mode: "not-requested" },
     video: {
       evidence: "The background fixture explicitly exercises video background export.",
       mode: "user-requested",
@@ -77,8 +79,11 @@ describe("Toolcraft background export acceptance contract", () => {
             actionCoverage: ["export.png"],
             automated: true,
             automatedTestName: "exports png output",
-            browser: true,
-            browserTestName: "browser: exports png output",
+            browser: {
+              budget: "standard",
+              file: "e2e/app-controls.spec.ts",
+              testName: "browser: exports png output",
+            },
             componentType: "panelActions",
             evidence: "exported-bytes",
             expectedObservable: "Export PNG creates output bytes.",
@@ -155,8 +160,11 @@ describe("Toolcraft background export acceptance contract", () => {
             actionCoverage: ["export.png"],
             automated: true,
             automatedTestName: "exports png output",
-            browser: true,
-            browserTestName: "browser: exports png output",
+            browser: {
+              budget: "standard",
+              file: "e2e/app-controls.spec.ts",
+              testName: "browser: exports png output",
+            },
             componentType: "panelActions",
             evidence: "exported-bytes",
             expectedObservable: "Export PNG creates output bytes.",
@@ -232,8 +240,11 @@ describe("Toolcraft background export acceptance contract", () => {
           actionCoverage: ["export.png"],
           automated: true,
           automatedTestName: "exports png output with current background settings",
-          browser: true,
-          browserTestName: "browser: exports png output with current background settings",
+          browser: {
+            budget: "standard",
+            file: "e2e/app-controls.spec.ts",
+            testName: "browser: exports png output with current background settings",
+          },
           componentType: "panelActions",
           evidence: "exported-bytes",
           expectedObservable: "Export PNG creates output bytes and reads background color plus include-background state.",
@@ -301,8 +312,11 @@ describe("Toolcraft background export acceptance contract", () => {
             actionCoverage: ["export.png"],
             automated: true,
             automatedTestName: "exports png output with current background settings",
-            browser: true,
-            browserTestName: "browser: exports png output with current background settings",
+            browser: {
+              budget: "standard",
+              file: "e2e/app-controls.spec.ts",
+              testName: "browser: exports png output with current background settings",
+            },
             componentType: "panelActions",
             evidence: "exported-bytes",
             expectedObservable: "Export PNG creates output bytes and reads background color plus include-background state.",

@@ -66,14 +66,8 @@ export function createToolcraftCanvasModePatch(
   }
 
   return tagToolcraftCanvasStateHistoryPatch({
-    after: {
-      "canvas.mode": "finite",
-      "canvas.offset": { x: 0, y: 0 },
-    },
-    before: {
-      "canvas.mode": "infinite",
-      "canvas.offset": canvas.offset,
-    },
+    after: { "canvas.mode": "finite" },
+    before: { "canvas.mode": "infinite" },
     label: "Disable Infinity canvas",
   });
 }

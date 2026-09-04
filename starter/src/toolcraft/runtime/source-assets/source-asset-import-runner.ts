@@ -1,4 +1,5 @@
 import type { ToolcraftControlSchema } from "../schema/types";
+import { normalizeToolcraftMediaImportIngress } from "../state/media-import-ingress";
 import { createToolcraftMediaImportAllocation } from "../state/media-import-allocation";
 import type { ToolcraftCommand, ToolcraftState } from "../state/types";
 import {
@@ -340,8 +341,8 @@ export function createToolcraftSourceAssetImportRunner({
 
         let assetIds: readonly string[];
         if (defaultReplacement) {
-          const draft = assets[0];
-          if (assets.length !== 1 || draft?.assetKind !== "model") {
+          const draft = prepared.assets[0];
+          if (prepared.assets.length !== 1 || draft?.assetKind !== "model") {
             throw new Error(
               "Default model import must prepare exactly one model asset.",
             );
@@ -370,17 +371,35 @@ export function createToolcraftSourceAssetImportRunner({
           }
           assetIds = Object.freeze([defaultReplacement.assetId]);
         } else {
-          const command = {
+          const state = getState();
+          const canonicalAssets = normalizeToolcraftMediaImportIngress(
             assets,
+            {
+              canvasMode: state.canvas.mode,
+              canvasSize: state.canvas.size,
+              sizingMode: state.schema.canvas.sizing.mode,
+            },
+          ).map((asset) => Object.freeze(asset));
+          const allocation = createToolcraftMediaImportAllocation(state, {
+            assets: canonicalAssets,
             replaceExisting: plan.replaceExisting,
-            type: "media.importBatch" as const,
-          };
-          assetIds = Object.freeze(
-            createToolcraftMediaImportAllocation(getState(), command).items.map(
-              (item) => item.mediaId,
+          });
+          const canonicalAllocation = Object.freeze({
+            baseLayers: Object.freeze([...allocation.baseLayers]),
+            baseMediaAssets: Object.freeze([...allocation.baseMediaAssets]),
+            items: Object.freeze(
+              allocation.items.map((item) => Object.freeze({ ...item })),
             ),
+          });
+          assetIds = Object.freeze(
+            canonicalAllocation.items.map((item) => item.mediaId),
           );
-          dispatch(command);
+          dispatch(
+            Object.freeze({
+              allocation: canonicalAllocation,
+              type: "media.commitCanonicalImportAllocation",
+            }),
+          );
         }
 
         finishOperation(job);

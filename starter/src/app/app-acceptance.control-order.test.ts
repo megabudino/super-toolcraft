@@ -10,10 +10,12 @@ import {
 } from "./acceptance/control-order";
 import {
   contractSchemaFixture,
+  createContractSectionInventoryFixture,
   defineContractSchemaFixture,
   validateContractAcceptance,
   validateContractAcceptanceDiagnostics,
 } from "./app-acceptance.contract-fixtures";
+import type { ToolcraftComponentAcceptance } from "./acceptance/types";
 
 const SCREENSHOT_LABELS = ["Default", "Ink Drops", "Solar", "Background"];
 const BOUNDARY_LABELS = ["Ink Drops", "Default", "Solar", "RGB"];
@@ -58,12 +60,15 @@ function createRawCollectionModesSchema(
   };
 }
 
-const collectionModesAcceptance = [
+const collectionModesAcceptance: readonly ToolcraftComponentAcceptance[] = [
   {
     automated: true,
     automatedTestName: "collection modes update rendered output",
-    browser: true,
-    browserTestName: "browser: collection modes update rendered output",
+    browser: {
+      budget: "standard",
+      file: "e2e/app-controls.spec.ts",
+      testName: "browser: collection modes update rendered output",
+    },
     componentType: "collectionActions",
     controlPartCoverage: [
       "collectionActions.add",
@@ -129,8 +134,11 @@ describe("starter acceptance control order contract", () => {
           {
             automated: true,
             automatedTestName: "depth changes rendered output",
-            browser: true,
-            browserTestName: "browser: depth slider changes rendered output",
+            browser: {
+              budget: "standard",
+              file: "e2e/app-controls.spec.ts",
+              testName: "browser: depth slider changes rendered output",
+            },
             componentType: "slider",
             evidence: "rendered-pixels",
             expectedObservable: "Changing Depth changes shader contrast.",
@@ -143,8 +151,11 @@ describe("starter acceptance control order contract", () => {
           {
             automated: true,
             automatedTestName: "mode changes rendered output",
-            browser: true,
-            browserTestName: "browser: mode selector changes rendered output",
+            browser: {
+              budget: "standard",
+              file: "e2e/app-controls.spec.ts",
+              testName: "browser: mode selector changes rendered output",
+            },
             componentType: "segmented",
             evidence: "rendered-pixels",
             expectedObservable: "Changing Mode switches shader pattern.",
@@ -204,6 +215,7 @@ describe("starter acceptance control order contract", () => {
                   variant: "continuous",
                 },
               },
+              id: "volume",
               title: "Volume",
             },
           ],
@@ -228,8 +240,11 @@ describe("starter acceptance control order contract", () => {
           {
             automated: true,
             automatedTestName: "blend changes rendered output",
-            browser: true,
-            browserTestName: "browser: blend selector changes rendered output",
+            browser: {
+              budget: "standard",
+              file: "e2e/app-controls.spec.ts",
+              testName: "browser: blend selector changes rendered output",
+            },
             componentType: "segmented",
             evidence: "rendered-pixels",
             expectedObservable: "Changing Blend switches shader pattern.",
@@ -243,8 +258,11 @@ describe("starter acceptance control order contract", () => {
           {
             automated: true,
             automatedTestName: "depth changes rendered output",
-            browser: true,
-            browserTestName: "browser: depth slider changes rendered output",
+            browser: {
+              budget: "standard",
+              file: "e2e/app-controls.spec.ts",
+              testName: "browser: depth slider changes rendered output",
+            },
             componentType: "slider",
             evidence: "rendered-pixels",
             expectedObservable: "Changing Depth changes shader contrast.",
@@ -255,6 +273,22 @@ describe("starter acceptance control order contract", () => {
             userAction: "Drag the Depth slider.",
           },
         ],
+        sectionInventory: createContractSectionInventoryFixture(
+          schemaWithOrderedControls,
+          [{
+            entity: "Volume",
+            entityId: "volume",
+            finiteSelectors: [
+              {
+                reason: "Blend changes the shader output without changing peer relevance.",
+                role: "parameter",
+                target: "shader.blend",
+              },
+            ],
+            groupingReason: "Blend and depth define one rendered shader volume.",
+            id: "volume",
+          }],
+        ),
       }),
     ).toEqual([]);
   });
@@ -321,8 +355,11 @@ describe("starter acceptance control order contract", () => {
           {
             automated: true,
             automatedTestName: "fx preset changes rendered output",
-            browser: true,
-            browserTestName: "browser: fx preset selector changes rendered output",
+            browser: {
+              budget: "standard",
+              file: "e2e/app-controls.spec.ts",
+              testName: "browser: fx preset selector changes rendered output",
+            },
             componentType: "segmented",
             evidence: "rendered-pixels",
             expectedObservable: "Changing FX Preset switches the shader preset.",

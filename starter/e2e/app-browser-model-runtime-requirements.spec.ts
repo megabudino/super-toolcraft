@@ -30,8 +30,11 @@ test("model import coverage derives lifecycle-specific runtime evidence", () => 
   const requirements = deriveToolcraftBrowserRuntimeRequirements(
     [
       {
-        browser: true,
-        browserTestName: "browser: complete model import lifecycle",
+        browser: {
+          budget: "standard",
+          file: "e2e/app-controls.spec.ts",
+          testName: "browser: complete model import lifecycle",
+        },
         evidence: "media-lifecycle",
         id: "media.model",
         modelImportCoverage: "all-required-model-import-behavior",

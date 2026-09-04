@@ -1,4 +1,5 @@
 import {
+  getToolcraftFiniteArtboardRect,
   outwardRoundToolcraftSceneRect,
   type ToolcraftSceneBoundsResult,
   type ToolcraftSceneRect,
@@ -49,12 +50,7 @@ export function resolveToolcraftExportFrame(
   const canvas = getToolcraftCanvasFrame(state.canvas);
   if (canvas.kind === "finite") {
     return {
-      frame: {
-        height: canvas.size.height,
-        width: canvas.size.width,
-        x: 0,
-        y: 0,
-      },
+      frame: getToolcraftFiniteArtboardRect(canvas.size),
       ok: true,
     };
   }

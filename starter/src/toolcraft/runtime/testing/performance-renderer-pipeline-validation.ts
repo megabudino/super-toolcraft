@@ -247,6 +247,17 @@ function getRendererPipelineErrorsFromParsedPipeline(
       );
     }
 
+    const requiresGpu = pass.runsOn === "gpu" || pass.runsOn === "worker-or-gpu";
+    if (requiresGpu && pass.gpu === undefined) {
+      errors.push(
+        `rendererPipeline pass "${pass.id}" runs on ${pass.runsOn} and must declare gpu execution semantics.`,
+      );
+    } else if (!requiresGpu && pass.gpu !== undefined) {
+      errors.push(
+        `rendererPipeline pass "${pass.id}" runs on ${pass.runsOn} and must omit gpu execution semantics.`,
+      );
+    }
+
     if (!renderPassOutputs.has(pass.output)) {
       errors.push(
         `rendererPipeline pass "${pass.id}" output "${pass.output}" is not supported.`,
@@ -307,6 +318,7 @@ function getRendererPipelineErrorsFromParsedPipeline(
     );
 
     const mustNotInvalidate = new Set(invalidation.mustNotInvalidate ?? []);
+    const invalidatedPassIds = new Set(invalidation.invalidates);
 
     for (const passId of invalidation.invalidates) {
       if (!passId.trim()) {
@@ -350,6 +362,42 @@ function getRendererPipelineErrorsFromParsedPipeline(
       } else if (!passesById.has(passId)) {
         errors.push(
           `rendererPipeline ${invalidation.interaction} mustNotInvalidate unknown pass "${passId}".`,
+        );
+      }
+    }
+
+    for (const passId of invalidation.preparationInvalidates ?? []) {
+      if (!passId.trim()) {
+        errors.push(
+          `rendererPipeline ${invalidation.interaction} preparationInvalidates contains an empty pass id.`,
+        );
+      } else if (!passesById.has(passId)) {
+        errors.push(
+          `rendererPipeline ${invalidation.interaction} preparationInvalidates unknown pass "${passId}".`,
+        );
+      }
+    }
+
+    for (const passId of invalidation.retainedAccesses ?? []) {
+      if (!passId.trim()) {
+        errors.push(
+          `rendererPipeline ${invalidation.interaction} retainedAccesses contains an empty pass id.`,
+        );
+        continue;
+      }
+      const pass = passesById.get(passId);
+      if (!pass) {
+        errors.push(
+          `rendererPipeline ${invalidation.interaction} retainedAccesses unknown pass "${passId}".`,
+        );
+      } else if (pass.lifecycle?.cache !== "retained-resource") {
+        errors.push(
+          `rendererPipeline ${invalidation.interaction} retainedAccesses pass "${passId}" must use retained-resource lifecycle.`,
+        );
+      }
+      if (invalidatedPassIds.has(passId)) {
+        errors.push(
+          `rendererPipeline ${invalidation.interaction} cannot both invalidate and retain-access pass "${passId}".`,
         );
       }
     }

@@ -39,8 +39,11 @@ describe("starter acceptance timeline playback contract", () => {
           {
             automated: true,
             automatedTestName: "timeline playback controls drive rendered output",
-            browser: true,
-            browserTestName: "browser: timeline playback controls drive rendered output",
+            browser: {
+              budget: "standard",
+              file: "e2e/app-controls.spec.ts",
+              testName: "browser: timeline playback controls drive rendered output",
+            },
             componentType: "timeline",
             evidence: "timeline-output",
             expectedObservable: "Pause, scrub, and playback update visible renderer output.",
@@ -67,6 +70,7 @@ describe("starter acceptance timeline playback contract", () => {
         transferMode: {
           animationIntent: { mode: "timeline-playback" },
           mode: "new-toolcraft-app",
+          referenceInputs: [],
         } as unknown as ToolcraftTransferMode,
       }),
     ).toContain(
@@ -82,6 +86,7 @@ describe("starter acceptance timeline playback contract", () => {
         transferMode: {
           animationIntent: { mode: "none" },
           mode: "new-toolcraft-app",
+          referenceInputs: [],
         },
       }),
     ).toContain(
@@ -97,6 +102,7 @@ describe("starter acceptance timeline playback contract", () => {
         transferMode: {
           animationIntent: { mode: "none" },
           mode: "new-toolcraft-app",
+          referenceInputs: [],
         },
       }),
     ).toContain(
@@ -119,6 +125,7 @@ describe("starter acceptance timeline playback contract", () => {
             mode: "timeline-playback",
           },
           mode: "new-toolcraft-app",
+          referenceInputs: [],
         },
       }),
     ).toContain(
@@ -141,6 +148,7 @@ describe("starter acceptance timeline playback contract", () => {
             mode: "timeline-playback",
           },
           mode: "new-toolcraft-app",
+          referenceInputs: [],
         },
       }),
     ).toContain(
@@ -156,8 +164,11 @@ describe("starter acceptance timeline playback contract", () => {
           {
             automated: true,
             automatedTestName: "timeline duration edit drives renderer output",
-            browser: true,
-            browserTestName: "browser: timeline duration edit drives renderer output",
+            browser: {
+              budget: "standard",
+              file: "e2e/app-controls.spec.ts",
+              testName: "browser: timeline duration edit drives renderer output",
+            },
             componentType: "timeline",
             evidence: "timeline-output",
             expectedObservable: "Editing timeline duration changes the playback range and renderer follows state.timeline.durationSeconds.",
@@ -190,8 +201,11 @@ describe("starter acceptance timeline playback contract", () => {
           {
             automated: true,
             automatedTestName: "timeline duration edit verifies a seamless forward-only loop",
-            browser: true,
-            browserTestName: "browser: timeline duration edit verifies loop seam",
+            browser: {
+              budget: "standard",
+              file: "e2e/app-controls.spec.ts",
+              testName: "browser: timeline duration edit verifies loop seam",
+            },
             componentType: "timeline",
             evidence: "timeline-output",
             expectedObservable: "Editing timeline duration keeps a seamless forward-only loop and stitches first and last frames.",
@@ -230,8 +244,11 @@ describe("starter acceptance timeline playback contract", () => {
           {
             automated: true,
             automatedTestName: "timeline duration edit verifies a generic loop",
-            browser: true,
-            browserTestName: "browser: timeline duration edit verifies a generic loop",
+            browser: {
+              budget: "standard",
+              file: "e2e/app-controls.spec.ts",
+              testName: "browser: timeline duration edit verifies a generic loop",
+            },
             componentType: "timeline",
             evidence: "timeline-output",
             expectedObservable: "La salida mantiene el ciclo previsto tras editar la duración.",

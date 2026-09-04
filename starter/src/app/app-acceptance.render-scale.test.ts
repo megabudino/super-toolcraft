@@ -40,8 +40,11 @@ function makeRenderScaleAcceptance(
   return {
     automated: true,
     automatedTestName: "selected render scale preserves backing pixels",
-    browser: true,
-    browserTestName: "browser: selected render scale preserves backing pixels",
+    browser: {
+      budget: "standard",
+      file: "e2e/app-controls.spec.ts",
+      testName: "browser: selected render scale preserves backing pixels",
+    },
     componentType: "canvas",
     evidence: "rendered-pixels",
     expectedObservable:
@@ -90,7 +93,6 @@ describe("Toolcraft render-scale acceptance coverage", () => {
         acceptance: [
           makeRenderScaleAcceptance({
             browser: false,
-            browserTestName: "",
           }),
         ],
       }),

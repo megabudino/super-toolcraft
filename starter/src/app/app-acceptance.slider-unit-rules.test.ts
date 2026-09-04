@@ -38,8 +38,11 @@ describe("starter acceptance slider unit rules", () => {
           {
             automated: true,
             automatedTestName: "strength changes glass output",
-            browser: true,
-            browserTestName: "browser: strength slider changes glass output",
+            browser: {
+              budget: "standard",
+              file: "e2e/app-controls.spec.ts",
+              testName: "browser: strength slider changes glass output",
+            },
             componentType: "slider",
             evidence: "rendered-pixels",
             expectedObservable: "Changing Strength changes the rendered glass strength.",

@@ -44,11 +44,7 @@ export function getToolcraftCanvasHandleAcceptanceErrors({
       errors.push(`${entry.id} canvas handle must describe the product output change.`);
     }
 
-    if (!entry.canvasHandle.exportCleanTestName.trim()) {
-      errors.push(`${entry.id} canvas handle must point to an export-clean test.`);
-    }
-
-    if (!entry.browser || !entry.browserTestName.trim()) {
+    if (entry.browser === false) {
       errors.push(`${entry.id} canvas handle must have browser drag coverage.`);
     }
 

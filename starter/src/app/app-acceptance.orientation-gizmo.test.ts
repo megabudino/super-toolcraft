@@ -46,11 +46,12 @@ const orientationAcceptance: ToolcraftComponentAcceptance = {
   automated: true,
   automatedTestName:
     "orientation pose changes rendered model and undo resets it",
-  browser: true,
-  browserTestName:
-    "browser: orientation gizmo and direct model orbit share canvas ownership",
+  browser: {
+    budget: "standard",
+    file: "e2e/app-controls.spec.ts",
+    testName: "browser: orientation gizmo and direct model orbit share canvas ownership",
+  },
   canvasHandle: {
-    exportCleanTestName: "export excludes orientation gizmo",
     outputObservable: "The visible model follows the shared orbit pose.",
     testId: "toolcraft-orientation-gizmo",
     writesTarget: "view.orbit",

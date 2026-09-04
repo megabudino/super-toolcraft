@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   contractSchemaFixture,
+  createContractSectionInventoryFixture,
   defineContractSchemaFixture,
   validateContractAcceptance,
   validateContractAcceptanceDiagnostics,
@@ -63,8 +64,11 @@ describe("starter acceptance animation intent contract", () => {
           {
             automated: true,
             automatedTestName: "paused switch freezes output",
-            browser: true,
-            browserTestName: "browser: paused switch freezes output",
+            browser: {
+              budget: "standard",
+              file: "e2e/app-controls.spec.ts",
+              testName: "browser: paused switch freezes output",
+            },
             componentType: "switch",
             evidence: "timeline-output",
             expectedObservable: "Paused switch freezes the timeline output.",
@@ -77,8 +81,11 @@ describe("starter acceptance animation intent contract", () => {
           {
             automated: true,
             automatedTestName: "restart action resets output",
-            browser: true,
-            browserTestName: "browser: restart action resets output",
+            browser: {
+              budget: "standard",
+              file: "e2e/app-controls.spec.ts",
+              testName: "browser: restart action resets output",
+            },
             componentType: "actions",
             evidence: "timeline-output",
             expectedObservable: "Restart returns animation output to the first frame.",
@@ -133,8 +140,11 @@ describe("starter acceptance animation intent contract", () => {
           {
             automated: true,
             automatedTestName: "pause switch freezes output",
-            browser: true,
-            browserTestName: "browser: pause switch freezes output",
+            browser: {
+              budget: "standard",
+              file: "e2e/app-controls.spec.ts",
+              testName: "browser: pause switch freezes output",
+            },
             componentType: "switch",
             evidence: "timeline-output",
             expectedObservable: "Pause switch freezes animation output.",
@@ -220,7 +230,8 @@ describe("starter acceptance animation intent contract", () => {
                   type: "slider",
                   unit: "%",
                 },
-              },
+            },
+              id: "animation",
               title: "Animation",
             },
           ],
@@ -239,6 +250,16 @@ describe("starter acceptance animation intent contract", () => {
       validateContractAcceptance({
         schema: schemaWithAutonomousAnimation,
         acceptance: [makeControlAcceptance("animation.shimmer", "slider")],
+        sectionInventory: createContractSectionInventoryFixture(
+          schemaWithAutonomousAnimation,
+          [{
+            entity: "Animation",
+            entityId: "animation",
+            finiteSelectors: [],
+            groupingReason: "Shimmer controls the decorative animation output.",
+            id: "animation",
+          }],
+        ),
         transferMode: {
           animationIntent: {
             behaviorCoverage: [
@@ -253,6 +274,7 @@ describe("starter acceptance animation intent contract", () => {
             reason: "The shimmer is decorative self-running output and does not expose product time transport.",
           },
           mode: "new-toolcraft-app",
+          referenceInputs: [],
         },
       }),
     ).toEqual([]);
@@ -351,6 +373,7 @@ describe("starter acceptance animation intent contract", () => {
             reason: "The shader is decorative self-running output with no transport controls.",
           },
           mode: "new-toolcraft-app",
+          referenceInputs: [],
         },
       }),
     ).toContain(
@@ -377,6 +400,7 @@ describe("starter acceptance animation intent contract", () => {
             mode: "timeline-keyframes",
           },
           mode: "new-toolcraft-app",
+          referenceInputs: [],
         },
       }),
     ).toContain(

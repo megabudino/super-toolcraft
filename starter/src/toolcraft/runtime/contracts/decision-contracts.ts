@@ -53,12 +53,18 @@ export type ToolcraftDecisionRule = {
   verdict: ToolcraftDecisionVerdict;
 };
 
+export const TOOLCRAFT_INFINITY_CANVAS_DECISION_RULE_ID =
+  "infinity-canvas-scene-bounds" as const;
+
+export const TOOLCRAFT_INFINITY_CANVAS_CANONICAL_BEHAVIOR =
+  "Editable-output apps expose one runtime-owned Infinity canvas mode. Enabling it removes only the finite artboard boundary, clipping, and size controls; disabling it restores the dormant finite size and clipping at the current view without centering. Both transitions preserve canvas offset and zoom, product/image/model world frames, mounted component and renderer identity, and live custom-renderer backing. ToolcraftAppComposition.sceneBoundsProvider declares the product world frame for every exact state in both modes, and runtime gives live custom output and product export the same provider rect. Finite mode presents a centered artboard as the clip and output boundary without changing the canonical product frame; when no provider exists, only finite mode may fall back to that artboard rect. Source pixel dimensions never substitute for explicit image scene geometry. Infinity export outward-rounds and crops to the union of visible product, image, and model contributors; video unions every scheduled state. Hidden layers, suppressed default consumers, preview-only infiniteCanvasContent, and editor-only UI do not contribute. Empty, unavailable, and unsafe oversized Infinity exports return typed visible failures. The standard Background pair still owns the complete infinite viewport color, and Background off atomically restores finite mode and disables Infinity.";
+
 export const TOOLCRAFT_DECISION_CONTRACT = [
   {
     area: "runtime-shell",
     currentConstraint: "Apps must assemble through defineToolcraft and ToolcraftApp.",
     desiredBehavior:
-      "Generated apps use the Toolcraft runtime shell and keep product-specific rendering inside supported extension points: schema controls, bounded canvasContent product output, editor-only full-viewport infiniteCanvasContent product output, controlRenderers for true custom controls, one shared ToolcraftAppComposition.exportRenderer for typed image/video actions, ToolcraftApp onPanelAction for non-export product actions, and runtime commands. App-specific code must not import or render low-level runtime surfaces or built-in control components directly, instantiate encoders, or own artifact download mechanics.",
+      "Generated apps use the Toolcraft runtime shell and keep product-specific rendering inside supported extension points: schema controls, bounded canvasContent product output, editor-only full-viewport infiniteCanvasContent product output, controlRenderers for true custom controls, ToolcraftAppComposition.exportRenderer for typed image/video actions, svgExportRenderer for typed SVG, ToolcraftApp onPanelAction for non-export product actions, and runtime commands. App-specific code must not import or render low-level runtime surfaces or built-in control components directly, serialize artifacts, instantiate encoders, or own artifact download mechanics.",
     enforcement: [
       "cli-integrity-check",
       "acceptance-validator",
@@ -97,9 +103,8 @@ export const TOOLCRAFT_DECISION_CONTRACT = [
   {
     area: "canvas",
     currentConstraint:
-      "Editable output can switch from a finite artboard to an unbounded workspace, but product renderers and export actions still need one canonical world-space frame contract.",
-    desiredBehavior:
-      "Editable-output apps expose one runtime-owned Infinity canvas mode. Enabling it removes finite artboard clipping and size controls while preserving the dormant finite canvas size for exact restoration. When the standard Background pair exists, its selected color fills the complete infinite viewport and Background off atomically resolves finite mode and disables Infinity. Runtime image and model assets retain explicit world-space frames. ToolcraftAppComposition.sceneBoundsProvider supplies product-renderer bounds for one exact state through one direct composition boundary. Runtime applies that same product frame to the live infinite preview, and custom raster/WebGL renderers consume useToolcraftProductSceneFrame for backing size and world-to-local translation instead of the dormant finite canvas size. ToolcraftAppComposition.infiniteCanvasContent is reserved for preview-only product environments that fill the complete Infinity viewport without world transforms, pointer input, scene-bounds participation, or export inclusion. Image export resolves the current frame and video export unions every state from the runtime-owned timestamp schedule. Hidden layers, suppressed default consumers, viewport environments, and editor-only UI do not expand preview or output bounds. Finite preview and export remain the full finite canvas and do not call the provider, while empty, unavailable, and unsafe oversized infinite exports return typed visible failures.",
+      "Editable output has one canonical world-space product scene whose finite and infinite modes differ only in boundary presentation and output framing.",
+    desiredBehavior: TOOLCRAFT_INFINITY_CANVAS_CANONICAL_BEHAVIOR,
     enforcement: [
       "acceptance-validator",
       "browser-helper",
@@ -107,9 +112,9 @@ export const TOOLCRAFT_DECISION_CONTRACT = [
       "runtime",
       "starter-agents",
     ],
-    id: "infinity-canvas-scene-bounds",
+    id: TOOLCRAFT_INFINITY_CANVAS_DECISION_RULE_ID,
     level: "invariant",
-    title: "Infinity canvas uses canonical scene bounds",
+    title: "Infinity canvas preserves one canonical scene",
     verdict: "keep-hard",
   },
   {
@@ -169,7 +174,7 @@ export const TOOLCRAFT_DECISION_CONTRACT = [
     currentConstraint:
       "Once layers are enabled, selection, visibility, reorder, grouping, media lifecycle, and selected-layer controls must work through the real LayersPanel UI.",
     desiredBehavior:
-      "Layer-enabled apps prove real layer interactions and product output changes instead of dispatching layer commands directly in browser tests.",
+      "Layer-enabled apps prove real layer interactions and product output changes instead of dispatching layer commands directly in browser tests. Every selectedLayer.* property uses the same protected two-entity isolation recipe as app-owned selected-entity properties: editing either selected entity changes only that entity while preserving the comparison entity.",
     enforcement: ["acceptance-validator", "browser-helper", "performance-validator"],
     id: "layers-enabled-behavior",
     level: "invariant",
@@ -203,9 +208,9 @@ export const TOOLCRAFT_DECISION_CONTRACT = [
   {
     area: "controls",
     currentConstraint:
-      "Every product control explicitly declares always or conditional applicability; every visible finite sibling branch binds to runtime state, resets from schema defaults, and passes its accepted browser outcome.",
+      "Every product control explicitly declares always or conditional applicability, and every bounded finite product selector is classified exactly once in the required finiteSelectors array as branch or parameter.",
     desiredBehavior:
-      "Non-applicable controls are absent with values preserved, and no always or conditional control remains visible in a finite product branch where its value is ignored.",
+      "Non-applicable controls are absent with values preserved. A branch names only exact always-visible same-entity peers in affectedTargets, while explicit applicability predicates add their dependents automatically and require their selector owners to be branches. A parameter proves its own accepted outcome and exhaustive option coverage without expanding peer cases. Applicability proof and focused feature closure never use section-wide finite-selector fanout.",
     enforcement: ["acceptance-validator", "browser-helper"],
     id: "controls-product-coverage",
     level: "invariant",
@@ -217,7 +222,7 @@ export const TOOLCRAFT_DECISION_CONTRACT = [
     currentConstraint:
       "Product artifact delivery must match the required productReadiness.exportIntent declaration.",
     desiredBehavior:
-      'Every product declares productReadiness.exportIntent. Image export starts as the Toolcraft default and is removed only with explicit user-removal evidence; video export requires explicit user request evidence. Animation, playback, keyframes, or timeline presence never changes artifact delivery intent. Resolved intent capabilities correspond exactly to schema actions, settings sections, and acceptance coverage: image-only, image-plus-video, video-only, and explicit no-export products expose only the runtime-owned artifact surfaces their intent enables. Product apps declare the standard background pair and runtime places it in Setup: Background beside Infinity canvas, Color below, and Timeline last. One shared product exportRenderer draws deterministic scene-coordinate frames for enabled artifact types; runtime owns settings, scene crop, PNG/JPEG/video background semantics, visible runtime media/model composition, exact timestamped encoding, download, progress, and typed failures.',
+      'Every product declares productReadiness.exportIntent. Image export starts as the Toolcraft default and is removed only with explicit user-removal evidence; SVG and video require explicit user request evidence. Animation, playback, keyframes, or timeline presence never changes artifact delivery intent. Resolved intent capabilities correspond exactly to typed schema actions, applicable settings sections, and artifact-specific acceptance coverage. SVG means self-contained editable vector geometry/text and never permits raster bytes wrapped in SVG. Product apps declare the standard background pair and runtime places it in Setup: Background beside Infinity canvas, Color below, and Timeline last. Product code uses exportRenderer for deterministic image/video pixels and svgExportRenderer for namespace-aware vector nodes; runtime owns settings, scene crop/frame, background, visible runtime media/model composition, validation, encoding/serialization, download, progress, and typed failures.',
     enforcement: ["acceptance-validator", "performance-validator", "browser-helper", "starter-agents"],
     id: "output-export-required",
     level: "invariant",
@@ -275,6 +280,23 @@ export const TOOLCRAFT_DECISION_CONTRACT = [
   {
     area: "renderer",
     currentConstraint:
+      "Custom GPU renderers can select WebGL/WebGPU without declaring compute, feedback, storage pressure, or the implementation provider per preview/export surface.",
+    desiredBehavior:
+      "GPU pass stage/resources/state/surfaces create typed backend pressure; backend/provider is selected separately for each preview/export surface. New custom WebGPU renderers use the approved pinned VGPU capability, while WebGL/native/reference/runtime exceptions carry closed evidence.",
+    enforcement: [
+      "performance-validator",
+      "browser-helper",
+      "docs",
+      "starter-agents",
+    ],
+    id: "renderer-gpu-provider",
+    level: "invariant",
+    title: "GPU backend and provider are explicit",
+    verdict: "move-to-validator",
+  },
+  {
+    area: "renderer",
+    currentConstraint:
       "A spatial scene can omit orientationGizmo by silently choosing a fixed camera before the existing rotatable-model rule applies.",
     desiredBehavior:
       "Every generated product declares typed viewInteraction intent before controls or renderer code. A visible editable three-dimensional scene defaults to orbit and requires matching orientationGizmo targets. Fixed or timeline-owned cameras are evidence-backed escape hatches allowed only when an explicit user request or inspected reference owns that behavior.",
@@ -326,7 +348,7 @@ export const TOOLCRAFT_DECISION_CONTRACT = [
     currentConstraint:
       "Video, GIF, and screen-recording references are often treated as static visual inspiration or summarized from a few frames.",
     desiredBehavior:
-      "Whenever a supplied reference is a video, GIF, screen recording, contact sheet, or extracted frame sequence, the agent studies it as behavioral evidence before implementation: extract or inspect a storyboard, record timecoded frame observations, compare frame-to-frame transitions, decompose changing entities and state into product behavior, and map those observed behaviors to acceptance rows. This applies to new Toolcraft apps and reference-runtime-clone work; it is independent from loop duration or timeline choice.",
+      "Whenever a supplied reference is a video, GIF, screen recording, contact sheet, or extracted frame sequence, the agent registers a typed referenceInputs item before implementation. Protected preprocessing performs one full source scan, produces a dense 12 FPS review with bounded partitions, and stores content-addressed evidence. The agent covers complete contiguous phases, classifies every detected event, decomposes product behaviors, and maps each behavior bidirectionally to observable acceptance rows plus browser reference-parity coverage. A no-reference product declares referenceInputs: [] and runs no preprocessing.",
     enforcement: ["acceptance-validator", "browser-helper", "docs", "starter-agents"],
     id: "video-reference-analysis",
     level: "invariant",

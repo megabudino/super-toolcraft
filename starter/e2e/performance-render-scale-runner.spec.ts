@@ -13,8 +13,8 @@ import type {
 import { attachedEvidenceTypes } from "./browser-semantic-evidence-test-helpers";
 import {
   compileToolcraftPerformancePathAdapterMatrix,
-  runToolcraftPerformancePath,
-} from "./performance-path-helpers";
+} from "./performance-path-adapter-matrix";
+import { runToolcraftPerformancePath } from "./performance-path-helpers";
 import {
   TOOLCRAFT_PERFORMANCE_FIXTURE_RESOLUTION_MODE_ENV,
   TOOLCRAFT_PERFORMANCE_REQUEST_AUTHORITY_HASH_ENV,

@@ -21,8 +21,10 @@ import {
   schemaHasVideoExportPanelAction,
 } from "./output-export";
 import { getToolcraftOrientationGizmoErrors } from "./orientation-gizmo";
+import { getToolcraftMotionReferenceStudyErrors } from "./motion-reference-study";
 import { getToolcraftReferenceRuntimeCloneErrors } from "./reference-runtime";
 import { getToolcraftRenderScaleCoverageErrors } from "./render-scale";
+import { getToolcraftSelectionScopeErrors } from "./selection-scope";
 import {
   getToolcraftCanvasSizingCoverageErrors,
   getToolcraftLayerCoverageErrors,
@@ -46,8 +48,8 @@ import {
   type ToolcraftAcceptanceValidationContext,
   type ToolcraftAcceptanceValidator,
 } from "./validation-pipeline";
-import { getToolcraftVideoReferenceStudyErrors } from "./video-reference-study";
 import { getToolcraftViewInteractionErrors } from "./view-interaction";
+import { getToolcraftBrowserProofErrors } from "./browser-proof";
 
 export type ToolcraftAcceptanceValidationInput = {
   acceptance: readonly ToolcraftComponentAcceptance[];
@@ -103,12 +105,29 @@ function createToolcraftAcceptanceValidationContext({
 
 const toolcraftAcceptanceValidators: readonly ToolcraftAcceptanceValidator[] = [
   {
+    path: "acceptance.browser",
+    ruleId: "acceptance-product-observable",
+    validate: ({ acceptance }) => [
+      ...getToolcraftBrowserProofErrors(acceptance),
+    ],
+  },
+  {
     path: "appProductReadiness.interactionOwnership",
     ruleId: "interaction-surface-ownership",
     validate: ({ acceptance, controls, productReadiness }) =>
       getToolcraftInteractionOwnershipErrors({
         acceptance,
         controls,
+        productReadiness,
+      }),
+  },
+  {
+    path: "appProductReadiness.interactionOwnership[].selectionScope",
+    ruleId: "interaction-surface-ownership",
+    validate: ({ acceptance, layersEnabled, productReadiness }) =>
+      getToolcraftSelectionScopeErrors({
+        acceptance,
+        layersEnabled,
         productReadiness,
       }),
   },
@@ -186,9 +205,9 @@ const toolcraftAcceptanceValidators: readonly ToolcraftAcceptanceValidator[] = [
       }),
   },
   {
-    path: "appTransferMode.videoReferenceStudy",
+    path: "appTransferMode.referenceInputs",
     ruleId: "video-reference-analysis",
-    validate: getToolcraftVideoReferenceStudyErrors,
+    validate: getToolcraftMotionReferenceStudyErrors,
   },
   {
     path: "appTransferMode.animationIntent",

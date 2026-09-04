@@ -50,14 +50,14 @@ export function CanvasViewportWorld({
 
   return (
     <div
-      className="absolute top-1/2 left-1/2"
+      className="absolute top-1/2 left-1/2 size-0"
       data-toolcraft-canvas-offset-x={transform.offsetX}
       data-toolcraft-canvas-offset-y={transform.offsetY}
       data-toolcraft-canvas-zoom={transform.zoom}
       data-toolcraft-canvas-world=""
       style={{
-        transform: `translate(-50%, -50%) translate(${transform.offsetX}px, ${transform.offsetY}px) scale(${transform.zoom / 100})`,
-        transformOrigin: "center",
+        transform: `translate(${transform.offsetX}px, ${transform.offsetY}px) scale(${transform.zoom / 100})`,
+        transformOrigin: "0 0",
       }}
     >
       {children}

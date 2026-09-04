@@ -1,36 +1,125 @@
 import { expect, test } from "@playwright/test";
 
 import {
+  expectFiniteCanvasObservation,
   expectInfiniteCanvasObservation,
   expectToolcraftInfinityCanvasBackgroundEvidence,
   expectToolcraftInfinityCanvasVideoExportEvidence,
   observeInfinityCanvas,
 } from "./browser-infinity-canvas-evidence";
+import { expectToolcraftInfinityCanvasSvgExportEvidence } from "./browser-infinity-canvas-svg-evidence";
+import { createToolcraftSvgFixtureDownload } from "./svg-download-test-fixtures";
+import { inspectToolcraftSvgDownload } from "./svg-artifact-inspection";
 import {
   readToolcraftCanvasViewport,
   zoomToolcraftCanvasViewport,
 } from "./performance-canvas-helpers";
 
+const partialFiniteControlPresence = [
+  { aspectRatio: true, height: false, width: false },
+  { aspectRatio: false, height: true, width: false },
+  { aspectRatio: false, height: false, width: true },
+  { aspectRatio: true, height: true, width: false },
+  { aspectRatio: true, height: false, width: true },
+  { aspectRatio: false, height: true, width: true },
+] as const;
+
+test("Infinity canvas evidence rejects every partial finite-control presence", async ({ page }) => {
+  const common = {
+    finiteControlSize: { height: 200, width: 320 },
+    overflow: "visible",
+    productScene: {
+      backingHeight: null,
+      backingWidth: null,
+      viewportRect: null,
+      worldRect: null,
+    },
+    productSceneStatus: "empty" as const,
+    viewport: { offsetX: 0, offsetY: 0, zoom: 100 },
+  };
+
+  for (const finiteControlsPresent of partialFiniteControlPresence) {
+    const controls = Object.entries({
+      "canvas.aspectRatio": finiteControlsPresent.aspectRatio,
+      "canvas.size.height": finiteControlsPresent.height,
+      "canvas.size.width": finiteControlsPresent.width,
+    }).filter(([, present]) => present).map(([target]) =>
+      `<label data-toolcraft-control-target="${target}"><input value="200" /></label>`,
+    ).join("");
+    await page.setContent(`${controls}
+      <div
+        data-toolcraft-canvas-world
+        data-toolcraft-canvas-offset-x="0"
+        data-toolcraft-canvas-offset-y="0"
+        data-toolcraft-canvas-zoom="100"
+      >
+        <div data-toolcraft-canvas-mode="infinite" style="overflow:visible"></div>
+      </div>
+    `);
+    const observed = await observeInfinityCanvas(page);
+    expect(observed.finiteControlsPresent).toEqual(finiteControlsPresent);
+    expect(() => expectInfiniteCanvasObservation(observed)).toThrow();
+    expect(() => expectFiniteCanvasObservation({
+      ...common,
+      artboardPresent: true,
+      canvasMode: "finite",
+      finiteCanvasSize: { height: 200, width: 320 },
+      finiteControlsPresent,
+      overflow: "hidden",
+    })).toThrow();
+  }
+});
+
 test("toolcraft Infinity canvas observation reads runtime-owned geometry", async ({
   page,
 }) => {
   await page.setContent(`
-    <div data-toolcraft-canvas-world data-toolcraft-canvas-offset-x="12" data-toolcraft-canvas-offset-y="-8">
+    <div
+      data-toolcraft-canvas-world
+      data-toolcraft-canvas-offset-x="12"
+      data-toolcraft-canvas-offset-y="-8"
+      data-toolcraft-canvas-zoom="125"
+      style="position: fixed; left: 400px; top: 300px; transform: translate(12px, -8px) scale(1.25); transform-origin: 0 0"
+    >
       <div data-toolcraft-canvas-mode="infinite" style="overflow: visible">
         <div data-scene style="position:absolute;left:1px;top:2px;width:3px;height:4px"></div>
         <div
           data-toolcraft-product-scene
           data-toolcraft-product-scene-status="ready"
           style="position:absolute;left:-320px;top:-200px;width:640px;height:400px"
-        ></div>
+        >
+          <canvas width="640" height="400"></canvas>
+        </div>
       </div>
     </div>
   `);
 
+  const observation = await observeInfinityCanvas(page);
+  expect(observation.finiteControlsPresent).toEqual({
+    aspectRatio: false,
+    height: false,
+    width: false,
+  });
   expectInfiniteCanvasObservation(
-    await observeInfinityCanvas(page),
+    observation,
     { height: 400, width: 640, x: -320, y: -200 },
   );
+  expect(observation.viewport).toEqual({
+    offsetX: 12,
+    offsetY: -8,
+    zoom: 125,
+  });
+  expect(observation.productScene).toEqual({
+    backingHeight: 400,
+    backingWidth: 640,
+    viewportRect: {
+      height: 500,
+      width: 800,
+      x: 12,
+      y: 42,
+    },
+    worldRect: { height: 400, width: 640, x: -320, y: -200 },
+  });
 });
 
 test("toolcraft canvas viewport observation reads the runtime world transform", async ({
@@ -91,6 +180,41 @@ test("toolcraft Infinity canvas video evidence compares decoded envelopes", asyn
       expectedFiniteSize: { height: 1350, width: 1080 },
       expectedInfiniteSize: { height: 640, width: 640 },
       requirementId: "fixture.infinity.video",
+      target: "canvas.infinity",
+    },
+  );
+});
+
+test("toolcraft Infinity canvas SVG evidence compares inspected vector envelopes", async ({
+  page,
+}) => {
+  const source = (width: number, height: number, x: number, y: number) =>
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="${x} ${y} ${width} ${height}"><g data-toolcraft-product-scene="true"><rect data-shape="true" x="${x}" y="${y}" width="${width}" height="${height}" fill="#52AAFF"/></g></svg>`;
+  const finite = await inspectToolcraftSvgDownload({
+    download: await createToolcraftSvgFixtureDownload(
+      page,
+      source(1080, 1350, 0, 0),
+      "finite.svg",
+    ),
+    page,
+  });
+  const infinite = await inspectToolcraftSvgDownload({
+    download: await createToolcraftSvgFixtureDownload(
+      page,
+      source(640, 400, -320, -200),
+      "infinite.svg",
+    ),
+    page,
+  });
+  await expectToolcraftInfinityCanvasSvgExportEvidence(
+    {
+      finite: finite.inspection,
+      infinite: infinite.inspection,
+    },
+    {
+      expectedFiniteSize: { height: 1350, width: 1080 },
+      expectedInfiniteSize: { height: 400, width: 640 },
+      requirementId: "fixture.infinity.svg",
       target: "canvas.infinity",
     },
   );

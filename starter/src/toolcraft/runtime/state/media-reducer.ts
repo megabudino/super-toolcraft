@@ -5,11 +5,17 @@ import {
   cloneToolcraftSourceAssetFeedback,
 } from "../model-import/model-asset-metadata";
 import { isToolcraftDefaultModelPlaceholder } from "../model-import/default-model-source-assets";
-import { createToolcraftMediaImportAllocation } from "./media-import-allocation";
+import {
+  createToolcraftMediaImportAllocation,
+} from "./media-import-allocation";
+import {
+  normalizeToolcraftMediaImportIngress,
+} from "./media-import-ingress";
 import { cloneToolcraftMediaResourceState } from "./media-resource-state";
 import { getMediaReadyTimelineState } from "./timeline-readiness";
 import type {
   ToolcraftCommand,
+  ToolcraftMediaBatchImportAsset,
   ToolcraftMediaAsset,
   ToolcraftMediaAssetDraft,
   ToolcraftMediaImportAsset,
@@ -23,6 +29,7 @@ type ToolcraftMediaCommand = Extract<
     type:
       | "media.delete"
       | "media.commitModelRepair"
+      | "media.commitCanonicalImportAllocation"
       | "media.hydrateDefaultModel"
       | "media.hydrateModel"
       | "media.import"
@@ -36,18 +43,35 @@ type ToolcraftMediaCommand = Extract<
 
 function normalizeMediaImportAsset(
   asset: ToolcraftMediaImportAsset,
-): ToolcraftMediaAssetDraft {
-  if (asset.assetKind === "model" || "resourceRef" in asset) {
+): ToolcraftMediaBatchImportAsset {
+  if ("policy" in asset) {
     return asset;
   }
 
-  const assetKind = asset.assetKind === "file" ? "file" : "image";
+  if (asset.assetKind === "model") {
+    return asset;
+  }
+
+  if ("resourceRef" in asset) {
+    return asset;
+  }
+
   const { dataUrl: _dataUrl, ...metadata } = asset;
+  if (asset.assetKind !== "file") {
+    return {
+      asset: {
+        ...metadata,
+        assetKind: "image",
+        ...cloneToolcraftMediaResourceState("image", asset),
+      },
+      policy: "legacy-record",
+    };
+  }
 
   return {
     ...metadata,
-    assetKind,
-    ...cloneToolcraftMediaResourceState(assetKind, asset),
+    assetKind: "file",
+    ...cloneToolcraftMediaResourceState("file", asset),
   };
 }
 
@@ -127,12 +151,10 @@ function createImportedMediaAsset({
   draft,
   layerId,
   mediaId,
-  resetImagePosition,
 }: {
-  draft: ToolcraftMediaImportAsset;
+  draft: ToolcraftMediaAssetDraft;
   layerId: string;
   mediaId: string;
-  resetImagePosition: boolean;
 }): ToolcraftMediaAsset {
   if (draft.assetKind === "model") {
     const record = cloneToolcraftModelAssetRecord(draft);
@@ -174,35 +196,38 @@ function createImportedMediaAsset({
     id: mediaId,
     layerId,
     mimeType: draft.mimeType,
-    position: resetImagePosition ? { x: 0, y: 0 } : { ...draft.position },
-    ...(draft.size ? { size: { ...draft.size } } : {}),
+    position: { ...draft.position },
+    size: { ...draft.size },
+    sourceSize: { ...draft.sourceSize },
     ...(draft.sourceTarget ? { sourceTarget: draft.sourceTarget } : {}),
     ...(draft.transform ? { transform: { ...draft.transform } } : {}),
   };
 }
 
-function reduceMediaImportBatch(
+function commitCanonicalMediaImportAllocation(
   state: ToolcraftState,
-  command: Extract<ToolcraftCommand, { type: "media.importBatch" }>,
+  allocation: Extract<
+    ToolcraftCommand,
+    { type: "media.commitCanonicalImportAllocation" }
+  >["allocation"],
 ): ToolcraftState {
-  if (command.assets.length === 0) {
+  if (allocation.items.length === 0) {
     return state;
   }
 
-  const { baseLayers, baseMediaAssets, items } =
-    createToolcraftMediaImportAllocation(state, command);
+  const { baseLayers, baseMediaAssets, items } = allocation;
   const importedAssets: ToolcraftMediaAsset[] = [];
   const importedLayers: ToolcraftState["layers"] = [];
-  const resizeImage = [...command.assets]
+  const lastImageDraft = [...items]
     .reverse()
-    .find(
-      (asset) =>
-        asset.assetKind === "image" && asset.size !== undefined,
-    );
-  const shouldResizeCanvas =
+    .find((item) => item.draft.assetKind === "image")?.draft;
+  // Canonical reinsertions resize intrinsic canvases from decoded source
+  // geometry while preserving their authored scene frame in the asset.
+  const intrinsicCanvasSize =
     state.schema.canvas.sizing.mode === "intrinsic-media" &&
-    resizeImage?.assetKind === "image" &&
-    resizeImage.size !== undefined;
+    lastImageDraft?.assetKind === "image"
+      ? lastImageDraft.sourceSize
+      : undefined;
 
   for (const { draft, layerId, layerName, mediaId } of items) {
     importedAssets.push(
@@ -210,7 +235,6 @@ function reduceMediaImportBatch(
         draft,
         layerId,
         mediaId,
-        resetImagePosition: shouldResizeCanvas,
       }),
     );
     importedLayers.push({
@@ -226,13 +250,13 @@ function reduceMediaImportBatch(
   const layers = [...baseLayers, ...importedLayers];
   const selectedLayerId = importedLayers.at(-1)?.id ?? state.selectedLayerId;
   const after = {
-    ...(shouldResizeCanvas ? { "canvas.size": resizeImage.size } : {}),
+    ...(intrinsicCanvasSize ? { "canvas.size": intrinsicCanvasSize } : {}),
     layers,
     mediaAssets,
     selectedLayerId,
   };
   const before = {
-    ...(shouldResizeCanvas ? { "canvas.size": state.canvas.size } : {}),
+    ...(intrinsicCanvasSize ? { "canvas.size": state.canvas.size } : {}),
     layers: state.layers,
     mediaAssets: state.mediaAssets,
     selectedLayerId: state.selectedLayerId,
@@ -243,6 +267,27 @@ function reduceMediaImportBatch(
     before,
     label: "Import media",
   });
+}
+
+function reduceMediaImportBatch(
+  state: ToolcraftState,
+  command: Extract<ToolcraftCommand, { type: "media.importBatch" }>,
+): ToolcraftState {
+  if (command.assets.length === 0) {
+    return state;
+  }
+
+  const canonicalAssets = normalizeToolcraftMediaImportIngress(command.assets, {
+    canvasMode: state.canvas.mode,
+    canvasSize: state.canvas.size,
+    sizingMode: state.schema.canvas.sizing.mode,
+  });
+  const allocation = createToolcraftMediaImportAllocation(state, {
+    assets: canonicalAssets,
+    replaceExisting: command.replaceExisting,
+  });
+
+  return commitCanonicalMediaImportAllocation(state, allocation);
 }
 
 export function reduceToolcraftMediaCommand(
@@ -454,6 +499,9 @@ export function reduceToolcraftMediaCommand(
 
     case "media.importBatch":
       return reduceMediaImportBatch(state, command);
+
+    case "media.commitCanonicalImportAllocation":
+      return commitCanonicalMediaImportAllocation(state, command.allocation);
 
     case "media.setModelRepairError": {
       const targetModel = state.mediaAssets.find(

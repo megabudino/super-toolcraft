@@ -121,15 +121,15 @@ describe("starter acceptance worklog performance intent", () => {
   it.each([
     [
       "unknown profile",
-      ["unknown-profile", "control-change", ["composite"], ["main"], []],
+      ["unknown-profile", "control-change", ["composite"], [], [], ["main"], []],
     ],
     [
       "unknown interaction",
-      ["interactive-discrete", "unknown-interaction", ["composite"], ["main"], []],
+      ["interactive-discrete", "unknown-interaction", ["composite"], [], [], ["main"], []],
     ],
     [
       "mismatched profile",
-      ["interactive-continuous", "control-change", ["composite"], ["main"], []],
+      ["interactive-continuous", "control-change", ["composite"], [], [], ["main"], []],
     ],
     [
       "duplicate signature members",
@@ -137,6 +137,8 @@ describe("starter acceptance worklog performance intent", () => {
         "interactive-discrete",
         "control-change",
         ["composite", "composite"],
+        [],
+        [],
         ["main"],
         [],
       ],
@@ -147,11 +149,14 @@ describe("starter acceptance worklog performance intent", () => {
         "interactive-discrete",
         "control-change",
         ["source", "composite"],
+        [],
+        [],
         ["main"],
         [],
       ],
     ],
   ])("rejects %s in canonical path signatures", (_case, signature) => {
+    expect(signature).toHaveLength(7);
     const pathId = `performance-path:${encodeURIComponent(
       JSON.stringify(signature),
     )}`;

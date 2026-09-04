@@ -89,6 +89,18 @@ async function installOrientationProofUiState(
   );
 }
 
+async function installLiveProductPlaybackProbe(page: Page): Promise<void> {
+  await page.locator('[data-slot="toolcraft-runtime-app"]').evaluate((root) => {
+    root.querySelector('[data-orientation-live-playback-probe]')?.remove();
+    const button = document.createElement("button");
+    button.dataset.orientationLivePlaybackProbe = "";
+    button.setAttribute("aria-label", "Pause playback");
+    button.textContent = "Pause playback";
+    button.type = "button";
+    root.append(button);
+  });
+}
+
 async function installOrientationGizmoPointerProbe(
   page: Page,
   initial: ToolcraftOrientationBrowserObservation,
@@ -283,6 +295,28 @@ test("orientation axis drag retains proof for products without optional playback
   await installOrientationGizmoPointerProbe(page, orientationBaseline, {
     outcomes: { drag: orientationDragged },
   });
+  await installOrientationProofUiState(page, {});
+
+  await expectToolcraftOrientationAxisDrag(observation, session, {
+    ...orientationOptions,
+    dragDelta: { x: 18, y: 12 },
+  });
+});
+
+test("synthetic orientation playback remains isolated from a live product timeline", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const session = await createToolcraftBrowserProofSession(page);
+  await setProofState(page, "orientation", orientationBaseline);
+  await installOrientationProofUiState(page, { playbackActions: ["play"] });
+  await installLiveProductPlaybackProbe(page);
+  await installOrientationGizmoPointerProbe(page, orientationBaseline, {
+    outcomes: { drag: orientationDragged },
+  });
+  const observation = session.observe((root) =>
+    JSON.parse(root.getAttribute("data-proof-orientation") ?? "null"),
+  );
 
   await expectToolcraftOrientationAxisDrag(observation, session, {
     ...orientationOptions,
@@ -301,6 +335,7 @@ test("orientation recipes require shared pose/output changes and correct canvas 
   const options = orientationOptions;
 
   await setProofState(page, "orientation", baseline);
+  await installOrientationProofUiState(page, {});
   const observation = session.observe((root) =>
     JSON.parse(root.getAttribute("data-proof-orientation") ?? "null"),
   );

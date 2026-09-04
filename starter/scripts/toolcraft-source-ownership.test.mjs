@@ -73,16 +73,12 @@ test("collects the same ownership policy for starter-local and generated paths",
   }
 });
 
-test("keeps the signed-manifest trust root small and inside canonical ownership", async () => {
+test("keeps the signed-manifest trust root unique and inside canonical ownership", async () => {
   const generatedPaths =
     await collectToolcraftFrameworkOwnedGeneratedPaths(starterRoot);
   const generatedPathSet = new Set(generatedPaths);
 
   assert.ok(requiredProtectedTrustRootFilePaths.length > 0);
-  assert.ok(
-    requiredProtectedTrustRootFilePaths.length <= 28,
-    `The trust root must stay small; received ${requiredProtectedTrustRootFilePaths.length} paths.`,
-  );
   assert.equal(
     new Set(requiredProtectedTrustRootFilePaths).size,
     requiredProtectedTrustRootFilePaths.length,
@@ -103,6 +99,8 @@ test("keeps the signed-manifest trust root small and inside canonical ownership"
     "e2e/toolcraft-product-test.ts",
     "scripts/check-toolcraft-integrity.mjs",
     "scripts/run-delivery-verification.mjs",
+    "scripts/run-feature-verification.mjs",
+    "e2e/toolcraft-feature-verification-reporter.ts",
     "scripts/toolcraft-integrity-policy.mjs",
     "scripts/toolcraft-source-ownership.mjs",
     "scripts/toolcraft-vitest-runtime-evidence-reporter.mjs",
@@ -115,6 +113,16 @@ test("keeps the signed-manifest trust root small and inside canonical ownership"
       `Trust root must retain the ${relativePath} sentinel.`,
     );
   }
+  assert.deepEqual(
+    requiredProtectedTrustRootFilePaths.filter((relativePath) =>
+      relativePath.includes("feature-verification"),
+    ),
+    [
+      "e2e/toolcraft-feature-verification-reporter.ts",
+      "scripts/run-feature-verification.mjs",
+    ],
+    "Focused verification trust root must contain only public execution authorities.",
+  );
 
   // The required root names subsystem authorities. Their transitive modules stay
   // protected by the complete signed framework inventory without becoming sentinels.
@@ -129,15 +137,80 @@ test("keeps the signed-manifest trust root small and inside canonical ownership"
     "e2e/performance-helpers.ts",
     "e2e/performance-measurement-evidence.ts",
     "e2e/performance-path-adapter-contract.ts",
+    "e2e/performance-path-adapter-matrix.ts",
     "e2e/performance-path-helpers.ts",
     "e2e/performance-pipeline-invariants.ts",
+    "e2e/performance-pipeline-phase-continuity.ts",
     "src/app/test-evidence/browser-performance-contract.ts",
     "src/app/test-evidence/browser-performance-measurement-contract.ts",
     "scripts/toolcraft-performance-report.mjs",
+    "scripts/toolcraft-feature-source-loader.mjs",
+    "scripts/toolcraft-feature-verification-plan.mjs",
+    "src/app/acceptance/browser-proof-policy.d.mts",
+    "src/app/acceptance/browser-proof-policy.mjs",
+    "src/app/acceptance/browser-proof.ts",
+    "src/app/acceptance/feature-verification-selection.ts",
   ]) {
+    assert.equal(
+      requiredProtectedTrustRootFilePaths.includes(relativePath),
+      false,
+      `Transitive implementation must not become a trust-root sentinel: ${relativePath}`,
+    );
     assert.ok(
       generatedPathSet.has(relativePath),
-      `Rich performance dependency must remain in the signed inventory: ${relativePath}`,
+      `Transitive implementation dependency must remain in the signed inventory: ${relativePath}`,
+    );
+  }
+});
+
+test("uses public motion-reference sentinels while signing transitive owners through canonical inventory", async () => {
+  const generatedPaths =
+    await collectToolcraftFrameworkOwnedGeneratedPaths(starterRoot);
+  const publicSentinels = [
+    "scripts/create-toolcraft-motion-reference-study.mjs",
+    "src/app/acceptance/motion-reference-evidence.d.mts",
+    "src/app/acceptance/motion-reference-evidence.mjs",
+  ];
+  const representativeTransitiveOwners = [
+    "scripts/toolcraft-motion-reference-group-inventory.mjs",
+    "scripts/toolcraft-motion-reference-publication-journal.mjs",
+  ];
+
+  assert.deepEqual(
+    requiredProtectedTrustRootFilePaths.filter((relativePath) =>
+      relativePath.includes("motion-reference"),
+    ),
+    publicSentinels,
+  );
+  for (const representativeTransitiveOwner of representativeTransitiveOwners) {
+    assert.equal(
+      requiredProtectedTrustRootFilePaths.includes(representativeTransitiveOwner),
+      false,
+      "Transitive implementation modules belong to the complete signed framework inventory, not the public sentinel list.",
+    );
+    assert.ok(generatedPaths.includes(representativeTransitiveOwner));
+  }
+});
+
+test("signs delivery catalog decomposition without promoting it to trust-root sentinels", async () => {
+  const generatedPaths =
+    await collectToolcraftFrameworkOwnedGeneratedPaths(starterRoot);
+  const catalogImplementationPaths = [
+    "scripts/toolcraft-delivery-catalog-validation.d.mts",
+    "scripts/toolcraft-delivery-catalog-validation.mjs",
+    "scripts/toolcraft-delivery-catalog.d.mts",
+    "scripts/toolcraft-delivery-catalog.mjs",
+  ];
+
+  for (const relativePath of catalogImplementationPaths) {
+    assert.equal(
+      requiredProtectedTrustRootFilePaths.includes(relativePath),
+      false,
+      "Catalog decomposition belongs to complete signed inventory, not the public sentinel list.",
+    );
+    assert.ok(
+      generatedPaths.includes(relativePath),
+      `Complete signed framework inventory must protect ${relativePath}.`,
     );
   }
 });

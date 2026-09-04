@@ -1,10 +1,9 @@
 # Toolcraft Workflow
 
-<!-- toolcraft-performance-lifecycle: first-delivery=functional; later-delivery=functional-targeted; complaint=one-authority-targeted-performance-iteration; full-audit=explicit-only -->
+<!-- toolcraft-performance-lifecycle: first-delivery=functional-complete; later-edits=focused-only; complaint=one-authority-targeted-performance-iteration; full-audit=explicit-only -->
 <!-- toolcraft-performance-iteration: authority=exact-request-evidence+canonical-path-ids; fixture=reachable-development; after-pass=return-app-to-user+stop -->
 <!-- toolcraft-performance-full-authority: automatic=forbidden; recommendation=two-compatible-iterations-or-broad-unlocalizable-problem; command=pnpm verify:perf; authority=explicit-user-request-or-accepted-offer -->
 <!-- toolcraft-performance-routing: localized=agent-targeted; ambiguous=one-user-facing-choice; broad=offer-targeted-or-full; full=explicit-only -->
-
 This file is the app-local routing layer for Toolcraft work. It does not replace the detailed contracts; it tells an agent which contract to read and which verification path to use before editing.
 
 ## Required Preflight
@@ -18,17 +17,37 @@ Before planning or editing app code, runtime code, controls, canvas, panels, ren
    - **Runtime/template source**: use root `AGENTS.md` and runtime contracts.
 3. Classify the task type.
 4. Read the task-specific docs below.
-5. Record the coherent user-visible delivery batch and its focused development checks before implementation.
+5. Record whether this is first product delivery or later feature work, plus its focused development checks, before implementation.
 
 Do not edit implementation files until this preflight is complete.
 
-Renderer and performance work also completes this pre-code sequence: reachable controls and inputs; workload dimensions and enforced boundaries; pass cost, frequency, lifecycle, and invalidation; render-plan assessment and protected kernel benchmark when required; derived paths and combined fixtures. Keep `src/app/app-verification-impact.json` current while implementing. Development uses impact-derived functional and browser checks without minting delivery evidence. First and later functional delivery run no measured performance; only exact request authority creates one targeted iteration. Full certification is a separate operator/CI action described in the canonical performance docs.
+Renderer and performance work also completes this pre-code sequence: reachable controls and inputs; workload dimensions and enforced boundaries; pass cost, frequency, lifecycle, and invalidation; render-plan assessment and protected kernel benchmark when required; derived paths and combined fixtures. Development uses feature-focused functional and browser checks without minting delivery evidence. First delivery runs no measured performance; only exact request authority creates one targeted iteration. Full certification is a separate operator/CI action described in the canonical performance docs.
+
+Renderer-provider version work follows [VGPU Provider Version Authority](renderer-technique.md#vgpu-provider-version-authority). The version check is read-only release information, not permission to edit an app. Generated applications must never auto-update; they receive a promoted provider only through an explicit Toolcraft tuple migration.
 
 ## Local Contract Authority
 
 The signed local `AGENTS.md` plus `docs/toolcraft/*` are sufficient and mandatory workflow input for a standalone generated app. External workflow skills should be used when available, but missing skills never invalidate `--no-skills` generation and never justify skipping the equivalent local spec, plan, debugging, browser, or verification requirement. `pnpm ai:check` enforces local code health and the product AST boundary only; it neither discovers nor validates workflow skill installations.
 
 Core modules are required reading when listed by the routing table. Read each listed module fully, one phase at a time. Open exactly one listed document per terminal or tool read, even when several documents belong to the same route and phase. Do not concatenate documents or rely on a truncated excerpt; finish the current phase, then open the next phase when the work reaches it. The signed host and runtime validators enforce platform boundaries, while product organization remains open inside those boundaries.
+
+## Manual Browser Surface Routing
+
+[//]: # (toolcraft-browser-surface-routing: explicit=user-choice; manual=host-embedded-first; fallback=host-embedded-then-external; external=standalone-os-browser; automated=headless-playwright)
+
+Explicit user browser choice wins. Otherwise select from callable browser capabilities, never from product names, environment variables such as `CODEX_*`, installed executables, or guessed host identity.
+
+Surface ownership defines the categories. A host-embedded browser renders inside an agent host. A standalone external browser opens or attaches to a separate operating-system browser window; a browser controller or MCP remains external even when callable by the agent.
+
+For manual diagnosis, visual inspection, and user-visible preview, use this order:
+
+1. Use the host-embedded browser surface in the current agent environment, such as the Codex in-app Browser.
+2. If that surface is unavailable or incompatible with the required operation, use another controlled browser surface embedded inside an agent host.
+3. Use a standalone external controlled browser only when all host-embedded surfaces are unavailable or incompatible, and record the concrete fallback reason in the worklog or verification narrative.
+
+If the user explicitly names a browser or browser family, that choice is authoritative. If the named browser is unavailable, report that limitation instead of silently substituting another browser. Opening an uncontrolled system browser is allowed only for an explicit user-facing preview request; it cannot prove that the agent inspected the UI. If no controllable browser exists, report browser verification as unavailable and do not claim live inspection.
+
+Automated Toolcraft browser checks remain on the headless Playwright Test path. The `test:feature`, `test:browser`, and `verify:delivery` scripts keep their existing projects, fixtures, reporters, budgets, and protected evidence behavior. A separately and explicitly requested headed debugging session remains diagnostic and does not alter those gates. Manual browser inspection supplements automated checks, never replaces them, and never mints protected evidence. A headless Playwright Test process is not an unwanted external browser window.
 
 ## Task Routing
 
@@ -40,7 +59,7 @@ Use the smallest route set that covers the changed surface. When a task matches 
 | App assembly, route structure, generated app porting | `core/runtime-boundary.md`<br>`assembly-workflow.md` | `decision-contract.md` | `acceptance-testing.md` |
 | Reference app study, audit, or port | `core/reference-study.md`<br>`core/runtime-boundary.md`<br>`assembly-workflow.md` | `schema-reference.md`<br>`decision-contract.md` | `acceptance-testing.md` |
 | Schema, controls, defaults, persistence, actions | `core/control-selection.md`<br>`core/layout.md` | `schema-reference.md`<br>`component-rules.md` | `acceptance-testing.md` |
-| Custom controls | `core/control-selection.md`<br>`core/layout.md` | `custom-controls.md`<br>`component-rules.md` | `acceptance-testing.md` |
+| Custom controls | `core/control-selection.md`<br>`core/layout.md` | `custom-controls.md`<br>`custom-control-visuals.md`<br>`component-rules.md` | `acceptance-testing.md` |
 | Renderer, canvas output, visual technique | `core/runtime-boundary.md`<br>`core/performance.md` | `renderer-technique.md`<br>`performance.md` | `acceptance-testing.md` |
 | Timeline, keyframes, animation transport | `core/timeline-animation.md`<br>`core/performance.md` | `decision-contract.md`<br>`component-rules.md` | `acceptance-testing.md` |
 | Layers | `core/runtime-boundary.md`<br>`core/layout.md` | `decision-contract.md`<br>`component-rules.md` | `acceptance-testing.md` |
@@ -64,14 +83,14 @@ For product app work, update `docs/toolcraft/agent-worklog.md` before reporting 
   - decision;
   - alternatives rejected;
   - state/output mapping from controls, commands, timeline, layers, media, or renderer to the visible product;
-  - one bare-delivery verification narrative;
+  - first-delivery proof or later focused-check narrative;
   - risks or follow-ups.
 - for localized performance work, or a post-clarification targeted choice, an exact request quote and the canonical affected performance path IDs; classifier output establishes complaint authority only, and unresolved localization records neither performance-iteration intent nor canonical path authority regardless of classifier result.
 - updated high-level decisions for renderer, view interaction, interaction ownership, timeline, layers, controls, export, and performance when those choices change.
 
 If the folder is still the neutral starter, do not invent product decisions. Once it becomes a product, switch the worklog to product mode and keep it concrete.
 
-Protected receipts, not the worklog, own changed files, the derived plan, executed checks, reports, measurements, and pass/fail evidence. Each Decision Trail entry mentions only that one bare `pnpm verify:delivery` will derive and run the protected proof.
+Protected receipts own first-delivery and performance proof. The worklog records which focused tests and browser checks were selected for later edits; those edits do not create another functional receipt.
 
 ## Runtime Boundary
 
@@ -92,26 +111,28 @@ Browser verification is outcome-based. Protected helpers attach versioned eviden
 The normal product loop is:
 
 ```text
-assemble/change
+assemble first product
 → focused functional feedback
-→ one coherent delivery boundary
-→ protected functional delivery
+→ one protected initial delivery
+→ later edits with feature-focused checks only
 → user evaluation
 ```
 
-Use the smallest focused unit and browser checks while implementation is changing. Do not rerun the aggregate, export, or performance matrix after every edit. At the coherent delivery boundary, run one bare `pnpm verify:delivery` and use the automatic sequence:
+Use the smallest focused unit and browser checks while implementation is changing. Do not rerun the aggregate, export, or performance matrix after edits. Use this automatic sequence:
 
-1. **First product delivery:** bare `pnpm verify:delivery` proves complete product contracts, performs one production build, runs full functional acceptance, and runs no measured performance.
-2. **Later functional-targeted delivery:** bare `pnpm verify:delivery` compares the immediate previous and current semantic functional proof models. It selects exact changed acceptance contracts, their direct owners and domains, and tests reached through the affected product-unit dependency graph.
-3. **Localized or clarified targeted work:** only a localized complaint or a post-clarification targeted choice records domain authority in the worklog—an exact request quote plus canonical affected path IDs—and runs one bare `pnpm verify:delivery`. It executes one targeted iteration against the reachable development fixture, returns the verified app, and waits for user evaluation. Classifier output alone never localizes a path; unresolved localization creates neither performance-iteration intent nor canonical path authority, whether classification returned high-confidence `performance-iteration` or `needs-agent-judgment`.
-4. **Full audit:** only an explicit operator request or accepted offer authorizes `pnpm verify:perf`. It performs one fresh build and the complete maximum-fixture performance matrix without advancing the delivery anchor.
+1. **First product delivery:** the immutable initial delivery receipt is the lifecycle boundary. Before it exists, one complete bare `pnpm verify:delivery` proves complete product contracts, performs one production build, runs full functional acceptance, and runs no measured performance.
+2. **Later ordinary edits:** after the receipt exists, run the exact unit/component test for the changed implementation while developing. Run `pnpm test:feature -- <acceptance-id>` once after the behavior is stable. On failure, diagnose the failed behavior and rerun only the failed acceptance ID. Multiple changed behaviors use multiple explicit IDs. Use `pnpm test:feature -- --all` only when a cross-cutting functional edit cannot be honestly bounded to acceptance IDs; `--all` still means all product acceptance, not all Playwright tests. Do not automatically run typecheck, AI/code-health, build, raw full browser, delivery, export/reload/theme/DPR matrices, framework tests, benchmarks, or measured performance. Each conditional extra requires a direct reason tied to the changed behavior. Commit, push, deploy, preview, steering, and fixes do not authorize aggregate proof. A repeated bare `pnpm verify:delivery` is a protected no-op that exits before inventory, build, tests, export, and performance work and preserves the initial receipt byte-for-byte.
+3. **Localized or clarified targeted performance work:** only a localized complaint or a post-clarification targeted choice records domain authority in the worklog—an exact request quote plus canonical affected path IDs—and runs one bare `pnpm verify:delivery`. It executes one targeted iteration against the reachable development fixture, returns the verified app, and waits for user evaluation. Classifier output alone never localizes a path; unresolved localization creates neither performance-iteration intent nor canonical path authority, whether classification returned high-confidence `performance-iteration` or `needs-agent-judgment`.
+4. **Full audit:** only an explicit operator request or accepted offer authorizes `pnpm verify:perf`. It performs one fresh build and the complete maximum-fixture performance matrix without replacing the initial delivery receipt.
+
+Focused feature verification uses one Vite source load and one Playwright process restricted to the selected file set to derive and run the declared browser descriptors. It does not use Playwright `--list` or global Playwright collection, and it never loads unrelated spec files. Selector roles come from the Control Section Inventory's required `finiteSelectors`: a selected `parameter` remains bounded to its own acceptance row, while a selected `branch` expands by fixed point only to acceptance rows for its exact `affectedTargets` and explicit `applicability` dependents. No section-wide finite-selector fanout exists. Complete catalog collection remains allowed for first delivery because that lifecycle must prove the full product.
 
 Performance authority and localization are separate decisions. Classifier output establishes complaint authority only and never path localization. A localized complaint lets the agent select the affected canonical paths and run one targeted iteration without asking the user. For an ambiguous complaint, ask one user-facing question that names the visible operation and offers targeted diagnosis or a complete performance review; never ask the user to choose internal path IDs, and record no performance-iteration intent or canonical path authority before the answer. For a broad or honestly unlocalizable problem, the agent may recommend the complete performance review in that single targeted/full choice, but the user still chooses. A direct request for the complete performance review runs `pnpm verify:perf` without another clarification.
 
 Store agent-produced browser diagnostics under `.toolcraft/browser-artifacts/`. Browser integrations may instead use their external tool-owned storage; diagnostic files never belong in product source.
 
-The unchanged `sourceHash` fast path does not collect the catalog, dependency graph, or functional proof model and does not execute proof. For a changed source, the current catalog, input roles, ownership inventory, and semantic model are collected once and remain the immutable basis for that delivery plan. `workflow-observation.md` is a post-delivery summary, not execution authority, so it stays outside this hash; `agent-worklog.md` remains included.
+The proven-product phase guard runs before current-source inventory, integrity, build, tests, or semantic proof collection. The initial receipt remains the durable first-version identity even after later source edits. `workflow-observation.md` is a post-delivery summary, not execution authority; `agent-worklog.md` remains part of first-delivery inputs.
 
 After two consecutive compatible targeted iterations, offer the slower full audit if the user remains unsatisfied. A complaint, filename, or touched subsystem never authorizes it. Canonical classification details, failure behavior, and evidence wording live in `core/performance.md` and `performance.md`.
 
-The app is not complete when required checks are failed, incomplete, pending, blocked, or listed as skipped. Resolve benchmark requirements with the protected internal kernel check before accepting the renderer. The delivery runner executes integrity and lifecycle-specific proof atomically, binds evidence to current source, and advances the delivery anchor only after success. Product prose and command arguments cannot select or broaden that proof.
+The first product version is not complete when its required checks are failed, incomplete, pending, blocked, or listed as skipped. Later work is not complete until its directly relevant focused checks pass. Resolve benchmark requirements with the protected internal kernel check before accepting the renderer. The delivery runner executes initial or authority-backed performance proof atomically; ordinary later edits do not advance or replace the initial receipt. Product prose and command arguments cannot select or broaden performance proof.

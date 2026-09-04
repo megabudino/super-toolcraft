@@ -8,9 +8,11 @@ import {
 import type {
   ToolcraftComponentAcceptance,
   ToolcraftControlSectionInventoryEntry,
+  ToolcraftFiniteSelectorInventoryEntry,
   ToolcraftProductReadiness,
   ToolcraftTransferMode,
 } from "./acceptance/types";
+import { isToolcraftProductSectionControl } from "./acceptance/controls";
 import {
   validateToolcraftAcceptanceDiagnostics,
   validateToolcraftAcceptanceCoverage,
@@ -70,9 +72,48 @@ export const contractAcceptanceFixture: readonly ToolcraftComponentAcceptance[] 
 
 export const contractSectionInventoryFixture: readonly ToolcraftControlSectionInventoryEntry[] = [];
 
+type ContractSectionInventoryIntent = Readonly<{
+  entity: string;
+  entityId: string;
+  finiteSelectors: readonly ToolcraftFiniteSelectorInventoryEntry[];
+  groupingReason: string;
+  id: string;
+  splitReason?: string;
+  targets?: readonly string[];
+  title?: string;
+  workflowStage?: string;
+}>;
+
+export function createContractSectionInventoryFixture(
+  schema: ResolvedToolcraftAppSchema,
+  intents: readonly ContractSectionInventoryIntent[],
+): readonly ToolcraftControlSectionInventoryEntry[] {
+  return intents.map((intent) => {
+    const section = schema.panels.controls?.sections.find(
+      ({ id }) => id === intent.id,
+    );
+    const targets = intent.targets ?? Object.values(section?.controls ?? {})
+      .filter(isToolcraftProductSectionControl)
+      .map(({ target }) => target);
+
+    return {
+      entity: intent.entity,
+      entityId: intent.entityId,
+      finiteSelectors: intent.finiteSelectors,
+      groupingReason: intent.groupingReason,
+      id: intent.id,
+      splitReason: intent.splitReason,
+      targets,
+      title: intent.title ?? section?.title ?? intent.entity,
+      workflowStage: intent.workflowStage,
+    };
+  });
+}
+
 export const contractTransferModeFixture: ToolcraftTransferMode = {
   animationIntent: { mode: "none" },
   mode: "new-toolcraft-app",
+  referenceInputs: [],
 };
 
 export const contractProductReadinessFixture: ToolcraftProductReadiness = {

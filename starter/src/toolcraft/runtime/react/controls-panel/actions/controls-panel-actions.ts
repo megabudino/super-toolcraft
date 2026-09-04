@@ -10,11 +10,11 @@ import type {
   ToolcraftActionCommand,
   ToolcraftActionSchema,
 } from "../../../schema/types";
+import { isToolcraftArtifactExportAction } from "../../../schema/artifact-export-actions";
 import type {
   ToolcraftCommand,
   ToolcraftState,
 } from "../../../state/types";
-import { getToolcraftCanvasFrame } from "../../../state/canvas-frame";
 import type { ActionControlRunAction } from "../renderers/controls-panel-action-renderer";
 import { renderToolcraftRuntimeSceneToCanvas } from "../../canvas/runtime-scene-export";
 import { useToolcraftPipeline } from "../../app-shell/use-toolcraft-pipeline";
@@ -66,7 +66,6 @@ function isPromiseLike(value: unknown): value is PromiseLike<unknown> {
 function noopReportProgress(): void {}
 
 const defaultSceneExport: ToolcraftControlsSceneExport = Object.freeze({
-  productSceneRequired: false,
   visibility: defaultToolcraftRuntimeSceneVisibility,
 });
 
@@ -204,8 +203,7 @@ export function useControlsPanelActions({
         setPanelActionFeedback(feedback);
       }
     };
-    const runtimeOwnsExport =
-      action.role === "export-image" || action.role === "export-video";
+    const runtimeOwnsExport = isToolcraftArtifactExportAction(action);
     const command = runtimeOwnsExport
       ? null
       : action.command ?? (onPanelAction ? null : getActionCommand(action));
@@ -228,9 +226,8 @@ export function useControlsPanelActions({
         renderRuntimeScene: (canvas, frame, state) =>
           renderToolcraftRuntimeSceneToCanvas({
             canvas,
-            canvasFrame: getToolcraftCanvasFrame(state.canvas),
-            exportFrame: frame,
             host: modelRenderHost,
+            outputFrame: frame,
             resolveImageResource: sourceAssetCoordinator.resolveResource,
             state,
             visibility: sceneExport.visibility,

@@ -9,6 +9,7 @@ import {
 } from "./coverage";
 import {
   schemaHasPngExportPanelAction,
+  schemaHasSvgExportPanelAction,
   schemaHasVideoExportPanelAction,
 } from "./output-export";
 import type {
@@ -67,7 +68,7 @@ export function getToolcraftLayerCoverageErrors({
         errors.push(`${entry.id} must have automated coverage proving layer ${coverage}.`);
       }
 
-      if (!entry.browser || !entry.browserTestName.trim()) {
+      if (entry.browser === false) {
         errors.push(`${entry.id} must have browser coverage proving layer ${coverage}.`);
       }
 
@@ -178,7 +179,11 @@ export function getToolcraftCanvasSizingCoverageErrors({
   const errors: string[] = [];
 
   if (schema.canvas.sizing.mode === "fixed-output") {
-    if (schemaHasPngExportPanelAction(schema) || schemaHasVideoExportPanelAction(schema)) {
+    if (
+      schemaHasPngExportPanelAction(schema) ||
+      schemaHasSvgExportPanelAction(schema) ||
+      schemaHasVideoExportPanelAction(schema)
+    ) {
       errors.push(
         'Product/output apps with export actions must use canvas.sizing mode "editable-output" so Aspect ratio, Canvas width, and Canvas height are always available. Put reference, fixed-format, or user-requested dimensions in canvas.size as the initial value instead of hiding size controls with "fixed-output".',
       );
@@ -201,7 +206,7 @@ export function getToolcraftCanvasSizingCoverageErrors({
         );
       }
 
-      if (!fixedCanvasSizingEntry.browser || !fixedCanvasSizingEntry.browserTestName.trim()) {
+      if (fixedCanvasSizingEntry.browser === false) {
         errors.push(
           `${fixedCanvasSizingEntry.id} must have browser coverage proving fixed output dimensions.`,
         );
@@ -231,7 +236,7 @@ export function getToolcraftCanvasSizingCoverageErrors({
         );
       }
 
-      if (!intrinsicCanvasSizingEntry.browser || !intrinsicCanvasSizingEntry.browserTestName.trim()) {
+      if (intrinsicCanvasSizingEntry.browser === false) {
         errors.push(
           `${intrinsicCanvasSizingEntry.id} must have browser coverage proving intrinsic media sizing.`,
         );
@@ -274,7 +279,7 @@ export function getToolcraftPersistenceCoverageErrors({
     );
   }
 
-  if (!persistenceEntry.browser || !persistenceEntry.browserTestName.trim()) {
+  if (persistenceEntry.browser === false) {
     errors.push(
       `${persistenceEntry.id} must have browser coverage proving persistence reload behavior.`,
     );

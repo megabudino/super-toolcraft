@@ -11,11 +11,12 @@ import {
 } from "./toolcraft-performance-authority-policy.mjs";
 
 const firstPathId =
-  "performance-path:%5B%22interactive-discrete%22%2C%22control-change%22%2C%5B%22composite%22%5D%2C%5B%22main%22%5D%2C%5B%5D%5D";
+  "performance-path:%5B%22interactive-discrete%22%2C%22control-change%22%2C%5B%22composite%22%5D%2C%5B%5D%2C%5B%5D%2C%5B%22main%22%5D%2C%5B%5D%5D";
 const secondPathId =
-  "performance-path:%5B%22interactive-continuous%22%2C%22viewport-drag%22%2C%5B%22composite%22%5D%2C%5B%22main%22%5D%2C%5B%5D%5D";
+  "performance-path:%5B%22interactive-continuous%22%2C%22viewport-drag%22%2C%5B%22composite%22%5D%2C%5B%5D%2C%5B%5D%2C%5B%22main%22%5D%2C%5B%5D%5D";
 
 function encodePathSignature(signature) {
+  assert.equal(signature.length, 7);
   return `performance-path:${encodeURIComponent(JSON.stringify(signature))}`;
 }
 
@@ -218,15 +219,15 @@ test("accepts nontrivial request evidence with exact whitespace and Unicode code
 for (const [caseName, signature] of [
   [
     "an unknown profile",
-    ["unknown-profile", "control-change", ["composite"], ["main"], []],
+    ["unknown-profile", "control-change", ["composite"], [], [], ["main"], []],
   ],
   [
     "an unknown interaction",
-    ["interactive-discrete", "unknown-interaction", ["composite"], ["main"], []],
+    ["interactive-discrete", "unknown-interaction", ["composite"], [], [], ["main"], []],
   ],
   [
     "a profile that does not match its interaction",
-    ["interactive-continuous", "control-change", ["composite"], ["main"], []],
+    ["interactive-continuous", "control-change", ["composite"], [], [], ["main"], []],
   ],
   [
     "duplicate invalidated passes",
@@ -234,6 +235,8 @@ for (const [caseName, signature] of [
       "interactive-discrete",
       "control-change",
       ["composite", "composite"],
+      [],
+      [],
       ["main"],
       [],
     ],
@@ -244,6 +247,8 @@ for (const [caseName, signature] of [
       "interactive-discrete",
       "control-change",
       ["source", "composite"],
+      [],
+      [],
       ["main"],
       [],
     ],
@@ -254,6 +259,8 @@ for (const [caseName, signature] of [
       "interactive-discrete",
       "control-change",
       ["composite"],
+      [],
+      [],
       ["satellite"],
       [],
     ],
@@ -264,6 +271,8 @@ for (const [caseName, signature] of [
       "interactive-discrete",
       "control-change",
       ["composite"],
+      [],
+      [],
       ["main"],
       ["pixel-count", "pixel-count"],
     ],
@@ -288,9 +297,11 @@ test("rejects adversarial encoded JSON path payloads", () => {
       0: "interactive-discrete",
       1: "control-change",
       2: ["composite"],
-      3: ["main"],
+      3: [],
       4: [],
-      length: 5,
+      5: ["main"],
+      6: [],
+      length: 7,
     }),
   )}`;
 

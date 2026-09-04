@@ -9,7 +9,7 @@ const workspaceUiModule = ["@", "repo/ui"].join("");
 test("finds built-in controls through every module form", async (context) => {
   const rootDir = await createFixture(context, {
     "src/features/control-bridge.ts": `
-      export { SliderControl as ProductSlider } from "@/toolcraft/ui/components/controls";
+      export { SliderControl as ProductSlider } from "${workspaceUiModule}/controls";
       export { Color as ProductColor } from "@/toolcraft/ui";
     `,
     "src/features/dynamic.ts": `

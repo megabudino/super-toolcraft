@@ -10,8 +10,11 @@ import {
 const timelinePlaybackAcceptance: ToolcraftComponentAcceptance = {
   automated: true,
   automatedTestName: "timeline playback controls drive rendered output",
-  browser: true,
-  browserTestName: "browser: timeline playback controls drive rendered output",
+  browser: {
+    budget: "standard",
+    file: "e2e/app-controls.spec.ts",
+    testName: "browser: timeline playback controls drive rendered output",
+  },
   componentType: "timeline",
   evidence: "timeline-output",
   expectedObservable: "Playback and scrubbing affect the rendered timeline frame.",
@@ -43,8 +46,11 @@ function createTimelineKeyframesAcceptance(
   return {
     automated: true,
     automatedTestName: "timeline keyframes evaluate rendered output",
-    browser: true,
-    browserTestName: "browser: timeline keyframes evaluate rendered output",
+    browser: {
+      budget: "standard",
+      file: "e2e/app-controls.spec.ts",
+      testName: "browser: timeline keyframes evaluate rendered output",
+    },
     componentType: "timeline",
     evidence: "timeline-output",
     expectedObservable,
@@ -123,8 +129,11 @@ describe("starter acceptance keyframes contract", () => {
           {
             automated: true,
             automatedTestName: "opacity changes rendered output",
-            browser: true,
-            browserTestName: "browser: opacity slider changes rendered output",
+            browser: {
+              budget: "standard",
+              file: "e2e/app-controls.spec.ts",
+              testName: "browser: opacity slider changes rendered output",
+            },
             componentType: "slider",
             evidence: "rendered-pixels",
             expectedObservable: "Changing Opacity changes rendered output.",
@@ -137,8 +146,11 @@ describe("starter acceptance keyframes contract", () => {
           {
             automated: true,
             automatedTestName: "mode changes rendered output",
-            browser: true,
-            browserTestName: "browser: mode select changes rendered output",
+            browser: {
+              budget: "standard",
+              file: "e2e/app-controls.spec.ts",
+              testName: "browser: mode select changes rendered output",
+            },
             componentType: "select",
             evidence: "rendered-pixels",
             expectedObservable: "Changing Mode changes blend behavior.",
@@ -181,8 +193,11 @@ describe("starter acceptance keyframes contract", () => {
           {
             automated: true,
             automatedTestName: "blur changes rendered output",
-            browser: true,
-            browserTestName: "browser: blur slider changes rendered output",
+            browser: {
+              budget: "standard",
+              file: "e2e/app-controls.spec.ts",
+              testName: "browser: blur slider changes rendered output",
+            },
             componentType: "slider",
             evidence: "rendered-pixels",
             expectedObservable: "Changing Blur changes edge softness.",
@@ -229,8 +244,11 @@ describe("starter acceptance keyframes contract", () => {
           {
             automated: true,
             automatedTestName: "mode changes rendered output",
-            browser: true,
-            browserTestName: "browser: mode select changes rendered output",
+            browser: {
+              budget: "standard",
+              file: "e2e/app-controls.spec.ts",
+              testName: "browser: mode select changes rendered output",
+            },
             componentType: "select",
             evidence: "rendered-pixels",
             expectedObservable: "Changing Mode changes blend behavior.",

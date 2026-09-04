@@ -17,7 +17,9 @@ import { expectToolcraftPersistentOutcomeAfterAction } from "./stable-outcome-he
 
 export async function expectToolcraftAcceptanceOutcome<T>(
   observeOutcome: () => Promise<T>,
-  action: () => Promise<void>,
+  action:
+    | (() => Promise<void>)
+    | ToolcraftBrowserAction<"interaction">,
   {
     evidenceType,
     requirementId,
@@ -37,9 +39,15 @@ export async function expectToolcraftAcceptanceOutcome<T>(
       `Generic acceptance outcomes cannot emit specialized evidence "${String(evidenceType)}". Use the protected semantic recipe for that behavior.`,
     );
   }
+  const browserAction = isToolcraftBrowserAction(action) ? action : undefined;
+  const target = browserAction
+    ? getToolcraftBrowserActionTarget(browserAction)
+    : undefined;
   const result = await expectToolcraftPersistentOutcomeAfterAction(
     observeOutcome,
-    action,
+    browserAction
+      ? () => runToolcraftBrowserValueAction(browserAction)
+      : action,
     {
       message: `Acceptance outcome "${requirementId}" should change after the tested action.`,
       stabilityIntervalMs,
@@ -47,7 +55,11 @@ export async function expectToolcraftAcceptanceOutcome<T>(
       timeoutMs,
     },
   );
-  await attachToolcraftBrowserRuntimeEvidence({ evidenceType, requirementId });
+  await attachToolcraftBrowserRuntimeEvidence({
+    evidenceType,
+    requirementId,
+    target,
+  });
   return result;
 }
 

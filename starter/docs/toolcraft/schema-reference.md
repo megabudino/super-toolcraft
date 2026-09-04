@@ -18,7 +18,7 @@ Top-level schema fields:
 | `settingsTransfer` | Runtime-owned Export Settings / Import Settings identity.              | `core/setup-export.md`                                                     |
 | `panelActions`     | Sticky product delivery actions such as export, copy, generate, apply. | `core/setup-export.md`, `core/control-selection.md`                        |
 
-Schema controls always bind to a `target`, use `defaultValue` for reset behavior, and include `performanceRole` / `performanceReason` on visible non-action controls. Use built-in control `type` values before `controlRenderers`.
+Schema controls always bind to a `target`, use `defaultValue` for reset behavior, and include `performanceRole` / `performanceReason` on visible non-action controls. Use built-in control `type` values before `controlRenderers`. Built-in targets have one canonical runtime value model through defaults, seeded/live state, undo/reset, persistence, settings transfer, and keyframes; renderers never decode React callback shapes. `color` state is an expanded uppercase `#RRGGBB` string even though Color emits `{ hex }`. Compound/collection values keep their documented models; ordinary `fileDrop` bytes stay outside `state.values`.
 
 ## Canvas
 
@@ -30,7 +30,7 @@ Canvas sizing modes:
 
 Product-output, exportable, shader, procedural, and reference-clone apps use `editable-output`. Uploaded background/source images inside a product canvas also use `editable-output`: keep the current canvas size and render the image as cover/crop inside current canvas bounds.
 
-`canvas.mode` is runtime state with values `"finite"` and `"infinite"`; it is not a second schema sizing mode. `canvas.infinity` is the reserved built-in Setup target. Infinite mode preserves `canvas.size` only for later finite restoration and never uses that dormant size for layout or export.
+`canvas.mode` is runtime state with values `"finite"` and `"infinite"`; it is not a second schema sizing mode. `canvas.infinity` is the reserved built-in Setup target. Both modes share one product scene frame. Infinite mode preserves `canvas.size` only for later finite restoration; finite mode uses that size for the centered artboard clip/output boundary, not as a substitute for declared product bounds.
 
 Editable-output apps may opt into Infinity for a fresh workspace and Reset with
 `canvas.sizing: { defaultMode: "infinite", mode: "editable-output" }`. Omitting
@@ -49,7 +49,7 @@ export const appComposition: ToolcraftAppComposition = {
 };
 ```
 
-The provider returns world-space `{ x, y, width, height }` rectangles for one exact state. Runtime uses their union for the live infinite product scene, unions them with visible image/model frames for export, and calls the provider for every scheduled video state before forming one stable envelope. Canvas 2D, WebGL, and WebGPU product output calls `useToolcraftProductSceneFrame()` inside `canvasContent` for active backing size and world-to-local translation. Product code does not read DOM bounds, author a time-range envelope, or reuse dormant finite size in infinite mode.
+The provider returns world-space `{ x, y, width, height }` rectangles for one exact state in both finite and infinite modes. Runtime uses the same provider rect for live product output and product export. Finite output remains the centered artboard boundary; Infinity export crops the outward-rounded union of visible product, image, and model contributors, and video resolves every scheduled state before forming one stable envelope. Without a provider, only finite mode may fall back to the artboard rect. Canvas 2D, WebGL, and WebGPU product output calls `useToolcraftProductSceneFrame()` inside `canvasContent` for the canonical product rect, backing size, and world-to-local translation without remounting or reallocating solely for a mode toggle. Product code does not read DOM bounds, infer image scene geometry from source pixels, or author a time-range envelope.
 
 Use `canvas.renderScale: true` or `canvas.renderScale: { step }` only for non-vector raster previews such as Canvas 2D, WebGL, or WebGPU. For this field, product code may customize only the slider step; authored schema cannot set `enabled`, `min`, `defaultValue`, or `max`. Runtime resolves enabled render scale to `{ enabled: true, min: 1, defaultValue: 2, max: 2, step }`, using `0.25` when no step is authored. A custom step must be finite, between `0.01` and `1`, and evenly partition the canonical `1..2` range so `2` remains reachable; invalid input fails fast. Do not enable it for DOM/SVG/vector-native previews. Enabling it requires one browser runtime acceptance row targeting `canvas.renderScale` with `renderScaleCoverage.kind: "selected-backing-pixels"` and exact sorted states `["interaction", "steady"]`, plus `"playback"` when timeline is enabled. The fixed `canvas-render-scale-backing` recipe proves actual backing pixels rather than timing.
 
@@ -160,7 +160,7 @@ Common control fields:
 | `description`       | Product-specific help text only when it adds meaning beyond the label.                                                       |
 | `applicability`     | Required product claim: `{ mode: "always" }` or `{ mode: "conditional", all: [...] }`. Hidden values are preserved.       |
 | `orderRole`         | Makes section order testable.                                                                                                |
-| `semanticGroup`     | Language-independent product sub-entity/workflow grouping, required on every control in sections with eight to ten controls. |
+| `semanticGroup`     | Language-independent product sub-entity/workflow grouping, required on every control in sections with eight to ten controls and on every plain Color when a mixed section contains multiple plain Colors. |
 | `sliderValueKind`   | `slider` intent: `"continuous"` or `"discrete"`.                                                                             |
 | `textValueKind`     | `text`/`code` intent: `"single-line"`, `"multiline"`, or `"structured"`.                                                     |
 | `curveIntent`       | `curves` composition: `"single-value-map"` or `"color-channels"`.                                                            |
@@ -170,7 +170,7 @@ Common control fields:
 | `keyframeable`      | Timeline/keyframe capability override when structurally needed.                                                              |
 | `variant`           | Component-specific variant.                                                                                                  |
 
-Every authored product control declares `applicability`: use `{ mode: "always" }` only when it affects its accepted outcome in every finite sibling-selector branch, or `{ mode: "conditional", all: [...] }` when every predicate must match. Inactive controls are absent while values remain preserved. Do not use `disabled`, `disabledWhen`, or inert visible controls for availability. Legacy control `visibleWhen` remains readable only at the low-level compatibility boundary; product acceptance rejects it and omitted applicability. Section `visibleWhen` remains a separate legacy section-layout feature.
+Every authored product control declares `applicability`: use `{ mode: "always" }` when the control remains usable, or `{ mode: "conditional", all: [...] }` when every predicate must match. Inactive controls are absent while values remain preserved. Branch proof is declared separately through the Control Section Inventory's `finiteSelectors`; an `always` declaration does not create implicit sibling fanout. Do not use `disabled`, `disabledWhen`, or inert visible controls for availability. Legacy control `visibleWhen` remains readable only at the low-level compatibility boundary; product acceptance rejects it and omitted applicability. Section `visibleWhen` remains a separate legacy section-layout feature.
 
 Conditions support `equals`, `notEquals`, `oneOf`, `notOneOf`, `greaterThan`, `greaterThanOrEqual`, `lessThan`, and `lessThanOrEqual`. Reserved runtime targets include `runtime.settingsTransfer`, `canvas.infinity`, `canvas.aspectRatio`, `canvas.size.width`, `canvas.size.height`, `canvas.renderScale`, and `panels.timeline.extended`; product sections must not declare them.
 
@@ -220,7 +220,7 @@ before schema controls or renderer code:
 
 ```ts
 export const appProductReadiness: ToolcraftProductReadiness = {
-  exportIntent: { image: { mode: "toolcraft-default" }, video: { mode: "not-requested" } },
+  exportIntent: { image: { mode: "toolcraft-default" }, svg: { mode: "not-requested" }, video: { mode: "not-requested" } },
   interactionOwnership: [],
   mode: "product",
   productName: "Model Studio",
@@ -289,21 +289,58 @@ exactly match schema `orientationGizmo` targets.
 
 ## Control Section Inventory
 
-Before writing `panels.controls.sections`, export `appControlSectionInventory` beside `appAcceptance`:
+Before writing `panels.controls.sections`, declare the controls in `appSchema`
+and export `appControlSectionInventory` beside `appAcceptance`. This
+complete section example shows the selector contract shared by all three:
+
 ```ts
-export const appControlSectionInventory = [
-  {
-    entity: "Text block",
-    entityId: "text-block",
-    groupingReason: "These controls edit the text content, typography, and visible text fill together.",
-    id: "text",
-    targets: ["text.content", "text.font"],
-    title: "Text",
+const shapeSection = {
+  controls: {
+    amount: {
+      applicability: { mode: "always" }, defaultValue: 0.5, max: 1, min: 0,
+      sliderValueKind: "continuous", target: "shape.amount", type: "slider",
+    },
+    character: {
+      applicability: { mode: "always" }, defaultValue: "soft",
+      options: [{ label: "Soft", value: "soft" }, { label: "Sharp", value: "sharp" }],
+      target: "shape.character", type: "select",
+    },
+    detailColor: {
+      applicability: { all: [{ equals: "star", target: "shape.kind" }], mode: "conditional" },
+      defaultValue: "#FFFFFF", target: "shape.detailColor", type: "color",
+    },
+    kind: {
+      applicability: { mode: "always" }, defaultValue: "circle",
+      options: [{ label: "Circle", value: "circle" }, { label: "Star", value: "star" }],
+      target: "shape.kind", type: "segmented",
+    },
   },
-] as const;
+  id: "shape", title: "Shape",
+} as const;
+export const appControlSectionInventory = [{
+  entity: "Shape", entityId: "shape",
+  finiteSelectors: [
+    {
+      affectedTargets: ["shape.amount"],
+      reason: "Shape kind selects parameter families with different relevance.",
+      role: "branch", target: "shape.kind",
+    },
+    {
+      reason: "Character changes its glyph without changing peer relevance.",
+      role: "parameter", target: "shape.character",
+    },
+  ],
+  groupingReason: "These controls edit one rendered shape.",
+  id: "shape",
+  targets: ["shape.kind", "shape.character", "shape.detailColor", "shape.amount"],
+  title: "Shape",
+}] as const satisfies readonly ToolcraftControlSectionInventoryEntry[];
 ```
 
 - Every product control target appears exactly once in the inventory. Runtime-owned `Setup`, sticky footer `Export`, settings transfer, and runtime canvas sizing targets do not need entries. The product targets authored in the standard `Background` source section remain in its `Background` inventory entry after runtime relocates those controls into `Setup`. Stable `entityId` is the primary grouping authority; target namespaces are only secondary diagnostics.
+- Every bounded finite product selector appears exactly once in `finiteSelectors`. Use `branch` only when changing the selector changes which peer settings are relevant; list its exact always-visible peers in `affectedTargets`. Explicit applicability predicates add their dependents automatically, so `shape.detailColor` is not repeated for `shape.kind` above. Predicate owners must be branches.
+- Use `parameter` when a finite selector changes only its own accepted output. Parameters still require their own acceptance row and complete option coverage, but they do not expand unrelated peer proof.
+- Continuous controls such as `shape.amount` are absent from `finiteSelectors`. The field is required on every inventory entry, including `finiteSelectors: []` when the section has no bounded selector.
 - Keep one logical entity in one section through ten controls. One to seven controls is the normal size; sections with eight to ten controls require `semanticGroup` on every control. Controls editing one tightly scoped product sub-entity share the same group, and this fact may not be inferred from English labels.
 - When one entity has more than ten controls, split it into balanced workflow sections containing two to ten controls. Every split section keeps the same `entityId` and `entity`, declares a unique `workflowStage`, and provides a concrete `splitReason`. Do not create a one-control tail.
 
@@ -313,17 +350,17 @@ Reference and motion metadata lives in `appTransferMode`.
 
 Use `transferMode: "reference-runtime-clone"` when porting an existing app unless the user explicitly asks for redesign. Reference clones declare `referenceStudy`, `referenceFeatureInventory`, and acceptance mapping; detailed evidence requirements live in `core/reference-study.md`.
 
-Every product readiness declaration includes required `exportIntent`. Its resolved image/video capabilities must correspond exactly to schema actions and settings sections. Use `core/setup-export.md` for the authoritative modes, evidence requirements, and decision sequence.
+Every product readiness declaration includes required `exportIntent`. Its resolved image/SVG/video capabilities must correspond exactly to typed schema actions, applicable settings sections, and artifact acceptance. Use `core/setup-export.md` for the authoritative modes, evidence requirements, and decision sequence.
 
-Video references declare `videoReferenceStudy` before implementation. Animated products declare `animationIntent`, and playback/keyframe timeline apps declare a proven loop duration when known. Detailed animation rules live in `core/timeline-animation.md`.
+Motion references declare typed `referenceInputs` before implementation; each behavior maps bidirectionally to observable acceptance and browser `reference-parity`. The canonical preprocessing, sampling, evidence, timing, and no-reference rules live in `core/reference-study.md`. Animated products declare `animationIntent`, and playback/keyframe timeline apps declare a proven loop duration when known. Detailed animation rules live in `core/timeline-animation.md`.
 
 ## Export And Actions
 
-Product apps expose enabled artifact delivery through sticky `panelActions`, not canvas UI or ordinary body controls. `productReadiness.exportIntent` is required: image export defaults on and is absent only with explicit removal evidence; video export exists only with explicit user-request evidence. Animation, playback, keyframes, and timeline presence never change that intent.
+Product apps expose enabled artifact delivery through sticky `panelActions`, not canvas UI or ordinary body controls. `productReadiness.exportIntent` is required: image export defaults on and is absent only with explicit removal evidence; SVG/video exist only with explicit user-request evidence. Renderer technology, animation, playback, keyframes, and timeline presence never change that intent.
 
-Every app with `Export PNG` includes `Image Export` controls with `export.image.format` and `export.image.resolution`. Apps with `Export Video` include `Video Export` controls with `export.video.format` and `export.video.resolution`. Image-only, image-plus-video, video-only, and explicit no-export layouts must match `core/setup-export.md` exactly.
+Every app with `Export PNG` includes `Image Export` controls with `export.image.format` and `export.image.resolution`. Apps with `Export Video` include `Video Export` controls with `export.video.format` and `export.video.resolution`. `Export SVG` has no settings section and joins the sticky actions without changing image/video settings adjacency. Resolved layouts must match `core/setup-export.md` exactly.
 
-Use the standard runtime path: declare typed `export-image`/`export-video` panel actions and their settings, provide one `ToolcraftAppComposition.exportRenderer` when product code contributes pixels, and draw one deterministic frame from the supplied state/time in scene coordinates. Call `shouldIncludeToolcraftPreviewBackground(state)` only for bounded live preview; runtime owns artifact composition, sizing, encoding, download, progress, and errors.
+Use the standard runtime path: declare typed `export-image`/`export-video` actions plus their settings and provide `ToolcraftAppComposition.exportRenderer` when product code contributes pixels. For explicit SVG delivery, declare `export-svg` and provide `svgExportRenderer`, which appends namespace-aware editable vector nodes to the supplied detached group. Call `shouldIncludeToolcraftPreviewBackground(state)` only for bounded live preview; runtime owns artifact composition, frame/sizing, SVG validation/serialization, raster/video encoding, download, progress, and errors.
 
 Detailed Setup, Background, Image Export, Video Export, sticky action, icon, and progress rules live in `core/setup-export.md`.
 

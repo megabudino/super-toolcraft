@@ -14,6 +14,7 @@ const starterPersistenceSlices =
 export const appTransferMode: ToolcraftTransferMode = {
   animationIntent: { mode: "none" },
   mode: "new-toolcraft-app",
+  referenceInputs: [],
 };
 
 export const appProductReadiness: ToolcraftProductReadiness = {
@@ -27,9 +28,11 @@ export const appAcceptance: readonly ToolcraftComponentAcceptance[] = [
     automated: true,
     automatedTestName:
       "declares production reload coverage for the starter schema",
-    browser: true,
-    browserTestName:
-      "browser: app restores exact canvas, values, and panel workspace slices after reload",
+    browser: {
+      budget: "extended-io",
+      file: "e2e/app-persistence.spec.ts",
+      testName: "browser: app restores exact canvas, values, and panel workspace slices after reload",
+    },
     componentType: "persistence",
     evidence: "persistence-state",
     expectedObservable:

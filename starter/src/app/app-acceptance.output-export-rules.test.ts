@@ -109,8 +109,11 @@ describe("Toolcraft output export synthetic rules", () => {
             actionCoverage: ["reset", "export.png"],
             automated: true,
             automatedTestName: "footer actions reset and export output",
-            browser: true,
-            browserTestName: "browser: footer actions reset and export output",
+            browser: {
+              budget: "standard",
+              file: "e2e/app-controls.spec.ts",
+              testName: "browser: footer actions reset and export output",
+            },
             componentType: "panelActions",
             evidence: "exported-bytes",
             expectedObservable: "Footer actions reset controls and export output.",

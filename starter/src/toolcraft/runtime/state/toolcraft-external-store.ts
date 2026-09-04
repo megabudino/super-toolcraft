@@ -29,6 +29,7 @@ export type ToolcraftExternalStore = {
   dispatchTransient: (command: ToolcraftTransientCommand) => void;
   getCommittedState: () => ToolcraftState;
   getState: () => ToolcraftState;
+  hasTransient: (lane: ToolcraftTransientLane) => boolean;
   subscribe: (listener: () => void) => () => void;
   subscribeDependencies: (
     dependencies: readonly ToolcraftStoreDependency[],
@@ -394,6 +395,10 @@ export function createToolcraftExternalStore(
     dispatchTransient,
     getCommittedState: () => committedState,
     getState: () => effectiveState,
+    hasTransient: (lane) =>
+      lane === "playback"
+        ? playbackTimeSeconds !== undefined
+        : viewport !== undefined,
     subscribe,
     subscribeDependencies,
     subscribeSelector,

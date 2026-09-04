@@ -9,7 +9,7 @@ import {
 } from "./toolcraft-integrity-policy.mjs";
 
 const fixtureManifestSignature =
-  "qU2Tc5z8NqfzbGr7ZdcGhKtt6eLBkw+kJMvmTNq5cE3andSTf/tF3SUdwpNJ4nNSiSHn/x6FcP0/iKW98nEWDg==";
+  "JV0pADONxQKv6AjOFGYNoYzCPJShkehcq3s6EjPP8lWTlgsz4ovO7j5tF3SHrmYR/JNx2l1M0M12278zBlFSDQ==";
 const runtimeSource = "export const runtime = true;\n";
 
 const sha256 = (value) =>
@@ -21,6 +21,7 @@ const sortRecord = (value) =>
 
 export function createToolcraftIntegrityFixtureManifest() {
   return {
+    domain: "generated",
     files: { "runtime.mjs": sha256(runtimeSource) },
     packageScripts: sortRecord(Object.fromEntries(
       requiredPackageScriptNames.map((scriptName) => [
@@ -60,6 +61,8 @@ export async function installToolcraftIntegrityFixture(rootDir) {
   await fs.mkdir(path.join(rootDir, "src", "toolcraft"), {
     recursive: true,
   });
+  await fs.mkdir(path.join(rootDir, "src", "toolcraft", "runtime"));
+  await fs.mkdir(path.join(rootDir, "src", "toolcraft", "ui"));
   await fs.writeFile(
     path.join(rootDir, "src", "toolcraft", "runtime.mjs"),
     runtimeSource,

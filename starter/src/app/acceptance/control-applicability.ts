@@ -165,6 +165,35 @@ export function getToolcraftApplicabilitySelectorDomain(
   return getDiscreteSliderDomain(control, predicates);
 }
 
+export type ToolcraftApplicabilitySelectorDiagnostic =
+  | Readonly<{
+      domain: Extract<
+        ToolcraftApplicabilitySelectorDomain,
+        { status: "supported" }
+      >;
+      status: "supported";
+    }>
+  | Readonly<{ reason: string; status: "missing" }>
+  | Readonly<{ reason: string; status: "unsupported" }>;
+
+export function getToolcraftApplicabilitySelectorDiagnostic(
+  target: string,
+  control: ResolvedToolcraftControlSchema | undefined,
+  predicates: readonly ToolcraftControlPredicateSchema[],
+): ToolcraftApplicabilitySelectorDiagnostic {
+  if (!control) {
+    return {
+      reason: `${target} does not resolve to a schema control`,
+      status: "missing",
+    };
+  }
+
+  const domain = getToolcraftApplicabilitySelectorDomain(control, predicates);
+  return domain.status === "supported"
+    ? { domain, status: "supported" }
+    : { reason: domain.reason, status: "unsupported" };
+}
+
 function getInvalidFinitePredicateValues(
   predicates: readonly ToolcraftControlPredicateSchema[],
   domain: readonly ToolcraftApplicabilitySelectorValue[],
@@ -254,13 +283,20 @@ export function getToolcraftControlApplicabilityErrors({
 
     for (const predicate of predicates) {
       const selector = controlsByTarget.get(predicate.target);
+      const diagnostic = getToolcraftApplicabilitySelectorDiagnostic(
+        predicate.target,
+        selector,
+        [predicate],
+      );
 
-      if (!selector) {
+      if (diagnostic.status === "missing") {
         errors.push(
           `${control.target} predicate target "${predicate.target}" does not exist.`,
         );
         continue;
       }
+
+      if (!selector) continue;
 
       if (selector.target === control.target) {
         errors.push(`${control.target} applicability cannot gate itself.`);
@@ -274,22 +310,25 @@ export function getToolcraftControlApplicabilityErrors({
 
     for (const [selectorTarget, targetPredicates] of predicatesByTarget) {
       const selector = controlsByTarget.get(selectorTarget);
-
-      if (!selector) {
-        continue;
-      }
-
-      const domain = getToolcraftApplicabilitySelectorDomain(
+      const diagnostic = getToolcraftApplicabilitySelectorDiagnostic(
+        selectorTarget,
         selector,
         targetPredicates,
       );
 
-      if (domain.status === "unsupported") {
+      if (diagnostic.status === "missing") {
+        continue;
+      }
+      if (diagnostic.status === "unsupported") {
         errors.push(
-          `${selector.target} is not a supported applicability selector: ${domain.reason}.`,
+          `${selectorTarget} is not a supported applicability selector: ${diagnostic.reason}.`,
         );
         continue;
       }
+
+      if (!selector) continue;
+
+      const { domain } = diagnostic;
 
       if (
         selector.type === "select" ||

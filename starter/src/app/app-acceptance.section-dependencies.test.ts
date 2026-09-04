@@ -59,6 +59,13 @@ describe("starter acceptance section dependency contract", () => {
           {
             entity: "Shape",
             entityId: "shape",
+            finiteSelectors: [
+              {
+                reason: "Shape kind changes its own rendered product outcome.",
+                role: "parameter",
+                target: "shape.kind",
+              },
+            ],
             groupingReason: "Shape setup",
             id: "shape",
             targets: ["shape.kind"],
@@ -123,6 +130,7 @@ describe("starter acceptance section dependency contract", () => {
       {
         entity: "Object shape",
         entityId: "object-shape",
+        finiteSelectors: [],
         groupingReason:
           "Structure controls tune the physical footprint of the object.",
         id: "shape-structure",
@@ -135,6 +143,7 @@ describe("starter acceptance section dependency contract", () => {
       {
         entity: "Object shape",
         entityId: "object-shape",
+        finiteSelectors: [],
         groupingReason:
           "Density controls tune how many objects appear after structure is set.",
         id: "shape-density",

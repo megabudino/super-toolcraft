@@ -25,7 +25,8 @@ Use only these app-specific extension points. Shared runtime changes happen upst
 - typed `modelPresentation`, with `{ mode: "runtime" }` as the default standard preview/export owner or `{ mode: "custom", consumers }` for declared model targets with checked consumers;
 - `controlRenderers` only for true custom controls that pass the built-in fit check;
 - one `exportRenderer` that draws a deterministic product frame for runtime-owned image/video export;
-- one `sceneBoundsProvider` that returns exact-state product world-space rectangles for infinite preview and runtime-owned export;
+- one `svgExportRenderer` that appends namespace-aware editable vector content for runtime-owned SVG export;
+- one `sceneBoundsProvider` that returns exact-state product world-space rectangles for live output and runtime-owned export in both finite and infinite modes;
 - `onPanelAction` for non-export sticky product actions;
 - optional `rendererPipelineRegistration` for one compiled executable custom-renderer pipeline shared by product work, runtime evidence, and performance assessment;
 - runtime commands and hooks, including `useToolcraftProductSceneFrame` inside `canvasContent` when a raster/WebGL renderer needs the active finite or infinite frame.
@@ -37,7 +38,7 @@ Use only these app-specific extension points. Shared runtime changes happen upst
 - Do not import anything below `src/toolcraft/ui/components/controls/**` (or the equivalent workspace package path), even when the private symbol name is not a public control. Private popovers, parsers, inputs, and state helpers are implementation details.
 - Do not substitute native or primitive `input` types `color`, `range`, `file`, `checkbox`, or `radio`, or native `select`/`textarea`, for schema controls. Generic text inputs and product-specific primitives remain available inside a justified custom interaction.
 - Do not recreate controls, panels, toolbar, timeline, layers, canvas shell, drag handles, section headers, section reset, history, or runtime surfaces by hand.
-- Do not create product-owned export canvases, encoders, object-URL downloads, or direct Mediabunny integrations; runtime owns typed image/video actions end to end.
+- Do not create product-owned export canvases/documents, SVG serializers, encoders, file pickers, object-URL downloads, or direct Mediabunny integrations; runtime owns typed image/SVG/video actions end to end.
 - If a shared behavior is wrong, fix the shared runtime/template source and regenerate or sync the copied Toolcraft source instead of patching one exported app.
 
 ## Canvas Boundary
@@ -51,8 +52,10 @@ Use only these app-specific extension points. Shared runtime changes happen upst
 - DOM product text rendered inside `canvasContent` must be marked with `data-toolcraft-product-output` or `data-toolcraft-product-text` so tests and performance fixtures can target product output instead of app chrome.
 - Product editing handles must be textless overlays, write to runtime state, and stay out of export/copy output.
 - Preserve the runtime canvas backing. Product renderers may draw their own product background, but must not hide, replace, or make the Toolcraft canvas shell/backing transparent.
-- Runtime owns the product scene surface. In infinite mode it resolves `sceneBoundsProvider` for the exact committed state and applies that frame before mounting product output. Product code does not position another scene wrapper from `canvas.size` or DOM measurement.
-- Canvas 2D, WebGL, and WebGPU product output reads `useToolcraftProductSceneFrame()` for backing size and world-to-local translation. Finite frames are `{ x: 0, y: 0, width: canvas.size.width, height: canvas.size.height }`; infinite frames use the provider union. `empty` and `unavailable` are explicit states and never fall back to dormant finite dimensions.
+- Runtime owns one product scene surface across finite and infinite modes. It resolves `sceneBoundsProvider` for the exact committed state in both modes and applies the same product rect before mounting live output or invoking product export. Product code does not position another scene wrapper from `canvas.size`, source pixel dimensions, or DOM measurement.
+- Finite mode centers the artboard as a clip and output boundary around that canonical scene. A composition without `sceneBoundsProvider` may use the finite artboard rect as a finite-only product-frame fallback; Infinity has no such fallback.
+- Canvas 2D, WebGL, and WebGPU product output reads `useToolcraftProductSceneFrame()` for the canonical product rect, backing size, and world-to-local translation. Mode toggles preserve the mounted component, renderer, and live backing. `empty` and `unavailable` are explicit Infinity states and never fall back to dormant finite dimensions.
+- Imported image source pixels describe the resource, not its scene geometry. Runtime image transforms provide explicit world frames independently of intrinsic pixel size.
 
 ## Model Presentation Boundary
 

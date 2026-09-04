@@ -32,7 +32,7 @@ import {
   passedResultWithEvidence,
 } from "./browser-runtime-evidence-reporter-test-fixtures";
 import ToolcraftBrowserRuntimeEvidenceReporter from "./browser-runtime-evidence-reporter";
-import { getToolcraftPerformancePathTestName } from "./performance-path-helpers";
+import { getToolcraftPerformancePathTestName } from "./performance-path-adapter-matrix";
 import {
   TOOLCRAFT_PERFORMANCE_ENVIRONMENT_ATTACHMENT_NAME,
   TOOLCRAFT_PERFORMANCE_ENVIRONMENT_CONTENT_TYPE,

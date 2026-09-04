@@ -53,6 +53,7 @@ export function toolcraftReducer(
       return reduceToolcraftPanelsCommand(state, command);
 
     case "media.delete":
+    case "media.commitCanonicalImportAllocation":
     case "media.commitModelRepair":
     case "media.hydrateDefaultModel":
     case "media.hydrateModel":

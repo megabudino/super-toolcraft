@@ -69,9 +69,14 @@ export type ToolcraftCommand =
       type: "media.import";
     }
   | {
-      assets: readonly ToolcraftMediaAssetDraft[];
+      assets: readonly ToolcraftMediaBatchImportAsset[];
       replaceExisting?: boolean;
       type: "media.importBatch";
+    }
+  | {
+      /** Runtime-internal: coordinator-owned canonical allocation commit. */
+      allocation: ToolcraftCanonicalMediaImportAllocation;
+      type: "media.commitCanonicalImportAllocation";
     }
   | {
       activeDocumentRef: string;
@@ -181,6 +186,7 @@ export const toolcraftRuntimeCommandTypes = [
   "panels.resetOffset",
   "media.import",
   "media.importBatch",
+  "media.commitCanonicalImportAllocation",
   "media.commitModelRepair",
   "media.hydrateDefaultModel",
   "media.hydrateModel",
@@ -271,11 +277,11 @@ export type ToolcraftMediaResourceState =
 type ToolcraftBinaryMediaAssetBase<AssetKind extends "file" | "image"> =
   ToolcraftMediaAssetBase<AssetKind> & ToolcraftMediaResourceState;
 
-export type ToolcraftImageAsset = ToolcraftBinaryMediaAssetBase<"image"> & {
-  position: ToolcraftPoint;
-  size?: ToolcraftCanvasSize;
-  transform?: ToolcraftMediaTransform;
-};
+export type ToolcraftImageAsset = ToolcraftBinaryMediaAssetBase<"image"> &
+  ToolcraftSceneElementFrame & {
+    sourceSize: ToolcraftCanvasSize;
+    transform?: ToolcraftMediaTransform;
+  };
 
 export type ToolcraftFileAsset = ToolcraftBinaryMediaAssetBase<"file"> & {
   position: ToolcraftPoint;
@@ -294,8 +300,8 @@ export type ToolcraftMediaAsset =
   | ToolcraftImageAsset
   | ToolcraftModelAsset;
 
-type ToolcraftMediaAssetDraftFor<Asset extends ToolcraftMediaAsset> =
-  Asset extends ToolcraftMediaAsset
+type ToolcraftAssetDraftFor<Asset extends { id: string; layerId: string }> =
+  Asset extends unknown
     ? Omit<Asset, "id" | "layerId"> & {
         id?: string;
         layerId?: string;
@@ -303,11 +309,24 @@ type ToolcraftMediaAssetDraftFor<Asset extends ToolcraftMediaAsset> =
       }
     : never;
 
+type ToolcraftMediaAssetDraftFor<Asset extends ToolcraftMediaAsset> =
+  ToolcraftAssetDraftFor<Asset>;
+
 export type ToolcraftFileAssetDraft =
   ToolcraftMediaAssetDraftFor<ToolcraftFileAsset>;
 
 export type ToolcraftImageAssetDraft =
   ToolcraftMediaAssetDraftFor<ToolcraftImageAsset>;
+
+type ToolcraftImageAssetWithoutSceneSize<Asset> = Asset extends unknown
+  ? Omit<Asset, "size"> & { size?: never }
+  : never;
+
+export type ToolcraftPreparedSourceImageAssetDraft =
+  ToolcraftImageAssetWithoutSceneSize<ToolcraftImageAssetDraft>;
+
+export type ToolcraftPreparedSourceImageAsset =
+  ToolcraftImageAssetWithoutSceneSize<ToolcraftImageAsset>;
 
 export type ToolcraftModelAssetDraft =
   ToolcraftMediaAssetDraftFor<ToolcraftModelAsset>;
@@ -325,8 +344,50 @@ export type ToolcraftLegacyImageAsset = Omit<
   dataUrl: string;
   position: ToolcraftPoint;
   size?: ToolcraftCanvasSize;
+  sourceSize?: ToolcraftCanvasSize;
   transform?: ToolcraftMediaTransform;
 };
+
+type ToolcraftImageAssetWithoutGeometry<Asset> = Asset extends unknown
+  ? Omit<Asset, "position" | "size" | "sourceSize">
+  : never;
+
+export type ToolcraftLegacyRuntimeImageAsset =
+  ToolcraftImageAssetWithoutGeometry<ToolcraftImageAsset> &
+  Partial<ToolcraftSceneElementFrame> & {
+    sourceSize?: ToolcraftCanvasSize;
+  };
+
+export type ToolcraftLegacyRuntimeImageAssetDraft =
+  ToolcraftAssetDraftFor<ToolcraftLegacyRuntimeImageAsset>;
+
+export type ToolcraftImageAssetIngress =
+  | {
+      asset: ToolcraftImageAssetDraft;
+      policy: "canonical-runtime";
+    }
+  | {
+      asset: ToolcraftLegacyRuntimeImageAssetDraft;
+      policy: "legacy-record";
+    }
+  | {
+      asset: ToolcraftPreparedSourceImageAssetDraft;
+      policy: "prepared-source";
+    };
+
+export type ToolcraftInitialImageAssetIngress =
+  | {
+      asset: ToolcraftImageAsset;
+      policy: "canonical-runtime";
+    }
+  | {
+      asset: ToolcraftLegacyRuntimeImageAsset;
+      policy: "legacy-record";
+    }
+  | {
+      asset: ToolcraftPreparedSourceImageAsset;
+      policy: "prepared-source";
+    };
 
 export type ToolcraftLegacyFileAsset = ToolcraftMediaAssetBase<"file"> & {
   assetKind: "file";
@@ -356,11 +417,32 @@ export type ToolcraftLegacyFileAssetDraft = Omit<
 export type ToolcraftMediaImportAsset =
   | ToolcraftLegacyFileAssetDraft
   | ToolcraftLegacyImageAssetDraft
-  | ToolcraftMediaAssetDraft;
+  | ToolcraftFileAssetDraft
+  | ToolcraftImageAssetIngress
+  | ToolcraftModelAssetDraft;
+
+export type ToolcraftMediaBatchImportAsset =
+  | ToolcraftFileAssetDraft
+  | ToolcraftImageAssetIngress
+  | ToolcraftModelAssetDraft;
+
+export type ToolcraftCanonicalMediaImportAllocationItem = {
+  draft: ToolcraftMediaAssetDraft;
+  layerId: string;
+  layerName: string;
+  mediaId: string;
+};
+
+export type ToolcraftCanonicalMediaImportAllocation = {
+  baseLayers: readonly ToolcraftLayer[];
+  baseMediaAssets: readonly ToolcraftMediaAsset[];
+  items: readonly ToolcraftCanonicalMediaImportAllocationItem[];
+};
 
 export type ToolcraftInitialMediaAsset =
   | ToolcraftLegacyFileAsset
   | ToolcraftLegacyImageAsset
+  | ToolcraftInitialImageAssetIngress
   | ToolcraftLegacyModelAsset
   | ToolcraftMediaAsset;
 

@@ -1,10 +1,12 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  createContractSectionInventoryFixture,
   defineContractSchemaFixture,
   validateContractAcceptance,
 } from "./app-acceptance.contract-fixtures";
 import { makeControlAcceptance } from "./app-acceptance.test-utils";
+import type { ToolcraftComponentAcceptance } from "./acceptance/types";
 
 describe("starter acceptance compound control part coverage contract", () => {
   it("distinguishes user-owned and source-owned collection parts", () => {
@@ -55,7 +57,7 @@ describe("starter acceptance compound control part coverage contract", () => {
         },
       },
     });
-    const acceptance = [
+    const acceptance: ToolcraftComponentAcceptance[] = [
       makeControlAcceptance("colors.editable", "collectionActions"),
       makeControlAcceptance("layers.editable", "collectionActions"),
       makeControlAcceptance("colors.source", "sourceCollection"),
@@ -195,11 +197,14 @@ describe("starter acceptance compound control part coverage contract", () => {
       "mesh.band",
       "mesh.channels",
       "mesh.curves",
-    ].map((target) => ({
+    ].map((target): ToolcraftComponentAcceptance => ({
       automated: true,
       automatedTestName: `${target} changes output`,
-      browser: true,
-      browserTestName: `browser: ${target} changes output`,
+      browser: {
+        budget: "standard",
+        file: "e2e/app-controls.spec.ts",
+        testName: `browser: ${target} changes output`,
+      },
       componentType:
         target === "mesh.anchor"
           ? "anchorGrid"
@@ -265,12 +270,13 @@ describe("starter acceptance compound control part coverage contract", () => {
                       { color: "#FFE97A", opacity: 100, position: "100%" },
                     ],
                   },
-                  label: "Gradient",
+                  label: false,
                   orderRole: "color",
                   target: "mesh.gradient",
                   type: "gradient",
                 },
               },
+              id: "gradient",
               title: "Gradient",
             },
           ],
@@ -286,8 +292,11 @@ describe("starter acceptance compound control part coverage contract", () => {
           {
             automated: true,
             automatedTestName: "gradient type angle and stops change output",
-            browser: true,
-            browserTestName: "browser: gradient type angle and stops change output",
+            browser: {
+              budget: "standard",
+              file: "e2e/app-controls.spec.ts",
+              testName: "browser: gradient type angle and stops change output",
+            },
             componentType: "gradient",
             controlPartCoverage: [
               "gradient.gradientType",
@@ -305,6 +314,16 @@ describe("starter acceptance compound control part coverage contract", () => {
             userAction: "Change every visible part of the Gradient control.",
           },
         ],
+        sectionInventory: createContractSectionInventoryFixture(
+          gradientSchema,
+          [{
+            entity: "Gradient",
+            entityId: "gradient",
+            finiteSelectors: [],
+            groupingReason: "Gradient parts jointly define one rendered fill.",
+            id: "gradient",
+          }],
+        ),
       }),
     ).toEqual([]);
   });

@@ -11,7 +11,7 @@ import {
 import type { ToolcraftArtifactExportRequest } from "./artifact-export-request";
 import { resolveToolcraftImageExportSettings } from "./artifact-export-settings";
 import { renderToolcraftArtifactFrame } from "./artifact-frame-renderer";
-import { resolveToolcraftImageArtifactFrame } from "./artifact-scene-frame";
+import { resolveToolcraftStillArtifactFrame } from "./artifact-scene-frame";
 import { createToolcraftArtifactFrameState } from "./artifact-frame-state";
 import {
   ToolcraftSceneExportError,
@@ -80,14 +80,14 @@ export async function exportToolcraftImageArtifact(
     request.state,
     request.state.timeline.currentTimeSeconds,
   );
-  const frame = resolveToolcraftImageArtifactFrame({
+  const scenePlan = resolveToolcraftStillArtifactFrame({
     boundsProvider: request.boundsProvider,
-    productSceneRequired: request.productSceneRequired,
+    productSceneRequired: request.exportRenderer !== undefined,
     state: frameState,
     visibility: request.visibility,
   });
   const size = getToolcraftImageExportSize({
-    frame,
+    frame: scenePlan.outputFrame,
     resolution: settings.resolution,
     state: frameState,
   });
@@ -111,9 +111,10 @@ export async function exportToolcraftImageArtifact(
       backgroundColor:
         getToolcraftRuntimeBackgroundColor(frameState) ?? "#000000",
       canvas,
-      frame,
       includeBackground,
+      outputFrame: scenePlan.outputFrame,
       pixelRatio: size.pixelRatio,
+      productFrame: scenePlan.productFrame,
       renderProductFrame: request.exportRenderer?.renderFrame ?? null,
       renderRuntimeScene: request.renderRuntimeScene,
       rendererPipeline: request.rendererPipeline,

@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import type { ToolcraftComponentAcceptance } from "./acceptance/types";
 import {
+  createContractSectionInventoryFixture,
   defineContractSchemaFixture,
   validateContractAcceptance,
 } from "./app-acceptance.contract-fixtures";
@@ -15,7 +16,7 @@ function createMandatorySetupSchema(settingsTransfer: false | "auto" = false) {
         sections: [
           {
             controls: Object.fromEntries(
-              Array.from({ length: 12 }, (_, index) => [
+              Array.from({ length: 6 }, (_, index) => [
                 `control${index}`,
                 {
                   defaultValue: index,
@@ -27,7 +28,28 @@ function createMandatorySetupSchema(settingsTransfer: false | "auto" = false) {
                 },
               ]),
             ),
-            title: "Transform",
+            id: "transform-primary",
+            title: "Transform Primary",
+          },
+          {
+            controls: Object.fromEntries(
+              Array.from({ length: 6 }, (_, offset) => {
+                const index = offset + 6;
+                return [
+                  `control${index}`,
+                  {
+                    defaultValue: index,
+                    label: `Control ${index + 1}`,
+                    orderRole: "detail",
+                    semanticGroup: "transform",
+                    target: `settings.control${index}`,
+                    type: "slider",
+                  },
+                ];
+              }),
+            ),
+            id: "transform-secondary",
+            title: "Transform Secondary",
           },
         ],
         title: "Complex Settings",
@@ -63,6 +85,7 @@ function createMandatorySetupWithCanvasSizeSchema() {
                 },
               ]),
             ),
+            id: "transform",
             title: "Transform",
           },
         ],
@@ -73,20 +96,22 @@ function createMandatorySetupWithCanvasSizeSchema() {
   });
 }
 
-function createMandatorySetupWithCanvasSizeAcceptance() {
+function createMandatorySetupWithCanvasSizeAcceptance(): ToolcraftComponentAcceptance[] {
   return [
     {
       automated: true,
       automatedTestName: "sets Infinity mode without copying it into values",
-      browser: true,
-      browserTestName:
-        "browser: Infinity canvas removes the artboard and restores finite size",
+      browser: {
+        budget: "standard",
+        file: "e2e/app-controls.spec.ts",
+        testName: "browser: Infinity canvas removes the artboard and restores finite size",
+      },
       componentType: "canvas",
       evidence: "viewport-side-effect" as const,
       expectedObservable: "Infinity mode restores the previous finite canvas size.",
       fixture: "editable-output canvas",
       id: "canvas.infinity.mode",
-      infinityCanvasCoverage: "mode-and-restoration" as const,
+      infinityCanvasCoverage: "mode-continuity-and-restoration" as const,
       kind: "runtime" as const,
       userAction: "Toggle Infinity canvas twice.",
     },
@@ -99,6 +124,31 @@ function createMandatorySetupWithCanvasSizeAcceptance() {
 }
 
 describe("Toolcraft starter setup and readiness acceptance coverage", () => {
+  function createComplexSectionInventory(
+    schema: ReturnType<typeof createMandatorySetupSchema>,
+  ) {
+    return createContractSectionInventoryFixture(schema, [
+      {
+        entity: "Transform",
+        entityId: "transform",
+        finiteSelectors: [],
+        groupingReason: "Primary controls edit the first transform workflow stage.",
+        id: "transform-primary",
+        splitReason: "The transform entity exceeds ten controls and uses two balanced stages.",
+        workflowStage: "primary",
+      },
+      {
+        entity: "Transform",
+        entityId: "transform",
+        finiteSelectors: [],
+        groupingReason: "Secondary controls edit the final transform workflow stage.",
+        id: "transform-secondary",
+        splitReason: "The transform entity exceeds ten controls and uses two balanced stages.",
+        workflowStage: "secondary",
+      },
+    ]);
+  }
+
   it("rejects generated apps without the mandatory runtime setup controls panel", () => {
     const schema = defineContractSchemaFixture({
       canvas: { enabled: true },
@@ -122,6 +172,7 @@ describe("Toolcraft starter setup and readiness acceptance coverage", () => {
       validateContractAcceptance({
         schema: complexSchema,
         acceptance: createMandatorySetupAcceptance(),
+        sectionInventory: createComplexSectionInventory(complexSchema),
       }),
     ).toEqual([]);
   });
@@ -131,6 +182,13 @@ describe("Toolcraft starter setup and readiness acceptance coverage", () => {
     const errors = validateContractAcceptance({
       schema: smallSchema,
       acceptance: createMandatorySetupWithCanvasSizeAcceptance(),
+      sectionInventory: createContractSectionInventoryFixture(smallSchema, [{
+        entity: "Transform",
+        entityId: "transform",
+        finiteSelectors: [],
+        groupingReason: "Transform controls edit one product transform entity.",
+        id: "transform",
+      }]),
     });
 
     expect(errors).toEqual([]);
@@ -142,8 +200,11 @@ describe("Toolcraft starter setup and readiness acceptance coverage", () => {
       {
         automated: true,
         automatedTestName: "settings transfer exports and imports complex settings",
-        browser: true,
-        browserTestName: "browser: settings transfer exports and imports complex settings",
+        browser: {
+          budget: "standard",
+          file: "e2e/app-controls.spec.ts",
+          testName: "browser: settings transfer exports and imports complex settings",
+        },
         componentType: "settingsTransfer",
         evidence: "persistence-state",
         expectedObservable:
@@ -161,6 +222,7 @@ describe("Toolcraft starter setup and readiness acceptance coverage", () => {
     expect(validateContractAcceptance({
       schema: complexSchema,
       acceptance: acceptance,
+      sectionInventory: createComplexSectionInventory(complexSchema),
     })).toEqual([]);
   });
 

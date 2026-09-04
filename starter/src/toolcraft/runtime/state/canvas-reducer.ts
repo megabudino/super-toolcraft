@@ -66,15 +66,6 @@ export function reduceToolcraftCanvasCommand(
       }
 
       if (
-        state.canvas.mode === "infinite" &&
-        mode === "finite" &&
-        (state.canvas.offset.x !== 0 || state.canvas.offset.y !== 0)
-      ) {
-        before["canvas.offset"] = state.canvas.offset;
-        after["canvas.offset"] = { x: 0, y: 0 };
-      }
-
-      if (
         state.canvas.size.width !== size.width ||
         state.canvas.size.height !== size.height
       ) {

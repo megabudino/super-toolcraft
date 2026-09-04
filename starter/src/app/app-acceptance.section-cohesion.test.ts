@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  createContractSectionInventoryFixture,
   defineContractSchemaFixture,
   validateContractAcceptance,
   validateContractAcceptanceDiagnostics,
@@ -162,6 +163,7 @@ describe("starter acceptance section cohesion contract", () => {
           reason: "The flow speed is a decorative self-running effect and does not expose product time transport.",
         },
         mode: "new-toolcraft-app",
+        referenceInputs: [],
       },
     });
 
@@ -217,6 +219,7 @@ describe("starter acceptance section cohesion contract", () => {
                   variant: "continuous",
                 },
               },
+              id: "flow",
               title: "Flow",
             },
           ],
@@ -233,6 +236,16 @@ describe("starter acceptance section cohesion contract", () => {
           makeControlAcceptance("flow.drift", "slider"),
           makeControlAcceptance("flow.phase", "slider"),
         ],
+        sectionInventory: createContractSectionInventoryFixture(
+          schemaWithSmallFlowSection,
+          [{
+            entity: "Flow",
+            entityId: "flow",
+            finiteSelectors: [],
+            groupingReason: "Flow controls edit one decorative motion entity.",
+            id: "flow",
+          }],
+        ),
         transferMode: {
           animationIntent: {
             behaviorCoverage: [
@@ -247,6 +260,7 @@ describe("starter acceptance section cohesion contract", () => {
             reason: "The flow speed is a decorative self-running effect and does not expose product time transport.",
           },
           mode: "new-toolcraft-app",
+          referenceInputs: [],
         },
       }),
     ).toEqual([]);
@@ -351,6 +365,7 @@ describe("starter acceptance section cohesion contract", () => {
                   variant: "continuous",
                 },
               },
+              id: "squares-right",
               title: "Square 1 (Right)",
             },
           ],
@@ -367,6 +382,16 @@ describe("starter acceptance section cohesion contract", () => {
           makeControlAcceptance("squares.right.color", "color"),
           makeControlAcceptance("squares.right.hoverRadius", "slider"),
         ],
+        sectionInventory: createContractSectionInventoryFixture(
+          schemaWithGroupedEntityColor,
+          [{
+            entity: "Right square",
+            entityId: "right-square",
+            finiteSelectors: [],
+            groupingReason: "Geometry and color edit one rendered square entity.",
+            id: "squares-right",
+          }],
+        ),
       }),
     ).toEqual([]);
   });

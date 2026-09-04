@@ -44,11 +44,17 @@ export function deriveToolcraftPerformancePathsFromParsedPipeline(
 
   for (const invalidation of parsedPipeline.pipeline.interactionInvalidation) {
     const invalidates = uniqueSorted(invalidation.invalidates);
+    const preparationInvalidates = uniqueSorted(
+      invalidation.preparationInvalidates ?? [],
+    );
+    const retainedAccesses = uniqueSorted(invalidation.retainedAccesses ?? []);
     const invalidatedPasses = getInvalidatedPasses(passesById, invalidates);
     const pathWithoutId = {
       interaction: invalidation.interaction,
       invalidates,
+      preparationInvalidates,
       profile: getToolcraftPerformanceProfileForInteraction(invalidation.interaction),
+      retainedAccesses,
       runsOn: uniqueSorted(invalidatedPasses.map((pass) => pass.runsOn)),
       workloadDimensions: uniqueSorted(
         invalidatedPasses.flatMap((pass) => pass.cost?.dimensions ?? []),

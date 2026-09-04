@@ -2,15 +2,20 @@ import { describe, expect, it } from "vitest";
 
 import {
   contractAcceptanceFixture,
+  createContractSectionInventoryFixture,
   defineContractSchemaFixture,
   validateContractAcceptance,
 } from "./app-acceptance.contract-fixtures";
 import { makeControlAcceptance } from "./app-acceptance.test-utils";
-import type { ToolcraftProductReadiness } from "./acceptance/types";
+import type {
+  ToolcraftComponentAcceptance,
+  ToolcraftProductReadiness,
+} from "./acceptance/types";
 
 const infinityProductReadiness: ToolcraftProductReadiness = {
   exportIntent: {
     image: { mode: "toolcraft-default" },
+    svg: { mode: "not-requested" },
     video: { mode: "not-requested" },
   },
   interactionOwnership: [],
@@ -28,6 +33,7 @@ const infinityVideoProductReadiness: ToolcraftProductReadiness = {
   ...infinityProductReadiness,
   exportIntent: {
     image: { mode: "toolcraft-default" },
+    svg: { mode: "not-requested" },
     video: {
       evidence: "The Infinity canvas fixture explicitly exercises video export bounds.",
       mode: "user-requested",
@@ -61,7 +67,8 @@ function createFixedOutputSchema({
                 textValueKind: "single-line",
                 type: "text",
               },
-            },
+          },
+            id: "generation",
             title: "Generation",
           },
         ],
@@ -125,18 +132,21 @@ function createEditableOutputSchema(
 
 function makeInfinityCanvasAcceptance(
   coverage:
-    | "mode-and-restoration"
+    | "mode-continuity-and-restoration"
     | "scene-bounds-image-export"
     | "scene-bounds-video-export",
-) {
+): ToolcraftComponentAcceptance {
   return {
     automated: true,
     automatedTestName: `proves ${coverage}`,
-    browser: true,
-    browserTestName: `browser: proves ${coverage}`,
+    browser: {
+      budget: "standard",
+      file: "e2e/app-controls.spec.ts",
+      testName: `browser: proves ${coverage}`,
+    },
     componentType: "canvas",
     evidence:
-      coverage === "mode-and-restoration"
+      coverage === "mode-continuity-and-restoration"
         ? ("viewport-side-effect" as const)
         : ("exported-bytes" as const),
     expectedObservable: `Infinity canvas ${coverage} is observable in the running product.`,
@@ -158,7 +168,7 @@ describe("Toolcraft canvas sizing acceptance coverage", () => {
       }),
     ).toEqual(
       expect.arrayContaining([
-        'canvas.sizing mode "editable-output" requires a runtime acceptance entry with infinityCanvasCoverage "mode-and-restoration" proving Infinity canvas hides finite size controls, removes artboard clipping, and restores the dormant finite size when disabled.',
+        'canvas.sizing mode "editable-output" requires a runtime acceptance entry with infinityCanvasCoverage "mode-continuity-and-restoration" proving Infinity canvas changes only the finite boundary and size controls while preserving the world frame, view, renderer identity, backing, and dormant finite size for restoration without centering.',
       ]),
     );
   });
@@ -167,7 +177,7 @@ describe("Toolcraft canvas sizing acceptance coverage", () => {
     expect(
       validateContractAcceptance({
         schema: createEditableOutputSchema("export-image"),
-        acceptance: [makeInfinityCanvasAcceptance("mode-and-restoration")],
+        acceptance: [makeInfinityCanvasAcceptance("mode-continuity-and-restoration")],
         productReadiness: infinityProductReadiness,
       }),
     ).toEqual(
@@ -181,7 +191,7 @@ describe("Toolcraft canvas sizing acceptance coverage", () => {
     expect(
       validateContractAcceptance({
         schema: createEditableOutputSchema("export-video"),
-        acceptance: [makeInfinityCanvasAcceptance("mode-and-restoration")],
+        acceptance: [makeInfinityCanvasAcceptance("mode-continuity-and-restoration")],
         productReadiness: infinityVideoProductReadiness,
       }),
     ).toEqual(
@@ -195,7 +205,7 @@ describe("Toolcraft canvas sizing acceptance coverage", () => {
     const errors = validateContractAcceptance({
       schema: createEditableOutputSchema("export-image"),
       acceptance: [
-        makeInfinityCanvasAcceptance("mode-and-restoration"),
+        makeInfinityCanvasAcceptance("mode-continuity-and-restoration"),
         makeInfinityCanvasAcceptance("scene-bounds-image-export"),
       ],
       productReadiness: infinityProductReadiness,
@@ -227,8 +237,11 @@ describe("Toolcraft canvas sizing acceptance coverage", () => {
           {
             automated: true,
             automatedTestName: "fixed canvas dimensions remain stable",
-            browser: true,
-            browserTestName: "browser: canvas starts at 1920 by 1080",
+            browser: {
+              budget: "standard",
+              file: "e2e/app-controls.spec.ts",
+              testName: "browser: canvas starts at 1920 by 1080",
+            },
             canvasSizingCoverage: "fixed-output-size",
             componentType: "canvas",
             evidence: "product-output",
@@ -239,6 +252,16 @@ describe("Toolcraft canvas sizing acceptance coverage", () => {
             userAction: "Abrir la herramienta interna.",
           },
         ],
+        sectionInventory: createContractSectionInventoryFixture(
+          createFixedOutputSchema(),
+          [{
+            entity: "Generation",
+            entityId: "generation",
+            finiteSelectors: [],
+            groupingReason: "Prompt controls the generated product content.",
+            id: "generation",
+          }],
+        ),
       }),
     ).toEqual([]);
   });
@@ -283,8 +306,11 @@ describe("Toolcraft canvas sizing acceptance coverage", () => {
           {
             automated: true,
             automatedTestName: "fixed reference size is preserved",
-            browser: true,
-            browserTestName: "browser: fixed reference size is preserved",
+            browser: {
+              budget: "standard",
+              file: "e2e/app-controls.spec.ts",
+              testName: "browser: fixed reference size is preserved",
+            },
             canvasSizingCoverage: "fixed-output-size",
             componentType: "fixed-output canvas",
             evidence: "product-output",
@@ -325,8 +351,11 @@ describe("Toolcraft canvas sizing acceptance coverage", () => {
           {
             automated: true,
             automatedTestName: "media viewer uses uploaded natural dimensions",
-            browser: true,
-            browserTestName: "browser: upload source-native image updates canvas.size",
+            browser: {
+              budget: "standard",
+              file: "e2e/app-controls.spec.ts",
+              testName: "browser: upload source-native image updates canvas.size",
+            },
             canvasSizingCoverage: "intrinsic-media-size",
             componentType: "canvas",
             evidence: "media-lifecycle",

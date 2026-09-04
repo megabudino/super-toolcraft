@@ -38,8 +38,11 @@ describe("starter acceptance range slider rules", () => {
           {
             automated: true,
             automatedTestName: "opacity range lower and upper change field output",
-            browser: true,
-            browserTestName: "browser: opacity range lower and upper change field output",
+            browser: {
+              budget: "standard",
+              file: "e2e/app-controls.spec.ts",
+              testName: "browser: opacity range lower and upper change field output",
+            },
             componentType: "rangeSlider",
             controlPartCoverage: ["rangeSlider.lower", "rangeSlider.upper"],
             evidence: "product-output",
@@ -109,8 +112,11 @@ describe("starter acceptance range slider rules", () => {
           {
             automated: true,
             automatedTestName: "opacity range lower and upper change field output",
-            browser: true,
-            browserTestName: "browser: opacity range lower and upper change field output",
+            browser: {
+              budget: "standard",
+              file: "e2e/app-controls.spec.ts",
+              testName: "browser: opacity range lower and upper change field output",
+            },
             componentType: "rangeSlider",
             controlPartCoverage: ["rangeSlider.lower", "rangeSlider.upper"],
             evidence: "product-output",
@@ -124,8 +130,11 @@ describe("starter acceptance range slider rules", () => {
           {
             automated: true,
             automatedTestName: "speed changes field output",
-            browser: true,
-            browserTestName: "browser: speed changes field output",
+            browser: {
+              budget: "standard",
+              file: "e2e/app-controls.spec.ts",
+              testName: "browser: speed changes field output",
+            },
             componentType: "slider",
             evidence: "product-output",
             expectedObservable: "Changing Speed changes field animation output.",

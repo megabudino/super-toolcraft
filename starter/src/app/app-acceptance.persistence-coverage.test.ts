@@ -45,8 +45,11 @@ describe("Toolcraft starter persistence acceptance coverage", () => {
           {
             automated: true,
             automatedTestName: "opacity changes product output",
-            browser: true,
-            browserTestName: "browser: opacity changes product output",
+            browser: {
+              budget: "standard",
+              file: "e2e/app-controls.spec.ts",
+              testName: "browser: opacity changes product output",
+            },
             componentType: "slider",
             evidence: "product-output",
             expectedObservable: "Changing Opacity changes rendered product opacity.",
@@ -105,8 +108,11 @@ describe("Toolcraft starter persistence acceptance coverage", () => {
           {
             automated: true,
             automatedTestName: "opacity changes product output",
-            browser: true,
-            browserTestName: "browser: opacity changes product output",
+            browser: {
+              budget: "standard",
+              file: "e2e/app-controls.spec.ts",
+              testName: "browser: opacity changes product output",
+            },
             componentType: "slider",
             evidence: "product-output",
             expectedObservable: "Changing Opacity changes rendered product opacity.",
@@ -119,8 +125,11 @@ describe("Toolcraft starter persistence acceptance coverage", () => {
           {
             automated: true,
             automatedTestName: "exports and imports settings",
-            browser: true,
-            browserTestName: "browser: exports and imports settings",
+            browser: {
+              budget: "standard",
+              file: "e2e/app-controls.spec.ts",
+              testName: "browser: exports and imports settings",
+            },
             componentType: "persistence",
             evidence: "persistence-state",
             expectedObservable: "El valor editado reaparece después de recargar.",
@@ -157,8 +166,11 @@ describe("Toolcraft starter persistence acceptance coverage", () => {
         {
           automated: true,
           automatedTestName: "restores persisted state",
-          browser: true,
-          browserTestName: "browser: restores persisted state",
+          browser: {
+            budget: "standard",
+            file: "e2e/app-controls.spec.ts",
+            testName: "browser: restores persisted state",
+          },
           componentType: "persistence",
           evidence: "command-side-effect",
           expectedObservable: "The persisted workspace returns after reload.",
