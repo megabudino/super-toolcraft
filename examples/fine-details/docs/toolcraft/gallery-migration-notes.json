@@ -1,0 +1,311 @@
+{
+  "kind": "migration-diagnostics-not-test-proof",
+  "unmapped": [
+    {
+      "id": "appearance.background",
+      "reason": "Missing/invalid functional descriptor for appearance.background: browser: Background color updates the real Fine Details section. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "appearance.gridSize",
+      "reason": "Missing/invalid functional descriptor for appearance.gridSize: browser: Grid size changes the real Fine Details texture scale. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "appearance.gridOpacity",
+      "reason": "Missing/invalid functional descriptor for appearance.gridOpacity: browser: Grid opacity changes the real Fine Details texture strength. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "carousel.count",
+      "reason": "Missing/invalid functional descriptor for carousel.count: browser: carousel.count changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "carousel.textGap",
+      "reason": "Missing/invalid functional descriptor for carousel.textGap: browser: carousel.textGap changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "carousel.radius",
+      "reason": "Missing/invalid functional descriptor for carousel.radius: browser: carousel.radius changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "carousel.gap",
+      "reason": "Missing/invalid functional descriptor for carousel.gap: browser: carousel.gap changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "carousel.speed",
+      "reason": "Missing/invalid functional descriptor for carousel.speed: browser: carousel.speed changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "carousel.border.enabled",
+      "reason": "Missing/invalid functional descriptor for carousel.border.enabled: browser: carousel.border.enabled changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "carousel.border.width",
+      "reason": "Missing/invalid functional descriptor for carousel.border.width: browser: carousel.border.width changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "carousel.border.colorOpacity",
+      "reason": "Missing/invalid functional descriptor for carousel.border.colorOpacity: browser: carousel.border.colorOpacity changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "carousel.shadow.enabled",
+      "reason": "Missing/invalid functional descriptor for carousel.shadow.enabled: browser: carousel.shadow.enabled changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "carousel.shadow.offset",
+      "reason": "Missing/invalid functional descriptor for carousel.shadow.offset: browser: carousel.shadow.offset changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "carousel.shadow.blur",
+      "reason": "Missing/invalid functional descriptor for carousel.shadow.blur: browser: carousel.shadow.blur changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "carousel.shadow.spread",
+      "reason": "Missing/invalid functional descriptor for carousel.shadow.spread: browser: carousel.shadow.spread changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "carousel.shadow.colorOpacity",
+      "reason": "Missing/invalid functional descriptor for carousel.shadow.colorOpacity: browser: carousel.shadow.colorOpacity changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "loading.enabled",
+      "reason": "Missing/invalid functional descriptor for loading.enabled: browser: loading.enabled changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "loading.cell",
+      "reason": "Missing/invalid functional descriptor for loading.cell: browser: loading.cell changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "loading.contrast",
+      "reason": "Missing/invalid functional descriptor for loading.contrast: browser: loading.contrast changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "loading.baseTone",
+      "reason": "Missing/invalid functional descriptor for loading.baseTone: browser: loading.baseTone changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "loading.glare",
+      "reason": "Missing/invalid functional descriptor for loading.glare: browser: loading.glare changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "loading.distort",
+      "reason": "Missing/invalid functional descriptor for loading.distort: browser: loading.distort changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "loading.border.width",
+      "reason": "Missing/invalid functional descriptor for loading.border.width: browser: loading.border.width changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "loading.border.colorOpacity",
+      "reason": "Missing/invalid functional descriptor for loading.border.colorOpacity: browser: loading.border.colorOpacity changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "loading.waveWidth",
+      "reason": "Missing/invalid functional descriptor for loading.waveWidth: browser: loading.waveWidth changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "loading.softness",
+      "reason": "Missing/invalid functional descriptor for loading.softness: browser: loading.softness changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "loading.angle",
+      "reason": "Missing/invalid functional descriptor for loading.angle: browser: loading.angle changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "loading.passTime",
+      "reason": "Missing/invalid functional descriptor for loading.passTime: browser: loading.passTime changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "loading.pause",
+      "reason": "Missing/invalid functional descriptor for loading.pause: browser: loading.pause changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "loading.stagger",
+      "reason": "Missing/invalid functional descriptor for loading.stagger: browser: loading.stagger changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "loading.desync",
+      "reason": "Missing/invalid functional descriptor for loading.desync: browser: loading.desync changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "prompt.typing.enabled",
+      "reason": "Missing/invalid functional descriptor for prompt.typing.enabled: browser: prompt.typing.enabled changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "prompt.typing.phrases",
+      "reason": "Missing/invalid functional descriptor for prompt.typing.phrases: browser: prompt.typing.phrases changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "prompt.typing.typeSpeed",
+      "reason": "Missing/invalid functional descriptor for prompt.typing.typeSpeed: browser: prompt.typing.typeSpeed changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "prompt.typing.deleteSpeed",
+      "reason": "Missing/invalid functional descriptor for prompt.typing.deleteSpeed: browser: prompt.typing.deleteSpeed changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "prompt.typing.hold",
+      "reason": "Missing/invalid functional descriptor for prompt.typing.hold: browser: prompt.typing.hold changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "prompt.typing.gap",
+      "reason": "Missing/invalid functional descriptor for prompt.typing.gap: browser: prompt.typing.gap changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "prompt.typing.humanize",
+      "reason": "Missing/invalid functional descriptor for prompt.typing.humanize: browser: prompt.typing.humanize changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "prompt.typing.deleteStyle",
+      "reason": "Missing/invalid functional descriptor for prompt.typing.deleteStyle: browser: prompt.typing.deleteStyle changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "trail.images",
+      "reason": "Missing/invalid functional descriptor for trail.images: browser: trail images preserve upload order, aspect and transforms. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "trail.enabled",
+      "reason": "Missing/invalid functional descriptor for trail.enabled: browser: trail.enabled changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "trail.cardSize",
+      "reason": "Missing/invalid functional descriptor for trail.cardSize: browser: trail.cardSize changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "trail.cardRadius",
+      "reason": "Missing/invalid functional descriptor for trail.cardRadius: browser: trail.cardRadius changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "trail.border.enabled",
+      "reason": "Missing/invalid functional descriptor for trail.border.enabled: browser: trail.border.enabled changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "trail.border.width",
+      "reason": "Missing/invalid functional descriptor for trail.border.width: browser: trail.border.width changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "trail.border.color",
+      "reason": "Missing/invalid functional descriptor for trail.border.color: browser: trail.border.color changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "trail.length",
+      "reason": "Missing/invalid functional descriptor for trail.length: browser: trail.length changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "trail.sizeFalloff",
+      "reason": "Missing/invalid functional descriptor for trail.sizeFalloff: browser: trail.sizeFalloff changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "trail.spacing",
+      "reason": "Missing/invalid functional descriptor for trail.spacing: browser: trail.spacing changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "trail.tilt",
+      "reason": "Missing/invalid functional descriptor for trail.tilt: browser: trail.tilt changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "trail.smoothness",
+      "reason": "Missing/invalid functional descriptor for trail.smoothness: browser: trail.smoothness changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "trail.lifetime",
+      "reason": "Missing/invalid functional descriptor for trail.lifetime: browser: trail.lifetime changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "trail.fadeIn",
+      "reason": "Missing/invalid functional descriptor for trail.fadeIn: browser: trail.fadeIn changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "trail.fadeOut",
+      "reason": "Missing/invalid functional descriptor for trail.fadeOut: browser: trail.fadeOut changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "trail.resumeDelay",
+      "reason": "Missing/invalid functional descriptor for trail.resumeDelay: browser: trail.resumeDelay changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "trail.resumeRamp",
+      "reason": "Missing/invalid functional descriptor for trail.resumeRamp: browser: trail.resumeRamp changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "trail.shadow.enabled",
+      "reason": "Missing/invalid functional descriptor for trail.shadow.enabled: browser: trail.shadow.enabled changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "trail.shadow.offset",
+      "reason": "Missing/invalid functional descriptor for trail.shadow.offset: browser: trail.shadow.offset changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "trail.shadow.blur",
+      "reason": "Missing/invalid functional descriptor for trail.shadow.blur: browser: trail.shadow.blur changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "trail.shadow.spread",
+      "reason": "Missing/invalid functional descriptor for trail.shadow.spread: browser: trail.shadow.spread changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "trail.shadow.colorOpacity",
+      "reason": "Missing/invalid functional descriptor for trail.shadow.colorOpacity: browser: trail.shadow.colorOpacity changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "typography.upperLeft.left",
+      "reason": "Missing/invalid functional descriptor for typography.upperLeft.left: browser: typography.upperLeft.left changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "typography.upperLeft.top",
+      "reason": "Missing/invalid functional descriptor for typography.upperLeft.top: browser: typography.upperLeft.top changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "typography.upperLeft.fontSize",
+      "reason": "Missing/invalid functional descriptor for typography.upperLeft.fontSize: browser: typography.upperLeft.fontSize changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "typography.lowerRight.right",
+      "reason": "Missing/invalid functional descriptor for typography.lowerRight.right: browser: typography.lowerRight.right changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "typography.lowerRight.bottom",
+      "reason": "Missing/invalid functional descriptor for typography.lowerRight.bottom: browser: typography.lowerRight.bottom changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "typography.lowerRight.headingFontSize",
+      "reason": "Missing/invalid functional descriptor for typography.lowerRight.headingFontSize: browser: typography.lowerRight.headingFontSize changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "typography.lowerRight.bodyFontSize",
+      "reason": "Missing/invalid functional descriptor for typography.lowerRight.bodyFontSize: browser: typography.lowerRight.bodyFontSize changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "typography.lowerRight.gap",
+      "reason": "Missing/invalid functional descriptor for typography.lowerRight.gap: browser: typography.lowerRight.gap changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "prompt.position",
+      "reason": "Missing/invalid functional descriptor for prompt.position: browser: prompt.position changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "prompt.shadow.enabled",
+      "reason": "Missing/invalid functional descriptor for prompt.shadow.enabled: browser: prompt.shadow.enabled changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "prompt.shadow.offset",
+      "reason": "Missing/invalid functional descriptor for prompt.shadow.offset: browser: prompt.shadow.offset changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "prompt.shadow.blur",
+      "reason": "Missing/invalid functional descriptor for prompt.shadow.blur: browser: prompt.shadow.blur changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "prompt.shadow.spread",
+      "reason": "Missing/invalid functional descriptor for prompt.shadow.spread: browser: prompt.shadow.spread changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "prompt.shadow.colorOpacity",
+      "reason": "Missing/invalid functional descriptor for prompt.shadow.colorOpacity: browser: prompt.shadow.colorOpacity changes the embedded Fine Details output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    }
+  ],
+  "inheritedIntegrityMismatches": [
+    "index.html",
+    "scripts/toolcraft-port.mjs",
+    "src/app/app-identity.ts"
+  ],
+  "inventoryErrors": []
+}

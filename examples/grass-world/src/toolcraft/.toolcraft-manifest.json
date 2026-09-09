@@ -564,8 +564,8 @@
     "test:browser:perf": "node scripts/run-browser-performance.mjs",
     "test:delivery": "node scripts/check-toolcraft-docs.mjs && node --test scripts/*.test.mjs && vitest run src --passWithNoTests --reporter=default --reporter=./scripts/toolcraft-vitest-runtime-evidence-reporter.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "verify:delivery": "node scripts/run-delivery-verification.mjs",
-    "verify:final": "npm run ai:check && npm run test && npm run build && npm run test:browser && npm run verify:receipt",
+    "verify:delivery": "node scripts/gallery-workflow/delivery.mjs",
+    "verify:final": "node scripts/gallery-workflow/delivery.mjs",
     "verify:kernel": "node scripts/run-kernel-benchmarks.mjs",
     "verify:perf": "npm run test:browser:perf",
     "verify:perf:playwright": "npm run test:browser:perf",
@@ -573,10 +573,11 @@
     "verify:perf:refresh": "node scripts/run-browser-performance.mjs --reason=explicit-performance-work",
     "verify:quick": "npm run ai:check && npm run test",
     "verify:receipt": "node scripts/toolcraft-verification-receipt.mjs validate",
-    "verify:ui": "npm run test:browser"
+    "verify:ui": "npm run test:browser",
+    "test:feature": "node scripts/gallery-workflow/feature.mjs"
   },
   "protectedFiles": {
-    "AGENTS.md": "a8d39801987857196c0a9a13aad9e0a98a172d9f81c2ad9cbde9e7c1ff6b09cf",
+    "AGENTS.md": "a0bf4f497f2d73afb09bd529ee9146b79d1f1d621f836c3a377843bfb0834e5f",
     "LICENSE.md": "ce77c459913e3c284c9943a5dd7437245c72cd0ebafda8999efa7c166d9695a5",
     "NOTICE.md": "0b3b077cecc897cfaa2f5426248e694e8daa9b91dbb891daaa97c3968494368e",
     "docs/toolcraft/README.md": "c5ab97d9175da40c3f9db52513832dab8be893e1e664f116c64c136a1ac326cb",
@@ -888,8 +889,19 @@
     "src/routes/root.tsx": "d68ee40dead278d96c594db3a9c76e3c4fd5c2957223d256542613ec7867a812",
     "src/styles.css": "8d7a95483eea9d50fcd2ae3f764ea5f6359b0110fdb60f39503ea7c1b3a5922a",
     "tsconfig.json": "ed3a9452f91aef2ce7465cd173aceee18e9929fb1e14d726cfd8d9b0f276c2fd",
-    "vite.config.ts": "9fc8e8887fa0ccb5429a3a9be9dffa9dee3a3839544a7a440a537ab393038919"
+    "vite.config.ts": "9fc8e8887fa0ccb5429a3a9be9dffa9dee3a3839544a7a440a537ab393038919",
+    "scripts/gallery-workflow/asset-loader.mjs": "f610f1b0c30c84c5ba56778c0efcfc70052e1aa4f5a2ad694ee6c4dbb6ee48a2",
+    "scripts/gallery-workflow/delivery.mjs": "27a7458e06f1254eeb80f81db39e2ac9f5b4906ea0ee24864b5e0fc495ab2392",
+    "scripts/gallery-workflow/feature.mjs": "ae90abe050b4dcff1efc2fc816cd59f2ee77eacb7ba8dd85bf9fc604be3888e4",
+    "scripts/gallery-workflow/playwright.config.mjs": "570ff7fa0d748c705f275afc7d73b37fa73fe43471cf26eb78e78b31cec97959",
+    "scripts/gallery-workflow/process.mjs": "4828d29f1b2ee40dfac15750a0e18d7720d2c9e835635693835ea8eca3eec6d9",
+    "scripts/gallery-workflow/register-assets.mjs": "b43a5f5816c7e644b1a21b6aec62cc22516dff630900ac88cc308c8aef5b91cc",
+    "scripts/gallery-workflow/release.mjs": "98a77ec7ba74bd17284c57315f856bd9d99e84bb33c092b1ebf95aecb8b4bedc",
+    "scripts/gallery-workflow/reporter.mjs": "e63a8c96956f9a702250f719f5738ab6c65190780a4402949e20c0388440fc36",
+    "scripts/gallery-workflow/selection.mjs": "cd0b739ecf2f55c6f6d64ec5a8d51fe756925d8f4c4c64e18ed41433ceb2ea00",
+    "scripts/gallery-workflow/source-child.mjs": "5e51e1529ac0d55b57bba8c54fcf0ad44604877c6e5f96b3e7b3d523b199f39b",
+    "docs/toolcraft/gallery-workflow.md": "70a0d4fce0aa82ec7799d23e7103a81dd808f5639896dd1b6fe88f6192a04394"
   },
   "version": 3,
-  "signature": "k7KX9F+RJrQMs4zeXcBBFfxJAjme6GXF78wxJtVkd6Xr9d16TsxcKu0+2gLbnXmKHu4127jnmx0O9hCPc1LXDQ=="
+  "signature": "RYXMaf95C37EUCJGtW3E+XkEb1G8Oz3uTQLVR4B2SwR7JcFSZ0+KEuwGs04esjabYgA0hiVPVRz+qELbuU9HCg=="
 }

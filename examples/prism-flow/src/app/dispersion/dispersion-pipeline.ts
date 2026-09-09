@@ -128,6 +128,7 @@ export const dispersionRendererPipelineRegistration =
           "canvas.aspectRatio",
           "canvas.size.width",
           "canvas.size.height",
+          "canvas.infinity",
         ],
       },
       {
@@ -173,10 +174,9 @@ export const dispersionRendererPipelineRegistration =
       },
       {
         interaction: "viewport-drag",
-        invalidates: [],
+        invalidates: [dispersionPassIds.previewFrame],
         mustNotInvalidate: [
           dispersionPassIds.shaderResource,
-          dispersionPassIds.previewFrame,
           dispersionPassIds.imageExport,
         ],
         targets: ["runtime.canvas.viewport"],
@@ -240,6 +240,7 @@ export const dispersionRendererPipelineRegistration =
         inputs: [
           "normalized dispersion settings",
           "product scene frame",
+          "infinite viewport size and runtime camera",
           "selected render scale",
           "Toolcraft timeline progress",
           "bounded soft ellipse mask uniforms and preview mode",
@@ -252,6 +253,8 @@ export const dispersionRendererPipelineRegistration =
           "canvas.size.height",
           "canvas.renderScale",
           "runtime.timeline",
+          "canvas.infinity",
+          "runtime.canvas.viewport",
         ],
         kind: "composite",
         lifecycle: { cache: "none", resourceScope: "renderer" },

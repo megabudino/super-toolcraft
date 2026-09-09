@@ -16,7 +16,9 @@
     "verify:quick": "pnpm ai:check && pnpm test",
     "verify:ui": "pnpm test:browser",
     "verify:perf": "pnpm test:browser:perf",
-    "verify:final": "pnpm ai:check && pnpm test && pnpm build && pnpm test:browser"
+    "verify:final": "node scripts/gallery-workflow/delivery.mjs",
+    "verify:delivery": "node scripts/gallery-workflow/delivery.mjs",
+    "test:feature": "node scripts/gallery-workflow/feature.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.1",

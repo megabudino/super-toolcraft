@@ -1,0 +1,11 @@
+{
+  "kind": "migration-diagnostics-not-test-proof",
+  "unmapped": [
+    {
+      "id": "shape-orientation",
+      "reason": "Missing/invalid functional descriptor for shape-orientation: browser: exported mosaic follows orientation without editor gizmo pixels. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    }
+  ],
+  "inheritedIntegrityMismatches": [],
+  "inventoryErrors": []
+}

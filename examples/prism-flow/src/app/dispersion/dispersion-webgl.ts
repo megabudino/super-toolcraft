@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import type { DispersionViewWindow } from "./dispersion-view-window";
 
 import type {
   DispersionMode,
@@ -30,6 +31,10 @@ import {
 export type DispersionGlFrame = Readonly<{
   height: number;
   includeBackground: boolean;
+  /** Shade against the viewport background without painting a bounded fill. */
+  previewOnBackground?: boolean;
+  /** Unbounded preview samples a window into the same logical optical image. */
+  viewWindow?: DispersionViewWindow;
   /** Current timeline loop duration; Speed derives its cycle count from it. */
   loopSeconds?: number;
   /** Preview shader density relative to the exact Toolcraft backing size. */
@@ -51,6 +56,7 @@ export type DispersionGlResource = Readonly<{
 
 type FieldUniforms = Readonly<{
   iResolution: THREE.Uniform<THREE.Vector3>;
+  uViewOffset: THREE.Uniform<THREE.Vector2>;
   iTime: THREE.Uniform<number>;
   uBg: THREE.Uniform<THREE.Vector3>;
   uChannelSplit: THREE.Uniform<number>;
@@ -79,6 +85,7 @@ type FieldUniforms = Readonly<{
   uMaskPreview: THREE.Uniform<number>;
   uNoiseAmount: THREE.Uniform<number>;
   uOpaque: THREE.Uniform<number>;
+  uRemoveBackdrop: THREE.Uniform<number>;
   uPalette2Amp: THREE.Uniform<THREE.Vector3>;
   uPaletteAmp: THREE.Uniform<THREE.Vector3>;
   uPaletteBase: THREE.Uniform<THREE.Vector3>;
@@ -210,6 +217,7 @@ function clamp01(value: number): number {
 function createFieldUniforms(noiseTexture: THREE.Texture): FieldUniforms {
   return {
     iResolution: new THREE.Uniform(new THREE.Vector3(1, 1, 1)),
+    uViewOffset: new THREE.Uniform(new THREE.Vector2()),
     iTime: new THREE.Uniform(0),
     uBg: new THREE.Uniform(new THREE.Vector3(0, 0, 0)),
     uChannelSplit: new THREE.Uniform(0),
@@ -250,6 +258,7 @@ function createFieldUniforms(noiseTexture: THREE.Texture): FieldUniforms {
     uMaskPreview: new THREE.Uniform(0),
     uNoiseAmount: new THREE.Uniform(0),
     uOpaque: new THREE.Uniform(1),
+    uRemoveBackdrop: new THREE.Uniform(0),
     uPalette2Amp: new THREE.Uniform(new THREE.Vector3(0, 0, 0)),
     uPaletteAmp: new THREE.Uniform(new THREE.Vector3(1, 1, 1)),
     uPaletteBase: new THREE.Uniform(new THREE.Vector3(1, 1, 1)),
@@ -389,7 +398,7 @@ class DispersionGlRenderer implements DispersionGlResource {
       frame.loopSeconds ?? DEFAULT_LOOP_SECONDS,
     );
     const loopPhase = ((progress + seedShift) * cycles) % 1;
-    uniforms.iResolution.value.set(frame.width, frame.height, 1);
+    this.setFieldResolution(frame, frame.width, frame.height);
     uniforms.iTime.value = loopPhase * LOOP_TIME_SPAN;
     uniforms.uTimeScale.value = 1;
 
@@ -466,7 +475,8 @@ class DispersionGlRenderer implements DispersionGlResource {
       settings.colorBalance.x,
       settings.colorBalance.y,
     );
-    uniforms.uEdgeFade.value = Math.pow(settings.inset / 40, 1.6) * 0.25;
+    uniforms.uEdgeFade.value = frame.viewWindow
+      ? 0 : Math.pow(settings.inset / 40, 1.6) * 0.25;
 
     const maskCount = Math.min(
       MAX_DISPERSION_MASKS,
@@ -500,13 +510,33 @@ class DispersionGlRenderer implements DispersionGlResource {
     }
 
     uniforms.uOpaque.value =
-      frame.includeBackground || frame.opaqueOutside ? 1 : 0;
+      frame.includeBackground || frame.opaqueOutside || frame.previewOnBackground ? 1 : 0;
+    uniforms.uRemoveBackdrop.value =
+      frame.previewOnBackground && !settings.lens.enabled ? 1 : 0;
+    // Backdrop removal already returns premultiplied pixels; the legacy field
+    // blend would multiply their RGB by alpha a second time.
+    this.material.blending = frame.previewOnBackground
+      ? THREE.NoBlending
+      : THREE.NormalBlending;
     writeHexSrgb(settings.background, uniforms.uBg.value);
 
   }
 
   private acquireFieldTarget(width: number, height: number): THREE.WebGLRenderTarget {
     return (this.fieldTarget = acquireDispersionRenderTarget(this.fieldTarget, width, height));
+  }
+
+  private setFieldResolution(frame: DispersionGlFrame, width: number, height: number): void {
+    const view = frame.viewWindow;
+    const scaleX = width / frame.width;
+    const scaleY = height / frame.height;
+    this.uniforms.iResolution.value.set(
+      view ? view.width * scaleX : width,
+      view ? view.height * scaleY : height, 1,
+    );
+    this.uniforms.uViewOffset.value.set(
+      (view?.offsetX ?? 0) * scaleX, (view?.offsetY ?? 0) * scaleY,
+    );
   }
 
   private acquireLensTarget(width: number, height: number): THREE.WebGLRenderTarget {
@@ -540,7 +570,7 @@ class DispersionGlRenderer implements DispersionGlResource {
       return;
     }
 
-    this.uniforms.iResolution.value.set(marchWidth, marchHeight, 1);
+    this.setFieldResolution(frame, marchWidth, marchHeight);
     const target = this.acquireFieldTarget(marchWidth, marchHeight);
     this.renderer.setRenderTarget(target);
     this.renderer.clear(true, false, false);
@@ -551,7 +581,14 @@ class DispersionGlRenderer implements DispersionGlResource {
         ? null
         : this.acquireLensTarget(marchWidth, marchHeight);
       this.lensPass.render(this.renderer, this.camera, target.texture,
-        lensTarget, frame.settings.lens, marchWidth, marchHeight);
+        lensTarget, frame.settings.lens, marchWidth, marchHeight,
+        frame.previewOnBackground ? this.uniforms.uBg.value : undefined,
+        frame.viewWindow ? [
+          frame.viewWindow.offsetX / frame.viewWindow.width,
+          frame.viewWindow.offsetY / frame.viewWindow.height,
+          frame.width / frame.viewWindow.width,
+          frame.height / frame.viewWindow.height,
+        ] : undefined);
       if (!lensTarget) {
         this.lastFrame = normalizedFrame;
         return;

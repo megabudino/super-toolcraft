@@ -699,16 +699,16 @@
     "reference:study": "node scripts/create-toolcraft-motion-reference-study.mjs",
     "test": "node scripts/check-toolcraft-docs.mjs && node scripts/check-toolcraft-integrity.mjs && node --test scripts/*.test.mjs && vitest run src --passWithNoTests --reporter=default --reporter=./scripts/toolcraft-vitest-runtime-evidence-reporter.mjs",
     "test:browser": "playwright install chromium && playwright test --grep-invert \"browser perf:|toolcraft kernel:\"",
-    "test:feature": "node scripts/run-feature-verification.mjs",
+    "test:feature": "node scripts/gallery-workflow/feature.mjs",
     "toolcraft:renderer": "node scripts/toolcraft-renderer-provider.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit && node scripts/toolcraft-renderer-provider-typecheck.mjs",
-    "verify:delivery": "node scripts/run-delivery-verification.mjs",
+    "verify:delivery": "node scripts/gallery-workflow/delivery.mjs",
     "verify:kernel": "node scripts/run-kernel-benchmarks.mjs",
     "verify:perf": "node scripts/run-browser-performance.mjs",
     "verify:receipt": "node scripts/toolcraft-verification-receipt.mjs validate"
   },
   "protectedFiles": {
-    "AGENTS.md": "39c3e993b1fe18b4bc4b5c865db5aa3dacdeda50182e5803afa158e35816bb65",
+    "AGENTS.md": "71f1b8336fb25688e243ab8cd35e6781076e34959b25fe0537d8789e389cdf35",
     "LICENSE.md": "ce77c459913e3c284c9943a5dd7437245c72cd0ebafda8999efa7c166d9695a5",
     "NOTICE.md": "c15f7d0b2b9b956005ff8c0bd3dec79f63f5309753c831b48a9a6d9b6cf5414a",
     "docs/toolcraft/README.md": "3106e0f8d212e028cce991727afaad024569d14f1b24a8800336697466ff9553",
@@ -1416,8 +1416,19 @@
     "toolcraft/renderer-providers/vgpu/tests/public-entry.typecheck.ts": "2beacea1957bf8242f42d75d105541524c5c9e953630508f0d70cf7a6df34e22",
     "toolcraft/renderer-providers/vgpu/tsconfig.json": "eb59af103cc42d6e3816825f4f53e95e3bdddcae86969ebdc330fc9bc2d15eb3",
     "tsconfig.json": "f7c027a3da3ee6c8d06beb0b813b607c60782259f7de5b0000a0515a9eff9edd",
-    "vite.config.ts": "a0fc31bac4a62e12d0815da330e7df3e58a42bb785ab48c2b1f054c718e493c6"
+    "vite.config.ts": "a0fc31bac4a62e12d0815da330e7df3e58a42bb785ab48c2b1f054c718e493c6",
+    "scripts/gallery-workflow/asset-loader.mjs": "f610f1b0c30c84c5ba56778c0efcfc70052e1aa4f5a2ad694ee6c4dbb6ee48a2",
+    "scripts/gallery-workflow/delivery.mjs": "27a7458e06f1254eeb80f81db39e2ac9f5b4906ea0ee24864b5e0fc495ab2392",
+    "scripts/gallery-workflow/feature.mjs": "ae90abe050b4dcff1efc2fc816cd59f2ee77eacb7ba8dd85bf9fc604be3888e4",
+    "scripts/gallery-workflow/playwright.config.mjs": "570ff7fa0d748c705f275afc7d73b37fa73fe43471cf26eb78e78b31cec97959",
+    "scripts/gallery-workflow/process.mjs": "4828d29f1b2ee40dfac15750a0e18d7720d2c9e835635693835ea8eca3eec6d9",
+    "scripts/gallery-workflow/register-assets.mjs": "b43a5f5816c7e644b1a21b6aec62cc22516dff630900ac88cc308c8aef5b91cc",
+    "scripts/gallery-workflow/release.mjs": "98a77ec7ba74bd17284c57315f856bd9d99e84bb33c092b1ebf95aecb8b4bedc",
+    "scripts/gallery-workflow/reporter.mjs": "e63a8c96956f9a702250f719f5738ab6c65190780a4402949e20c0388440fc36",
+    "scripts/gallery-workflow/selection.mjs": "cd0b739ecf2f55c6f6d64ec5a8d51fe756925d8f4c4c64e18ed41433ceb2ea00",
+    "scripts/gallery-workflow/source-child.mjs": "5e51e1529ac0d55b57bba8c54fcf0ad44604877c6e5f96b3e7b3d523b199f39b",
+    "docs/toolcraft/gallery-workflow.md": "70a0d4fce0aa82ec7799d23e7103a81dd808f5639896dd1b6fe88f6192a04394"
   },
   "version": 3,
-  "signature": "9O9h/nQje2Y72Cj7wBGFJRfxaV61l/HW93xtxK/Rl1wfKqD3MoOHx9bMQOIfY+n8Jn2Fh9HYI8u/541/ezIkCg=="
+  "signature": "8uHi5uePE5xODDsYhGhzo+LpRgaDAorpLQNiN00NptngDCoPfooj9/hzF9MGR/XsjfybKbLvbZy7GLrH09vLCg=="
 }
