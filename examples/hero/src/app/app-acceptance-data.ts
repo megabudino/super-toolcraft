@@ -673,13 +673,8 @@ export const appControlSectionInventory: readonly ToolcraftControlSectionInvento
       entity: "Hero gallery auto scroll",
       entityId: "hero-gallery-autoscroll",
       groupingReason:
-        "The switch, interval, and jump duration define one autonomous cycle of jumps across the Sphere gallery.",
+        "The switch, interval, and jump duration define one autonomous cycle of jumps across the Sphere gallery. The approved product copy intentionally repeats Auto scroll beside the switch so its binary state remains explicit while Interval and Jump time are conditionally hidden.",
       id: "auto-scroll",
-      sectionTitleLabelEvidence: {
-        reason:
-          "The approved product copy intentionally repeats Auto scroll beside the switch so its binary state remains explicit while Interval and Jump time are conditionally hidden.",
-        target: heroGalleryTargets.autoScrollEnabled,
-      },
       targets: [
         heroGalleryTargets.autoScrollEnabled,
         heroGalleryTargets.autoScrollInterval,

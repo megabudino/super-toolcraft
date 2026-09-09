@@ -106,13 +106,8 @@ export const heroEffectsSectionInventory: readonly ToolcraftControlSectionInvent
       entity: "CRT overlay",
       entityId: "hero-motion-crt",
       groupingReason:
-        "The switch, scanlines, line pitch, chroma shift, flicker, and fade-out duration define one CRT treatment driven by its independently configurable Sphere pan-motion envelope.",
+        "The switch, scanlines, line pitch, chroma shift, flicker, and fade-out duration define one CRT treatment driven by its independently configurable Sphere pan-motion envelope. The plan intentionally names both the section and its binary switch CRT so the enable state remains explicit while all tuning controls are conditionally hidden.",
       id: "motion-crt",
-      sectionTitleLabelEvidence: {
-        reason:
-          "The plan intentionally names both the section and its binary switch CRT so the enable state remains explicit while all tuning controls are conditionally hidden.",
-        target: heroEffectsTargets.crtEnabled,
-      },
       targets: [
         heroEffectsTargets.crtEnabled,
         heroEffectsTargets.crtScanlines,

@@ -201,3 +201,19 @@ Hero is an independent native Toolcraft app. The original website repositories a
 - Changes: Gallery title and opening text, canonical display title, app identity title, HTML title metadata and README heading. No bootstrap, runtime, renderer or behavior changes. The `hero` ID, settings namespace, folder, package and deployment URLs remain unchanged. Original Recraft source is untouched.
 - Verification: Canonical identity tests first failed for the two old HTML titles; after synchronizing display names, the combined canonical identity/content suite passed all 34 tests. Targeted `git diff --check` passed. Browser, build, performance and aggregate gates were not rerun for this copy-only change; inherited integrity limitations are not certified as resolved.
 - Publication: Local docs-new changes only; no new commit, push or deployment in this naming pass.
+
+## Gallery workflow production release — 2026-09-09
+
+- Request: «давай заливать апдейт в продакшен всех апок»; «релиз cli мы конечно оставляем».
+- Task type: Later focused build-compatibility correction during production publication.
+- User-visible result: Preserve the current Hero UI and the released template CLI while making the accepted gallery example buildable and copyable with the focused-development workflow.
+- Source/reference checked: Failed production build `dpl_G2X7XdbTVPTaJPwj8vYRNtqQRwDD` at source `0d7045c8`; current signed section-inventory types and the two product metadata entries. Reference inputs: None; no visual redesign.
+- Docs/contracts read: AGENTS; gallery-workflow; workflow; decision-contract; core/runtime-boundary; component-rules; renderer-technique; acceptance-testing; core/performance; performance.
+- Contract rules applied: Product-owned metadata remains editable; signed framework files, validators, manifests and runtime remain unchanged. Accepted-gallery status is owner approval, not fabricated test execution.
+- View interaction intent: Existing native Hero interaction unchanged. Interaction ownership: Existing runtime and product owners unchanged.
+- Decision: Move the existing Auto scroll and CRT label rationale from the unsupported `sectionTitleLabelEvidence` extension into the supported `groupingReason` prose. Preserve section targets, schema labels, visibility and renderer behavior. This prose is context, not a validator exception.
+- Alternatives rejected: Restoring a private extension in protected types/validators; hiding TypeScript errors; changing approved labels; changing the CLI release.
+- State/output mapping: No runtime state or rendered output changes. The same Auto scroll and CRT targets and labels remain asserted by the focused product test.
+- Performance intent: Ordinary metadata/build repair; no measured performance work.
+- Verification: Two focused product regression cases failed before the metadata correction and then passed with `vitest run src/app/hero-auto-scroll-toolcraft.test.ts`; `npm run typecheck` passed. Current CLI admission and portable accepted-gallery status passed for both the source and a newly packaged Hero copy. No aggregate delivery or performance suite was run. Browser checks were not rerun because no UI, renderer or interaction source changed; production readiness is recorded separately in the controller release report.
+- Risks: Inherited legacy acceptance/pipeline limitations are not certified as resolved. Historical signed-file drift notes above describe their original snapshots; the current source passes CLI admission after the separately preserved CLI-release restoration. The large full-quality asset bundle remains unchanged.
