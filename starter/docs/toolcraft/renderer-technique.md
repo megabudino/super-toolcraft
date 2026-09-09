@@ -36,11 +36,11 @@ When assessment requires a benchmark, declare `kernelBenchmarkDecisions`, implem
 
 ## GPU Backend And Provider Decision
 
-Every GPU pass declares `stage` (`render` or `compute`), `resources`, `state` (`stateless` or `feedback`), and `surfaces` before product shader code. Those pass semantics create backend pressure; backend/provider is selected separately for each `rendererTechnique.gpu` preview/export surface. Compute, storage-resource, and feedback passes create WebGPU pressure. A newly authored custom WebGPU renderer uses provider `vgpu` with capability `shader-webgpu-vgpu` and version policy `toolcraft-pinned`.
+Every GPU pass declares `stage` (`render` or `compute`), `resources`, `state` (`stateless` or `feedback`), and `surfaces` before product shader code. Those pass semantics create backend pressure; backend/provider is selected separately for each `rendererTechnique.gpu` preview/export surface. Compute, storage-resource, and feedback passes create WebGPU pressure. A newly authored custom WebGPU renderer uses provider `vgpu` with capability `shader-webgpu-vgpu` and version policy `app-pinned`.
 
 | Situation | Typed decision | Required evidence |
 | --- | --- | --- |
-| Newly authored custom WebGPU | `backend: "webgpu"`, `provider: "vgpu"`, `capability: "shader-webgpu-vgpu"`, `versionPolicy: "toolcraft-pinned"` | Toolcraft provider activation and its exact pin |
+| Newly authored custom WebGPU | `backend: "webgpu"`, `provider: "vgpu"`, `capability: "shader-webgpu-vgpu"`, `versionPolicy: "app-pinned"` | Toolcraft provider activation and its exact pin |
 | Compatibility-first custom WebGL | `backend: "webgl"`, `provider: "native"`, exception `browser-compatibility` | The browser/device constraint that rejects the primary WebGPU path |
 | Reference-owned WebGL | `backend: "webgl"`, `provider: "reference-runtime"`, exception `reference-parity` | Inspected reference behavior and matching acceptance |
 | Three.js WebGL presentation | `backend: "webgl"`, `provider: "three"` | The declared Three.js presentation owner |
@@ -52,25 +52,44 @@ WebGL compatibility/reference parity, native WebGPU API gaps, reference runtimes
 
 ## Opt-In VGPU Setup
 
-The neutral starter contains the protected provider catalog and dormant adapter
-source, but no installed VGPU dependency and no VGPU artwork. Enable the provider
-only after declared compute, feedback, or storage-resource passes create WebGPU
-pressure and `rendererTechnique.gpu` selects the Toolcraft-pinned VGPU capability
-for one or both affected surfaces. Preview and export remain independent typed
-provider decisions.
+The neutral starter contains a versionless provider descriptor and dormant adapter
+source, but no installed VGPU dependency and no selected VGPU release. Enable the
+provider after the render plan selects WebGPU/VGPU for the affected surfaces.
 
-Run these commands in order from the generated application:
+Run one command from the generated application:
 
 ```bash
 pnpm toolcraft:renderer -- enable vgpu
-pnpm install
 ```
 
-The catalog-pinned two-role tuple is the `vgpu` runtime role plus the
-`@vgpu/wgsl` WGSL-tooling role at the exact versions and integrities declared by
-the provider catalog. The enable command applies that tuple idempotently; do not
-install a range, `latest`, one role by itself, or a second provider. Product code
-imports only the public Toolcraft VGPU integration entry.
+Activation runs automatically and is noninteractive. It resolves npm's current `latest`
+tag to an exact stable version, validates the aligned `vgpu` runtime role and
+`@vgpu/wgsl` WGSL-tooling role, installs in an isolated copy, and runs shader
+validation, public adapter typecheck, lifecycle tests, and real browser
+canvas/target-readback/export checks. It then installs the tested dependencies
+and lockfile in the app. No separate install, version-choice or confirmation
+prompt is needed.
+
+Exact versions and integrities are stored in the application's
+`package.json` at `toolcraft.rendererProviders.vgpu`, together with the
+compatibility source hash and completed check identities. Toolcraft's provider
+catalog contains no version, release integrity or approvedRelease. The app's
+`versionPolicy: "app-pinned"` means latest stable at first activation and exact
+reproducible dependencies afterwards. Repeat activation restores the same pins
+without contacting latest or upgrading the app.
+
+Network, package, shader or adapter failures report the concrete failing step;
+activation never silently chooses an older release. The agent retries transient
+failures and resolves integration incompatibilities in the source Toolcraft
+adapter, regenerates the affected framework, and reruns activation without
+asking the user to choose versions or approve routine fixes. Product code does
+not modify its protected framework copy. An external outage can still prevent
+completion; report it honestly instead of inventing compatibility evidence.
+
+Use the public Toolcraft VGPU integration entry for provider lifetime,
+presentation, sizing and export. Shader primitives such as `effect`, `frame`,
+`compute` and `sampler` may be imported from the app's exact `vgpu` package.
+The provider owns one GPU device; any limited native API seam must be documented.
 
 ### VGPU Preview Surface
 
@@ -157,43 +176,30 @@ performance.
 
 ### VGPU Provider Version Authority
 
-Provider discovery and publication belong to the Toolcraft monorepo, not to a
-generated application. From the monorepo root, run the read-only check first:
+Version selection belongs to first activation in each application. The monorepo
+stores integration code and compatibility checks, not a selected VGPU version.
+The read-only discovery command may report registry latest and never mutates
+any app, dependency pin, catalog or repository file:
 
 ```bash
 pnpm renderer:versions:check
 ```
 
-The check may report registry latest and current approved metadata, but it never mutates
-the catalog or any repository file. A report is not update authority.
-Promote only one explicitly chosen exact version with:
+The old monorepo `renderer:version:promote` path does not apply to the versionless
+catalog. No Toolcraft release or catalog publication is required merely because
+VGPU released a compatible update. A background compatibility workflow may
+exercise latest ahead of new app creation; it does not publish package pins or
+change existing apps.
 
-```bash
-pnpm renderer:version:promote -- vgpu <exact-version>
-```
+Never auto-update an existing generated app. Its dependency pins, lockfile,
+matching adapter source, Vite loader, app-local compatibility record and any
+schema migration move together during a deliberate migration. Ordinary builds,
+dev server starts and reloads do not resolve registry latest. Version ranges
+and a literal latest dependency are not valid saved application pins.
 
-Promotion accepts an exact version only. It validates the closed, aligned VGPU
-runtime/WGSL-tooling tuple. It runs the compatibility gate before atomic tuple publication
-against an isolated generated application.
-A failed candidate leaves the current approved dependency tuple and catalog bytes unchanged.
-Provider compatibility promotion is functional proof; measured performance is not part of provider compatibility promotion.
-
-Never use version ranges (`^` or `~`), the `latest` tag. Do not use `pnpm up vgpu`,
-direct catalog edits, or a handwritten `approvedRelease` record. The promotion command
-creates the candidate bytes and approval record; do not reconstruct either by
-hand.
-
-If a candidate needs an API migration, leave the approved catalog tuple unchanged,
-edit the real protected adapter source, schema, and focused tests, then rerun the
-same exact promotion command. Its ephemeral overlay is never an editing surface;
-it exists only to run isolated compatibility against the candidate bytes.
-
-A generated app must never auto-update its renderer provider and adopts a new
-release only through an explicit Toolcraft tuple migration. An old app receives
-both promoted dependency pins, the provider catalog, matching adapter source,
-Vite loader, `approvedRelease` record, and any schema migration as one coherent
-migration. It never reads registry latest or copies only one new version string.
-Automatic migration tooling is outside this contract.
+Provider activation uses bounded functional compatibility checks. It does not
+run measured performance or create a product delivery receipt. First product
+delivery retains its one protected functional gate; later edits remain focused.
 
 ## Required Inventory
 
@@ -216,9 +222,11 @@ If output is intentionally rasterized, include `intentionalRasterizationReason`.
 
 Renderer technology does not decide camera ownership. Before renderer code,
 product readiness separately declares `viewInteraction`: editable spatial scenes
-default to `orbit`; fixed or timeline-owned cameras require explicit
-user/reference evidence. WebGL/Three.js alone does not imply orbit, and a fixed
-camera chosen by the implementation is not evidence for omitting it.
+default to `orbit`; fixed or timeline-owned cameras require positive typed
+authority from a verbatim user request or a named inspected behavioral reference
+with observed interaction. A still image, screenshot, or desired output frame
+establishes composition only. WebGL/Three.js alone does not imply orbit, and a
+fixed camera chosen by the implementation is not evidence for omitting it.
 
 ## Layer Inventory
 
@@ -228,7 +236,7 @@ Editing handles remain interaction overlays, stay out of exported product output
 
 ## Three-Dimensional Model Interaction
 
-Standard model apps use `modelPresentation: { mode: "runtime" }` and the runtime's lazy Three binding/canvas layer. It renders canonical geometry plus the supported authored material/texture/vertex-color appearance, or the exact Blender-compatible fallback when appearance is absent. Product `canvasContent` must not import format loaders, enumerate repository records, create a second Three cache, reconstruct materials, or render a duplicate model over the runtime layer. `renderDefaultCanvasMedia={false}` affects generic image/file preview only and never disables model presentation.
+Standard model apps omit `modelPresentation` and use the runtime's lazy Three binding/canvas layer. It renders canonical geometry plus the supported authored material/texture/vertex-color appearance, or the exact Blender-compatible fallback when appearance is absent. Product `scene.canvasContent` must not import format loaders, enumerate repository records, create a second Three cache, reconstruct materials, or render a duplicate model over the runtime layer. `scene.renderDefaultCanvasMedia: false` affects generic image/file preview only and never disables model presentation.
 
 Custom model output is an explicit presentation mode, not a loader escape hatch. Declare unique consumers in `modelPresentation: { mode: "custom", consumers }`, mount `useToolcraftModelPresentationConsumer(declaration)`, then acquire and release the supplied presentation lease. Runtime suppresses its standard layer only for those declared source targets and reports retryable feedback when the checked consumer is missing or acquisition fails.
 
@@ -275,10 +283,10 @@ The `mount*` and error functions above stand for product renderer integration on
 
 The presentation lease is keyed by canonical document reference and shares immutable geometry/material/texture GPU resources across preview and export while cloning only scene roots. Replacement, delete/reset, failed creation, release, and provider unmount dispose ownership deterministically. The original uploaded folder/ZIP remains immutable durable source; display fit and camera pose live outside the leased root.
 
-The runtime presents structurally valid analyzing or repairing geometry at `0.4` opacity and committed clean/fixed geometry at `1`. Export is always `1`. Runtime image/video export composites visible committed model layers before awaiting the product's shared `ToolcraftAppComposition.exportRenderer` frame. Models are not silently traced for SVG; explicit SVG delivery requires product-authored editable vector content through `svgExportRenderer`. Runtime owns presentation binding, pose, scene frame, dimensions, pixel ratio, validation/encoding, and download; product code does not call model compositors or construct a parallel export host.
+The runtime presents structurally valid analyzing or repairing geometry at `0.4` opacity and committed clean/fixed geometry at `1`. Export is always `1`. Runtime image/video export composites visible committed model layers before awaiting the product's shared `scene.rasterFrameRenderer` frame. Models are not silently traced for SVG; explicit SVG delivery requires product-authored editable vector content through `scene.vectorFrameRenderer`. Runtime owns presentation binding, pose, scene frame, dimensions, pixel ratio, validation/encoding, and download; product code does not call model compositors or construct a parallel export host.
 
 When `viewInteraction.mode` is `orbit`, schema `orientationGizmo`, direct model drag, preview rendering, hit testing, reset/history, and export share every declared orientation pose target. The product renderer supplies geometry-aware `hitTest`; Toolcraft owns gesture scheduling and history through `useToolcraftModelOrbitInteraction`.
 
-Pointer ownership is selected on pointer-down. A visible-model hit rotates; a miss is left untouched so `CanvasShell` pans. Target-scoped runtime ownership serializes gizmo drag, snap, and direct orbit, and cancels stale work on a newer gesture or external state write. Do not infer model geometry in runtime, keep a second local camera/Euler state, or let orientation invalidate passes that do not consume the pose. Measure the orientation target's canonical live interaction path at the declared workload without reducing preview quality.
+Pointer ownership is selected on pointer-down. `CanvasShell` claims Space + primary drag for pan before product hit testing. Otherwise a visible-model hit rotates and a plain miss does not pan. Target-scoped runtime ownership serializes gizmo drag, snap, and direct orbit, and cancels stale work on a newer gesture or external state write. Do not infer model geometry in runtime, keep a second local camera/Euler state, or let orientation invalidate passes that do not consume the pose. Measure the orientation target's canonical live interaction path at the declared workload without reducing preview quality.
 
 Layer boundaries follow semantics and invalidation, not a fixed list of product domains. Their workload proof comes from derived paths and combined fixtures.

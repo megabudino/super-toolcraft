@@ -91,7 +91,11 @@ export async function evaluateGeneratedCodeHealth(rootDir = appRoot) {
   const localDependencyGraph = await createToolcraftLocalDependencyGraph({
     aliases: dependencyCycleAliases,
     entries: inventory.entries,
+    fullEvidenceEntryPaths: inventory.entries
+      .filter(({ owner }) => owner === "product")
+      .map(({ repoPath }) => repoPath),
     rootDir,
+    sourceRecordMode: "imports-only",
   });
   const codeHealth = await evaluateCodeHealth({
     ...generatedCodeHealthPolicy,

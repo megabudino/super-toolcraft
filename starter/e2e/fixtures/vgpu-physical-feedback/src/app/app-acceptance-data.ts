@@ -1,11 +1,11 @@
 import type {
   ToolcraftComponentAcceptance,
-  ToolcraftControlSectionInventoryEntry,
   ToolcraftProductReadiness,
   ToolcraftTransferMode,
 } from "./acceptance/types";
 
 import { appSchema } from "./app-schema";
+export { appControlSectionInventory } from "./app-control-inventory";
 
 const persistenceSlices =
   appSchema.persistence.storage === "localStorage"
@@ -416,35 +416,5 @@ export const appAcceptance: readonly ToolcraftComponentAcceptance[] = [
     kind: "control",
     target: "simulation.enabled",
     userAction: "Turn Field off and inspect resource disposal evidence.",
-  },
-];
-
-export const appControlSectionInventory: readonly ToolcraftControlSectionInventoryEntry[] = [
-  {
-    entity: "Physical feedback field",
-    entityId: "physical-feedback-field",
-    groupingReason:
-      "Field availability and impulse strength jointly define the simulated output.",
-    id: "simulation",
-    targets: ["simulation.enabled", "simulation.impulse"],
-    title: "Simulation",
-  },
-  {
-    entity: "Output background",
-    entityId: "output-background",
-    groupingReason:
-      "Inclusion and color jointly define the preview and exported field background.",
-    id: "background",
-    targets: ["export.includeBackground", "appearance.background"],
-    title: "Background",
-  },
-  {
-    entity: "Image delivery",
-    entityId: "image-delivery",
-    groupingReason:
-      "Format and resolution jointly configure the exported physical field image.",
-    id: "image-export",
-    targets: ["export.image.format", "export.image.resolution"],
-    title: "Image Export",
   },
 ];

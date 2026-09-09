@@ -79,21 +79,17 @@ export async function expectToolcraftInfinityCanvasModeEvidence(
     observations.before,
     expectedFiniteSize ?? undefined,
   );
-  const baselineProductScene = observations.before.productScene;
+  const baselineOutput = observations.before.productScene.output;
   expect(
-    baselineProductScene.backingWidth !== null &&
-      Number.isInteger(baselineProductScene.backingWidth) &&
-      baselineProductScene.backingWidth > 0 &&
-      baselineProductScene.backingHeight !== null &&
-      Number.isInteger(baselineProductScene.backingHeight) &&
-      baselineProductScene.backingHeight > 0,
-    `Infinity canvas "${options.requirementId}" requires positive integer product canvas backing dimensions.`,
+    baselineOutput?.kind === "canvas" || baselineOutput?.kind === "svg",
+    `Infinity canvas "${options.requirementId}" requires mounted product canvas or SVG output.`,
   ).toBe(true);
   expectMeasurableInfinityCanvasRect(
     options.expectedSceneRect,
     `Infinity canvas "${options.requirementId}" requires a finite positive-area expected product world rectangle.`,
   );
   for (const observation of observedSequence) {
+    expect(observation.productSceneStatus).toBe("ready");
     expectMeasurableInfinityCanvasRect(
       observation.productScene.worldRect,
       `Infinity canvas "${options.requirementId}" requires finite positive-area product world rectangles.`,
@@ -128,18 +124,42 @@ export async function expectToolcraftInfinityCanvasModeEvidence(
     expectedFiniteSize ?? undefined,
   );
 
-  const expectedBacking = {
-    backingHeight: baselineProductScene.backingHeight,
-    backingWidth: baselineProductScene.backingWidth,
-  };
   for (const observation of observedSequence) {
     expect(observation.productScene.worldRect).toEqual(
       options.expectedSceneRect,
     );
-    expect({
-      backingHeight: observation.productScene.backingHeight,
-      backingWidth: observation.productScene.backingWidth,
-    }).toEqual(expectedBacking);
+    const output = observation.productScene.output;
+    expect(output?.kind).toBe(baselineOutput?.kind);
+    if (output?.kind === "canvas") {
+      expect(
+        Number.isInteger(output.backingWidth) &&
+          output.backingWidth > 0 &&
+          Number.isInteger(output.backingHeight) &&
+          output.backingHeight > 0,
+        `Infinity canvas "${options.requirementId}" requires positive integer product canvas backing dimensions.`,
+      ).toBe(true);
+      expect(output).toEqual(baselineOutput);
+    } else if (output?.kind === "svg" && baselineOutput?.kind === "svg") {
+      for (const rect of [
+        output.localRect,
+        output.contentRect,
+        output.viewportRect,
+      ]) {
+        expectMeasurableInfinityCanvasRect(
+          rect,
+          `Infinity canvas "${options.requirementId}" requires measurable, nonempty SVG product geometry.`,
+        );
+      }
+      expect(output.localRect).toEqual(baselineOutput.localRect);
+      expect(output.contentRect).toEqual(baselineOutput.contentRect);
+      expect({
+        width: output.viewportRect.width,
+        height: output.viewportRect.height,
+      }).toEqual({
+        width: baselineOutput.viewportRect.width,
+        height: baselineOutput.viewportRect.height,
+      });
+    }
   }
 
   expect(observations.enabled.viewport).toEqual(observations.before.viewport);
@@ -171,6 +191,11 @@ export async function expectToolcraftInfinityCanvasModeEvidence(
     expect(afterTransition.productScene.viewportRect).toEqual(
       beforeTransition.productScene.viewportRect,
     );
+    const beforeOutput = beforeTransition.productScene.output;
+    const afterOutput = afterTransition.productScene.output;
+    if (beforeOutput?.kind === "svg" && afterOutput?.kind === "svg") {
+      expect(afterOutput.viewportRect).toEqual(beforeOutput.viewportRect);
+    }
   }
 
   for (const continuity of Object.values(transitions)) {
@@ -245,11 +270,13 @@ export async function expectToolcraftInfinityCanvasImageExportEvidence(
   expect(artifacts.infinite).toMatchObject(options.expectedInfiniteSize);
   expect(artifacts.finite.byteLength).toBeGreaterThan(100);
   expect(artifacts.infinite.byteLength).toBeGreaterThan(100);
-  expect({ height: artifacts.infinite.height, width: artifacts.infinite.width })
-    .not.toEqual({
-      height: artifacts.finite.height,
-      width: artifacts.finite.width,
-    });
+  expect({
+    height: artifacts.infinite.height,
+    width: artifacts.infinite.width,
+  }).not.toEqual({
+    height: artifacts.finite.height,
+    width: artifacts.finite.width,
+  });
 
   await attachToolcraftBrowserRuntimeEvidence({
     evidenceType: "exported-artifact",
@@ -291,11 +318,13 @@ export async function expectToolcraftInfinityCanvasVideoExportEvidence(
   expect(artifacts.infinite.byteLength).toBeGreaterThan(100);
   expect(artifacts.finite.durationMs).toBeGreaterThan(0);
   expect(artifacts.infinite.durationMs).toBeGreaterThan(0);
-  expect({ height: artifacts.infinite.height, width: artifacts.infinite.width })
-    .not.toEqual({
-      height: artifacts.finite.height,
-      width: artifacts.finite.width,
-    });
+  expect({
+    height: artifacts.infinite.height,
+    width: artifacts.infinite.width,
+  }).not.toEqual({
+    height: artifacts.finite.height,
+    width: artifacts.finite.width,
+  });
 
   await attachToolcraftBrowserRuntimeEvidence({
     evidenceType: "exported-artifact",

@@ -3,7 +3,7 @@ import {
   ToolcraftSceneExportError,
   type ToolcraftExportFrame,
 } from "../../export/export-frame";
-import type { ToolcraftState } from "../../state/types";
+import type { ReadonlyToolcraftState } from "../../state/readonly-state";
 import type { ToolcraftModelRenderHost } from "./model-render-binding";
 import { renderToolcraftModelsInWorldContext } from "./model-export-world-context";
 
@@ -12,28 +12,31 @@ export type ToolcraftRenderModelsToCanvas = (
 ) => Promise<number>;
 
 export type ToolcraftModelExportOptions = Readonly<{
-  exportFrame: ToolcraftExportFrame;
+  exportFrame?: ToolcraftExportFrame;
+  signal: AbortSignal;
   suppressedTargets?: readonly string[];
 }>;
 
 function resolveModelExportOptions(
-  state: ToolcraftState,
-  options: ToolcraftModelExportOptions | undefined,
-): ToolcraftModelExportOptions {
-  if (options) return options;
+  state: ReadonlyToolcraftState,
+  options: ToolcraftModelExportOptions,
+): ToolcraftModelExportOptions & { exportFrame: ToolcraftExportFrame } {
+  if (options.exportFrame) return { ...options, exportFrame: options.exportFrame };
   const result = resolveToolcraftExportFrame(state, null);
   if (!result.ok) throw new ToolcraftSceneExportError(result);
   return {
+    ...options,
     exportFrame: result.frame,
   };
 }
 
 export async function renderToolcraftModelsToCanvas(
   host: ToolcraftModelRenderHost | null,
-  state: ToolcraftState,
+  state: ReadonlyToolcraftState,
   canvas: HTMLCanvasElement,
-  options?: ToolcraftModelExportOptions,
+  options: ToolcraftModelExportOptions,
 ): Promise<number> {
+  options.signal.throwIfAborted();
   if (!host) return 0;
   const context = canvas.getContext("2d");
   if (!context) {
@@ -57,6 +60,7 @@ export async function renderToolcraftModelsToCanvas(
       context,
       exportFrame: resolved.exportFrame,
       host,
+      signal: options.signal,
       state,
       suppressedTargets: resolved.suppressedTargets,
     });

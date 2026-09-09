@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { timelineModule } from "@/toolcraft/runtime";
 
 import { getToolcraftRenderScaleCoverageErrors } from "./acceptance/render-scale";
 import type {
@@ -10,27 +11,25 @@ import {
   validateContractAcceptance,
 } from "./app-acceptance.contract-fixtures";
 
-function createRenderScaleSchema({ timeline = false }: { timeline?: boolean } = {}) {
+function createRenderScaleSchema({
+  timeline = false,
+}: { timeline?: boolean } = {}) {
   return defineContractSchemaFixture({
-    canvas: {
-      enabled: true,
-      renderScale: true,
-    },
-    panels: {
-      controls: {
-        sections: [],
-        title: "Controls",
+    base: {
+      identity: { id: "contract-fixture", title: "Contract fixture" },
+      canvas: {
+        enabled: true,
+        renderScale: true,
       },
-      ...(timeline
-        ? {
-            timeline: {
-              defaultDurationSeconds: 8,
-              enabled: true,
-              mode: "playback" as const,
-            },
-          }
-        : {}),
+      panels: {
+        controls: {
+          sections: [],
+          title: "Controls",
+        },
+      },
+      ...(timeline ? {} : { persistence: { storage: "none" as const } }),
     },
+    modules: timeline ? [timelineModule({ mode: "playback" })] : [],
   });
 }
 
@@ -267,13 +266,18 @@ describe("Toolcraft render-scale acceptance coverage", () => {
 
   it("does not require backing-pixel coverage when raster render scale is disabled", () => {
     const schemaWithoutRenderScale = defineContractSchemaFixture({
-      canvas: { enabled: true },
-      panels: {
-        controls: {
-          sections: [],
-          title: "Controls",
+      base: {
+        identity: { id: "contract-fixture", title: "Contract fixture" },
+        canvas: { enabled: true },
+        panels: {
+          controls: {
+            sections: [],
+            title: "Controls",
+          },
         },
+        persistence: { storage: "none" },
       },
+      modules: [],
     });
 
     expect(
@@ -286,13 +290,18 @@ describe("Toolcraft render-scale acceptance coverage", () => {
 
   it("rejects render-scale coverage when raster render scale is disabled", () => {
     const schemaWithoutRenderScale = defineContractSchemaFixture({
-      canvas: { enabled: true },
-      panels: {
-        controls: {
-          sections: [],
-          title: "Controls",
+      base: {
+        identity: { id: "contract-fixture", title: "Contract fixture" },
+        canvas: { enabled: true },
+        panels: {
+          controls: {
+            sections: [],
+            title: "Controls",
+          },
         },
+        persistence: { storage: "none" },
       },
+      modules: [],
     });
 
     expect(

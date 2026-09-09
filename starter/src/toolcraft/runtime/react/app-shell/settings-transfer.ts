@@ -1,4 +1,11 @@
-import type { ResolvedToolcraftAppSchema } from "../../schema/types";
+import type { ResolvedToolcraftAppSchema } from "../../schema/resolved-app-schema";
+import {
+  createToolcraftSettingsAttachments,
+  parseToolcraftSettingsAttachments,
+  type ToolcraftSettingsAttachment,
+} from "../../source-assets/settings-media";
+import type { ToolcraftSourceAssetCoordinator } from "../../source-assets/source-asset-coordinator";
+import { collectToolcraftMediaResourceRefs } from "../../source-assets/repository/resource-reachability";
 import { isToolcraftCanvasSizingTarget } from "../../schema/runtime-targets";
 import { normalizeToolcraftCanvasAspectRatioValue } from "../../state/canvas-state";
 import {
@@ -7,23 +14,24 @@ import {
 } from "../../state/control-value-normalization";
 import type {
   ToolcraftCommand,
+  ToolcraftMediaAsset,
   ToolcraftState,
   ToolcraftTimelineState,
 } from "../../state/types";
 import {
-  applyToolcraftSettingsCanvas,
   parseToolcraftSettingsCanvas,
-  settingsTransferImportHistoryGroup,
   type ToolcraftSettingsCanvasPayload,
 } from "./settings-transfer-canvas";
 
 const settingsTransferPayloadSource = "toolcraft-settings";
-const settingsTransferPayloadVersion = 2;
+const settingsTransferPayloadVersion = 3;
 
 type ToolcraftDispatch = (command: ToolcraftCommand) => void;
+const activeSettingsImports = new WeakSet<ToolcraftDispatch>();
 
 export type ToolcraftSettingsTransferPayload = {
   appId: string;
+  attachments: readonly ToolcraftSettingsAttachment[];
   canvas: ToolcraftSettingsCanvasPayload;
   exportedAt: string;
   source: typeof settingsTransferPayloadSource;
@@ -34,7 +42,7 @@ export type ToolcraftSettingsTransferPayload = {
     isPlaying: false;
   };
   values: Record<string, unknown>;
-  version: 1 | typeof settingsTransferPayloadVersion;
+  version: typeof settingsTransferPayloadVersion;
 };
 
 type ImportContext = {
@@ -52,6 +60,40 @@ function isFinitePositiveNumber(value: unknown): value is number {
 
 function isFiniteNumber(value: unknown): value is number {
   return typeof value === "number" && Number.isFinite(value);
+}
+
+function isCanonicalExportTimestamp(value: unknown): value is string {
+  if (typeof value !== "string") return false;
+  const timestamp = Date.parse(value);
+  return (
+    Number.isFinite(timestamp) && new Date(timestamp).toISOString() === value
+  );
+}
+
+function readToolcraftSettingsTimeline(
+  value: Record<string, unknown>,
+): ToolcraftSettingsTransferPayload["timeline"] | null {
+  if (
+    Object.keys(value).sort().join("|") !==
+      "currentTimeSeconds|durationSeconds|expanded|isLooping|isPlaying" ||
+    !isFiniteNumber(value.currentTimeSeconds) ||
+    value.currentTimeSeconds < 0 ||
+    !isFinitePositiveNumber(value.durationSeconds) ||
+    value.currentTimeSeconds > value.durationSeconds ||
+    typeof value.expanded !== "boolean" ||
+    typeof value.isLooping !== "boolean" ||
+    value.isPlaying !== false
+  ) {
+    return null;
+  }
+
+  return {
+    currentTimeSeconds: value.currentTimeSeconds,
+    durationSeconds: value.durationSeconds,
+    expanded: value.expanded,
+    isLooping: value.isLooping,
+    isPlaying: false,
+  };
 }
 
 function pickTransferValues(state: ToolcraftState): Record<string, unknown> {
@@ -78,6 +120,7 @@ export function createToolcraftSettingsPayload(
 ): ToolcraftSettingsTransferPayload {
   return {
     appId: state.schema.settingsTransfer.appId,
+    attachments: createToolcraftSettingsAttachments(state.mediaAssets),
     canvas: {
       ...(Object.hasOwn(state.values, "canvas.aspectRatio")
         ? {
@@ -113,83 +156,64 @@ export function parseToolcraftSettingsPayload(
   }
 
   if (
-    value.source !== settingsTransferPayloadSource ||
-    (value.version !== 1 && value.version !== settingsTransferPayloadVersion) ||
-    value.appId !== schema.settingsTransfer.appId
+    Object.keys(value).sort().join("|") !==
+    "appId|attachments|canvas|exportedAt|source|timeline|values|version"
   ) {
     return null;
   }
 
-  if (!isRecord(value.values) || !isRecord(value.canvas) || !isRecord(value.timeline)) {
+  if (
+    value.source !== settingsTransferPayloadSource ||
+    value.version !== settingsTransferPayloadVersion ||
+    value.appId !== schema.settingsTransfer.appId ||
+    !isCanonicalExportTimestamp(value.exportedAt)
+  ) {
     return null;
   }
 
-  const canvas = parseToolcraftSettingsCanvas({
-    canvas: value.canvas,
-    values: value.values,
-    version: value.version,
-  });
+  if (
+    !Array.isArray(value.attachments) ||
+    !isRecord(value.values) ||
+    !isRecord(value.canvas) ||
+    !isRecord(value.timeline)
+  ) {
+    return null;
+  }
 
-  if (!canvas) {
+  if (Object.keys(value.values).some(isToolcraftCanvasSizingTarget)) {
+    return null;
+  }
+
+  const canvas = parseToolcraftSettingsCanvas(value.canvas);
+  const timeline = readToolcraftSettingsTimeline(value.timeline);
+
+  if (!canvas || !timeline) {
     return null;
   }
 
   return {
-    ...(value as Omit<ToolcraftSettingsTransferPayload, "canvas">),
+    appId: schema.settingsTransfer.appId,
+    attachments: parseToolcraftSettingsAttachments(value.attachments),
     canvas,
+    exportedAt: value.exportedAt,
+    source: settingsTransferPayloadSource,
+    timeline,
+    values: value.values,
+    version: settingsTransferPayloadVersion,
   };
-}
-
-function applyTimeline(
-  { dispatch, state }: ImportContext,
-  timeline: ToolcraftSettingsTransferPayload["timeline"],
-): void {
-  if (state.schema.panels.timeline?.enabled && isFinitePositiveNumber(timeline.durationSeconds)) {
-    dispatch({
-      durationSeconds: timeline.durationSeconds,
-      type: "timeline.setDuration",
-    });
-  }
-
-  if (state.schema.panels.timeline?.enabled && isFiniteNumber(timeline.currentTimeSeconds)) {
-    dispatch({
-      currentTimeSeconds: timeline.currentTimeSeconds,
-      type: "timeline.setCurrentTime",
-    });
-  }
-
-  if (state.schema.panels.timeline?.enabled && typeof timeline.expanded === "boolean") {
-    dispatch({
-      expanded: timeline.expanded,
-      type: "timeline.setExpanded",
-    });
-  }
-
-  if (
-    state.schema.panels.timeline?.enabled &&
-    typeof timeline.isLooping === "boolean" &&
-    timeline.isLooping !== state.timeline.isLooping
-  ) {
-    dispatch({ type: "timeline.toggleLoop" });
-  }
-
-  if (state.schema.panels.timeline?.enabled) {
-    dispatch({
-      isPlaying: false,
-      type: "timeline.setPlaying",
-    });
-  }
 }
 
 export function applyToolcraftSettingsPayload(
   context: ImportContext,
   payload: ToolcraftSettingsTransferPayload,
+  assets: readonly ToolcraftMediaAsset[],
 ): void {
   const importableTargets = getToolcraftValueControls(context.state.schema);
   const additionalTargets = new Set(
     context.state.schema.settingsTransfer.additionalValueTargets,
   );
 
+  const values: Record<string, unknown> = {};
   for (const [target, value] of Object.entries(payload.values)) {
     const control = importableTargets.get(target);
 
@@ -204,18 +228,20 @@ export function applyToolcraftSettingsPayload(
       ? normalizeToolcraftControlValue(control, value)
       : { accepted: true as const, value };
 
-    context.dispatch({
-      history: "merge",
-      historyGroup: settingsTransferImportHistoryGroup,
-      label: "Import settings",
-      target,
-      type: "controls.setValue",
-      value: normalized.accepted ? normalized.value : normalized.fallback,
-    });
+    values[target] = normalized.accepted
+      ? normalized.value
+      : normalized.fallback;
   }
 
-  applyToolcraftSettingsCanvas(context, payload.canvas);
-  applyTimeline(context, payload.timeline);
+  context.dispatch({
+    type: "settings.apply",
+    settings: {
+      assets,
+      canvas: payload.canvas,
+      timeline: payload.timeline,
+      values,
+    },
+  });
 }
 
 export function downloadToolcraftSettings(state: ToolcraftState): void {
@@ -240,43 +266,80 @@ function reportImportError(error: unknown): void {
   window.alert("Could not import settings JSON.");
 }
 
-export async function importToolcraftSettings(context: ImportContext): Promise<void> {
+export async function importToolcraftSettings(context: {
+  dispatch: ToolcraftDispatch;
+  getState: () => ToolcraftState;
+  sourceAssetCoordinator: Pick<
+    ToolcraftSourceAssetCoordinator,
+    "resolveSettingsAsset" | "retainResourceRef"
+  >;
+}): Promise<void> {
+  // The store owns the operation even if the controls panel is remounted.
+  if (activeSettingsImports.has(context.dispatch)) return;
+  activeSettingsImports.add(context.dispatch);
   const input = document.createElement("input");
   input.accept = "application/json,.json";
   input.style.display = "none";
   input.type = "file";
   document.body.append(input);
 
-  await new Promise<void>((resolve) => {
-    input.addEventListener(
-      "change",
-      () => {
-        resolve();
-      },
-      { once: true },
-    );
-    input.click();
-  });
-
-  const file = input.files?.item(0);
-  input.remove();
-
-  if (!file) {
-    return;
-  }
-
   try {
+    const file = await new Promise<File | null>((resolve) => {
+      const finish = (event: Event) => {
+        input.removeEventListener("change", finish);
+        input.removeEventListener("cancel", finish);
+        resolve(
+          event.type === "change" ? (input.files?.item(0) ?? null) : null,
+        );
+      };
+      input.addEventListener("change", finish);
+      input.addEventListener("cancel", finish);
+      input.click();
+    });
+    if (!file) return;
+    const json: unknown = JSON.parse(await file.text());
     const payload = parseToolcraftSettingsPayload(
-      context.state.schema,
-      JSON.parse(await file.text()),
+      context.getState().schema,
+      json,
     );
 
     if (!payload) {
       throw new Error("Invalid Toolcraft settings payload.");
     }
 
-    applyToolcraftSettingsPayload(context, payload);
+    const releases: (() => void)[] = [];
+    try {
+      const assets = await Promise.all(
+        payload.attachments.map(async ({ asset }) => {
+          if (!asset) return null;
+          try {
+            for (const ref of collectToolcraftMediaResourceRefs([asset])) {
+              const release =
+                context.sourceAssetCoordinator.retainResourceRef?.(ref);
+              if (release) releases.push(release);
+            }
+            return (
+              (await context.sourceAssetCoordinator.resolveSettingsAsset?.(
+                asset,
+              )) ?? null
+            );
+          } catch {
+            return null;
+          }
+        }),
+      );
+      applyToolcraftSettingsPayload(
+        { dispatch: context.dispatch, state: context.getState() },
+        payload,
+        assets.filter((asset) => asset !== null),
+      );
+    } finally {
+      for (const release of releases) release();
+    }
   } catch (error) {
     reportImportError(error);
+  } finally {
+    input.remove();
+    activeSettingsImports.delete(context.dispatch);
   }
 }

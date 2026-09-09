@@ -8,5 +8,6 @@ fn renderField(@location(0) uv: vec2f) -> @location(0) vec4f {
   let impulse = vec3f(0.20, 0.90, 1.00);
   let halo = smoothstep(0.015, 0.84, strength);
   let alpha = halo;
-  return vec4f(mix(ink, impulse, halo) * alpha, alpha);
+  // ImageData / Toolcraft target-readback consumes straight, not premultiplied RGBA.
+  return vec4f(select(vec3f(0.0), mix(ink, impulse, halo), alpha > 0.0), alpha);
 }

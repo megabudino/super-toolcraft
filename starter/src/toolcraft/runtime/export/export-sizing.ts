@@ -1,4 +1,4 @@
-import type { ToolcraftState } from "../state/types";
+import type { ReadonlyToolcraftState } from "../state/readonly-state";
 import {
   resolveToolcraftExportFrame,
   ToolcraftSceneExportError,
@@ -17,7 +17,7 @@ export type ToolcraftRetinaExportSize = {
 export type ToolcraftExportSizeOptions = {
   devicePixelRatio?: number;
   frame?: ToolcraftExportFrame;
-  state: ToolcraftState;
+  state: ReadonlyToolcraftState;
 };
 
 export type ToolcraftImageExportSizeOptions = ToolcraftExportSizeOptions & {

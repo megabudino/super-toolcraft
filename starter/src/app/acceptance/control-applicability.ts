@@ -206,9 +206,7 @@ function getInvalidFinitePredicateValues(
         !domain.some((candidate) =>
           areToolcraftValuesEqual(candidate, value),
         ) &&
-        !values.some((candidate) =>
-          areToolcraftValuesEqual(candidate, value),
-        )
+        !values.some((candidate) => areToolcraftValuesEqual(candidate, value))
       ) {
         values.push(value);
       }
@@ -261,19 +259,6 @@ export function getToolcraftControlApplicabilityErrors({
 
   for (const { control } of controls) {
     const { applicability } = control;
-
-    if (applicability.origin === "implicit") {
-      errors.push(
-        `${control.target} must declare explicit applicability as always or conditional.`,
-      );
-      continue;
-    }
-
-    if (applicability.origin === "legacy") {
-      errors.push(
-        `${control.target} uses legacy visibleWhen; product controls must declare explicit applicability.`,
-      );
-    }
 
     const predicates = getToolcraftApplicabilityPredicates(applicability);
     const predicatesByTarget = new Map<

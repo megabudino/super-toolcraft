@@ -2,6 +2,7 @@
 
 import { Children, isValidElement, useEffect, useRef, useState } from "react";
 
+import { selectBrowserElementContents } from "./browser-transport";
 import { Slider } from "./slider";
 
 const editableValueTextBaseClassName =
@@ -329,14 +330,5 @@ function hasEditableNumericValueLabel(valueLabel: string): boolean {
 }
 
 function selectEditableText(node: HTMLElement): void {
-  const selection = window.getSelection();
-
-  if (!selection) {
-    return;
-  }
-
-  const range = document.createRange();
-  range.selectNodeContents(node);
-  selection.removeAllRanges();
-  selection.addRange(range);
+  selectBrowserElementContents(node);
 }

@@ -31,7 +31,6 @@ export type ToolcraftOutputExportFacts = {
   panelActionsSectionIndex: number;
   setupSection: ToolcraftControlsSection | undefined;
   setupSectionIndex: number;
-  timelineEntry: readonly [string, ToolcraftControlSchema] | undefined;
   videoExportSection: ToolcraftControlsSection | undefined;
   videoExportSectionIndex: number;
   videoFormatEntry: readonly [string, ToolcraftControlSchema] | undefined;
@@ -185,10 +184,6 @@ export function buildToolcraftOutputExportFacts({
     panelActionsSectionIndex: getFirstPanelActionsSectionIndex(schema),
     setupSection,
     setupSectionIndex: getSchemaControlsSectionIndexByTitle(schema, "Setup"),
-    timelineEntry: getSectionControlEntryByTarget(
-      setupSection,
-      "panels.timeline.extended",
-    ),
     videoExportSection,
     videoExportSectionIndex,
     videoFormatEntry: getSectionControlEntryByTarget(

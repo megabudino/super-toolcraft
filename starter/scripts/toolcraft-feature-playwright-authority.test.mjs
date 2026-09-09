@@ -10,6 +10,7 @@ import {
   validateToolcraftFeaturePlaywrightAuthority,
 } from "./toolcraft-feature-playwright-authority.mjs";
 import { createToolcraftIntegrityFixture } from "./toolcraft-integrity-test-utils.mjs";
+import { collectToolcraftPlaywrightBindingProvenanceViolations } from "./toolcraft-playwright-test-type-provenance.mjs";
 test("rejects direct Playwright authority in a selected spec local import closure", async () => {
   const projectDir = await mkdtemp(path.join(tmpdir(), "toolcraft-feature-authority-"));
   try {
@@ -157,6 +158,40 @@ test("rejects raw framework TestType bridges while allowing safe helpers", async
   } finally {
     await rm(projectDir, { force: true, recursive: true });
   }
+});
+
+test("treats only the verified product-test facade as an opaque authority boundary", () => {
+  const helperPath = "e2e/evidence-helper.ts";
+  const facadePath = "e2e/toolcraft-product-test.ts";
+  const productPath = "e2e/product.spec.ts";
+  const moduleImports = [
+    { importerRepoPath: helperPath, specifier: "@playwright/test" },
+    { importerRepoPath: facadePath, resolvedRepoPath: helperPath, specifier: "./evidence-helper" },
+    { importerRepoPath: productPath, resolvedRepoPath: facadePath, specifier: "./toolcraft-product-test" },
+  ];
+  const graph = {
+    moduleImports,
+    reverse: new Map([[helperPath, [facadePath]], [facadePath, [productPath]]]),
+    sourceRecords: new Map([
+      [helperPath, { rawSource: 'import { expect } from "@playwright/test"; export async function prove(observe) { let current; await expect.poll(async () => { current = await observe(); return current; }).not.toEqual({}); return current; }' }],
+      [facadePath, { rawSource: 'export { prove } from "./evidence-helper";' }],
+      [productPath, { rawSource: 'import { prove } from "./toolcraft-product-test"; prove("visible");' }],
+    ]),
+  };
+  const input = {
+    entryByPath: new Map([[helperPath, { owner: "framework" }], [facadePath, { owner: "framework" }], [productPath, { owner: "product" }]]),
+    frameworkFilePaths: new Set([helperPath, facadePath]),
+    graph,
+    productFilePaths: new Set([productPath]),
+    reachablePaths: [helperPath, facadePath, productPath],
+  };
+
+  const unsignedViolations = collectToolcraftPlaywrightBindingProvenanceViolations({ ...input, verifiedFacade: false });
+  assert.ok(unsignedViolations.length > 0);
+  assert.deepEqual(
+    collectToolcraftPlaywrightBindingProvenanceViolations({ ...input, verifiedFacade: true }),
+    [],
+  );
 });
 
 test("rejects statically analyzable Node loader indirection to Playwright", async () => {

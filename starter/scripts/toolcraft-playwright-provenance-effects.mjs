@@ -161,7 +161,7 @@ export function evaluatePlaywrightReflectInvocation({ applyCallWrites, callee, e
   return state === AUTHORITY ? authority() : state === UNKNOWN ? unknown() : returned;
 }
 
-export function evaluatePlaywrightProvenanceCall({ applyCallWrites, evaluate, mark, markUse, node }) {
+export function evaluatePlaywrightProvenanceCall({ applyCallWrites, evaluate, mark, markUse, node, trustedFacadePath }) {
   const callee = evaluate(node.expression, false);
   if (hasPlaywrightProvenanceExecutionAuthority(callee)) {
     mark({ imported: Boolean(callee.target), target: callee.target }, callee, node.expression);
@@ -178,6 +178,7 @@ export function evaluatePlaywrightProvenanceCall({ applyCallWrites, evaluate, ma
     const substituted = substitute(callee.returnValue, argumentsValues);
     const returned = tagged({ ...substituted,
       executionEffect: Math.max(callee.executionEffect ?? SAFE, state) }, callee.target);
+    if (callee.target === trustedFacadePath) returned.target = trustedFacadePath;
     return markUse ? mark({ imported: Boolean(returned.target), target: returned.target }, returned, node) : returned;
   }
   if (callee.parameterIndex !== undefined) {

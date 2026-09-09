@@ -12,6 +12,18 @@ import {
   resolveToolcraftRootResourcePath,
 } from "./toolcraft-source-inventory.mjs";
 
+test("derives inventory extensions from the canonical module extension owner", async () => {
+  const source = await fs.readFile(
+    new URL("./toolcraft-source-inventory.mjs", import.meta.url),
+    "utf8",
+  );
+
+  assert.match(
+    source,
+    /import \{ toolcraftModuleExtensions \} from\s+"\.\/toolcraft-product-dependency-resolution\.mjs";/u,
+  );
+});
+
 test("classifies platform, framework, product, test, and generated source", () => {
   const options = {
     protectedFilePaths: ["src/main.tsx", "src/routes/index.tsx"],
@@ -33,12 +45,49 @@ test("classifies platform, framework, product, test, and generated source", () =
     classifyToolcraftSourcePath("src/features/renderer.test.tsx", options),
     { owner: "product", role: "test" },
   );
+  for (const repoPath of [
+    "src/features/renderer.story.tsx",
+    "src/features/renderer.stories.tsx",
+  ]) {
+    assert.deepEqual(classifyToolcraftSourcePath(repoPath, options), {
+      owner: "product",
+      role: "test",
+    });
+  }
+  for (const repoPath of [
+    "src/features/__tests__/renderer.tsx",
+    "src/features/__mocks__/renderer.tsx",
+    "src/features/story/renderer.tsx",
+    "src/features/stories/renderer.tsx",
+    "src/features/support/renderer.tsx",
+    "src/features/test/renderer.tsx",
+    "src/features/test-support/renderer.tsx",
+    "src/features/fixtures/renderer.tsx",
+  ]) {
+    assert.deepEqual(classifyToolcraftSourcePath(repoPath, options), {
+      owner: "product",
+      role: "test-support",
+    });
+  }
   assert.deepEqual(
     classifyToolcraftSourcePath("src/features/renderer-test-utils.ts", options),
     { owner: "product", role: "test-support" },
   );
+  for (const repoPath of [
+    "src/features/renderer.fixture.tsx",
+    "src/features/renderer.fixtures.tsx",
+    "src/features/renderer.support.tsx",
+  ]) {
+    assert.deepEqual(classifyToolcraftSourcePath(repoPath, options), {
+      owner: "product",
+      role: "test-support",
+    });
+  }
   assert.deepEqual(
-    classifyToolcraftSourcePath("src/features/renderer.fixtures.ts", options),
+    classifyToolcraftSourcePath(
+      "src/schema/define-toolcraft.control-sections.test-support.ts",
+      options,
+    ),
     { owner: "product", role: "test-support" },
   );
   assert.deepEqual(

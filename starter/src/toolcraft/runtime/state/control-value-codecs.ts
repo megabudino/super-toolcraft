@@ -2,40 +2,47 @@ import {
   isToolcraftBuiltInControlType,
   type ToolcraftBuiltInControlType,
 } from "../contracts/component-contracts";
-import type { ToolcraftControlSchema } from "../schema/types";
+import { getToolcraftScalarCollectionItemControl } from "../schema/collection-item-defaults";
 import { decodeToolcraftOrientationPose } from "./orientation-pose";
+import type {
+  ToolcraftBuiltInControlValueMap,
+  ToolcraftChannelMixerValue,
+  ToolcraftColorChannel,
+  ToolcraftCurvesValue,
+  ToolcraftGradientValue,
+} from "./control-value-types";
 
-export type ToolcraftControlValueDecodeResult =
-  | Readonly<{ accepted: true; value: unknown }>
+export type ToolcraftControlValueDecodeResult<Value = unknown> =
+  | Readonly<{ accepted: true; value: Value }>
   | Readonly<{ accepted: false }>;
 
-export type ToolcraftControlValueDescriptor = Readonly<
-  Pick<
-    ToolcraftControlSchema,
-    | "defaultValue"
-    | "itemControl"
-    | "itemControls"
-    | "items"
-    | "max"
-    | "min"
-    | "options"
-    | "type"
-  >
->;
+/** Internal decoding input, never a product authoring schema. */
+export type ToolcraftControlValueDescriptor = Readonly<{
+  defaultValue?: unknown;
+  itemControl?: ToolcraftControlValueDescriptor;
+  itemControls?: Readonly<Record<string, ToolcraftControlValueDescriptor>>;
+  items?: readonly { value: string }[];
+  max?: number;
+  min?: number;
+  options?: readonly { value: string }[];
+  type: string;
+}>;
 
-type ToolcraftControlValueCodec = (
+type ToolcraftControlValueCodec<Value> = (
   control: ToolcraftControlValueDescriptor,
   candidate: unknown,
-) => ToolcraftControlValueDecodeResult;
+) => ToolcraftControlValueDecodeResult<Value>;
 
-export type ToolcraftControlValueCodecDecision =
+export type ToolcraftControlValueCodecDecision<
+  K extends ToolcraftBuiltInControlType = ToolcraftBuiltInControlType,
+> =
   | Readonly<{
-      codec: ToolcraftControlValueCodec;
+      codec: ToolcraftControlValueCodec<ToolcraftBuiltInControlValueMap[K]>;
       implicitDefault?: (control: ToolcraftControlValueDescriptor) => unknown;
       kind: "codec";
     }>
   | Readonly<{
-      codec: ToolcraftControlValueCodec;
+      codec: ToolcraftControlValueCodec<ToolcraftBuiltInControlValueMap[K]>;
       kind: "conditional-codec";
       ownsValue: (control: ToolcraftControlValueDescriptor) => boolean;
     }>
@@ -44,11 +51,11 @@ export type ToolcraftControlValueCodecDecision =
 
 type JsonRecord = Record<string, unknown>;
 
-function accept(value: unknown): ToolcraftControlValueDecodeResult {
+function accept<Value>(value: Value): ToolcraftControlValueDecodeResult<Value> {
   return { accepted: true, value };
 }
 
-function reject(): ToolcraftControlValueDecodeResult {
+function reject(): ToolcraftControlValueDecodeResult<never> {
   return { accepted: false };
 }
 
@@ -123,14 +130,18 @@ function normalizeToolcraftHexColor(value: string): string | null {
 function decodeBoolean(
   _control: ToolcraftControlValueDescriptor,
   candidate: unknown,
-): ToolcraftControlValueDecodeResult {
+): ToolcraftControlValueDecodeResult<
+  ToolcraftBuiltInControlValueMap["checkbox"]
+> {
   return typeof candidate === "boolean" ? accept(candidate) : reject();
 }
 
 function decodeBoundedNumber(
   control: ToolcraftControlValueDescriptor,
   candidate: unknown,
-): ToolcraftControlValueDecodeResult {
+): ToolcraftControlValueDecodeResult<
+  ToolcraftBuiltInControlValueMap["slider"]
+> {
   return isFiniteNumber(candidate) &&
     (control.min === undefined || candidate >= control.min) &&
     (control.max === undefined || candidate <= control.max)
@@ -141,7 +152,7 @@ function decodeBoundedNumber(
 function decodeString(
   _control: ToolcraftControlValueDescriptor,
   candidate: unknown,
-): ToolcraftControlValueDecodeResult {
+): ToolcraftControlValueDecodeResult<ToolcraftBuiltInControlValueMap["text"]> {
   return typeof candidate === "string" ? accept(candidate) : reject();
 }
 
@@ -160,7 +171,9 @@ const anchorGridValues = new Set([
 function decodeAnchorGrid(
   _control: ToolcraftControlValueDescriptor,
   candidate: unknown,
-): ToolcraftControlValueDecodeResult {
+): ToolcraftControlValueDecodeResult<
+  ToolcraftBuiltInControlValueMap["anchorGrid"]
+> {
   return typeof candidate === "string" && anchorGridValues.has(candidate)
     ? accept(candidate)
     : reject();
@@ -169,7 +182,9 @@ function decodeAnchorGrid(
 function decodeOption(
   control: ToolcraftControlValueDescriptor,
   candidate: unknown,
-): ToolcraftControlValueDecodeResult {
+): ToolcraftControlValueDecodeResult<
+  ToolcraftBuiltInControlValueMap["select"]
+> {
   return typeof candidate === "string" &&
     (control.options ?? []).some((option) => option.value === candidate)
     ? accept(candidate)
@@ -179,7 +194,9 @@ function decodeOption(
 function decodeImagePicker(
   control: ToolcraftControlValueDescriptor,
   candidate: unknown,
-): ToolcraftControlValueDecodeResult {
+): ToolcraftControlValueDecodeResult<
+  ToolcraftBuiltInControlValueMap["imagePicker"]
+> {
   return typeof candidate === "string" &&
     (control.items ?? []).some((item) => item.value === candidate)
     ? accept(candidate)
@@ -189,21 +206,34 @@ function decodeImagePicker(
 function decodeColor(
   _control: ToolcraftControlValueDescriptor,
   candidate: unknown,
-): ToolcraftControlValueDecodeResult {
-  const raw =
+): ToolcraftControlValueDecodeResult<ToolcraftBuiltInControlValueMap["color"]> {
+  const value =
     typeof candidate === "string"
-      ? candidate
-      : isRecord(candidate) && typeof candidate.hex === "string"
-        ? candidate.hex
-        : "";
-  const value = normalizeToolcraftHexColor(raw);
+      ? normalizeToolcraftHexColor(candidate)
+      : null;
   return value === null ? reject() : accept(value);
+}
+
+export function decodeToolcraftBuiltInLiveValue(
+  control: ToolcraftControlValueDescriptor,
+  candidate: unknown,
+): ToolcraftControlValueDecodeResult | null {
+  const liveCandidate =
+    control.type === "color" &&
+    isRecord(candidate) &&
+    typeof candidate.hex === "string"
+      ? candidate.hex
+      : candidate;
+
+  return decodeToolcraftBuiltInControlValue(control, liveCandidate);
 }
 
 function decodeColorOpacity(
   _control: ToolcraftControlValueDescriptor,
   candidate: unknown,
-): ToolcraftControlValueDecodeResult {
+): ToolcraftControlValueDecodeResult<
+  ToolcraftBuiltInControlValueMap["colorOpacity"]
+> {
   const record = typeof candidate === "string" ? { hex: candidate } : candidate;
   if (!isRecord(record) || typeof record.hex !== "string") {
     return reject();
@@ -218,29 +248,25 @@ function decodeColorOpacity(
     : reject();
 }
 
-function decodeStringPair(
-  candidate: unknown,
-  first: string,
-  second: string,
-): ToolcraftControlValueDecodeResult {
-  return isRecord(candidate) &&
-    typeof candidate[first] === "string" &&
-    typeof candidate[second] === "string"
-    ? accept({ [first]: candidate[first], [second]: candidate[second] })
-    : reject();
-}
-
 function decodeRangeInput(
   _control: ToolcraftControlValueDescriptor,
   candidate: unknown,
-): ToolcraftControlValueDecodeResult {
-  return decodeStringPair(candidate, "start", "end");
+): ToolcraftControlValueDecodeResult<
+  ToolcraftBuiltInControlValueMap["rangeInput"]
+> {
+  return isRecord(candidate) &&
+    typeof candidate.start === "string" &&
+    typeof candidate.end === "string"
+    ? accept({ start: candidate.start, end: candidate.end })
+    : reject();
 }
 
 function decodeVector(
   _control: ToolcraftControlValueDescriptor,
   candidate: unknown,
-): ToolcraftControlValueDecodeResult {
+): ToolcraftControlValueDecodeResult<
+  ToolcraftBuiltInControlValueMap["vector"]
+> {
   if (!isRecord(candidate)) {
     return reject();
   }
@@ -261,7 +287,9 @@ function decodeVector(
 function decodeRangeSlider(
   control: ToolcraftControlValueDescriptor,
   candidate: unknown,
-): ToolcraftControlValueDecodeResult {
+): ToolcraftControlValueDecodeResult<
+  ToolcraftBuiltInControlValueMap["rangeSlider"]
+> {
   if (!Array.isArray(candidate) || candidate.length === 0) {
     return reject();
   }
@@ -280,7 +308,9 @@ function decodeRangeSlider(
 function decodePalette(
   _control: ToolcraftControlValueDescriptor,
   candidate: unknown,
-): ToolcraftControlValueDecodeResult {
+): ToolcraftControlValueDecodeResult<
+  ToolcraftBuiltInControlValueMap["palette"]
+> {
   return isRecord(candidate) &&
     typeof candidate.family === "string" &&
     candidate.family.length > 0 &&
@@ -290,23 +320,32 @@ function decodePalette(
     : reject();
 }
 
-const gradientTypes = new Set(["linear", "radial", "angular", "diamond"]);
+function includesString<const Values extends readonly string[]>(
+  values: Values,
+  candidate: string,
+): candidate is Values[number] {
+  return values.some((value) => value === candidate);
+}
+
+const gradientTypes = ["linear", "radial", "angular", "diamond"] as const;
 
 function decodeGradient(
   _control: ToolcraftControlValueDescriptor,
   candidate: unknown,
-): ToolcraftControlValueDecodeResult {
+): ToolcraftControlValueDecodeResult<
+  ToolcraftBuiltInControlValueMap["gradient"]
+> {
   if (
     !isRecord(candidate) ||
     !isFiniteNumber(candidate.angle) ||
     typeof candidate.gradientType !== "string" ||
-    !gradientTypes.has(candidate.gradientType) ||
+    !includesString(gradientTypes, candidate.gradientType) ||
     !Array.isArray(candidate.stops) ||
     candidate.stops.length < 2
   ) {
     return reject();
   }
-  const stops: JsonRecord[] = [];
+  const stops: ToolcraftGradientValue["stops"] = [];
   for (const stop of candidate.stops) {
     if (
       !isRecord(stop) ||
@@ -337,35 +376,40 @@ function decodeGradient(
   });
 }
 
-const letterSpacings = new Set([
+const letterSpacings = [
+  "tightest",
   "tight",
   "tighter",
   "normal",
   "wide",
   "wider",
   "widest",
-]);
-const lineHeights = new Set([
+] as const;
+const lineHeights = [
+  "spacious",
   "loose",
   "none",
   "normal",
   "relaxed",
   "snug",
   "tight",
-]);
-const textCases = new Set([
+] as const;
+const textCases = [
   "capitalize",
   "lowercase",
   "original",
   "titleCase",
   "uppercase",
-]);
+] as const;
 
 function decodeFontPicker(
   _control: ToolcraftControlValueDescriptor,
   candidate: unknown,
-): ToolcraftControlValueDecodeResult {
-  const record = typeof candidate === "string" ? { fontId: candidate } : candidate;
+): ToolcraftControlValueDecodeResult<
+  ToolcraftBuiltInControlValueMap["fontPicker"]
+> {
+  const record =
+    typeof candidate === "string" ? { fontId: candidate } : candidate;
   if (
     !isRecord(record) ||
     typeof record.fontId !== "string" ||
@@ -388,14 +432,14 @@ function decodeFontPicker(
     fontSize < 1 ||
     typeof fontWeight !== "string" ||
     typeof letterSpacing !== "string" ||
-    !letterSpacings.has(letterSpacing) ||
+    !includesString(letterSpacings, letterSpacing) ||
     typeof lineHeight !== "string" ||
-    !lineHeights.has(lineHeight) ||
+    !includesString(lineHeights, lineHeight) ||
     !isFiniteNumber(opacity) ||
     opacity < 0 ||
     opacity > 100 ||
     typeof textCase !== "string" ||
-    !textCases.has(textCase)
+    !includesString(textCases, textCase)
   ) {
     return reject();
   }
@@ -411,8 +455,7 @@ function decodeFontPicker(
   });
 }
 
-const colorChannels = ["R", "G", "B"] as const;
-const defaultChannelMixerValue = {
+const defaultChannelMixerValue: ToolcraftChannelMixerValue = {
   B: { B: 100, G: 0, R: 0 },
   G: { B: 0, G: 100, R: 0 },
   R: { B: 0, G: 0, R: 100 },
@@ -421,26 +464,25 @@ const defaultChannelMixerValue = {
 function decodeChannelMixer(
   _control: ToolcraftControlValueDescriptor,
   candidate: unknown,
-): ToolcraftControlValueDecodeResult {
+): ToolcraftControlValueDecodeResult<
+  ToolcraftBuiltInControlValueMap["channelMixer"]
+> {
   if (!isRecord(candidate)) {
     return reject();
   }
-  const value: JsonRecord = {};
-  for (const output of colorChannels) {
-    const row = candidate[output];
-    if (!isRecord(row)) {
-      return reject();
-    }
-    const nextRow: JsonRecord = {};
-    for (const input of colorChannels) {
-      if (!isFiniteNumber(row[input])) {
-        return reject();
-      }
-      nextRow[input] = row[input];
-    }
-    value[output] = nextRow;
-  }
-  return accept(value);
+  const decodeRow = (
+    row: unknown,
+  ): Record<ToolcraftColorChannel, number> | null =>
+    isRecord(row) &&
+    isFiniteNumber(row.R) &&
+    isFiniteNumber(row.G) &&
+    isFiniteNumber(row.B)
+      ? { R: row.R, G: row.G, B: row.B }
+      : null;
+  const R = decodeRow(candidate.R);
+  const G = decodeRow(candidate.G);
+  const B = decodeRow(candidate.B);
+  return R && G && B ? accept({ R, G, B }) : reject();
 }
 
 const curveChannels = ["RGB", "R", "G", "B"] as const;
@@ -460,27 +502,27 @@ const defaultCurvesValue = {
 function decodeCurves(
   _control: ToolcraftControlValueDescriptor,
   candidate: unknown,
-): ToolcraftControlValueDecodeResult {
+): ToolcraftControlValueDecodeResult<
+  ToolcraftBuiltInControlValueMap["curves"]
+> {
   if (
     !isRecord(candidate) ||
     typeof candidate.activeChannel !== "string" ||
-    !curveChannels.includes(
-      candidate.activeChannel as (typeof curveChannels)[number],
-    ) ||
+    !includesString(curveChannels, candidate.activeChannel) ||
     !isRecord(candidate.points)
   ) {
     return reject();
   }
-  const points: JsonRecord = {};
+  const points: ToolcraftCurvesValue["points"] = {};
   for (const [channel, entries] of Object.entries(candidate.points)) {
     if (
-      !curveChannels.includes(channel as (typeof curveChannels)[number]) ||
+      !includesString(curveChannels, channel) ||
       !Array.isArray(entries) ||
       entries.length < 2
     ) {
       return reject();
     }
-    const nextPoints: JsonRecord[] = [];
+    const nextPoints: { x: number; y: number }[] = [];
     for (const point of entries) {
       if (
         !isRecord(point) ||
@@ -515,7 +557,9 @@ function decodeCurves(
 function decodeOrientationPose(
   _control: ToolcraftControlValueDescriptor,
   candidate: unknown,
-): ToolcraftControlValueDecodeResult {
+): ToolcraftControlValueDecodeResult<
+  ToolcraftBuiltInControlValueMap["orientationGizmo"]
+> {
   const value = decodeToolcraftOrientationPose(candidate);
   return value === null ? reject() : accept(value);
 }
@@ -531,14 +575,17 @@ function decodeCollectionItem(
 function decodeCollection(
   control: ToolcraftControlValueDescriptor,
   candidate: unknown,
-): ToolcraftControlValueDecodeResult {
+): ToolcraftControlValueDecodeResult<
+  ToolcraftBuiltInControlValueMap["collectionActions"]
+> {
   if (!Array.isArray(candidate)) {
     return reject();
   }
-  if (control.itemControl) {
+  if (!control.itemControls) {
+    const itemControl = getToolcraftScalarCollectionItemControl(control);
     const items: unknown[] = [];
     for (const item of candidate) {
-      const decoded = decodeCollectionItem(control.itemControl, item);
+      const decoded = decodeCollectionItem(itemControl, item);
       if (!decoded.accepted) {
         return reject();
       }
@@ -557,7 +604,9 @@ function decodeCollection(
         return reject();
       }
       const nextItem: JsonRecord = clonedItem;
-      for (const [field, fieldControl] of Object.entries(control.itemControls)) {
+      for (const [field, fieldControl] of Object.entries(
+        control.itemControls,
+      )) {
         const fieldCandidate = Object.hasOwn(item, field)
           ? item[field]
           : fieldControl.defaultValue;
@@ -577,7 +626,9 @@ function decodeCollection(
 function decodeFileDropItemSettings(
   control: ToolcraftControlValueDescriptor,
   candidate: unknown,
-): ToolcraftControlValueDecodeResult {
+): ToolcraftControlValueDecodeResult<
+  ToolcraftBuiltInControlValueMap["fileDrop"]
+> {
   if (!Array.isArray(candidate) || !control.itemControls) {
     return reject();
   }
@@ -656,10 +707,9 @@ export const TOOLCRAFT_CONTROL_VALUE_CODEC_REGISTRY = {
   tabs: { codec: decodeOption, kind: "codec" },
   text: { codec: decodeString, kind: "codec" },
   vector: { codec: decodeVector, kind: "codec" },
-} as const satisfies Record<
-  ToolcraftBuiltInControlType,
-  ToolcraftControlValueCodecDecision
->;
+} as const satisfies {
+  [K in ToolcraftBuiltInControlType]: ToolcraftControlValueCodecDecision<K>;
+};
 
 export function decodeToolcraftBuiltInControlValue(
   control: ToolcraftControlValueDescriptor,

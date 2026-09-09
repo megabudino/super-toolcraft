@@ -2,54 +2,14 @@
 
 import type { ReactElement, ReactNode } from "react";
 import {
-  ArrowClockwiseIcon,
-  ArrowCounterClockwiseIcon,
-  CheckIcon,
-  CopySimpleIcon,
-  DownloadSimpleIcon,
-  EraserIcon,
-  ExportIcon,
-  FlipHorizontalIcon,
-  FlipVerticalIcon,
-  MagicWandIcon,
-  ShuffleIcon,
-  UploadSimpleIcon,
-} from "@phosphor-icons/react";
-
+  renderActionIcon,
+  type ActionControlIconName,
+} from "../../action-icon-catalog";
 import { Button, Field } from "../../primitives";
 import { ControlFieldLabel } from "../../control-layout";
 import { cn } from "../../../lib/utils";
 
-export type ActionControlIconName =
-  | "check"
-  | "copy"
-  | "download"
-  | "download-simple"
-  | "eraser"
-  | "export"
-  | "flip-horizontal"
-  | "flip-vertical"
-  | "rotate-cw"
-  | "rotate-ccw"
-  | "shuffle"
-  | "upload-simple"
-  | "wand-sparkles";
-
-const actionIconComponents = {
-  check: CheckIcon,
-  copy: CopySimpleIcon,
-  download: DownloadSimpleIcon,
-  "download-simple": DownloadSimpleIcon,
-  eraser: EraserIcon,
-  export: ExportIcon,
-  "flip-horizontal": FlipHorizontalIcon,
-  "flip-vertical": FlipVerticalIcon,
-  "rotate-cw": ArrowClockwiseIcon,
-  "rotate-ccw": ArrowCounterClockwiseIcon,
-  shuffle: ShuffleIcon,
-  "upload-simple": UploadSimpleIcon,
-  "wand-sparkles": MagicWandIcon,
-} as const;
+export type { ActionControlIconName } from "../../action-icon-catalog";
 
 export type ActionControlObjectOption = {
   ariaLabel?: string;
@@ -94,9 +54,7 @@ function getActionIcon(action: ActionControlOption): ReactNode {
     return action.icon;
   }
 
-  const Icon = actionIconComponents[action.icon];
-
-  return <Icon data-icon="inline-start" />;
+  return renderActionIcon(action.icon, { "data-icon": "inline-start" });
 }
 
 function getActionAriaLabel(

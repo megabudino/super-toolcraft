@@ -93,7 +93,7 @@ export const TOOLCRAFT_DECISION_CONTRACT = [
     currentConstraint:
       "The Toolcraft canvas shell owns the visible workspace backing behind product output.",
     desiredBehavior:
-      "Generated apps preserve the runtime canvas surface and do not replace or hide it when product renderers customize their own background. In infinite mode the shell fills the complete viewport with the selected standard Background color, while bounded product background pixels remain suppressed. Preview-only product environments may layer through infiniteCanvasContent across the complete viewport under the transformed world; that layer is pointer-transparent and excluded from scene bounds and export.",
+      "Generated apps preserve the runtime canvas surface and keep live product foreground transparent. CanvasShell owns one evaluated Background authority: finite mode places it below runtime model/image media and product content, while infinite mode fills the complete viewport without a duplicate finite layer. Preview-only product environments may layer through infiniteCanvasContent across the complete viewport under the transformed world; that layer is pointer-transparent and excluded from scene bounds and export.",
     enforcement: ["browser-helper", "starter-agents", "spec-checklist"],
     id: "canvas-surface-preserved",
     level: "invariant",
@@ -222,7 +222,7 @@ export const TOOLCRAFT_DECISION_CONTRACT = [
     currentConstraint:
       "Product artifact delivery must match the required productReadiness.exportIntent declaration.",
     desiredBehavior:
-      'Every product declares productReadiness.exportIntent. Image export starts as the Toolcraft default and is removed only with explicit user-removal evidence; SVG and video require explicit user request evidence. Animation, playback, keyframes, or timeline presence never changes artifact delivery intent. Resolved intent capabilities correspond exactly to typed schema actions, applicable settings sections, and artifact-specific acceptance coverage. SVG means self-contained editable vector geometry/text and never permits raster bytes wrapped in SVG. Product apps declare the standard background pair and runtime places it in Setup: Background beside Infinity canvas, Color below, and Timeline last. Product code uses exportRenderer for deterministic image/video pixels and svgExportRenderer for namespace-aware vector nodes; runtime owns settings, scene crop/frame, background, visible runtime media/model composition, validation, encoding/serialization, download, progress, and typed failures.',
+      'Every product declares productReadiness.exportIntent. Image export starts as the Toolcraft default and is removed only with explicit user-removal evidence; SVG and video require explicit user request evidence. Animation, playback, keyframes, or timeline presence never changes artifact delivery intent. Every nondefault decision records structured user-message evidence with messageRef, messageText, and exact quote; plans, summaries, and worklogs are not primary request evidence. Missing primary permission leaves optional export off; later user exclusions override earlier evidence. Structural validation does not authenticate chat authorship. Resolved intent capabilities correspond exactly to typed schema actions, applicable settings sections, and artifact-specific acceptance coverage. SVG means self-contained editable vector geometry/text and never permits raster bytes wrapped in SVG. Product apps declare the standard background pair and runtime places it in Setup: Background beside Infinity canvas, Color below, and Timeline beside optional Lock rotation in the final row. Product code uses exportRenderer for deterministic image/video pixels and svgExportRenderer for namespace-aware vector nodes; runtime owns settings, scene crop/frame, background, visible runtime media/model composition, validation, encoding/serialization, download, progress, and typed failures.',
     enforcement: ["acceptance-validator", "performance-validator", "browser-helper", "starter-agents"],
     id: "output-export-required",
     level: "invariant",
@@ -234,7 +234,7 @@ export const TOOLCRAFT_DECISION_CONTRACT = [
     currentConstraint:
       "Every product controls section must be represented in the exported Control Section Inventory before schema authoring.",
     desiredBehavior:
-      "Generated product apps publish a typed Control Section Inventory with stable entityId, human-readable entity, exact targets, and a concrete grouping reason. One entity stays in one section through ten controls; larger entities use balanced two-to-ten-control workflow stages with explicit split evidence, so section ownership and reset boundaries are machine-checkable without runtime rewriting.",
+      "Generated product apps publish a typed Control Section Inventory with stable entityId, human-readable entity, exact targets, and a concrete grouping reason. Explicitly user-requested application modes declare productMode request evidence and sharedTargets on their finite-selector branch: one reachable selector follows runtime Setup immediately, other controls directly declare mode applicability or deliberate shared availability, and inactive controls disappear with values preserved. Section boundaries follow user tasks, dependencies, and reset scope, not control counts. Any-size entities may use workflow stages with shared identity and explicit split evidence, so target ownership and split metadata remain machine-checkable without runtime rewriting.",
     enforcement: ["acceptance-validator", "docs", "starter-agents", "spec-checklist"],
     id: "controls-section-inventory-required",
     level: "invariant",
@@ -258,7 +258,7 @@ export const TOOLCRAFT_DECISION_CONTRACT = [
     currentConstraint:
       "Labels, color placement, section grouping, selector order, and inline density need product-aware decisions.",
     desiredBehavior:
-      "Given a valid Control Section Inventory, ordering, labels, color placement, and compact density remain product-aware recommendations. The ten-control maximum and entity cohesion are inventory invariants; heuristics may report questionable presentation without rejecting a coherent product-specific choice solely because it differs from a preferred layout.",
+      "Given a valid Control Section Inventory, ordering, labels, color placement, and compact density remain product-aware recommendations. Ten declared controls triggers a non-blocking density review of simultaneously visible controls, compound complexity, panel height, navigation, and reset scope. Entity identity, target ownership, and split evidence remain invariants; no control count mandates splitting or merging.",
     enforcement: ["acceptance-validator", "schema-normalization", "docs", "starter-agents"],
     id: "controls-layout-heuristics",
     level: "heuristic",
@@ -397,9 +397,9 @@ export const TOOLCRAFT_DECISION_CONTRACT = [
   {
     area: "workflow",
     currentConstraint:
-      "Template app work must use brainstorming, writing-plans, systematic-debugging, and browser verification when the environment supports those skills.",
+      "Small, localized edits do not require a written spec or implementation plan. Substantial work uses a concise agent-owned plan; workflow skills follow the proportional planning policy instead of imposing universal planning or approval rituals.",
     desiredBehavior:
-      "Workflow skills guide the generation process, while product implementation plans stay focused on app files, tests, build, and browser verification.",
+      "For a build, port, change, or fix request, perform authorized work without waiting for plan approval. Explicit plan-only, review-only and approval requests remain binding; ask for material ambiguity or actions outside the authorized scope. Plans contain necessary design decisions, files, risks and focused checks, and never broaden feature or verification authority.",
     enforcement: ["starter-agents", "docs"],
     id: "workflow-required",
     level: "invariant",

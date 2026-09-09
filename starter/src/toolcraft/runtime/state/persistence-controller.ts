@@ -1,5 +1,5 @@
-import type { ResolvedToolcraftAppSchema } from "../schema/types";
-import { createToolcraftPersistenceSnapshot } from "./persistence-snapshot";
+import type { ResolvedToolcraftAppSchema } from "../schema/resolved-app-schema";
+import type { ToolcraftPersistencePayload } from "./persistence-shared";
 import type { ToolcraftState } from "./types";
 
 export type ToolcraftPersistenceStorage = Pick<Storage, "setItem">;
@@ -7,11 +7,7 @@ export type ToolcraftPersistenceStorage = Pick<Storage, "setItem">;
 export type ToolcraftPersistenceWriteResult =
   | { status: "disabled" | "success" }
   | {
-      reason:
-        | "incompatible-version"
-        | "quota"
-        | "unavailable"
-        | "unknown";
+      reason: "incompatible-version" | "quota" | "unavailable" | "unknown";
       status: "failed";
     };
 
@@ -46,21 +42,16 @@ export function createToolcraftPersistenceController({
   blockedReason,
   debounceMs = 120,
   getCommittedState,
-  getWriteBlock,
+  createSnapshot,
   onStatusChange,
-  onWriteSuccess,
   schema,
   storage,
 }: {
-  blockedReason?: "newer-version";
+  blockedReason?: "incompatible-version";
   debounceMs?: number;
   getCommittedState: () => ToolcraftState;
-  getWriteBlock?: () => Extract<
-    ToolcraftPersistenceWriteResult,
-    { status: "failed" }
-  > | null;
+  createSnapshot: (state: ToolcraftState, persistence: ResolvedToolcraftAppSchema["persistence"]) => ToolcraftPersistencePayload | undefined;
   onStatusChange?: (status: ToolcraftPersistenceStatus) => void;
-  onWriteSuccess?: () => void;
   schema: ResolvedToolcraftAppSchema;
   storage?: ToolcraftPersistenceStorage;
 }): ToolcraftPersistenceController {
@@ -68,11 +59,11 @@ export function createToolcraftPersistenceController({
   let pending = false;
   let timer: ReturnType<typeof setTimeout> | undefined;
   let status: ToolcraftPersistenceStatus =
-    blockedReason === "newer-version"
+    blockedReason === "incompatible-version"
       ? { reason: "incompatible-version", status: "failed" }
       : schema.persistence.storage === "localStorage"
-      ? { status: "pending" }
-      : { status: "disabled" };
+        ? { status: "pending" }
+        : { status: "disabled" };
 
   const publishStatus = (nextStatus: ToolcraftPersistenceStatus): void => {
     status = nextStatus;
@@ -89,7 +80,7 @@ export function createToolcraftPersistenceController({
   };
 
   const flush = (): ToolcraftPersistenceWriteResult => {
-    if (blockedReason === "newer-version") {
+    if (blockedReason === "incompatible-version") {
       const result = {
         reason: "incompatible-version",
         status: "failed",
@@ -109,13 +100,6 @@ export function createToolcraftPersistenceController({
     clearScheduledFlush();
     pending = false;
 
-    const writeBlock = getWriteBlock?.();
-
-    if (writeBlock) {
-      publishStatus(writeBlock);
-      return writeBlock;
-    }
-
     if (!storage) {
       const result = { reason: "unavailable", status: "failed" } as const;
 
@@ -124,7 +108,7 @@ export function createToolcraftPersistenceController({
     }
 
     try {
-      const snapshot = createToolcraftPersistenceSnapshot(
+    const snapshot = createSnapshot(
         getCommittedState(),
         schema.persistence,
       );
@@ -137,7 +121,6 @@ export function createToolcraftPersistenceController({
       }
 
       storage.setItem(schema.persistence.key, JSON.stringify(snapshot));
-      onWriteSuccess?.();
 
       const result = { status: "success" } as const;
 
@@ -176,7 +159,7 @@ export function createToolcraftPersistenceController({
     },
     schedule() {
       if (
-        blockedReason === "newer-version" ||
+        blockedReason === "incompatible-version" ||
         disposed ||
         schema.persistence.storage !== "localStorage"
       ) {

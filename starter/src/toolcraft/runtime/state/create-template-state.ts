@@ -1,13 +1,12 @@
-import type {
-  ResolvedToolcraftAppSchema,
-  ResolvedToolcraftControlSchema,
-} from "../schema/types";
+import type { ResolvedToolcraftControlSchema } from "../schema/types";
+import type { ResolvedToolcraftAppSchema } from "../schema/resolved-app-schema";
 import type {
   ToolcraftInitialState,
   ToolcraftState,
   ToolcraftTimelineKeyframeGroup,
   ToolcraftTimelineState,
 } from "./types";
+import { mergeToolcraftInitialState } from "./persistence-merge";
 import { toolcraftCanvasZoomDefault } from "./canvas-zoom";
 import {
   getToolcraftDefaultCanvasMode,
@@ -22,15 +21,19 @@ import {
   createToolcraftLayersFromMediaAssets,
 } from "./media-defaults";
 import { getMediaReadyTimelineState } from "./timeline-readiness";
-import {
-  cloneToolcraftJsonValue,
-} from "./control-value-codecs";
+import { cloneToolcraftJsonValue } from "./control-value-codecs";
 import {
   createCanonicalToolcraftControlDefaults,
   getToolcraftValueControls,
   mergeCanonicalToolcraftInitialValues,
   normalizeToolcraftControlValue,
 } from "./control-value-normalization";
+import {
+  createToolcraftCollectionSelectionDefaults,
+  normalizeToolcraftCollectionKeyframeGroups,
+  normalizeToolcraftCollectionSelections,
+} from "./collection-control-state";
+import { getToolcraftCollectionActionsControls } from "../schema/collection-actions";
 
 function cloneTimelineKeyframeGroups(
   keyframeGroups: readonly ToolcraftTimelineKeyframeGroup[],
@@ -42,7 +45,10 @@ function cloneTimelineKeyframeGroups(
       const control = controls.get(group.controlId);
       const normalized = control
         ? normalizeToolcraftControlValue(control, keyframe.value)
-        : { accepted: true as const, value: cloneToolcraftJsonValue(keyframe.value) };
+        : {
+            accepted: true as const,
+            value: cloneToolcraftJsonValue(keyframe.value),
+          };
 
       if (!normalized.accepted) {
         throw new Error(
@@ -93,12 +99,24 @@ export function createToolcraftState(
   schema: ResolvedToolcraftAppSchema,
   initialState: ToolcraftInitialState = {},
 ): ToolcraftState {
+  initialState = mergeToolcraftInitialState(schema.sourceDefaults?.initialState, initialState);
   const valueControls = getToolcraftValueControls(schema);
-  const defaults = createCanonicalToolcraftControlDefaults(valueControls);
-  const values = mergeCanonicalToolcraftInitialValues({
+  const collectionControls = getToolcraftCollectionActionsControls(
+    schema.panels.controls,
+  );
+  const defaults = {
+    ...createCanonicalToolcraftControlDefaults(valueControls),
+    ...createToolcraftCollectionSelectionDefaults(schema),
+    ...schema.sourceDefaults?.initialState.values,
+  };
+  const mergedValues = mergeCanonicalToolcraftInitialValues({
     controls: valueControls,
     defaults,
     initialValues: initialState.values,
+  });
+  const values = normalizeToolcraftCollectionSelections({
+    controls: collectionControls,
+    values: mergedValues,
   });
   const initialCanvas = {
     offset: { x: 0, y: 0 },
@@ -107,13 +125,17 @@ export function createToolcraftState(
     ...initialState.canvas,
     mode: normalizeToolcraftCanvasModeForBackground({
       mode: normalizeToolcraftCanvasMode(
-        initialState.canvas?.mode ?? getToolcraftDefaultCanvasMode(schema.canvas),
+        initialState.canvas?.mode ??
+          getToolcraftDefaultCanvasMode(schema.canvas),
       ),
       schema,
       values,
     }),
   };
-  const defaultMediaState = createToolcraftDefaultMediaState(schema, initialCanvas);
+  const defaultMediaState = createToolcraftDefaultMediaState(
+    schema,
+    initialCanvas,
+  );
   const hasInitialMediaAssets = Object.hasOwn(initialState, "mediaAssets");
   const mediaAssets = hasInitialMediaAssets
     ? cloneToolcraftInitialMediaAssets(
@@ -125,27 +147,53 @@ export function createToolcraftState(
   const layers =
     initialState.layers ??
     (hasInitialMediaAssets
-      ? createToolcraftLayersFromMediaAssets(mediaAssets, defaultMediaState.layers)
+      ? createToolcraftLayersFromMediaAssets(
+          mediaAssets,
+          defaultMediaState.layers,
+        )
       : cloneToolcraftLayers(defaultMediaState.layers));
   const selectedLayerId =
-    initialState.selectedLayerId ??
-    (hasInitialMediaAssets ? (layers[0]?.id ?? null) : defaultMediaState.selectedLayerId);
-  const timeline = getMediaReadyTimelineState(
+    Object.hasOwn(initialState, "selectedLayerId") ? initialState.selectedLayerId ?? null :
+    (hasInitialMediaAssets
+      ? (layers[0]?.id ?? null)
+      : defaultMediaState.selectedLayerId);
+  const initialTimeline = getMediaReadyTimelineState(
     schema,
     createDefaultTimelineState({
       controls: valueControls,
-      defaultDurationSeconds: schema.panels.timeline?.defaultDurationSeconds ?? 8,
+      defaultDurationSeconds:
+        schema.panels.timeline?.defaultDurationSeconds ?? 8,
       timeline: initialState.timeline,
     }),
     mediaAssets,
   );
+  const keyframeGroups = normalizeToolcraftCollectionKeyframeGroups({
+    controls: collectionControls,
+    groups: initialTimeline.keyframeGroups,
+    values,
+  });
+  const selectedKeyframeId = keyframeGroups.some((group) =>
+    group.keyframes.some(
+      (keyframe) => keyframe.id === initialTimeline.selectedKeyframeId,
+    ),
+  )
+    ? initialTimeline.selectedKeyframeId
+    : null;
+  const timeline = {
+    ...initialTimeline,
+    keyframeGroups,
+    selectedKeyframeId,
+  };
 
   const validSectionIds = new Set(
     schema.panels.controls?.sections.map((section) => section.id) ?? [],
   );
   const collapsedSections = Object.fromEntries(
-    Object.entries(initialState.panels?.controls?.collapsedSections ?? {}).filter(
-      ([sectionId, collapsed]) => validSectionIds.has(sectionId) && collapsed === true,
+    Object.entries(
+      initialState.panels?.controls?.collapsedSections ?? {},
+    ).filter(
+      ([sectionId, collapsed]) =>
+        validSectionIds.has(sectionId) && collapsed === true,
     ),
   );
   const panels: ToolcraftState["panels"] = {

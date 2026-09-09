@@ -35,76 +35,80 @@ function acceptance(
 }
 
 const schema = defineToolcraft({
-  canvas: { enabled: true },
-  panels: {
-    controls: {
-      sections: [
-        {
-          controls: {
-            character: {
-              applicability: { mode: "always" },
-              defaultValue: "round",
-              label: "Character",
-              options: [
-                { label: "Round", value: "round" },
-                { label: "Sharp", value: "sharp" },
-              ],
-              target: "material.character",
-              type: "select",
-            },
-            frosting: {
-              applicability: {
-                all: [{ equals: "frosted", target: "material.layer" }],
-                mode: "conditional",
+  base: {
+    identity: { id: "contract-fixture", title: "Contract fixture" },
+    canvas: { enabled: true },
+    panels: {
+      controls: {
+        sections: [
+          {
+            controls: {
+              character: {
+                applicability: { mode: "always" },
+                defaultValue: "round",
+                label: "Character",
+                options: [
+                  { label: "Round", value: "round" },
+                  { label: "Sharp", value: "sharp" },
+                ],
+                target: "material.character",
+                type: "select",
               },
-              defaultValue: "#FFFFFF",
-              label: "Frosting",
-              target: "material.frosting",
-              type: "color",
+              frosting: {
+                applicability: {
+                  all: [{ equals: "frosted", target: "material.layer" }],
+                  mode: "conditional",
+                },
+                defaultValue: "#FFFFFF",
+                label: "Frosting",
+                target: "material.frosting",
+                type: "color",
+              },
+              gloss: {
+                applicability: { mode: "always" },
+                defaultValue: 0.5,
+                label: "Gloss",
+                max: 1,
+                min: 0,
+                target: "material.gloss",
+                type: "slider",
+              },
+              layer: {
+                applicability: { mode: "always" },
+                defaultValue: "frosted",
+                label: "Layer",
+                options: [
+                  { label: "Frosted", value: "frosted" },
+                  { label: "Chocolate", value: "chocolate" },
+                ],
+                target: "material.layer",
+                type: "segmented",
+              },
             },
-            gloss: {
-              applicability: { mode: "always" },
-              defaultValue: 0.5,
-              label: "Gloss",
-              max: 1,
-              min: 0,
-              target: "material.gloss",
-              type: "slider",
-            },
-            layer: {
-              applicability: { mode: "always" },
-              defaultValue: "frosted",
-              label: "Layer",
-              options: [
-                { label: "Frosted", value: "frosted" },
-                { label: "Chocolate", value: "chocolate" },
-              ],
-              target: "material.layer",
-              type: "segmented",
-            },
+            id: "material",
+            title: "Material",
           },
-          id: "material",
-          title: "Material",
-        },
-        {
-          controls: {
-            intensity: {
-              applicability: { mode: "always" },
-              defaultValue: 0.5,
-              label: "Intensity",
-              max: 1,
-              min: 0,
-              target: "lighting.intensity",
-              type: "slider",
+          {
+            controls: {
+              intensity: {
+                applicability: { mode: "always" },
+                defaultValue: 0.5,
+                label: "Intensity",
+                max: 1,
+                min: 0,
+                target: "lighting.intensity",
+                type: "slider",
+              },
             },
+            id: "lighting",
+            title: "Lighting",
           },
-          id: "lighting",
-          title: "Lighting",
-        },
-      ],
-      title: "Controls",
+        ],
+        title: "Controls",
+      },
     },
   },
+  modules: [],
 });
 
 const sectionInventory = [
@@ -114,7 +118,8 @@ const sectionInventory = [
     finiteSelectors: [
       {
         affectedTargets: ["material.gloss"],
-        reason: "Layer selects material branches with different coating controls.",
+        reason:
+          "Layer selects material branches with different coating controls.",
         role: "branch",
         target: "material.layer",
       },
@@ -155,11 +160,7 @@ const browserAcceptance = [
       testName: "browser: material.character",
     },
   },
-  acceptance(
-    "material.exportedAppearance",
-    "material.frosting",
-    "runtime",
-  ),
+  acceptance("material.exportedAppearance", "material.frosting", "runtime"),
   acceptance("material.frosting", "material.frosting"),
   acceptance("material.gloss", "material.gloss"),
   acceptance("material.layer", "material.layer"),
@@ -259,51 +260,55 @@ describe("Toolcraft feature verification selection", () => {
 
   it("reaches a fixed point without selecting unrelated or runtime rows", () => {
     const chainedSchema = defineToolcraft({
-      canvas: { enabled: true },
-      panels: {
-        controls: {
-          sections: [
-            {
-              controls: {
-                detail: {
-                  applicability: { mode: "always" },
-                  defaultValue: "fine",
-                  label: "Detail",
-                  options: [
-                    { label: "Fine", value: "fine" },
-                    { label: "Coarse", value: "coarse" },
-                  ],
-                  target: "shape.detail",
-                  type: "segmented",
+      base: {
+        identity: { id: "contract-fixture", title: "Contract fixture" },
+        canvas: { enabled: true },
+        panels: {
+          controls: {
+            sections: [
+              {
+                controls: {
+                  detail: {
+                    applicability: { mode: "always" },
+                    defaultValue: "fine",
+                    label: "Detail",
+                    options: [
+                      { label: "Fine", value: "fine" },
+                      { label: "Coarse", value: "coarse" },
+                    ],
+                    target: "shape.detail",
+                    type: "segmented",
+                  },
+                  mode: {
+                    applicability: { mode: "always" },
+                    defaultValue: "solid",
+                    label: "Mode",
+                    options: [
+                      { label: "Solid", value: "solid" },
+                      { label: "Wire", value: "wire" },
+                    ],
+                    target: "shape.mode",
+                    type: "segmented",
+                  },
+                  width: {
+                    applicability: { mode: "always" },
+                    defaultValue: 10,
+                    label: "Width",
+                    max: 20,
+                    min: 1,
+                    target: "shape.width",
+                    type: "slider",
+                  },
                 },
-                mode: {
-                  applicability: { mode: "always" },
-                  defaultValue: "solid",
-                  label: "Mode",
-                  options: [
-                    { label: "Solid", value: "solid" },
-                    { label: "Wire", value: "wire" },
-                  ],
-                  target: "shape.mode",
-                  type: "segmented",
-                },
-                width: {
-                  applicability: { mode: "always" },
-                  defaultValue: 10,
-                  label: "Width",
-                  max: 20,
-                  min: 1,
-                  target: "shape.width",
-                  type: "slider",
-                },
+                id: "shape",
+                title: "Shape",
               },
-              id: "shape",
-              title: "Shape",
-            },
-          ],
-          title: "Controls",
+            ],
+            title: "Controls",
+          },
         },
       },
+      modules: [],
     });
     const chainedInventory = [
       {
@@ -318,7 +323,8 @@ describe("Toolcraft feature verification selection", () => {
           },
           {
             affectedTargets: ["shape.width"],
-            reason: "Shape detail selects the width outcomes for each detail level.",
+            reason:
+              "Shape detail selects the width outcomes for each detail level.",
             role: "branch",
             target: "shape.detail",
           },
@@ -353,22 +359,17 @@ describe("Toolcraft feature verification selection", () => {
   });
 
   it("fails closed for invalid seed and acceptance boundaries", () => {
-    expect(() =>
-      select({ mode: "invalid", version: 1 } as never),
-    ).toThrow(/ids or all mode/iu);
-    expect(() =>
-      select({ acceptanceIds: ["missing"], mode: "ids", version: 1 }),
-    ).toThrow(
-      /unknown browser acceptance id.*missing/iu,
+    expect(() => select({ mode: "invalid", version: 1 } as never)).toThrow(
+      /ids or all mode/iu,
     );
     expect(() =>
-      select(
-        { acceptanceIds: ["material.layer"], mode: "ids", version: 1 },
-        [
-          ...browserAcceptance,
-          acceptance("material.layer", "material.layer"),
-        ],
-      ),
+      select({ acceptanceIds: ["missing"], mode: "ids", version: 1 }),
+    ).toThrow(/unknown browser acceptance id.*missing/iu);
+    expect(() =>
+      select({ acceptanceIds: ["material.layer"], mode: "ids", version: 1 }, [
+        ...browserAcceptance,
+        acceptance("material.layer", "material.layer"),
+      ]),
     ).toThrow(/duplicate browser acceptance id.*material\.layer/iu);
     expect(() =>
       select(
@@ -427,7 +428,10 @@ describe("Toolcraft feature verification selection", () => {
       { acceptanceIds: ["zeta", "Alpha"], mode: "ids", version: 1 },
       [
         { ...acceptance("zeta", "material.gloss"), browser: sharedBrowser },
-        { ...acceptance("Alpha", "lighting.intensity"), browser: sharedBrowser },
+        {
+          ...acceptance("Alpha", "lighting.intensity"),
+          browser: sharedBrowser,
+        },
       ],
     );
 

@@ -1,6 +1,6 @@
+import type { ReadonlyToolcraftState } from "../../state/readonly-state";
 import type { ToolcraftExportFrame } from "../../export/export-frame";
 import { getToolcraftSceneElementRect } from "../../scene";
-import type { ToolcraftState } from "../../state/types";
 import type { ToolcraftModelRenderHost } from "./model-render-binding";
 import { getToolcraftVisibleModelExportRequests } from "./model-render-state";
 
@@ -9,7 +9,8 @@ export type ToolcraftModelWorldContextRenderRequest = Readonly<{
   context: CanvasRenderingContext2D;
   exportFrame: ToolcraftExportFrame;
   host: ToolcraftModelRenderHost;
-  state: ToolcraftState;
+  signal: AbortSignal;
+  state: ReadonlyToolcraftState;
   suppressedTargets?: readonly string[];
 }>;
 
@@ -29,9 +30,11 @@ export async function renderToolcraftModelsInWorldContext({
   context,
   exportFrame,
   host,
+  signal,
   state,
   suppressedTargets,
 }: ToolcraftModelWorldContextRenderRequest): Promise<number> {
+  signal.throwIfAborted();
   const pixelRatio = getExportPixelRatio(exportFrame, canvas);
   const requests = getToolcraftVisibleModelExportRequests(state, {
     suppressedTargets,
@@ -42,15 +45,19 @@ export async function renderToolcraftModelsInWorldContext({
   });
 
   for (const request of requests) {
+    signal.throwIfAborted();
     const rect = getToolcraftSceneElementRect(request.asset);
     await host.renderExport(request, {
       height: rect.height,
       onRendered: (source) => {
+        signal.throwIfAborted();
         context.drawImage(source, rect.x, rect.y, rect.width, rect.height);
       },
       pixelRatio,
+      signal,
       width: rect.width,
     });
+    signal.throwIfAborted();
   }
 
   return requests.length;

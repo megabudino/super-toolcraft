@@ -12,6 +12,7 @@ export const TOOLCRAFT_BROWSER_PERFORMANCE_MARKER_TEST_NAME =
 
 export const TOOLCRAFT_BROWSER_RUNTIME_EVIDENCE_TYPES = [
   "background-image-transparency",
+  "background-finite-media-stacking",
   "background-infinity-viewport",
   "background-preview-exclusion",
   "background-video-preserved",
@@ -83,6 +84,7 @@ export const TOOLCRAFT_BROWSER_RUNTIME_EVIDENCE_TYPES = [
   "timeline-rendered-frame",
   "timeline-scrub",
   "video-export-artifact",
+  "vector-screen-motion",
   "viewport-side-effect",
 ] as const;
 

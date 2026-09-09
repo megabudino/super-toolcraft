@@ -12,8 +12,7 @@ export type InfinityCanvasObservation = Readonly<{
   }>;
   overflow: string;
   productScene: Readonly<{
-    backingHeight: number | null;
-    backingWidth: number | null;
+    output: InfinityCanvasOutputObservation | null;
     viewportRect: InfinityCanvasRect | null;
     worldRect: InfinityCanvasRect | null;
   }>;
@@ -31,6 +30,19 @@ type InfinityCanvasRect = Readonly<{
   x: number;
   y: number;
 }>;
+
+type InfinityCanvasOutputObservation =
+  | Readonly<{
+      kind: "canvas";
+      backingHeight: number;
+      backingWidth: number;
+    }>
+  | Readonly<{
+      kind: "svg";
+      contentRect: InfinityCanvasRect;
+      localRect: InfinityCanvasRect;
+      viewportRect: InfinityCanvasRect;
+    }>;
 
 export type InfinityCanvasBackgroundObservation = Readonly<{
   backgroundEnabled: boolean | null;
@@ -51,12 +63,12 @@ export async function observeInfinityCanvasBackground(
       const field = document.querySelector<HTMLElement>(
         `[data-toolcraft-control-target="${target}"]`,
       );
-      const switchElement = field?.querySelector<HTMLElement>('[role="switch"]');
+      const switchElement =
+        field?.querySelector<HTMLElement>('[role="switch"]');
       const checked = switchElement?.getAttribute("aria-checked");
 
       return {
-        checked:
-          checked === "true" ? true : checked === "false" ? false : null,
+        checked: checked === "true" ? true : checked === "false" ? false : null,
         disabled: switchElement
           ? switchElement.matches(":disabled") ||
             switchElement.getAttribute("aria-disabled") === "true"
@@ -112,9 +124,10 @@ export async function observeInfinityCanvas(
     const productScene = document.querySelector<HTMLElement>(
       "[data-toolcraft-product-scene]",
     );
-    const hasControl = (target: string): boolean => Boolean(
-      document.querySelector(`[data-toolcraft-control-target="${target}"]`),
-    );
+    const hasControl = (target: string): boolean =>
+      Boolean(
+        document.querySelector(`[data-toolcraft-control-target="${target}"]`),
+      );
     const finiteControlsPresent = {
       aspectRatio: hasControl("canvas.aspectRatio"),
       height: hasControl("canvas.size.height"),
@@ -137,8 +150,7 @@ export async function observeInfinityCanvas(
           .querySelector<HTMLElement>(
             `[data-toolcraft-control-target="${target}"]`,
           )
-          ?.querySelector<HTMLInputElement>("input")
-          ?.value,
+          ?.querySelector<HTMLInputElement>("input")?.value,
       );
     const controlWidth = readControlDimension("canvas.size.width");
     const controlHeight = readControlDimension("canvas.size.height");
@@ -173,9 +185,42 @@ export async function observeInfinityCanvas(
           y: productSceneViewportRect.y,
         }
       : null;
-    const productCanvas = productScene?.querySelector<HTMLCanvasElement>(
-      "canvas",
+    const productCanvas =
+      productScene?.querySelector<HTMLCanvasElement>("canvas");
+    // A raster surface always retains its backing proof, even beside SVG output.
+    const productSvg = productScene?.querySelector<SVGSVGElement>(
+      "svg[data-toolcraft-product-output]",
     );
+    const toRect = (rect: DOMRect): InfinityCanvasRect => ({
+      height: rect.height,
+      width: rect.width,
+      x: rect.x,
+      y: rect.y,
+    });
+    const observeOutput = (): InfinityCanvasOutputObservation | null => {
+      if (productCanvas) {
+        return {
+          kind: "canvas",
+          backingHeight: productCanvas.height,
+          backingWidth: productCanvas.width,
+        };
+      }
+      if (!productSvg) return null;
+      const localRect = productSvg.hasAttribute("viewBox")
+        ? toRect(productSvg.viewBox.baseVal)
+        : {
+            x: 0,
+            y: 0,
+            width: productSvg.width.baseVal.value,
+            height: productSvg.height.baseVal.value,
+          };
+      return {
+        kind: "svg",
+        contentRect: toRect(productSvg.getBBox()),
+        localRect,
+        viewportRect: toRect(productSvg.getBoundingClientRect()),
+      };
+    };
     const productSceneStatus =
       productScene?.dataset.toolcraftProductSceneStatus;
 
@@ -193,8 +238,7 @@ export async function observeInfinityCanvas(
       finiteControlsPresent,
       overflow: surface ? getComputedStyle(surface).overflow : "missing",
       productScene: {
-        backingHeight: productCanvas?.height ?? null,
-        backingWidth: productCanvas?.width ?? null,
+        output: observeOutput(),
         viewportRect,
         worldRect,
       },

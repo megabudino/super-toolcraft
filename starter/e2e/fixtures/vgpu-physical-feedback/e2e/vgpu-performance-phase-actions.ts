@@ -212,9 +212,15 @@ export async function performPhysicalFeedbackPathAction(
     const box = await viewport.boundingBox();
     if (!box) throw new Error("Canvas viewport has no geometry.");
     await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
-    await page.mouse.down();
-    await page.mouse.move(box.x + box.width / 2 + 24, box.y + box.height / 2 + 16);
-    await page.mouse.up();
+    await viewport.focus();
+    await page.keyboard.down("Space");
+    try {
+      await page.mouse.down();
+      await page.mouse.move(box.x + box.width / 2 + 24, box.y + box.height / 2 + 16);
+    } finally {
+      await page.mouse.up();
+      await page.keyboard.up("Space");
+    }
     await waitForPhysicalFeedbackSettlement(page, {
       before,
       operationTransition: true,

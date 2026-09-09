@@ -1,4 +1,5 @@
 import ts from "typescript";
+import { parseToolcraftTypeScriptSource } from "./toolcraft-typescript-source-evidence.mjs";
 import { evaluatePlaywrightProvenanceClass } from "./toolcraft-playwright-provenance-class.mjs";
 import { interpretPlaywrightProvenanceStatements } from "./toolcraft-playwright-provenance-statements.mjs";
 import { interpretPlaywrightProvenanceMutation } from "./toolcraft-playwright-provenance-mutation.mjs";
@@ -8,7 +9,7 @@ import { AUTHORITY, SAFE, UNKNOWN, authorityProvenance as authority, cloneProven
   joinProvenance as join, poisonProvenance as poison, propertyKey, provenanceValue as value, rankProvenance as rank, readProvenanceMember as member, retargetClonedProvenanceWrites, safeProvenance as safe,
   unknownProvenance as unknown, substituteProvenanceParameters as substituteParameters, tagProvenance as tagged, unwrapExpression as unwrap, writeProvenancePath } from "./toolcraft-playwright-provenance-value.mjs";
 const MAX_NODES = 100_000, MAX_ITERATIONS = 256;
-function analyzeModule({ source, dependency, budget }, exportsByPath, collectConsumption = false) {
+function analyzeModule({ source, dependency, budget, trustedFacadePath }, exportsByPath, collectConsumption = false) {
   const env = new Map(), exports = new Map(), consumed = [], exportedBindings = new Map(), dependencyViews = new Map();
   const { applyCallWrites, begin: beginEffects, end: endEffects, recordWrite } = createPlaywrightProvenanceEffects(env);
   predeclarePlaywrightProvenanceBindings(source, env);
@@ -64,6 +65,7 @@ function analyzeModule({ source, dependency, budget }, exportsByPath, collectCon
       const seen = new Map();
       const view = new Map([...targetExports].map(([key, item]) => [key, cloneProvenance(item, seen)]));
       for (const item of view.values()) retargetClonedProvenanceWrites(item, seen);
+      if (target === trustedFacadePath) for (const item of view.values()) item.target = target;
       dependencyViews.set(target, view);
     }
     if (targetExports) viewedExports = dependencyViews.get(target);
@@ -160,7 +162,7 @@ function analyzeModule({ source, dependency, budget }, exportsByPath, collectCon
       const callee = evaluate(node.expression, false);
       const reflected = evaluatePlaywrightReflectInvocation({ applyCallWrites, callee, evaluate, mark, node });
       if (reflected) return reflected;
-      return evaluatePlaywrightProvenanceCall({ applyCallWrites, evaluate, mark, markUse, node });
+      return evaluatePlaywrightProvenanceCall({ applyCallWrites, evaluate, mark, markUse, node, trustedFacadePath });
     }
     if (ts.isConditionalExpression(node)) return join(evaluate(node.whenTrue), evaluate(node.whenFalse));
     if (ts.isBinaryExpression(node)) {
@@ -317,8 +319,9 @@ export function collectToolcraftPlaywrightBindingProvenanceViolations({ entryByP
   const models = new Map([...relevant].flatMap((repoPath) => {
     const record = graph.sourceRecords.get(repoPath);
     if (!record?.rawSource) return [];
-    const source = ts.createSourceFile(repoPath, record.rawSource, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
-    return [[repoPath, { source, budget, dependency: (specifier) => resolved.get(`${repoPath}\0${specifier}`) }]];
+    const parsed = parseToolcraftTypeScriptSource({ absolutePath: repoPath, rawSource: record.rawSource });
+    if (!parsed) throw new Error(`${repoPath} requires the TypeScript compiler for Playwright binding provenance.`);
+    return [[repoPath, { source: parsed.sourceFile, budget, dependency: (specifier) => resolved.get(`${repoPath}\0${specifier}`), trustedFacadePath: verifiedFacade ? "e2e/toolcraft-product-test.ts" : undefined }]];
   }));
   const exportsByPath = new Map([...models].map(([repoPath]) => [repoPath, new Map()]));
   for (let iteration = 0, changed = true; changed;) {

@@ -43,10 +43,13 @@ test(scenarioNames.finite, async ({ page }) => {
   const box = await viewport.boundingBox();
   if (!box) throw new Error("Canvas viewport has no bounding box.");
   await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  await viewport.focus();
+  await page.keyboard.down("Space");
   await page.mouse.down();
   await page.mouse.move(box.x + box.width / 2 + 40, box.y + box.height / 2 + 20);
   expect(await canvas.getAttribute("data-toolcraft-gpu-backing")).toBe(backing);
   await page.mouse.up();
+  await page.keyboard.up("Space");
 
   const pause = page.getByRole("button", { name: "Pause playback" });
   if (await pause.isVisible()) await pause.click();
@@ -183,6 +186,8 @@ test(scenarioNames.viewport, async ({ page }) => {
   const box = await viewport.boundingBox();
   if (!box) throw new Error("Canvas viewport has no bounding box.");
   await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  await viewport.focus();
+  await page.keyboard.down("Space");
   await page.mouse.down();
   await page.mouse.move(box.x + box.width / 2 + 1, box.y + box.height / 2 + 1);
   await expect(canvas).toHaveAttribute("data-vgpu-interaction-active", "true");
@@ -201,6 +206,7 @@ test(scenarioNames.viewport, async ({ page }) => {
   expect(await canvas.getAttribute("data-vgpu-rendered-time")).toBe(activeTime);
   expect(await canvas.getAttribute("data-vgpu-playing")).toBe("true");
   await page.mouse.up();
+  await page.keyboard.up("Space");
   await expect(canvas).toHaveAttribute("data-vgpu-interaction-active", "false");
   await expect
     .poll(async () =>

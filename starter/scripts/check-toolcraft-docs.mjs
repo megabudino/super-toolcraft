@@ -52,10 +52,7 @@ const requiredWorkflowDocPaths = [...requiredDocs, ...requiredCoreDocs].filter(
 
 const requiredProjectFiles = ["LICENSE.md", "NOTICE.md"];
 
-const requiredAgentsEntryLinks = [
-  "workflow.md",
-  "core/",
-];
+const requiredAgentsEntryLinks = ["workflow.md", "core/"];
 
 const requiredWorkflowLinks = [...toolcraftWorkflowRequiredDocPaths];
 
@@ -67,6 +64,7 @@ const requiredWorkflowTerms = [
   "pnpm verify:delivery",
   "pnpm test:feature",
 ];
+const productConstructorDocTerms = ["base", "modules", "composeToolcraftApp"];
 
 const repoScope = "@repo";
 const workspaceProtocol = "workspace";
@@ -89,6 +87,11 @@ const forbiddenPerformanceRoutingPatterns = [
   /for unresolved\s+`?needs-agent-judgment`?[^\n]*no `?performance intent/iu,
   /direct reports that the app lags[^\n]*select one performance iteration/iu,
   /independent complaint still selects an iteration/iu,
+];
+const forbiddenCompatibilityGuidancePatterns = [
+  /omitted applicability and legacy visibleWhen are runtime compatibility only/iu,
+  /Legacy data-URL snapshots migrate/iu,
+  /Use `visibleWhen` for sliders or range sliders/iu,
 ];
 
 async function readText(relativePath) {
@@ -130,7 +133,9 @@ for (const ruleId of toolcraftDecisionRuleIds) {
   }
 
   if (!decisionSource.includes(ruleId)) {
-    failures.push(`docs/toolcraft/decision-contract.md must list decision rule "${ruleId}"`);
+    failures.push(
+      `docs/toolcraft/decision-contract.md must list decision rule "${ruleId}"`,
+    );
   }
 }
 
@@ -160,9 +165,25 @@ for (const fileName of [...requiredDocs, ...requiredCoreDocs]) {
 const combinedSource = docsSources.join("\n");
 const workflowSource = await readText("docs/toolcraft/workflow.md");
 const mediaUploadSource = await readText("docs/toolcraft/core/media-upload.md");
-const runtimeBoundarySource = await readText("docs/toolcraft/core/runtime-boundary.md");
-const rendererTechniqueSource = await readText("docs/toolcraft/renderer-technique.md");
+const runtimeBoundarySource = await readText(
+  "docs/toolcraft/core/runtime-boundary.md",
+);
+const rendererTechniqueSource = await readText(
+  "docs/toolcraft/renderer-technique.md",
+);
 const acceptanceSource = await readText("docs/toolcraft/acceptance-testing.md");
+const productConstructorSources = [
+  ["AGENTS.md", agentsSource],
+  [
+    "docs/toolcraft/assembly-workflow.md",
+    await readText("docs/toolcraft/assembly-workflow.md"),
+  ],
+  ["docs/toolcraft/core/runtime-boundary.md", runtimeBoundarySource],
+  [
+    "docs/toolcraft/schema-reference.md",
+    await readText("docs/toolcraft/schema-reference.md"),
+  ],
+];
 
 failures.push(
   ...(await getToolcraftWorkflowRouteFailures({
@@ -185,13 +206,17 @@ failures.push(
 
 for (const pattern of forbiddenTextPatterns) {
   if (pattern.test(combinedSource)) {
-    failures.push(`local Toolcraft docs contain forbidden text pattern ${pattern}`);
+    failures.push(
+      `local Toolcraft docs contain forbidden text pattern ${pattern}`,
+    );
   }
 }
 
 for (const pattern of forbiddenModelContractPatterns) {
   if (pattern.test(combinedSource)) {
-    failures.push(`local Toolcraft docs contain obsolete model contract ${pattern}`);
+    failures.push(
+      `local Toolcraft docs contain obsolete model contract ${pattern}`,
+    );
   }
 }
 
@@ -199,6 +224,14 @@ for (const pattern of forbiddenPerformanceRoutingPatterns) {
   if (pattern.test(combinedSource)) {
     failures.push(
       `local Toolcraft docs contain unconditional complaint routing ${pattern}`,
+    );
+  }
+}
+
+for (const pattern of forbiddenCompatibilityGuidancePatterns) {
+  if (pattern.test(combinedSource)) {
+    failures.push(
+      `local Toolcraft docs contain removed compatibility guidance ${pattern}`,
     );
   }
 }
@@ -214,14 +247,18 @@ for (const term of [
 }
 
 if (!runtimeBoundarySource.includes("modelPresentation")) {
-  failures.push("docs/toolcraft/core/runtime-boundary.md must define modelPresentation");
+  failures.push(
+    "docs/toolcraft/core/runtime-boundary.md must define modelPresentation",
+  );
 }
 if (!runtimeBoundarySource.includes("does not suppress runtime model layers")) {
   failures.push(
     "docs/toolcraft/core/runtime-boundary.md must state that renderDefaultCanvasMedia does not suppress runtime model layers",
   );
 }
-if (!rendererTechniqueSource.includes("useToolcraftModelPresentationConsumer")) {
+if (
+  !rendererTechniqueSource.includes("useToolcraftModelPresentationConsumer")
+) {
   failures.push(
     "docs/toolcraft/renderer-technique.md must show the checked custom model presentation consumer",
   );
@@ -233,7 +270,9 @@ for (const term of [
   "pixel-output",
 ]) {
   if (!acceptanceSource.includes(term)) {
-    failures.push(`docs/toolcraft/acceptance-testing.md must mention "${term}"`);
+    failures.push(
+      `docs/toolcraft/acceptance-testing.md must mention "${term}"`,
+    );
   }
 }
 
@@ -256,6 +295,16 @@ for (const term of requiredWorkflowTerms) {
 
   if (!combinedSource.includes(term)) {
     failures.push(`local Toolcraft docs must mention "${term}"`);
+  }
+}
+
+for (const [label, source] of productConstructorSources) {
+  for (const term of productConstructorDocTerms) {
+    if (!source.includes(term)) {
+      failures.push(
+        `${label} must mention public product constructor term "${term}"`,
+      );
+    }
   }
 }
 

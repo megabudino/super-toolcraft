@@ -3,20 +3,20 @@
 import * as React from "react";
 
 import type { AnyToolcraftRendererPipelineRegistration } from "../../rendering";
-import type {
-  ResolvedToolcraftAppSchema,
-} from "../../schema/types";
+import type { ResolvedToolcraftAppSchema } from "../../schema/resolved-app-schema";
 import { createToolcraftState } from "../../state/create-template-state";
-import { mergeToolcraftInitialState } from "../../state/persistence";
-import { createToolcraftExternalStore } from "../../state/toolcraft-external-store";
+import { mergeToolcraftInitialState } from "../../composition/public-persistence";
+import { createToolcraftExternalStore } from "../../composition/public-state";
 import type {
   ToolcraftCommand,
   ToolcraftInitialState,
   ToolcraftState,
 } from "../../state/types";
 import { ToolcraftThemeProvider } from "./theme-runtime";
+import { ToolcraftBrowserZoomBoundary } from "./toolcraft-browser-zoom-boundary";
 import { ToolcraftPipelineProvider } from "./toolcraft-pipeline-context";
 import { ToolcraftSourceAssetProvider } from "./toolcraft-source-asset-context";
+import { ToolcraftExportProvider } from "./toolcraft-export-context";
 import { ToolcraftStoreContext } from "./toolcraft-store-context";
 import type { ToolcraftModelPresentationMode } from "../model-rendering/model-render-binding";
 import {
@@ -27,9 +27,6 @@ import {
   ToolcraftPersistenceStatusProvider,
   useToolcraftPersistence,
 } from "./use-toolcraft-persistence";
-import {
-  collectToolcraftBinaryMediaHydrationJobs,
-} from "../../source-assets/binary-media-hydration";
 import { readToolcraftPersistenceBootstrap } from "./toolcraft-persistence-bootstrap";
 
 export type ToolcraftContextValue = {
@@ -37,7 +34,8 @@ export type ToolcraftContextValue = {
   state: ToolcraftState;
 };
 
-export const ToolcraftContext = React.createContext<ToolcraftContextValue | null>(null);
+export const ToolcraftContext =
+  React.createContext<ToolcraftContextValue | null>(null);
 
 export type ToolcraftRootProps = {
   children: React.ReactNode;
@@ -111,7 +109,8 @@ function isRedoShortcut(event: KeyboardEvent): boolean {
   return (
     (event.metaKey || event.ctrlKey) &&
     !event.altKey &&
-    ((event.shiftKey && key === "z") || (!event.metaKey && event.ctrlKey && key === "y"))
+    ((event.shiftKey && key === "z") ||
+      (!event.metaKey && event.ctrlKey && key === "y"))
   );
 }
 
@@ -129,14 +128,13 @@ export function ToolcraftRoot({
     createToolcraftExternalStore(
       createToolcraftState(
         schema,
-        mergeToolcraftInitialState(persistenceBootstrap.initialState, initialState),
+        mergeToolcraftInitialState(
+          persistenceBootstrap.initialState,
+          initialState,
+        ),
       ),
     ),
   );
-  const [binaryMediaHydrationJobs] = React.useState(() => [
-    ...persistenceBootstrap.mediaHydrationJobs,
-    ...collectToolcraftBinaryMediaHydrationJobs(initialState?.mediaAssets),
-  ]);
   const state = React.useSyncExternalStore(
     store.subscribe,
     store.getState,
@@ -145,9 +143,6 @@ export function ToolcraftRoot({
   const dispatch: React.Dispatch<ToolcraftCommand> = store.dispatch;
   const persistenceStatus = useToolcraftPersistence(schema, store, {
     blockedReason: persistenceBootstrap.blockedReason,
-    cleanupStorageKeys: persistenceBootstrap.cleanupStorageKeys,
-    mediaMigrationResourceKeys:
-      persistenceBootstrap.mediaMigrationResourceKeys,
   });
   const value = React.useMemo(() => ({ dispatch, state }), [dispatch, state]);
   const resolvedModelPresentation = React.useMemo(
@@ -189,18 +184,19 @@ export function ToolcraftRoot({
       <ToolcraftModelPresentationModeContext.Provider
         value={resolvedModelPresentation}
       >
-        <ToolcraftThemeProvider>
-          <ToolcraftStoreContext.Provider value={store}>
-            <ToolcraftSourceAssetProvider
-              binaryMediaHydrationJobs={binaryMediaHydrationJobs}
-              store={store}
-            >
-              <ToolcraftContext.Provider value={value}>
-                {children}
-              </ToolcraftContext.Provider>
-            </ToolcraftSourceAssetProvider>
-          </ToolcraftStoreContext.Provider>
-        </ToolcraftThemeProvider>
+        <ToolcraftBrowserZoomBoundary>
+          <ToolcraftThemeProvider defaultPreference={schema.sourceDefaults?.theme}>
+            <ToolcraftStoreContext.Provider value={store}>
+              <ToolcraftSourceAssetProvider store={store}>
+                <ToolcraftExportProvider store={store}>
+                  <ToolcraftContext.Provider value={value}>
+                    {children}
+                  </ToolcraftContext.Provider>
+                </ToolcraftExportProvider>
+              </ToolcraftSourceAssetProvider>
+            </ToolcraftStoreContext.Provider>
+          </ToolcraftThemeProvider>
+        </ToolcraftBrowserZoomBoundary>
       </ToolcraftModelPresentationModeContext.Provider>
     </ToolcraftPersistenceStatusProvider>
   );

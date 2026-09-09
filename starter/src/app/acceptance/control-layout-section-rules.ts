@@ -9,14 +9,13 @@ import {
   getToolcraftGenericControlLabelError,
 } from "./control-labels";
 import type { ToolcraftControlLayoutFacts } from "./control-layout-model";
-import { TOOLCRAFT_DENSE_SECTION_MIN_CONTROLS } from "./control-section-entity-cohesion";
 import {
   controlTypeSectionTitlePattern,
+  getToolcraftSectionTitleLengthError,
   genericControlSectionTitlePattern,
 } from "./section-title-rules";
 
-const broadControlSectionTitlePattern =
-  /^(animation|export|flow|icon|logo|motion|output|scene|shape|shapes|text|typography|visual|visuals)$/i;
+const TOOLCRAFT_SECTION_DENSITY_REVIEW_THRESHOLD = 10;
 
 export function getToolcraftControlLayoutSectionInvariantErrors(
   facts: ToolcraftControlLayoutFacts,
@@ -29,7 +28,6 @@ export function getToolcraftControlLayoutSectionInvariantErrors(
       sectionLabel,
       sectionLoosePrefixes,
       sectionTitle,
-      semanticClusters,
     } = section;
 
     if (!sectionTitle) {
@@ -50,18 +48,14 @@ export function getToolcraftControlLayoutSectionInvariantErrors(
       );
     }
 
-    const missingSemanticGroups = controls
-      .filter(([, control]) => !control.semanticGroup?.trim())
-      .map(([controlId]) => controlId);
+    const titleLengthError = sectionTitle
+      ? getToolcraftSectionTitleLengthError(sectionTitle)
+      : undefined;
 
-    if (
-      controls.length >= TOOLCRAFT_DENSE_SECTION_MIN_CONTROLS &&
-      missingSemanticGroups.length > 0
-    ) {
-      errors.push(
-        `${sectionLabel} has ${controls.length} controls and must declare semanticGroup for every control so cohesion is checked from typed product intent rather than labels. Missing: ${missingSemanticGroups.join(", ")}.`,
-      );
+    if (titleLengthError) {
+      errors.push(titleLengthError);
     }
+
     errors.push(
       ...getToolcraftColorRowGroupingErrors({
         controls,
@@ -140,36 +134,13 @@ export function getToolcraftControlLayoutSectionHeuristicErrors(
   const errors: string[] = [];
 
   for (const section of facts.sections) {
-    const {
-      controls,
-      sectionLabel,
-      sectionTitle,
-      semanticClusters,
-    } = section;
-    const clusterList = [...semanticClusters].join(", ");
-    const hasBroadSectionTitle =
-      sectionTitle !== undefined && broadControlSectionTitlePattern.test(sectionTitle);
-
-    if (
-      controls.length >= TOOLCRAFT_DENSE_SECTION_MIN_CONTROLS &&
-      hasBroadSectionTitle &&
-      semanticClusters.size >= 3
-    ) {
+    const { controls, sectionLabel } = section;
+    if (controls.length >= TOOLCRAFT_SECTION_DENSITY_REVIEW_THRESHOLD) {
       errors.push(
-        `${sectionLabel} has ${controls.length} controls across multiple semantic clusters (${clusterList}). Broad section titles are only valid for small cohesive groups; split this into discrete sections with specific titles such as motion, geometry, density, color, typography, or export sub-entities.`,
+        `${sectionLabel} has ${controls.length} declared controls. Review simultaneously visible controls in reachable modes, compound-editor complexity, panel height, navigation, and section reset scope. This is not a section limit: keep a coherent workflow together, use semanticGroup where helpful, and split only when distinct user tasks justify it; declaration count alone does not prove visual density.`,
       );
     }
-
   }
 
   return errors;
-}
-
-export function getToolcraftControlLayoutSectionErrors(
-  facts: ToolcraftControlLayoutFacts,
-): string[] {
-  return [
-    ...getToolcraftControlLayoutSectionInvariantErrors(facts),
-    ...getToolcraftControlLayoutSectionHeuristicErrors(facts),
-  ];
 }

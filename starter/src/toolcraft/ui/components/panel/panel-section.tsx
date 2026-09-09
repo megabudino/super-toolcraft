@@ -3,6 +3,7 @@
 import * as React from "react";
 
 import { cn } from "../../lib/utils";
+import { PanelCollapsibleBodySurface } from "./panel-surface";
 import {
   ControlItem,
   ControlList,
@@ -10,9 +11,15 @@ import {
   ControlSectionHeader,
   PanelTitle,
 } from "../control-layout";
+import {
+  cancelBrowserAnimationFrame,
+  requestBrowserAnimationFrame,
+  scheduleBrowserAnimationFrames,
+} from "../primitives/browser-transport";
+import type { SafeComposedHostElementProps } from "../primitives/sanitize-composed-host-props";
 
 export type PanelSectionProps = Omit<
-  React.HTMLAttributes<HTMLElement>,
+  SafeComposedHostElementProps<"section">,
   "children" | "title"
 > & {
   action?: React.ReactNode;
@@ -22,6 +29,7 @@ export type PanelSectionProps = Omit<
   className?: string;
   collapsed?: boolean;
   collapsible?: boolean;
+  description?: string;
   flush?: boolean;
   onCollapsedChange?: (collapsed: boolean) => void;
   spacing?: "default" | "technical";
@@ -36,6 +44,7 @@ export function PanelSection({
   className,
   collapsed = false,
   collapsible = false,
+  description,
   flush = false,
   onCollapsedChange,
   spacing = "default",
@@ -89,6 +98,7 @@ export function PanelSection({
           action={action}
           collapsed={isSectionCollapsed}
           collapsible={collapsible}
+          description={description}
           onCollapsedChange={onCollapsedChange}
         >
           <PanelTitle>{title}</PanelTitle>
@@ -156,11 +166,11 @@ function PanelSectionCollapsibleBody({
 
     setShouldRender(true);
     setIsVisuallyCollapsed(true);
-    const frame = window.requestAnimationFrame(() => {
+    const frame = requestBrowserAnimationFrame(() => {
       setIsVisuallyCollapsed(false);
     });
 
-    return () => window.cancelAnimationFrame(frame);
+    return () => cancelBrowserAnimationFrame(frame);
   }, [collapsed, shouldRender]);
 
   function handleTransitionEnd(event: React.TransitionEvent<HTMLDivElement>): void {
@@ -176,7 +186,7 @@ function PanelSectionCollapsibleBody({
   }
 
   return (
-    <div
+    <PanelCollapsibleBodySurface
       aria-hidden={collapsed ? "true" : undefined}
       className={cn(
         "grid overflow-hidden transition-[grid-template-rows,opacity] duration-180 ease-out motion-reduce:transition-none",
@@ -185,7 +195,6 @@ function PanelSectionCollapsibleBody({
           : "grid-rows-[1fr] opacity-100",
       )}
       data-collapsed={String(collapsed)}
-      data-slot="panel-section-collapsible-body"
       onTransitionEnd={handleTransitionEnd}
     >
       <div
@@ -196,7 +205,7 @@ function PanelSectionCollapsibleBody({
       >
         {children}
       </div>
-    </div>
+    </PanelCollapsibleBodySurface>
   );
 }
 
@@ -210,30 +219,10 @@ function useInitialPanelSectionControlTransitionSuppression(
 
   React.useEffect(() => {
     setSuppressionState({ dependency, isSuppressing: true });
-
-    if (typeof window === "undefined") {
-      return undefined;
-    }
-
-    if (typeof window.requestAnimationFrame !== "function") {
-      const timeout = window.setTimeout(() => {
-        setSuppressionState({ dependency, isSuppressing: false });
-      }, 0);
-
-      return () => window.clearTimeout(timeout);
-    }
-
-    let secondFrame = 0;
-    const firstFrame = window.requestAnimationFrame(() => {
-      secondFrame = window.requestAnimationFrame(() => {
-        setSuppressionState({ dependency, isSuppressing: false });
-      });
-    });
-
-    return () => {
-      window.cancelAnimationFrame(firstFrame);
-      window.cancelAnimationFrame(secondFrame);
-    };
+    return scheduleBrowserAnimationFrames(
+      () => setSuppressionState({ dependency, isSuppressing: false }),
+      2,
+    );
   }, [dependency]);
 
   return (

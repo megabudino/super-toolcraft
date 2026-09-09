@@ -22,6 +22,7 @@ import {
 import { getToolcraftControlSectionInventoryStructureErrors } from "./control-section-inventory-structure";
 import { isToolcraftProductSectionControl } from "./controls";
 import type { ToolcraftControlSectionInventoryEntry } from "./types";
+import { getToolcraftProductModeInventoryErrors } from "./product-mode-inventory";
 
 function getControlIndexes(
   schema: Pick<ResolvedToolcraftAppSchema, "panels">,
@@ -227,7 +228,7 @@ function validateBranchAffectedTargets({
       continue;
     }
     const affectedOwner = ownerByTarget.get(candidate);
-    if (!affectedOwner || affectedOwner.entityId !== selectorOwner.entityId) {
+    if (!affectedOwner || (!branch.productMode && affectedOwner.entityId !== selectorOwner.entityId)) {
       errors.push(
         `Branch selector "${selectorTarget}" cannot affect "${candidate}" because they belong to different entities.`,
       );
@@ -330,13 +331,13 @@ export function getToolcraftControlSelectorInventoryErrors(
   schema: Pick<ResolvedToolcraftAppSchema, "panels">,
   sectionInventory: readonly ToolcraftControlSectionInventoryEntry[],
 ): string[] {
-  return getSelectorInventoryErrors(
+  return [...getSelectorInventoryErrors(
     createSelectorInventoryContext(
       createSelectorDependencySource(schema),
       sectionInventory,
     ),
     sectionInventory,
-  );
+  ), ...getToolcraftProductModeInventoryErrors(schema, sectionInventory)];
 }
 
 export type { ToolcraftControlSelectorDependencyIndex };
@@ -365,6 +366,7 @@ export function createToolcraftControlSelectorDependencyIndex(
     ),
     ...context.predicateDomainErrors,
     ...getSelectorInventoryErrors(context, sectionInventory),
+    ...getToolcraftProductModeInventoryErrors(schema, sectionInventory),
   ].sort();
 
   if (errors.length > 0) {

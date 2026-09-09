@@ -2,6 +2,11 @@
 
 export * from "./app-shell/toolcraft-root";
 export * from "./app-shell/toolcraft-app";
+export { composeToolcraftApp } from "./app-shell/compose-toolcraft-app";
+export type {
+  ToolcraftAppPorts,
+  ToolcraftAppScenePorts,
+} from "./app-shell/toolcraft-app-ports";
 export { useToolcraftMediaPresentationUrls } from "./app-shell/toolcraft-media-presentation";
 export * from "./app-shell/use-toolcraft-pipeline";
 export * from "./app-shell/use-toolcraft-pipeline-pass";
@@ -39,6 +44,11 @@ export {
 } from "./orientation-gizmo/use-toolcraft-model-orbit-interaction";
 export * from "./panel-host/panel-host";
 export * from "./panel-host/panel-host-types";
+export { createToolcraftSourceAssetPresentation } from "./source-assets/source-asset-presentation";
+export type {
+  ToolcraftFileDropPresentation,
+  ToolcraftFileDropPresentationStatus,
+} from "./source-assets/source-asset-presentation-types";
 export * from "./app-shell/settings-transfer";
 export * from "./timeline/timeline-panel";
 export * from "./app-shell/theme-runtime";
@@ -51,3 +61,5 @@ export {
   useToolcraftSelector,
   useToolcraftValue,
 } from "./app-shell/use-toolcraft";
+
+export * from "./app-shell/toolcraft-defaults-authoring";

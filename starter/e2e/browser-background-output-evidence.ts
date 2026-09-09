@@ -39,6 +39,16 @@ export type ToolcraftBackgroundVideoInspection =
     mediaType: string;
   };
 
+export type ToolcraftFiniteBackgroundStackingObservation = {
+  backgroundColor: string;
+  backgroundVisible: boolean;
+  canvasMode: "finite" | "infinite";
+  layerOrder: readonly string[];
+  mediaVisible: boolean;
+  outputSignature: string;
+  productForegroundTransparent: boolean;
+};
+
 type ToolcraftBackgroundVideoProof<TArtifact> = {
   exportArtifact: ToolcraftBrowserAction<"interaction", TArtifact>;
   inspectArtifact: (
@@ -67,6 +77,71 @@ function validateBackgroundPreviewObservation(
     observation.outputSignature.trim(),
     `Background requirement "${requirementId}" must report a preview output signature.`,
   ).not.toBe("");
+}
+
+function validateFiniteBackgroundStacking(
+  observation: ToolcraftFiniteBackgroundStackingObservation,
+  requirementId: string,
+): void {
+  expect(
+    observation.canvasMode,
+    `Background requirement "${requirementId}" must inspect finite canvas mode.`,
+  ).toBe("finite");
+  expect(observation.backgroundVisible).toBe(true);
+  expect(observation.mediaVisible).toBe(true);
+  expect(observation.productForegroundTransparent).toBe(true);
+  expect(observation.backgroundColor.trim()).not.toBe("");
+  expect(observation.outputSignature.trim()).not.toBe("");
+
+  const backgroundIndex = observation.layerOrder.indexOf("background");
+  const mediaIndex = observation.layerOrder.indexOf("media");
+  const productIndex = observation.layerOrder.indexOf("product");
+  expect(backgroundIndex).toBeGreaterThanOrEqual(0);
+  expect(mediaIndex).toBeGreaterThan(backgroundIndex);
+  expect(productIndex).toBeGreaterThan(mediaIndex);
+}
+
+export async function expectToolcraftFiniteBackgroundMediaStacking(
+  observeStacking: ToolcraftBrowserObservation<ToolcraftFiniteBackgroundStackingObservation>,
+  enableBackground: ToolcraftBrowserAction,
+  expected: ToolcraftFiniteBackgroundStackingObservation,
+  options: ToolcraftSemanticEvidenceOptions,
+): Promise<ToolcraftFiniteBackgroundStackingObservation> {
+  assertToolcraftBrowserProofSession(observeStacking, enableBackground);
+  const target = requireTargetScopedAction(
+    enableBackground,
+    "Finite-background stacking evidence requires a target-scoped Background switch action.",
+  );
+  const before = await readToolcraftBrowserObservation(observeStacking);
+  expect(before.canvasMode).toBe("finite");
+  expect(before.backgroundVisible).toBe(false);
+  expect(before.mediaVisible).toBe(true);
+  expect(before.productForegroundTransparent).toBe(true);
+  expect(before.outputSignature.trim()).not.toBe("");
+  validateFiniteBackgroundStacking(expected, options.requirementId);
+
+  const { after } = await expectToolcraftExpectedOutcomeAfterAction(
+    observeStacking,
+    enableBackground,
+    expected,
+    createToolcraftSemanticTransitionOptions(
+      `Background requirement "${options.requirementId}" should keep runtime media above the evaluated finite background.`,
+      options,
+    ),
+  );
+  validateFiniteBackgroundStacking(after, options.requirementId);
+  expect(after.outputSignature).not.toBe(before.outputSignature);
+  await attachToolcraftBrowserRuntimeEvidence({
+    evidenceType: "product-observable-change",
+    requirementId: options.requirementId,
+    target,
+  });
+  await attachToolcraftBrowserRuntimeEvidence({
+    evidenceType: "background-finite-media-stacking",
+    requirementId: options.requirementId,
+    target,
+  });
+  return after;
 }
 
 export async function expectToolcraftBackgroundOutputSemantics<

@@ -1,26 +1,76 @@
+import { exportRequestFixture } from "./app-acceptance.export-request-test-fixtures";
 import { describe, expect, it } from "vitest";
+import { layersModule } from "@/toolcraft/runtime";
 
 import {
   contractAcceptanceFixture,
   contractSchemaFixture,
+  defineContractSchemaFixture,
   validateContractAcceptance,
 } from "./app-acceptance.contract-fixtures";
 import { playbackTimelineAcceptance } from "./app-acceptance.timeline-test-utils";
+import type {
+  ToolcraftComponentAcceptance,
+  ToolcraftProductReadiness,
+} from "./acceptance/types";
+
+const layersProductReadiness: ToolcraftProductReadiness = {
+  exportIntent: {
+    image: {
+      evidence: exportRequestFixture(
+        "Remove image export; this fixture must not offer downloadable artifacts.",
+      ),
+      mode: "user-removed",
+    },
+    svg: { mode: "not-requested" },
+    video: { mode: "not-requested" },
+  },
+  interactionOwnership: [],
+  mode: "product",
+  productName: "Layers fixture",
+  productSummary: "A fixture for runtime layer management.",
+  requestedBehavior: "Manage structured content through Layers.",
+  viewInteraction: {
+    mode: "non-spatial",
+    reason: "The layers fixture has no spatial view.",
+  },
+};
+
+const layersPersistenceAcceptance: ToolcraftComponentAcceptance = {
+  automated: true,
+  automatedTestName: "layers state restores after reload",
+  browser: {
+    budget: "standard" as const,
+    file: "e2e/app-controls.spec.ts",
+    testName: "browser: layers state restores after reload",
+  },
+  componentType: "persistence",
+  evidence: "persistence-state",
+  expectedObservable: "Layer state restores after a real browser reload.",
+  fixture: "layers persistence fixture",
+  id: "persistence.reload",
+  kind: "runtime",
+  persistenceCoverage: "reload",
+  persistenceSlices: ["layers"],
+  userAction: "Edit layers, reload the page, and inspect restored state.",
+};
 
 describe("starter acceptance layers contract", () => {
   it("requires layer behavior coverage when a layers panel is enabled", () => {
-    const layersSchema = {
-      ...contractSchemaFixture,
-      panels: {
-        ...contractSchemaFixture.panels,
-        layers: true,
+    const layersSchema = defineContractSchemaFixture({
+      base: {
+        canvas: { enabled: true },
+        identity: { id: "layers-fixture", title: "Layers fixture" },
+        panels: { controls: { sections: [], title: "Controls" } },
       },
-    };
+      modules: [layersModule()],
+    });
 
     expect(
       validateContractAcceptance({
         schema: layersSchema,
-        acceptance: contractAcceptanceFixture,
+        acceptance: [...contractAcceptanceFixture, layersPersistenceAcceptance],
+        productReadiness: layersProductReadiness,
       }),
     ).toEqual(
       expect.arrayContaining([
@@ -42,13 +92,17 @@ describe("starter acceptance layers contract", () => {
             {
               controls: {
                 opacity: {
+                  applicability: {
+                    mode: "always" as const,
+                    origin: "explicit" as const,
+                  },
                   defaultValue: 75,
                   label: "Opacity",
                   max: 100,
                   min: 0,
                   target: "selectedLayer.opacity",
-                  type: "slider",
-                  variant: "continuous",
+                  type: "slider" as const,
+                  variant: "continuous" as const,
                 },
               },
               id: "layer",
@@ -101,13 +155,17 @@ describe("starter acceptance layers contract", () => {
             {
               controls: {
                 opacity: {
+                  applicability: {
+                    mode: "always" as const,
+                    origin: "explicit" as const,
+                  },
                   defaultValue: 75,
                   label: "Opacity",
                   max: 100,
                   min: 0,
                   target: "selectedLayer.opacity",
-                  type: "slider",
-                  variant: "continuous",
+                  type: "slider" as const,
+                  variant: "continuous" as const,
                 },
               },
               id: "layer",
@@ -131,11 +189,13 @@ describe("starter acceptance layers contract", () => {
             browser: {
               budget: "standard",
               file: "e2e/app-controls.spec.ts",
-              testName: "browser: layers selection changes selected runtime layer",
+              testName:
+                "browser: layers selection changes selected runtime layer",
             },
             componentType: "layers",
             evidence: "product-output",
-            expectedObservable: "Selecting another layer changes which output layer is edited.",
+            expectedObservable:
+              "Selecting another layer changes which output layer is edited.",
             fixture: "layered output fixture",
             id: "layers.selection",
             kind: "runtime",
@@ -152,7 +212,8 @@ describe("starter acceptance layers contract", () => {
             },
             componentType: "layers",
             evidence: "product-output",
-            expectedObservable: "Toggling layer visibility removes that layer from output.",
+            expectedObservable:
+              "Toggling layer visibility removes that layer from output.",
             fixture: "layered output fixture",
             id: "layers.visibility",
             kind: "runtime",
@@ -169,7 +230,8 @@ describe("starter acceptance layers contract", () => {
             },
             componentType: "layers",
             evidence: "product-output",
-            expectedObservable: "Dragging a layer changes composited render order.",
+            expectedObservable:
+              "Dragging a layer changes composited render order.",
             fixture: "overlapping layers fixture",
             id: "layers.reorder",
             kind: "runtime",
@@ -186,7 +248,8 @@ describe("starter acceptance layers contract", () => {
             },
             componentType: "layers",
             evidence: "product-output",
-            expectedObservable: "Dragging a layer into a group nests it and group visibility affects the nested output.",
+            expectedObservable:
+              "Dragging a layer into a group nests it and group visibility affects the nested output.",
             fixture: "grouped layers fixture",
             id: "layers.grouping",
             kind: "runtime",
@@ -219,6 +282,4 @@ describe("starter acceptance layers contract", () => {
       ]),
     );
   });
-
-
 });

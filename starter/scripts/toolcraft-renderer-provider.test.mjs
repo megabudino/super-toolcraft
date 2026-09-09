@@ -304,7 +304,7 @@ test("catalog parsing rejects ranges, unsorted ids, and malformed closed objects
     },
     {
       catalog: { ...syntheticCatalog, schemaVersion: 1 },
-      error: "catalog.schemaVersion must equal 2.",
+      error: "catalog.schemaVersion must equal 2 or 3.",
     },
     {
       catalog: {

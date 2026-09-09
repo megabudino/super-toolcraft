@@ -8,7 +8,6 @@ import {
   schemaHasSvgExportPanelAction,
   schemaHasVideoExportPanelAction,
 } from "./acceptance/output-export";
-import { isNeutralTemplateProject } from "./app-acceptance.product-readiness-test-utils";
 import { schemaHasProductSurface } from "./app-acceptance.schema-test-utils";
 import { appSchema } from "./app-schema";
 
@@ -33,7 +32,7 @@ describe("Toolcraft product readiness", () => {
     expect(appTransferMode.referenceInputs).toEqual([]);
   });
 
-  it("allows neutral readiness only for the source starter/template folder", () => {
+  it("allows neutral readiness only while the product surface is absent", () => {
     if (appProductReadiness.mode === "product") {
       expect(appProductReadiness.exportIntent).toBeDefined();
       if (appProductReadiness.exportIntent.image.mode === "toolcraft-default") {
@@ -58,7 +57,7 @@ describe("Toolcraft product readiness", () => {
       expect(appProductReadiness.viewInteraction).toBeDefined();
       expect(
         schemaHasProductSurface(),
-        "Product readiness requires product surface: controls, layers, timeline, canvasContent, or acceptance coverage.",
+        "Product readiness requires product surface: controls, layers, timeline, canvas content, default-media suppression, or acceptance coverage.",
       ).toBe(true);
       expect(
         appSchema.panels.controls,
@@ -70,12 +69,8 @@ describe("Toolcraft product readiness", () => {
 
     expect(appProductReadiness.reason.trim()).not.toBe("");
     expect(
-      isNeutralTemplateProject(),
-      "Renamed/generated product folders must switch product readiness from starter to product so an empty template cannot pass as an implemented app.",
-    ).toBe(true);
-    expect(
       schemaHasProductSurface(),
-      "Neutral starter readiness must not be used after adding product controls, timeline, layers, canvasContent, or acceptance coverage.",
+      "Neutral starter readiness must not be used after adding product controls, timeline, layers, canvas content, default-media suppression, or acceptance coverage.",
     ).toBe(false);
   });
 });

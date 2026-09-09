@@ -7,6 +7,8 @@ import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { promisify } from "node:util";
 
+import { activateLatestRendererProvider } from "./toolcraft-renderer-activation.mjs";
+
 import { enableRendererProvider } from "../src/toolcraft/renderer-providers/provider-config.mjs";
 
 const execFileAsync = promisify(execFile);
@@ -46,6 +48,11 @@ export async function configureRendererProvider({
     fileOperations.readFile(packageJsonPath),
     fileOperations.stat(packageJsonPath),
   ]);
+  const catalog = JSON.parse(catalogSource);
+  if (catalog.schemaVersion === 3) {
+    if (providerId !== "vgpu") throw new TypeError(`Unknown renderer provider "${providerId}".`);
+    return activateLatestRendererProvider({ appRoot: resolvedAppRoot, catalog });
+  }
   const result = enableRendererProvider({
     catalog: JSON.parse(catalogSource),
     packageJson: JSON.parse(originalPackageBuffer.toString("utf8")),
@@ -126,7 +133,8 @@ async function runCli() {
       ? 'Renderer provider "vgpu" enabled.'
       : 'Renderer provider "vgpu" already enabled.',
   );
-  console.log(result.installCommand);
+  if (result.version) console.log(`VGPU ${result.version}: exact dependencies installed and compatibility verified.`);
+  if (result.installCommand) console.log(result.installCommand);
 }
 
 if (

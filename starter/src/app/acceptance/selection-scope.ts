@@ -4,10 +4,30 @@ import type {
   ToolcraftProductReadiness,
 } from "./types";
 
+type ToolcraftSelectionScopeSchema = Readonly<{
+  panels: Readonly<{
+    controls?: Readonly<{
+      sections: readonly Readonly<{
+        controls: Readonly<
+          Record<
+            string,
+            Readonly<{
+              selectionTarget?: string;
+              target: string;
+              type: string;
+            }>
+          >
+        >;
+      }>[];
+    }>;
+  }>;
+}>;
+
 type ToolcraftSelectionScopeValidationInput = {
   acceptance: readonly ToolcraftComponentAcceptance[];
   layersEnabled: boolean;
   productReadiness: ToolcraftProductReadiness;
+  schema?: ToolcraftSelectionScopeSchema;
 };
 
 function isPropertyOwner(
@@ -32,6 +52,7 @@ export function getToolcraftSelectionScopeErrors({
   acceptance,
   layersEnabled,
   productReadiness,
+  schema,
 }: ToolcraftSelectionScopeValidationInput): string[] {
   const errors: string[] = [];
   const inventory =
@@ -89,6 +110,24 @@ export function getToolcraftSelectionScopeErrors({
       errors.push(
         `${owner.id} selectionInteractionId ${selectionScope.selectionInteractionId} must reference spatial-selection or structured-selection ownership.`,
       );
+    }
+
+    const collectionControl = schema?.panels.controls?.sections
+      .flatMap((section) => Object.values(section.controls))
+      .find(
+        (control) =>
+          control.type === "collectionActions" && control.target === owner.target,
+      );
+    if (collectionControl) {
+      if (!collectionControl.selectionTarget) {
+        errors.push(
+          `${owner.id} selected-entity collection scope requires selectionTarget on ${collectionControl.target}.`,
+        );
+      } else if (selectionOwner?.target !== collectionControl.selectionTarget) {
+        errors.push(
+          `${owner.id} selected-entity collection scope must bind selection ownership to exact selectionTarget ${collectionControl.selectionTarget}.`,
+        );
+      }
     }
 
     const propertyAcceptance = acceptance.find(

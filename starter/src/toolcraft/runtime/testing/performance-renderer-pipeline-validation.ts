@@ -1,4 +1,4 @@
-import type { ResolvedToolcraftAppSchema } from "../schema/types";
+import type { ResolvedToolcraftAppSchema } from "../schema/resolved-app-schema";
 import {
   assessParsedToolcraftEnvelopeRenderPlan,
   type ToolcraftRenderPlanBenchmarkRequirement,
@@ -18,9 +18,7 @@ import type {
   ToolcraftRenderPassRunLocation,
   ToolcraftRendererPipeline,
 } from "./performance-types";
-import type {
-  ToolcraftPerformanceCoverageValidationPolicy,
-} from "./performance-coverage-policy";
+import type { ToolcraftPerformanceCoverageValidationPolicy } from "./performance-coverage-policy";
 
 const renderPassKinds = new Set<ToolcraftRenderPassKind>([
   "decode",
@@ -84,14 +82,16 @@ const cacheRequiredRenderPassKinds = new Set<ToolcraftRenderPassKind>([
   "composite",
 ]);
 
-const highFrequencyViewportInteractions = new Set<ToolcraftPipelineInteraction>([
-  "animation-frame",
-  "mask-drag",
-  "timeline-playback",
-  "timeline-scrub",
-  "viewport-drag",
-  "viewport-zoom",
-]);
+const highFrequencyViewportInteractions = new Set<ToolcraftPipelineInteraction>(
+  [
+    "animation-frame",
+    "mask-drag",
+    "timeline-playback",
+    "timeline-scrub",
+    "viewport-drag",
+    "viewport-zoom",
+  ],
+);
 
 const vaguePipelineReferencePattern =
   /^(?:all|all values|everything|props|runtime|settings|state|values)$/i;
@@ -103,7 +103,9 @@ function getPassById(
 }
 
 function hasPipelineReference(value: string): boolean {
-  return value.trim().length > 0 && !vaguePipelineReferencePattern.test(value.trim());
+  return (
+    value.trim().length > 0 && !vaguePipelineReferencePattern.test(value.trim())
+  );
 }
 
 function isRetinaViewportZoomRaster(
@@ -181,15 +183,14 @@ function getRendererPipelineErrorsFromParsedPipeline(
   const { config, parsedPipeline } = context;
   const errors: string[] = [];
   const rawPipeline = config.rendererPipeline as unknown;
-  const envelopeRenderPlanErrors =
-    context.evaluateRenderPlan
-      ? getEnvelopeRenderPlanErrors(
-          schema,
-          context.config,
-          parsedPipeline,
-          context.policy,
-        )
-      : [];
+  const envelopeRenderPlanErrors = context.evaluateRenderPlan
+    ? getEnvelopeRenderPlanErrors(
+        schema,
+        context.config,
+        parsedPipeline,
+        context.policy,
+      )
+    : [];
 
   if (config.usesCustomRenderer && rawPipeline === undefined) {
     return [
@@ -210,7 +211,9 @@ function getRendererPipelineErrorsFromParsedPipeline(
   }
 
   if (!parsedPipeline.pipeline) {
-    return [...new Set([...parsedPipeline.errors, ...envelopeRenderPlanErrors])];
+    return [
+      ...new Set([...parsedPipeline.errors, ...envelopeRenderPlanErrors]),
+    ];
   }
   const pipeline = parsedPipeline.pipeline;
 
@@ -238,7 +241,9 @@ function getRendererPipelineErrorsFromParsedPipeline(
     }
 
     if (!renderPassKinds.has(pass.kind)) {
-      errors.push(`rendererPipeline pass "${pass.id}" kind "${pass.kind}" is not supported.`);
+      errors.push(
+        `rendererPipeline pass "${pass.id}" kind "${pass.kind}" is not supported.`,
+      );
     }
 
     if (!renderPassRunLocations.has(pass.runsOn)) {
@@ -271,10 +276,18 @@ function getRendererPipelineErrorsFromParsedPipeline(
     }
 
     errors.push(...getPipelineReferenceErrors(pass.id, "inputs", pass.inputs));
-    errors.push(...getPipelineReferenceErrors(pass.id, "invalidatedBy", pass.invalidatedBy));
+    errors.push(
+      ...getPipelineReferenceErrors(
+        pass.id,
+        "invalidatedBy",
+        pass.invalidatedBy,
+      ),
+    );
 
     if (pass.cacheKey) {
-      errors.push(...getPipelineReferenceErrors(pass.id, "cacheKey", pass.cacheKey));
+      errors.push(
+        ...getPipelineReferenceErrors(pass.id, "cacheKey", pass.cacheKey),
+      );
     }
 
     if (

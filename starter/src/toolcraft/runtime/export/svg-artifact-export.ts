@@ -7,7 +7,7 @@ import {
   getToolcraftRuntimeBackgroundColor,
   isToolcraftRuntimeBackgroundEnabled,
 } from "../state/canvas-background-state";
-import type { ToolcraftState } from "../state/types";
+import type { ReadonlyToolcraftState } from "../state/readonly-state";
 import {
   downloadToolcraftArtifact,
   type ToolcraftArtifactDownloadRequest,
@@ -46,7 +46,8 @@ export type ToolcraftSvgArtifactExportRequest = Readonly<{
   ) => ToolcraftArtifactDownloadResult;
   rendererPipeline: ToolcraftRendererPipelineClient | null;
   reportProgress: (progress: number) => void;
-  state: ToolcraftState;
+  signal: AbortSignal;
+  state: ReadonlyToolcraftState;
   svgExportRenderer: ToolcraftProductSvgExportRenderer;
   visibility: ToolcraftRuntimeSceneVisibility;
 }>;
@@ -54,6 +55,7 @@ export type ToolcraftSvgArtifactExportRequest = Readonly<{
 export async function exportToolcraftSvgArtifact(
   request: ToolcraftSvgArtifactExportRequest,
 ): Promise<ToolcraftSvgArtifactExportResult> {
+  request.signal.throwIfAborted();
   const frameState = createToolcraftArtifactFrameState(
     request.state,
     request.state.timeline.currentTimeSeconds,
@@ -74,23 +76,27 @@ export async function exportToolcraftSvgArtifact(
   );
   const { container } = createToolcraftSvgProductContainer();
   request.reportProgress(0.1);
+  request.signal.throwIfAborted();
   try {
     if (scenePlan.productFrame.kind === "ready") {
       await request.svgExportRenderer.renderFrame({
         container,
         frame: scenePlan.productFrame.rect,
         rendererPipeline: request.rendererPipeline,
+        signal: request.signal,
         state: frameState,
         timeSeconds: frameState.timeline.currentTimeSeconds,
         timelineProgress: getToolcraftArtifactTimelineProgress(frameState),
       });
     }
   } catch (error) {
+    if (request.signal.aborted && error === request.signal.reason) throw error;
     throw normalizeToolcraftExportError(error, {
       code: "svg-render-failed",
       message: "Toolcraft could not render product vectors for SVG export.",
     });
   }
+  request.signal.throwIfAborted();
   request.reportProgress(0.65);
 
   const serialized = serializeToolcraftSvgDocument({
@@ -105,6 +111,7 @@ export async function exportToolcraftSvgArtifact(
     type: "image/svg+xml;charset=utf-8",
   });
   request.reportProgress(0.9);
+  request.signal.throwIfAborted();
   (request.downloadArtifact ?? downloadToolcraftArtifact)({
     blob,
     extension: ".svg",

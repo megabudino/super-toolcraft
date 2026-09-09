@@ -3,7 +3,6 @@ import type {
   ToolcraftModelDiagnostic,
 } from "../model-import/model-import-types";
 import type { ToolcraftSourceAssetFeedback } from "../source-assets/source-asset-types";
-import { createToolcraftDataUrlResourceRef } from "../source-assets/media-resource-ref";
 import { readCanvasSize, readPoint } from "./persistence-reader-primitives";
 import {
   isToolcraftFiniteNumber,
@@ -12,19 +11,16 @@ import {
 import type {
   ToolcraftFileAsset,
   ToolcraftImageAsset,
-  ToolcraftInitialImageAssetIngress,
-  ToolcraftInitialMediaAsset,
-  ToolcraftLegacyRuntimeImageAsset,
   ToolcraftMediaAsset,
   ToolcraftMediaTransform,
   ToolcraftModelAsset,
 } from "./types";
-import { normalizeToolcraftSceneElementFrame } from "./scene-element-frame";
 
 type PersistedMediaBase = Pick<
   ToolcraftMediaAsset,
   "fileName" | "id" | "layerId" | "mimeType"
 > & {
+  sourcePaths?: readonly string[];
   sourceTarget?: string;
 };
 
@@ -44,12 +40,17 @@ const feedbackCategories = new Set<ToolcraftSourceAssetFeedback["category"]>([
   "topology",
 ]);
 
-function readMediaBase(value: Record<string, unknown>): PersistedMediaBase | undefined {
+function readMediaBase(
+  value: Record<string, unknown>,
+): PersistedMediaBase | undefined {
   if (
     typeof value.id !== "string" ||
     typeof value.layerId !== "string" ||
     typeof value.fileName !== "string" ||
-    typeof value.mimeType !== "string"
+    typeof value.mimeType !== "string" ||
+    (value.sourcePaths !== undefined &&
+      (!Array.isArray(value.sourcePaths) ||
+        !value.sourcePaths.every((path) => typeof path === "string" && path.length > 0)))
   ) {
     return undefined;
   }
@@ -59,13 +60,16 @@ function readMediaBase(value: Record<string, unknown>): PersistedMediaBase | und
     id: value.id,
     layerId: value.layerId,
     mimeType: value.mimeType,
+    ...(Array.isArray(value.sourcePaths) ? { sourcePaths: [...value.sourcePaths] } : {}),
     ...(typeof value.sourceTarget === "string"
       ? { sourceTarget: value.sourceTarget }
       : {}),
   };
 }
 
-function readMediaTransform(value: unknown): ToolcraftMediaTransform | undefined {
+function readMediaTransform(
+  value: unknown,
+): ToolcraftMediaTransform | undefined {
   if (!isToolcraftPersistenceRecord(value)) {
     return undefined;
   }
@@ -95,17 +99,13 @@ function readMediaTransform(value: unknown): ToolcraftMediaTransform | undefined
 function readImageAsset(
   value: Record<string, unknown>,
   base: PersistedMediaBase,
-): ToolcraftImageAsset | ToolcraftInitialImageAssetIngress | undefined {
+): ToolcraftImageAsset | undefined {
   const position = readPoint(value.position);
 
   const resourceRef =
-    typeof value.resourceRef === "string"
-      ? value.resourceRef
-      : typeof value.dataUrl === "string"
-        ? createToolcraftDataUrlResourceRef("image", value.dataUrl)
-        : undefined;
+    typeof value.resourceRef === "string" ? value.resourceRef : undefined;
 
-  if (!resourceRef || !position) {
+  if (!resourceRef || !position || Object.hasOwn(value, "dataUrl")) {
     return undefined;
   }
 
@@ -113,29 +113,16 @@ function readImageAsset(
   const sourceSize = readCanvasSize(value.sourceSize);
   const transform = readMediaTransform(value.transform);
 
-  const asset: ToolcraftLegacyRuntimeImageAsset = {
+  if (!size || !sourceSize) return undefined;
+  return {
     ...base,
     assetKind: "image",
     lifecycle: "restoring",
     position,
     resourceRef,
-    ...(size ? { size } : {}),
-    ...(sourceSize ? { sourceSize } : {}),
+    size,
+    sourceSize,
     ...(transform ? { transform } : {}),
-  };
-
-  if (size && sourceSize) {
-    return {
-      ...asset,
-      position,
-      size,
-      sourceSize,
-    };
-  }
-
-  return {
-    asset,
-    policy: "legacy-record",
   };
 }
 
@@ -146,13 +133,9 @@ function readFileAsset(
   const position = readPoint(value.position);
 
   const resourceRef =
-    typeof value.resourceRef === "string"
-      ? value.resourceRef
-      : typeof value.dataUrl === "string"
-        ? createToolcraftDataUrlResourceRef("file", value.dataUrl)
-        : undefined;
+    typeof value.resourceRef === "string" ? value.resourceRef : undefined;
 
-  if (!resourceRef || !position) {
+  if (!resourceRef || !position || Object.hasOwn(value, "dataUrl")) {
     return undefined;
   }
 
@@ -171,7 +154,9 @@ function readNonNegativeInteger(value: unknown): number | undefined {
     : undefined;
 }
 
-function readModelDiagnostic(value: unknown): ToolcraftModelDiagnostic | undefined {
+function readModelDiagnostic(
+  value: unknown,
+): ToolcraftModelDiagnostic | undefined {
   if (!isToolcraftPersistenceRecord(value)) {
     return undefined;
   }
@@ -183,7 +168,11 @@ function readModelDiagnostic(value: unknown): ToolcraftModelDiagnostic | undefin
     typeof value.code !== "string" ||
     typeof value.explanation !== "string" ||
     typeof value.severity !== "string" ||
-    !diagnosticSeverities.has(value.severity as ToolcraftModelDiagnostic["severity"])
+    (Object.hasOwn(value, "primitiveId") &&
+      typeof value.primitiveId !== "string") ||
+    !diagnosticSeverities.has(
+      value.severity as ToolcraftModelDiagnostic["severity"],
+    )
   ) {
     return undefined;
   }
@@ -199,7 +188,9 @@ function readModelDiagnostic(value: unknown): ToolcraftModelDiagnostic | undefin
   };
 }
 
-function readModelAnalysis(value: unknown): ToolcraftModelAnalysisSummary | undefined {
+function readModelAnalysis(
+  value: unknown,
+): ToolcraftModelAnalysisSummary | undefined {
   if (
     !isToolcraftPersistenceRecord(value) ||
     !Array.isArray(value.diagnostics) ||
@@ -212,7 +203,9 @@ function readModelAnalysis(value: unknown): ToolcraftModelAnalysisSummary | unde
 
   const diagnostics = value.diagnostics.map(readModelDiagnostic);
   const boundaryEdges = readNonNegativeInteger(value.boundaryEdges);
-  const disconnectedComponents = readNonNegativeInteger(value.disconnectedComponents);
+  const disconnectedComponents = readNonNegativeInteger(
+    value.disconnectedComponents,
+  );
   const nonManifoldEdges = readNonNegativeInteger(value.nonManifoldEdges);
   const triangles = readNonNegativeInteger(value.triangles);
   const vertices = readNonNegativeInteger(value.vertices);
@@ -223,7 +216,9 @@ function readModelAnalysis(value: unknown): ToolcraftModelAnalysisSummary | unde
     disconnectedComponents === undefined ||
     nonManifoldEdges === undefined ||
     triangles === undefined ||
-    vertices === undefined
+    vertices === undefined ||
+    (Object.hasOwn(value, "repairPlanRef") &&
+      typeof value.repairPlanRef !== "string")
   ) {
     return undefined;
   }
@@ -264,28 +259,128 @@ function readSourceAssetFeedback(
   };
 }
 
+function haveEqualModelDiagnostics(
+  left: ToolcraftModelDiagnostic,
+  right: ToolcraftModelDiagnostic,
+): boolean {
+  return (
+    left.affectedCount === right.affectedCount &&
+    left.code === right.code &&
+    left.explanation === right.explanation &&
+    left.primitiveId === right.primitiveId &&
+    left.severity === right.severity
+  );
+}
+
+function haveEqualModelAnalyses(
+  left: ToolcraftModelAnalysisSummary,
+  right: ToolcraftModelAnalysisSummary,
+): boolean {
+  return (
+    left.boundaryEdges === right.boundaryEdges &&
+    left.disconnectedComponents === right.disconnectedComponents &&
+    left.nonManifoldEdges === right.nonManifoldEdges &&
+    left.outcome === right.outcome &&
+    left.repairPlanRef === right.repairPlanRef &&
+    left.triangles === right.triangles &&
+    left.vertices === right.vertices &&
+    left.diagnostics.length === right.diagnostics.length &&
+    left.diagnostics.every((diagnostic, index) =>
+      haveEqualModelDiagnostics(diagnostic, right.diagnostics[index]),
+    )
+  );
+}
+
+function isNonEmptyString(value: unknown): value is string {
+  return typeof value === "string" && value.length > 0;
+}
+
+function hasValidPersistedModelLifecycleEvidence(
+  value: Record<string, unknown>,
+  analysis: ToolcraftModelAnalysisSummary,
+  originalAnalysis: ToolcraftModelAnalysisSummary,
+): boolean {
+  if (
+    !isNonEmptyString(value.activeDocumentRef) ||
+    !isNonEmptyString(value.originalDocumentRef)
+  ) {
+    return false;
+  }
+
+  const hasRepairRecipe = isNonEmptyString(value.appliedRepairRecipeId);
+  const hasRepairedDocument = isNonEmptyString(value.repairedDocumentRef);
+  const hasRepairRecipeField = Object.hasOwn(value, "appliedRepairRecipeId");
+  const hasRepairedDocumentField = Object.hasOwn(value, "repairedDocumentRef");
+  const hasRepairError = value.lastRepairError !== undefined;
+
+  switch (value.lifecycle) {
+    case "clean":
+      return (
+        value.activeDocumentRef === value.originalDocumentRef &&
+        analysis.outcome === "clean" &&
+        analysis.repairPlanRef === undefined &&
+        haveEqualModelAnalyses(analysis, originalAnalysis) &&
+        !hasRepairRecipeField &&
+        !hasRepairedDocumentField &&
+        !hasRepairError
+      );
+    case "repairable":
+      return (
+        value.activeDocumentRef === value.originalDocumentRef &&
+        analysis.outcome === "repairable" &&
+        isNonEmptyString(analysis.repairPlanRef) &&
+        haveEqualModelAnalyses(analysis, originalAnalysis) &&
+        !hasRepairRecipeField &&
+        !hasRepairedDocumentField
+      );
+    case "fixed":
+      return (
+        hasRepairRecipe &&
+        hasRepairedDocument &&
+        value.activeDocumentRef === value.repairedDocumentRef &&
+        value.originalDocumentRef !== value.repairedDocumentRef &&
+        analysis.outcome === "clean" &&
+        analysis.repairPlanRef === undefined &&
+        originalAnalysis.outcome === "repairable" &&
+        isNonEmptyString(originalAnalysis.repairPlanRef) &&
+        !hasRepairError
+      );
+    default:
+      return false;
+  }
+}
+
 function readModelAsset(
   value: Record<string, unknown>,
   base: PersistedMediaBase,
 ): ToolcraftModelAsset | undefined {
   const analysis = readModelAnalysis(value.analysis);
-  const originalAnalysis =
-    value.originalAnalysis === undefined
-      ? analysis
-      : readModelAnalysis(value.originalAnalysis);
+  const originalAnalysis = readModelAnalysis(value.originalAnalysis);
+  const position = readPoint(value.position);
+  const size = readCanvasSize(value.size);
+  const hasValidOptionalRepairFields =
+    (!Object.hasOwn(value, "appliedRepairRecipeId") ||
+      typeof value.appliedRepairRecipeId === "string") &&
+    (!Object.hasOwn(value, "repairedDocumentRef") ||
+      typeof value.repairedDocumentRef === "string") &&
+    (!Object.hasOwn(value, "lastRepairError") ||
+      readSourceAssetFeedback(value.lastRepairError) !== undefined);
 
   if (
     !analysis ||
     !originalAnalysis ||
+    !position ||
+    !size ||
+    !hasValidOptionalRepairFields ||
     typeof value.activeDocumentRef !== "string" ||
     typeof value.originalDocumentRef !== "string" ||
+    !hasValidPersistedModelLifecycleEvidence(
+      value,
+      analysis,
+      originalAnalysis,
+    ) ||
     typeof value.sourceBundleDigest !== "string" ||
     typeof value.sourceBundleRef !== "string" ||
-    (value.lifecycle !== "clean" &&
-      value.lifecycle !== "fixed" &&
-      value.lifecycle !== "repairable" &&
-      value.lifecycle !== "restoring" &&
-      value.lifecycle !== "unavailable") ||
     (value.topologyProfile !== "realtime-mesh" &&
       value.topologyProfile !== "solid-mesh")
   ) {
@@ -293,10 +388,6 @@ function readModelAsset(
   }
 
   const lastRepairError = readSourceAssetFeedback(value.lastRepairError);
-  const frame = normalizeToolcraftSceneElementFrame({
-    position: readPoint(value.position),
-    size: readCanvasSize(value.size),
-  });
 
   return {
     ...base,
@@ -309,8 +400,8 @@ function readModelAsset(
     lifecycle: "restoring",
     originalAnalysis,
     originalDocumentRef: value.originalDocumentRef,
-    position: frame.position,
-    size: frame.size,
+    position,
+    size,
     sourceBundleDigest: value.sourceBundleDigest,
     sourceBundleRef: value.sourceBundleRef,
     topologyProfile: value.topologyProfile,
@@ -324,7 +415,9 @@ function readModelAsset(
   };
 }
 
-function readMediaAsset(value: unknown): ToolcraftInitialMediaAsset | undefined {
+function readMediaAsset(
+  value: unknown,
+): ToolcraftMediaAsset | undefined {
   if (!isToolcraftPersistenceRecord(value)) {
     return undefined;
   }
@@ -341,7 +434,6 @@ function readMediaAsset(value: unknown): ToolcraftInitialMediaAsset | undefined 
     case "model":
       return readModelAsset(value, base);
     case "image":
-    case undefined:
       return readImageAsset(value, base);
     default:
       return undefined;
@@ -350,13 +442,13 @@ function readMediaAsset(value: unknown): ToolcraftInitialMediaAsset | undefined 
 
 export function readMediaAssets(
   value: unknown,
-): ToolcraftInitialMediaAsset[] | undefined {
+): ToolcraftMediaAsset[] | undefined {
   if (!Array.isArray(value)) {
     return undefined;
   }
 
-  return value.flatMap((item) => {
-    const mediaAsset = readMediaAsset(item);
-    return mediaAsset ? [mediaAsset] : [];
-  });
+  const assets = value.map(readMediaAsset);
+  return assets.some((asset) => asset === undefined)
+    ? undefined
+    : (assets as ToolcraftMediaAsset[]);
 }

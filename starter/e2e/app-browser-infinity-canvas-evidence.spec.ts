@@ -24,13 +24,14 @@ const partialFiniteControlPresence = [
   { aspectRatio: false, height: true, width: true },
 ] as const;
 
-test("Infinity canvas evidence rejects every partial finite-control presence", async ({ page }) => {
+test("Infinity canvas evidence rejects every partial finite-control presence", async ({
+  page,
+}) => {
   const common = {
     finiteControlSize: { height: 200, width: 320 },
     overflow: "visible",
     productScene: {
-      backingHeight: null,
-      backingWidth: null,
+      output: null,
       viewportRect: null,
       worldRect: null,
     },
@@ -43,9 +44,13 @@ test("Infinity canvas evidence rejects every partial finite-control presence", a
       "canvas.aspectRatio": finiteControlsPresent.aspectRatio,
       "canvas.size.height": finiteControlsPresent.height,
       "canvas.size.width": finiteControlsPresent.width,
-    }).filter(([, present]) => present).map(([target]) =>
-      `<label data-toolcraft-control-target="${target}"><input value="200" /></label>`,
-    ).join("");
+    })
+      .filter(([, present]) => present)
+      .map(
+        ([target]) =>
+          `<label data-toolcraft-control-target="${target}"><input value="200" /></label>`,
+      )
+      .join("");
     await page.setContent(`${controls}
       <div
         data-toolcraft-canvas-world
@@ -59,14 +64,16 @@ test("Infinity canvas evidence rejects every partial finite-control presence", a
     const observed = await observeInfinityCanvas(page);
     expect(observed.finiteControlsPresent).toEqual(finiteControlsPresent);
     expect(() => expectInfiniteCanvasObservation(observed)).toThrow();
-    expect(() => expectFiniteCanvasObservation({
-      ...common,
-      artboardPresent: true,
-      canvasMode: "finite",
-      finiteCanvasSize: { height: 200, width: 320 },
-      finiteControlsPresent,
-      overflow: "hidden",
-    })).toThrow();
+    expect(() =>
+      expectFiniteCanvasObservation({
+        ...common,
+        artboardPresent: true,
+        canvasMode: "finite",
+        finiteCanvasSize: { height: 200, width: 320 },
+        finiteControlsPresent,
+        overflow: "hidden",
+      }),
+    ).toThrow();
   }
 });
 
@@ -100,18 +107,19 @@ test("toolcraft Infinity canvas observation reads runtime-owned geometry", async
     height: false,
     width: false,
   });
-  expectInfiniteCanvasObservation(
-    observation,
-    { height: 400, width: 640, x: -320, y: -200 },
-  );
+  expectInfiniteCanvasObservation(observation, {
+    height: 400,
+    width: 640,
+    x: -320,
+    y: -200,
+  });
   expect(observation.viewport).toEqual({
     offsetX: 12,
     offsetY: -8,
     zoom: 125,
   });
   expect(observation.productScene).toEqual({
-    backingHeight: 400,
-    backingWidth: 640,
+    output: { kind: "canvas", backingHeight: 400, backingWidth: 640 },
     viewportRect: {
       height: 500,
       width: 800,

@@ -39,6 +39,7 @@ export const toolcraftProductOwnedGeneratedPaths = Object.freeze([
   "e2e/app-performance-path-adapters.ts",
   "src/app/app-acceptance-data.ts",
   "src/app/app-composition.tsx",
+  "src/app/app-defaults.json",
   "src/app/app-performance.ts",
   "src/app/app-schema.test.ts",
   "src/app/app-schema.ts",

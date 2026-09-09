@@ -1,5 +1,4 @@
 import * as React from "react";
-import { shouldIncludeToolcraftPreviewBackground } from "@/toolcraft/runtime";
 import { getToolcraftVgpuExportRuntimeAttributes } from "@/toolcraft/integrations/vgpu";
 import {
   useToolcraftPipeline,
@@ -30,7 +29,6 @@ import {
   planPhysicalFeedbackPreview,
 } from "./feedback-operations";
 import {
-  getPhysicalFeedbackBackground,
   getPhysicalFeedbackImpulse,
   getPhysicalFeedbackRenderScale,
 } from "./feedback-values";
@@ -84,12 +82,6 @@ export function usePhysicalFeedbackRenderer(
   );
   const impulse = getPhysicalFeedbackImpulse(
     useToolcraftValue("simulation.impulse"),
-  );
-  const backgroundColor = getPhysicalFeedbackBackground(
-    useToolcraftValue("appearance.background"),
-  );
-  const previewBackgroundIncluded = useToolcraftSelector((state) =>
-    shouldIncludeToolcraftPreviewBackground({ state }),
   );
   const renderScale = getPhysicalFeedbackRenderScale(
     useToolcraftValue("canvas.renderScale"),
@@ -258,14 +250,12 @@ export function usePhysicalFeedbackRenderer(
   ]);
 
   return Object.freeze({
-    backgroundColor,
     canvasRef,
     disabledBacking: enabled ? undefined : `${backingWidth}x${backingHeight}`,
     exportAttributes: getToolcraftVgpuExportRuntimeAttributes(exportFailure),
     interactionActive,
     lifecycleEpoch: lifecycle.currentEpoch(),
     pipelineProgress,
-    previewBackgroundIncluded,
     runtime,
     sceneFrameKind: sceneFrame.kind,
     timelinePlaying,

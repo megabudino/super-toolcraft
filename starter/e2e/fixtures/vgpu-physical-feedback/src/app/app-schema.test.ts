@@ -21,6 +21,27 @@ if (!fixtureSource) {
       .find((candidate) => candidate.target === target);
 
   describe("VGPU physical feedback schema", () => {
+    it("uses image and playback modules without conditional export actions", () => {
+      expect(
+        schema.appSchema.modulePlan.modules.map(({ id }) => id).sort(),
+      ).toEqual(["image-export", "timeline"]);
+      expect(schema.appSchema.panels.timeline).toMatchObject({
+        defaultDurationSeconds: 2,
+        enabled: true,
+        mode: "playback",
+      });
+      expect(control("simulation.impulse")).toMatchObject({
+        applicability: {
+          all: [{ equals: true, target: "simulation.enabled" }],
+          mode: "conditional",
+        },
+      });
+      expect(control("actions.output")).toMatchObject({
+        applicability: { mode: "always" },
+        actions: [{ role: "export-image", value: "export.png" }],
+      });
+    });
+
     it("declares production reload coverage for the generated product schema", () => {
       expect(schema.appSchema.persistence.storage).toBe("localStorage");
       if (schema.appSchema.persistence.storage !== "localStorage") {
@@ -48,7 +69,7 @@ if (!fixtureSource) {
             targets: ["export.includeBackground", "appearance.background"],
           }),
           expect.objectContaining({
-            id: "image-export",
+            id: "runtime.image-export",
             targets: ["export.image.format", "export.image.resolution"],
           }),
         ]),
@@ -67,13 +88,13 @@ if (!fixtureSource) {
           backend: "webgpu",
           capability: "shader-webgpu-vgpu",
           provider: "vgpu",
-          versionPolicy: "toolcraft-pinned",
+          versionPolicy: "app-pinned",
         },
         preview: {
           backend: "webgpu",
           capability: "shader-webgpu-vgpu",
           provider: "vgpu",
-          versionPolicy: "toolcraft-pinned",
+          versionPolicy: "app-pinned",
         },
       });
       expect(performance.appPerformance.rendererTechnique).toMatchObject({

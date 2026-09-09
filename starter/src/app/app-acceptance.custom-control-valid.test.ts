@@ -9,27 +9,33 @@ import {
 describe("starter acceptance valid custom control contract", () => {
   it("accepts custom controls with explicit custom control coverage", () => {
     const schema = defineContractSchemaFixture({
-      canvas: { enabled: true },
-      panels: {
-        controls: {
-          sections: [
-            {
-              controls: {
-                glyphRamp: {
-                  defaultValue: [],
-                  label: "Glyph ramp",
-                  orderRole: "input",
-                  target: "glyph.ramp",
-                  type: "glyphRamp",
-                } as never,
+      base: {
+        identity: { id: "contract-fixture", title: "Contract fixture" },
+        canvas: { enabled: true },
+        panels: {
+          controls: {
+            sections: [
+              {
+                id: "glyphs",
+                controls: {
+                  glyphRamp: {
+                    applicability: { mode: "always" as const },
+                    defaultValue: [],
+                    label: "Glyph ramp",
+                    orderRole: "input",
+                    target: "glyph.ramp",
+                    type: "glyphRamp",
+                  } as never,
+                },
+                title: "Glyphs",
               },
-              id: "glyphs",
-              title: "Glyphs",
-            },
-          ],
-          title: "Controls",
+            ],
+            title: "Controls",
+          },
         },
+        persistence: { storage: "none" },
       },
+      modules: [],
     });
 
     expect(
@@ -53,10 +59,19 @@ describe("starter acceptance valid custom control contract", () => {
                 "reorder",
                 "selection",
               ],
-              checkedBuiltIns: ["actions", "collectionActions", "fileDrop", "imagePicker", "select", "sourceCollection"],
+              checkedBuiltIns: [
+                "actions",
+                "collectionActions",
+                "fileDrop",
+                "imagePicker",
+                "select",
+                "sourceCollection",
+              ],
               closestBuiltIn: "fileDrop",
-              productObservable: "Ordering uploaded glyphs changes the rendered glyph ramp output.",
-              whyInsufficient: "FileDrop imports source files, but it does not provide density ordering, per-glyph preview, reorder, and remove behavior in one runtime value.",
+              productObservable:
+                "Ordering uploaded glyphs changes the rendered glyph ramp output.",
+              whyInsufficient:
+                "FileDrop imports source files, but it does not provide density ordering, per-glyph preview, reorder, and remove behavior in one runtime value.",
             },
             componentType: "glyphRamp",
             customControlCoverage: [
@@ -67,7 +82,8 @@ describe("starter acceptance valid custom control contract", () => {
               "runtime-state",
             ],
             evidence: "product-output",
-            expectedObservable: "Choosing and ordering glyphs changes the rendered product output.",
+            expectedObservable:
+              "Choosing and ordering glyphs changes the rendered product output.",
             fixture: "glyph ramp fixture",
             id: "glyph.ramp",
             kind: "control",
@@ -75,13 +91,15 @@ describe("starter acceptance valid custom control contract", () => {
             userAction: "Upload, reorder, and remove glyphs.",
           },
         ],
-        sectionInventory: createContractSectionInventoryFixture(schema, [{
-          entity: "Glyphs",
-          entityId: "glyphs",
-          finiteSelectors: [],
-          groupingReason: "Glyph controls edit one rendered glyph ramp.",
-          id: "glyphs",
-        }]),
+        sectionInventory: createContractSectionInventoryFixture(schema, [
+          {
+            entity: "Glyphs",
+            entityId: "glyphs",
+            finiteSelectors: [],
+            groupingReason: "Glyph controls edit one rendered glyph ramp.",
+            id: "glyphs",
+          },
+        ]),
       }),
     ).toEqual([]);
   });

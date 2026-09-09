@@ -7,6 +7,12 @@ const inventory = [
   {
     entity: "Feature",
     entityId: "feature",
+    finiteSelectors: [{
+      affectedTargets: ["feature.amount"],
+      reason: "Mode selects the active amount behavior.",
+      role: "branch",
+      target: "feature.mode",
+    }],
     groupingReason: "Mode and amount describe one feature.",
     id: "feature",
     targets: ["feature.mode", "feature.amount"],
@@ -16,39 +22,43 @@ const inventory = [
 
 test("conditional controls derive case-specific visibility and outcome evidence", () => {
   const schema = defineToolcraft({
-    canvas: { enabled: true },
-    panels: {
-      controls: {
-        sections: [
-          {
-            controls: {
-              amount: {
-                applicability: {
-                  all: [{ equals: "advanced", target: "feature.mode" }],
-                  mode: "conditional",
+    base: {
+      identity: { id: "contract-fixture", title: "Contract fixture" },
+      canvas: { enabled: true },
+      panels: {
+        controls: {
+          sections: [
+            {
+              controls: {
+                amount: {
+                  applicability: {
+                    all: [{ equals: "advanced", target: "feature.mode" }],
+                    mode: "conditional",
+                  },
+                  defaultValue: 1,
+                  target: "feature.amount",
+                  type: "slider",
                 },
-                defaultValue: 1,
-                target: "feature.amount",
-                type: "slider",
+                mode: {
+                  applicability: { mode: "always" },
+                  defaultValue: "simple",
+                  options: [
+                    { label: "Simple", value: "simple" },
+                    { label: "Advanced", value: "advanced" },
+                  ],
+                  target: "feature.mode",
+                  type: "segmented",
+                },
               },
-              mode: {
-                applicability: { mode: "always" },
-                defaultValue: "simple",
-                options: [
-                  { label: "Simple", value: "simple" },
-                  { label: "Advanced", value: "advanced" },
-                ],
-                target: "feature.mode",
-                type: "segmented",
-              },
+              id: "feature",
+              title: "Feature",
             },
-            id: "feature",
-            title: "Feature",
-          },
-        ],
-        title: "Controls",
+          ],
+          title: "Controls",
+        },
       },
     },
+    modules: [],
   });
   const requirements = deriveToolcraftBrowserRuntimeRequirements(
     [
@@ -84,36 +94,40 @@ test("conditional controls derive case-specific visibility and outcome evidence"
 
 test("finite siblings expand outcomes even when always-applicability omits the selector", () => {
   const schema = defineToolcraft({
-    canvas: { enabled: true },
-    panels: {
-      controls: {
-        sections: [
-          {
-            controls: {
-              amount: {
-                applicability: { mode: "always" },
-                defaultValue: 1,
-                target: "feature.amount",
-                type: "slider",
+    base: {
+      identity: { id: "contract-fixture", title: "Contract fixture" },
+      canvas: { enabled: true },
+      panels: {
+        controls: {
+          sections: [
+            {
+              controls: {
+                amount: {
+                  applicability: { mode: "always" },
+                  defaultValue: 1,
+                  target: "feature.amount",
+                  type: "slider",
+                },
+                mode: {
+                  applicability: { mode: "always" },
+                  defaultValue: "simple",
+                  options: [
+                    { label: "Simple", value: "simple" },
+                    { label: "Advanced", value: "advanced" },
+                  ],
+                  target: "feature.mode",
+                  type: "segmented",
+                },
               },
-              mode: {
-                applicability: { mode: "always" },
-                defaultValue: "simple",
-                options: [
-                  { label: "Simple", value: "simple" },
-                  { label: "Advanced", value: "advanced" },
-                ],
-                target: "feature.mode",
-                type: "segmented",
-              },
+              id: "feature",
+              title: "Feature",
             },
-            id: "feature",
-            title: "Feature",
-          },
-        ],
-        title: "Controls",
+          ],
+          title: "Controls",
+        },
       },
     },
+    modules: [],
   });
   const acceptance = {
     browser: {
@@ -125,7 +139,7 @@ test("finite siblings expand outcomes even when always-applicability omits the s
     id: "feature.amount",
     kind: "control" as const,
     target: "feature.amount",
-  };
+  } as const;
   const requirements = deriveToolcraftBrowserRuntimeRequirements(
     [acceptance],
     schema,

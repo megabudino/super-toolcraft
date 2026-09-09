@@ -1,79 +1,83 @@
 import { defineToolcraft } from "@/toolcraft/runtime";
 import { describe, expect, it } from "vitest";
-
 import {
   createToolcraftControlSelectorDependencyIndex,
   getToolcraftControlSelectorInventoryErrors,
   getToolcraftFiniteSelectorTargets,
 } from "./control-selector-inventory";
 import type { ToolcraftControlSectionInventoryEntry } from "./types";
-
 function createSchema() {
   return defineToolcraft({
-    canvas: { enabled: true },
-    panels: {
-      controls: {
-        sections: [
-          {
-            controls: {
-              amount: {
-                applicability: { mode: "always" },
-                defaultValue: 0.5,
-                max: 1,
-                min: 0,
-                target: "shape.amount",
-                type: "slider",
-              },
-              character: {
-                applicability: { mode: "always" },
-                defaultValue: "soft",
-                options: [
-                  { label: "Soft", value: "soft" },
-                  { label: "Sharp", value: "sharp" },
-                ],
-                target: "shape.character",
-                type: "select",
-              },
-              detailColor: {
-                applicability: {
-                  all: [{ greaterThan: 0, target: "shape.details" }],
-                  mode: "conditional",
+    base: {
+      identity: {
+        id: "acceptance-fixture",
+        title: "Acceptance fixture",
+      },
+      canvas: { enabled: true },
+      panels: {
+        controls: {
+          sections: [
+            {
+              controls: {
+                amount: {
+                  applicability: { mode: "always" },
+                  defaultValue: 0.5,
+                  max: 1,
+                  min: 0,
+                  target: "shape.amount",
+                  type: "slider",
                 },
-                defaultValue: "#ffffff",
-                target: "shape.detailColor",
-                type: "color",
+                character: {
+                  applicability: { mode: "always" },
+                  defaultValue: "soft",
+                  options: [
+                    { label: "Soft", value: "soft" },
+                    { label: "Sharp", value: "sharp" },
+                  ],
+                  target: "shape.character",
+                  type: "select",
+                },
+                detailColor: {
+                  applicability: {
+                    all: [{ greaterThan: 0, target: "shape.details" }],
+                    mode: "conditional",
+                  },
+                  defaultValue: "#ffffff",
+                  target: "shape.detailColor",
+                  type: "color",
+                },
+                details: {
+                  applicability: { mode: "always" },
+                  defaultValue: 0,
+                  max: 2,
+                  min: 0,
+                  step: 1,
+                  target: "shape.details",
+                  type: "slider",
+                  variant: "discrete",
+                },
+                kind: {
+                  applicability: { mode: "always" },
+                  defaultValue: "circle",
+                  options: [
+                    { label: "Circle", value: "circle" },
+                    { label: "Star", value: "star" },
+                  ],
+                  target: "shape.kind",
+                  type: "segmented",
+                },
               },
-              details: {
-                applicability: { mode: "always" },
-                defaultValue: 0,
-                max: 2,
-                min: 0,
-                step: 1,
-                target: "shape.details",
-                type: "slider",
-                variant: "discrete",
-              },
-              kind: {
-                applicability: { mode: "always" },
-                defaultValue: "circle",
-                options: [
-                  { label: "Circle", value: "circle" },
-                  { label: "Star", value: "star" },
-                ],
-                target: "shape.kind",
-                type: "segmented",
-              },
+              id: "shape",
+              title: "Shape",
             },
-            id: "shape",
-            title: "Shape",
-          },
-        ],
-        title: "Controls",
+          ],
+          title: "Controls",
+        },
       },
     },
+    modules: [],
   });
 }
-
 const validInventory = [
   {
     entity: "Shape",
@@ -81,7 +85,8 @@ const validInventory = [
     finiteSelectors: [
       {
         affectedTargets: ["shape.amount"],
-        reason: "Shape kind selects parameter families with different relevance.",
+        reason:
+          "Shape kind selects parameter families with different relevance.",
         role: "branch",
         target: "shape.kind",
       },
@@ -109,20 +114,21 @@ const validInventory = [
     title: "Shape",
   },
 ] as const satisfies readonly ToolcraftControlSectionInventoryEntry[];
-
 function malformedInventory(
   finiteSelectors: readonly unknown[],
 ): readonly ToolcraftControlSectionInventoryEntry[] {
-  return [{ ...validInventory[0], finiteSelectors }] as unknown as readonly ToolcraftControlSectionInventoryEntry[];
+  return [
+    { ...validInventory[0], finiteSelectors },
+  ] as unknown as readonly ToolcraftControlSectionInventoryEntry[];
 }
-
 describe("Toolcraft finite selector inventory", () => {
   it("accepts an exhaustive branch and parameter classification", () => {
     const schema = createSchema();
-
-    expect(
-      [...getToolcraftFiniteSelectorTargets(schema)].sort(),
-    ).toEqual(["shape.character", "shape.details", "shape.kind"]);
+    expect([...getToolcraftFiniteSelectorTargets(schema)].sort()).toEqual([
+      "shape.character",
+      "shape.details",
+      "shape.kind",
+    ]);
     expect(
       getToolcraftControlSelectorInventoryErrors(schema, validInventory),
     ).toEqual([]);
@@ -139,7 +145,6 @@ describe("Toolcraft finite selector inventory", () => {
       ).dependentsBySelector.get("shape.details"),
     ).toEqual(["shape.detailColor"]);
   });
-
   it("requires every finite selector exactly once", () => {
     const missing = malformedInventory(
       validInventory[0].finiteSelectors.filter(
@@ -150,7 +155,6 @@ describe("Toolcraft finite selector inventory", () => {
       ...validInventory[0].finiteSelectors,
       validInventory[0].finiteSelectors[1],
     ]);
-
     expect(
       getToolcraftControlSelectorInventoryErrors(createSchema(), missing),
     ).toContain(
@@ -162,7 +166,6 @@ describe("Toolcraft finite selector inventory", () => {
       'Finite selector "shape.character" must be classified exactly once; found 2 entries.',
     );
   });
-
   it("rejects continuous controls and selectors outside their owning entry", () => {
     const classifiedContinuous = malformedInventory([
       ...validInventory[0].finiteSelectors,
@@ -182,7 +185,6 @@ describe("Toolcraft finite selector inventory", () => {
         target: "other.character",
       },
     ]);
-
     expect(
       getToolcraftControlSelectorInventoryErrors(
         createSchema(),
@@ -197,7 +199,6 @@ describe("Toolcraft finite selector inventory", () => {
       'Selector inventory target "other.character" is not owned by section "shape".',
     );
   });
-
   it("requires concrete reasons and exact union keys", () => {
     const errors = getToolcraftControlSelectorInventoryErrors(
       createSchema(),
@@ -222,7 +223,6 @@ describe("Toolcraft finite selector inventory", () => {
         },
       ]),
     );
-
     expect(errors).toEqual(
       expect.arrayContaining([
         'Selector inventory entry "shape.character" must include a concrete reason of at least 12 characters.',
@@ -232,7 +232,6 @@ describe("Toolcraft finite selector inventory", () => {
       ]),
     );
   });
-
   it("requires every applicability predicate owner to be a branch", () => {
     const parameterDetails = malformedInventory(
       validInventory[0].finiteSelectors.map((entry) =>
@@ -245,7 +244,6 @@ describe("Toolcraft finite selector inventory", () => {
           : entry,
       ),
     );
-
     expect(
       getToolcraftControlSelectorInventoryErrors(
         createSchema(),
@@ -259,11 +257,8 @@ describe("Toolcraft finite selector inventory", () => {
         createSchema(),
         parameterDetails,
       ),
-    ).toThrow(
-      /shape\.details.*applicability predicates.*branch/iu,
-    );
+    ).toThrow(/shape\.details.*applicability predicates.*branch/iu);
   });
-
   it("rejects invalid affected targets and duplicate predicate edges", () => {
     const errors = getToolcraftControlSelectorInventoryErrors(
       createSchema(),
@@ -276,7 +271,8 @@ describe("Toolcraft finite selector inventory", () => {
             "missing.target",
             "other.amount",
           ],
-          reason: "Shape kind selects parameter families with different relevance.",
+          reason:
+            "Shape kind selects parameter families with different relevance.",
           role: "branch",
           target: "shape.kind",
         },
@@ -289,7 +285,6 @@ describe("Toolcraft finite selector inventory", () => {
         },
       ]),
     );
-
     expect(errors).toEqual(
       expect.arrayContaining([
         'Branch selector "shape.kind" cannot affect itself.',
@@ -300,7 +295,6 @@ describe("Toolcraft finite selector inventory", () => {
       ]),
     );
   });
-
   it("rejects cross-entity affected targets but allows another workflow stage", () => {
     const schema = createSchema();
     const first = {
@@ -316,7 +310,12 @@ describe("Toolcraft finite selector inventory", () => {
         validInventory[0].finiteSelectors[2],
       ],
       splitReason: "Selection precedes the shape finishing workflow.",
-      targets: ["shape.kind", "shape.character", "shape.details", "shape.detailColor"],
+      targets: [
+        "shape.kind",
+        "shape.character",
+        "shape.details",
+        "shape.detailColor",
+      ],
       workflowStage: "selection",
     } as const;
     const second = {
@@ -330,11 +329,9 @@ describe("Toolcraft finite selector inventory", () => {
       title: "Shape Finish",
       workflowStage: "finish",
     } as const;
-
     expect(
       getToolcraftControlSelectorInventoryErrors(schema, [first, second]),
     ).toEqual([]);
-
     const crossEntity = {
       ...second,
       entity: "Finish",
@@ -346,7 +343,6 @@ describe("Toolcraft finite selector inventory", () => {
       'Branch selector "shape.kind" cannot affect "shape.amount" because they belong to different entities.',
     );
   });
-
   it("rejects empty branches without affected peers or predicate dependents", () => {
     const emptyKind = malformedInventory(
       validInventory[0].finiteSelectors.map((entry) =>
@@ -355,7 +351,6 @@ describe("Toolcraft finite selector inventory", () => {
           : entry,
       ),
     );
-
     expect(
       getToolcraftControlSelectorInventoryErrors(createSchema(), emptyKind),
     ).toContain(

@@ -32,8 +32,11 @@ The broad docs below remain supplementary topic references. They do not replace 
 9. `agent-worklog.md` — implementation decision trail, evidence, verification, and risks.
 10. `custom-controls.md` — how to register custom controls without editing `src/toolcraft`.
 11. `custom-control-visuals.md` — neutral token roles, state colors, area limits, geometry, focus, and contrast rules for product-owned custom control visuals.
+12. `module-authoring.md` — framework capability ownership, common mechanisms, registration and extension proof fixtures.
 
-`agent-worklog.md` starts as a neutral starter template. Once the folder becomes a product, change it to `Mode: product`, add one `Decision Trail` entry per coherent user request, and record concrete renderer, timeline, layers, controls, export, and performance decisions. Each entry keeps human intent: request, user-visible result, source/reference checked, contract rules applied, rejected alternatives, state/output mapping, known risks, and domain-shaped performance authority when applicable. The first delivery receipt owns its complete plan and evidence; later entries record the focused checks actually run.
+Follow [Proportional Planning And Autonomous Execution](workflow.md#proportional-planning-and-autonomous-execution): small edits proceed without spec/plan files; substantial work gets a concise agent-owned plan followed by implementation without another approval gate. Explicit plan-only requests and authority boundaries still apply.
+
+`agent-worklog.md` starts as a neutral starter template. Once the folder becomes a product, change it to `Mode: product`, add a `Decision Trail`, and record concrete product decisions under `workflow.md`. Later small edits use a compact entry with the request, changed owner, result and focused checks, without rewriting unchanged decisions or inventing alternatives. The first delivery receipt owns its complete plan and evidence; later entries record the focused checks actually run.
 
 Use focused tests while implementation is changing. Protected functional delivery runs once for the first product version; steering and later fixes do not create another aggregate gate.
 

@@ -13,35 +13,46 @@ Use:
 
 ## Runtime Path
 
-Declare the product with `defineToolcraft` and export its typed composition. The protected route renders `ToolcraftApp` and owns host-only props.
+Declare the product with the closed `defineToolcraft({ base, modules })` API and create its typed composition with `composeToolcraftApp`. The protected route renders `ToolcraftApp` and owns host-only props.
+
+```ts
+import { defineToolcraft, mediaSourceModule } from "@/toolcraft/runtime";
+
+export const appSchema = defineToolcraft({
+  base: {
+    canvas: { enabled: true, upload: true },
+    identity: { id: "my-product", title: "My Product" },
+    panels: { controls: { sections: [], title: "Controls" } },
+  },
+  modules: [mediaSourceModule()],
+});
+```
 
 ```tsx
-import type { ToolcraftAppComposition } from "@/toolcraft/runtime/react";
+import { composeToolcraftApp } from "@/toolcraft/runtime/react";
 
 import { appSchema } from "./app-schema";
 
-export const appComposition = {
-  schema: appSchema,
-} satisfies ToolcraftAppComposition;
+export const appComposition = composeToolcraftApp(appSchema, {});
 ```
 
-Edit `src/app/app-composition.tsx`, not the signed route. Product composition may provide only `schema`, `canvasContent`, `infiniteCanvasContent`, `controlRenderers`, `exportRenderer`, `modelPresentation`, `onPanelAction`, `renderDefaultCanvasMedia`, `sceneBoundsProvider`, and optional `rendererPipelineRegistration`; the protected route owns `className` and other host layout. `infiniteCanvasContent` is editor-only product output for a full Infinity viewport backdrop; it does not inherit world transforms or participate in scene bounds/export. Model products default to `modelPresentation: { mode: "runtime" }`. Custom presentation declares checked consumers and suppresses only their model targets; `renderDefaultCanvasMedia={false}` affects generic image/file preview, not runtime models. Do not compose `ToolcraftRoot`, `CanvasShell`, `ControlsPanel`, `LayersPanel`, `TimelinePanel`, or `ToolbarPanel` by hand. If a runtime surface has a performance or behavior issue, fix the shared runtime instead of replacing the surface locally.
+Edit `src/app/app-composition.tsx`, not the signed route. Product ports are grouped as `scene`, `controls`, `actions`, and `renderer`, with optional custom `modelPresentation`; `composeToolcraftApp` validates them against `appSchema.modulePlan` and returns the exact `ToolcraftAppComposition`. The protected route owns `className` and other host layout. `scene.infiniteCanvasContent` is editor-only product output for a full Infinity viewport backdrop; it does not inherit world transforms or participate in scene bounds/export. Runtime model presentation is the omission/default. Custom presentation declares checked consumers and suppresses only their model targets; `scene.renderDefaultCanvasMedia: false` affects generic image/file preview, not runtime models. Do not compose `ToolcraftRoot`, `CanvasShell`, `ControlsPanel`, `LayersPanel`, `TimelinePanel`, or `ToolbarPanel` by hand. If a runtime surface has a performance or behavior issue, fix the shared runtime instead of replacing the surface locally.
 
 Supporting product modules may be organized anywhere under `src`; there is no folder allowlist. The product boundary follows all product production files and rejects host/runtime surface imports, built-in control imports/re-exports, dynamic bypasses, and production dependencies on test/spec modules.
 
 Allowed app extension points:
 
-| Extension point | Use for |
-| --- | --- |
-| Schema controls | Built-in controls, targets, defaults, visibility, panel actions. |
-| `canvasContent` | Product output only. |
-| `infiniteCanvasContent` | Editor-only full-viewport product environment under the Infinity world; never app UI or export content. |
-| `controlRenderers` | True custom controls only after the built-in fit check. |
-| `exportRenderer` | One deterministic scene-coordinate product frame shared by runtime image and video export. |
-| `svgExportRenderer` | Namespace-aware editable vector content for explicit runtime SVG export. |
-| `onPanelAction` | Non-export sticky footer product actions. |
-| `rendererPipelineRegistration` | One compiled executable pipeline shared by render work, actions, evidence, and new-envelope assessment. |
-| Runtime commands/hooks | History, media, canvas, timeline, layers, and controlled app behavior. |
+| Extension point                 | Use for                                                                                                 |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| Schema controls                 | Built-in controls, targets, defaults, visibility, panel actions.                                        |
+| `scene.canvasContent`           | Product output only.                                                                                    |
+| `scene.infiniteCanvasContent`   | Editor-only full-viewport product environment under the Infinity world; never app UI or export content. |
+| `controls.renderers`            | True custom controls only after the built-in fit check.                                                 |
+| `scene.rasterFrameRenderer`     | One deterministic scene-coordinate product frame shared by runtime image and video export.              |
+| `scene.vectorFrameRenderer`     | Namespace-aware editable vector content for explicit runtime SVG export.                                |
+| `actions.onPanelAction`         | Non-export sticky footer product actions.                                                               |
+| `renderer.pipelineRegistration` | One compiled executable pipeline shared by render work, actions, evidence, and new-envelope assessment. |
+| Runtime commands/hooks          | History, media, canvas, timeline, layers, and controlled app behavior.                                  |
 
 Do not render built-in controls such as `SliderControl`, `SelectControl`, `ColorControl`, `GradientControl`, `FontPickerControl`, `FileDropControl`, or `PanelActionsControl` directly in app code. Declare them in schema so layout, reset, history, visibility, keyframes, labels, and tests stay runtime-owned.
 
@@ -78,12 +89,14 @@ operations may share related state across surfaces; mirrored operations may not.
 
 Use `viewInteraction.mode: "orbit"` for a visible editable spatial scene and
 list its `orientationGizmo` targets. `fixed-camera` or `timeline-camera` require
-explicit request/reference evidence; do not infer fixed framing merely because
-the prompt did not separately request rotation.
+positive typed authority from a verbatim user request or an inspected behavioral
+reference; do not infer fixed framing merely because the prompt did not
+separately request rotation. A still image, screenshot, or desired output frame
+establishes composition only, never locked interaction.
 
 ## Controls
 
-Before choosing component layout, export `appControlSectionInventory` and make the entity-first grouping decision. Every product section declares stable `entityId`, human-readable `entity`, exact targets, and `groupingReason`; one entity stays in one section through ten controls, while larger entities split only into explicit balanced workflow stages.
+Before choosing component layout, export `appControlSectionInventory` and make the entity-first grouping decision. Every product section declares stable `entityId`, human-readable `entity`, exact targets, and `groupingReason`; section boundaries follow user tasks, dependencies, and reset scope. Ten declared controls is a non-blocking review threshold, not a maximum. Any-size entities may use justified workflow stages with the same identity, unique `workflowStage`, and concrete `splitReason`; never split or merge solely to satisfy a count.
 
 Every bounded finite selector is classified exactly once in the section's required `finiteSelectors` array as `branch` or `parameter`. A branch's `affectedTargets` lists only the exact always-visible peers it affects; explicit `applicability` predicates contribute their dependents automatically. A parameter proves its own accepted outcome and does not expand unrelated controls. Predicate owners must be branches, continuous controls are omitted, and a section without bounded selectors still declares `finiteSelectors: []`.
 
@@ -117,7 +130,7 @@ Use `core/timeline-animation.md` for timeline mode, compact/extended timeline, s
 
 For custom renderers, write the Renderer Technique Decision Matrix and typed performance model before code. Follow one sequence: reachable controls and inputs; workload dimensions and enforced boundaries; pass cost, frequency, lifecycle, and invalidation; render-plan assessment and protected kernel benchmark when required; derived paths and combined fixtures; feature-focused functional/browser development checks; first-delivery or authority-backed performance proof. Only exact request authority may add measured targeted performance.
 
-Compile one lightweight renderer pipeline registration outside test modules. Supply that exact registration as `rendererPipelineRegistration` in the composition and as `rendererPipeline` to new-envelope performance assessment. Run `assessToolcraftRenderPlan` before implementing the renderer. Derive path ids from the assessed registration and compile workload fixtures from those paths; do not classify workload by target names or author scenario-specific maxima. Renderer work uses `useToolcraftPipelinePass`; retained resources are available only from its generation-bound pass execution context. Product code never receives runtime disposal ownership.
+Compile one lightweight renderer pipeline registration outside test modules. Supply that exact registration as `renderer.pipelineRegistration` through `composeToolcraftApp` and as `rendererPipeline` to new-envelope performance assessment. Run `assessToolcraftRenderPlan` before implementing the renderer. Derive path ids from the assessed registration and compile workload fixtures from those paths; do not classify workload by target names or author scenario-specific maxima. Renderer work uses `useToolcraftPipelinePass`; retained resources are available only from its generation-bound pass execution context. Product code never receives runtime disposal ownership.
 
 Use `renderer-technique.md`, `core/performance.md`, and `performance.md` for renderer strategy, envelope dimensions, pass metadata, adapters, derived paths, render scale, and optimization evidence.
 

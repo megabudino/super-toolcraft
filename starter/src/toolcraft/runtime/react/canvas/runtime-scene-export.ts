@@ -1,6 +1,7 @@
+import type { ReadonlyToolcraftState } from "../../state/readonly-state";
 import type { ToolcraftExportFrame } from "../../export/export-frame";
 import type { ToolcraftRuntimeSceneVisibility } from "../../scene";
-import type { ToolcraftImageAsset, ToolcraftState } from "../../state/types";
+import type { ToolcraftImageAsset } from "../../state/types";
 import type { ToolcraftModelRenderHost } from "../model-rendering/model-render-binding";
 import { renderToolcraftModelsInWorldContext } from "../model-rendering/model-export-world-context";
 import { getVisibleCanvasImageAssets } from "./canvas-default-media-layer";
@@ -14,50 +15,6 @@ export type ToolcraftRuntimeSceneExportResult = Readonly<{
 export type ToolcraftCanvasImageLoader = (
   asset: ToolcraftImageAsset,
 ) => Promise<CanvasImageSource>;
-
-export type ToolcraftCanvasImageResourceResolver = (
-  resourceRef: string,
-  options: Readonly<{ signal: AbortSignal }>,
-) => Promise<Uint8Array | null>;
-
-function loadCanvasImageUrl(
-  fileName: string,
-  url: string,
-): Promise<CanvasImageSource> {
-  return new Promise((resolve, reject) => {
-    const image = new Image();
-    image.onload = () => resolve(image);
-    image.onerror = () => reject(new Error(`Could not decode ${fileName}.`));
-    image.src = url;
-  });
-}
-
-async function loadCanvasImage(
-  asset: ToolcraftImageAsset,
-  resolveResource: ToolcraftCanvasImageResourceResolver,
-): Promise<CanvasImageSource> {
-  if (asset.lifecycle !== "ready") {
-    throw new Error(`Could not load ${asset.fileName} for export.`);
-  }
-
-  const bytes = await resolveResource(asset.resourceRef, {
-    signal: new AbortController().signal,
-  });
-
-  if (!bytes) {
-    throw new Error(`Could not load ${asset.fileName} for export.`);
-  }
-
-  const url = URL.createObjectURL(
-    new Blob([new Uint8Array(bytes).buffer], { type: asset.mimeType }),
-  );
-
-  try {
-    return await loadCanvasImageUrl(asset.fileName, url);
-  } finally {
-    URL.revokeObjectURL(url);
-  }
-}
 
 function drawImageAsset(
   context: CanvasRenderingContext2D,
@@ -101,19 +58,20 @@ export async function renderToolcraftRuntimeSceneToCanvas({
   canvas,
   host,
   loadImage,
-  resolveImageResource,
+  signal,
   state,
   visibility,
   outputFrame,
 }: Readonly<{
   canvas: HTMLCanvasElement;
   host: ToolcraftModelRenderHost | null;
-  loadImage?: ToolcraftCanvasImageLoader;
-  resolveImageResource?: ToolcraftCanvasImageResourceResolver;
-  state: ToolcraftState;
+  loadImage: ToolcraftCanvasImageLoader;
+  signal: AbortSignal;
+  state: ReadonlyToolcraftState;
   visibility: ToolcraftRuntimeSceneVisibility;
   outputFrame: ToolcraftExportFrame;
 }>): Promise<ToolcraftRuntimeSceneExportResult> {
+  signal.throwIfAborted();
   const context = canvas.getContext("2d");
   if (!context) {
     throw new Error("Toolcraft scene export requires a 2D target canvas.");
@@ -125,28 +83,20 @@ export async function renderToolcraftRuntimeSceneToCanvas({
         context,
         exportFrame: outputFrame,
         host,
+        signal,
         state,
         suppressedTargets: visibility.suppressedModelTargets,
       })
     : 0;
+  signal.throwIfAborted();
   const images = visibility.renderDefaultImages
     ? getVisibleCanvasImageAssets(state)
     : [];
-  const imageLoader =
-    loadImage ??
-    (resolveImageResource
-      ? (asset: ToolcraftImageAsset) =>
-          loadCanvasImage(asset, resolveImageResource)
-      : null);
-
-  if (images.length > 0 && !imageLoader) {
-    throw new Error("Toolcraft scene export cannot resolve image resources.");
-  }
-
-  if (imageLoader) {
-    for (const asset of images) {
-      drawImageAsset(context, await imageLoader(asset), asset);
-    }
+  for (const asset of images) {
+    signal.throwIfAborted();
+    const source = await loadImage(asset);
+    signal.throwIfAborted();
+    drawImageAsset(context, source, asset);
   }
 
   return { imageCount: images.length, modelCount };

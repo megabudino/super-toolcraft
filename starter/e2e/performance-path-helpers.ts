@@ -25,9 +25,7 @@ import {
   measureToolcraftClipboardActionByLabel,
   measureToolcraftDownloadActionByLabel,
 } from "./performance-output-action-helpers";
-import {
-  createToolcraftPerformanceCanvasQualityGuard,
-} from "./performance-canvas-quality-guard";
+import { createToolcraftPerformanceCanvasQualityGuard } from "./performance-canvas-quality-guard";
 import {
   getToolcraftPerformancePathSettleFrames,
   type ToolcraftCompiledPerformancePathAdapter,
@@ -68,13 +66,15 @@ export async function runToolcraftPerformancePath(
   entry: ToolcraftCompiledPerformancePathAdapter,
   runtime: ToolcraftPerformancePathRuntime = {},
 ): Promise<void> {
-  const fixtureResolutionMode =
-    readToolcraftPerformanceFixtureResolutionMode();
+  const fixtureResolutionMode = readToolcraftPerformanceFixtureResolutionMode();
   const { adapter, canvasBacking, path } = entry;
   const canonicalPath = deriveToolcraftPerformancePaths(schema, config).find(
     (candidate) => candidate.id === path.id,
   );
-  if (!canonicalPath || JSON.stringify(canonicalPath) !== JSON.stringify(path)) {
+  if (
+    !canonicalPath ||
+    JSON.stringify(canonicalPath) !== JSON.stringify(path)
+  ) {
     throw new Error(
       `Toolcraft performance path adapter "${adapter.pathId}" no longer matches the canonical derived path.`,
     );
@@ -136,117 +136,114 @@ export async function runToolcraftPerformancePath(
   const target = getPathTarget(path);
   let hasPrimaryFailure = false;
   try {
-    await expectToolcraftPipelineInvariant(
-      page,
-      config,
-      path.id,
-      {
-        preparePhase: adapter.preparePhase
-          ? async (phase) => {
-              await adapter.preparePhase!(Object.freeze({ page, path, phase }));
-            }
-          : undefined,
-        settlePreparedPhase: adapter.settlePhase
-          ? async (phase) => {
-              await adapter.settlePhase!(Object.freeze({ page, path, phase }));
-              if (canvasBacking && adapter.preparationRenderScale !== undefined) {
-                await expectToolcraftCanvasBackingPixelsForRenderScale(
-                  page,
-                  canvasBacking.canvasSelector,
-                  adapter.preparationRenderScale,
-                  {
-                    baselineCssSize: baselineCssSize!,
-                    state: `performance-${phase}`,
-                  },
-                );
-              }
-            }
-          : undefined,
-        runPhase: async (phase) => {
-          const context = Object.freeze({ page, path, phase });
-          const measurePhase = async () => {
-            if (adapter.output?.kind === "download") {
-              const measured = await measureToolcraftDownloadActionByLabel(
+    await expectToolcraftPipelineInvariant(page, config, path.id, {
+      preparePhase: adapter.preparePhase
+        ? async (phase) => {
+            await adapter.preparePhase!(Object.freeze({ page, path, phase }));
+          }
+        : undefined,
+      settlePreparedPhase: adapter.settlePhase
+        ? async (phase) => {
+            await adapter.settlePhase!(Object.freeze({ page, path, phase }));
+            if (canvasBacking && adapter.preparationRenderScale !== undefined) {
+              await expectToolcraftCanvasBackingPixelsForRenderScale(
                 page,
-                adapter.output.label,
-                { pathId: path.id, phase, profile: path.profile, target },
+                canvasBacking.canvasSelector,
+                adapter.preparationRenderScale,
+                {
+                  baselineCssSize: baselineCssSize!,
+                  state: `performance-${phase}`,
+                },
               );
-              await adapter.output.verify(measured.completion, page);
-              return measured.result;
             }
-            if (adapter.output?.kind === "clipboard") {
-              const measured = await measureToolcraftClipboardActionByLabel(
-                page,
-                adapter.output.label,
-                { pathId: path.id, phase, profile: path.profile, target },
-              );
-              await adapter.output.verify(measured.completion, page);
-              return measured.result;
-            }
-            if (path.interaction === "animation-frame") {
-              await adapter.action(context);
-              const result = await measureToolcraftAnimationFrames(page, 120, {
-                pathId: path.id,
-                phase,
-                profile: path.profile,
-                target,
-              });
-              await adapter.verifyOutcome?.(context);
-              return result;
-            }
-            const result = await (
-              runtime.measureInteraction ?? measureToolcraftInteraction
-            )(
+          }
+        : undefined,
+      runPhase: async (phase) => {
+        const context = Object.freeze({ page, path, phase });
+        const measurePhase = async () => {
+          if (adapter.output?.kind === "download") {
+            const measured = await measureToolcraftDownloadActionByLabel(
               page,
-              () => adapter.action(context),
-              {
-                ...(adapter.observeOutcome
-                  ? { observeOutcome: () => adapter.observeOutcome!(context) }
-                  : {}),
-                pathId: path.id,
-                phase,
-                profile: path.profile,
-                settleFrames: getToolcraftPerformancePathSettleFrames(path),
-                target,
-              },
+              adapter.output.label,
+              { pathId: path.id, phase, profile: path.profile, target },
             );
-            await adapter.verifyOutcome?.(context);
-            return result;
-          };
-          const result = canvasQualityGuard
-            ? await canvasQualityGuard.runPhase(phase, measurePhase)
-            : await measurePhase();
-          expectToolcraftPerformanceBudget(result, budget);
-          await attachPathEvidence("performance-budget", path);
-
-          if (
-            path.interaction === "control-drag" ||
-            path.interaction === "mask-drag"
-          ) {
-            await attachPathEvidence("performance-control-drag", path);
+            await adapter.output.verify(measured.completion, page);
+            return measured.result;
           }
-          if (
-            path.interaction === "viewport-drag" ||
-            path.interaction === "viewport-zoom"
-          ) {
-            await attachPathEvidence("performance-viewport", path);
+          if (adapter.output?.kind === "clipboard") {
+            const measured = await measureToolcraftClipboardActionByLabel(
+              page,
+              adapter.output.label,
+              { pathId: path.id, phase, profile: path.profile, target },
+            );
+            await adapter.output.verify(measured.completion, page);
+            return measured.result;
           }
-          if (canvasBacking) {
-            await expectToolcraftPerformanceRenderScaleBackingEvidence(page, {
-              baselineCssSize: baselineCssSize!,
-              canvasSelector: canvasBacking.canvasSelector,
-              cssSizePolicy:
-                path.interaction === "viewport-zoom"
-                  ? "viewport-driven"
-                  : "fixed",
+          const action = adapter.action;
+          if (!action) {
+            throw new Error(
+              `Performance path ${path.id} requires its typed action adapter.`,
+            );
+          }
+          if (path.interaction === "animation-frame") {
+            await action(context);
+            const result = await measureToolcraftAnimationFrames(page, 120, {
               pathId: path.id,
               phase,
+              profile: path.profile,
               target,
             });
+            await adapter.verifyOutcome?.(context);
+            return result;
           }
-        },
+          const result = await (
+            runtime.measureInteraction ?? measureToolcraftInteraction
+          )(page, () => action(context), {
+            ...(adapter.observeOutcome
+              ? { observeOutcome: async () => adapter.observeOutcome!(context) }
+              : {}),
+            pathId: path.id,
+            phase,
+            profile: path.profile,
+            settleFrames: getToolcraftPerformancePathSettleFrames(path),
+            target,
+          });
+          await adapter.verifyOutcome?.(context);
+          return result;
+        };
+        const result = canvasQualityGuard
+          ? await canvasQualityGuard.runPhase(phase, measurePhase)
+          : await measurePhase();
+        expectToolcraftPerformanceBudget(result, budget);
+        await attachPathEvidence("performance-budget", path);
+
+        if (
+          path.interaction === "control-drag" ||
+          path.interaction === "mask-drag"
+        ) {
+          await attachPathEvidence("performance-control-drag", path);
+        }
+        if (
+          path.interaction === "viewport-drag" ||
+          path.interaction === "viewport-zoom"
+        ) {
+          await attachPathEvidence("performance-viewport", path);
+        }
+        if (canvasBacking) {
+          await expectToolcraftPerformanceRenderScaleBackingEvidence(page, {
+            baselineCssSize: baselineCssSize!,
+            canvasSelector: canvasBacking.canvasSelector,
+            cssSizePolicy:
+              path.interaction === "viewport-zoom"
+                ? "viewport-driven"
+                : "fixed",
+            pathId: path.id,
+            phase,
+            target,
+          });
+        }
       },
-    );
+    });
   } catch (error) {
     hasPrimaryFailure = true;
     throw error;

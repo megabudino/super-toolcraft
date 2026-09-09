@@ -86,6 +86,20 @@
   cursor: default !important;
 }
 
+[data-toolcraft-theme] [data-slot="toolcraft-runtime-canvas"][data-canvas-pan-state="ready"],
+[data-toolcraft-theme] [data-slot="toolcraft-runtime-canvas"][data-canvas-pan-state="ready"] *,
+[data-toolcraft-theme] [data-slot="toolcraft-runtime-canvas"][data-canvas-pan-state="ready"] *::before,
+[data-toolcraft-theme] [data-slot="toolcraft-runtime-canvas"][data-canvas-pan-state="ready"] *::after {
+  cursor: grab !important;
+}
+
+[data-toolcraft-theme] [data-slot="toolcraft-runtime-canvas"][data-canvas-pan-state="dragging"],
+[data-toolcraft-theme] [data-slot="toolcraft-runtime-canvas"][data-canvas-pan-state="dragging"] *,
+[data-toolcraft-theme] [data-slot="toolcraft-runtime-canvas"][data-canvas-pan-state="dragging"] *::before,
+[data-toolcraft-theme] [data-slot="toolcraft-runtime-canvas"][data-canvas-pan-state="dragging"] *::after {
+  cursor: grabbing !important;
+}
+
 [data-toolcraft-theme='dark'][data-toolcraft-theme] {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);

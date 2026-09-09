@@ -7,7 +7,7 @@ import {
 
 const VGPU_PROVIDER_ID = "vgpu";
 const ENABLE_VGPU_ERROR =
-  "rendererTechnique selects VGPU, but the provider is not enabled. Run `pnpm toolcraft:renderer -- enable vgpu`, then `pnpm install`.";
+  "rendererTechnique selects VGPU, but the provider is not enabled. Run `pnpm toolcraft:renderer -- enable vgpu`; activation installs and verifies dependencies automatically.";
 const UNUSED_VGPU_ERROR =
   "VGPU provider dependencies are enabled, but rendererTechnique does not select VGPU.";
 const DRIFTED_UNUSED_VGPU_ERROR =

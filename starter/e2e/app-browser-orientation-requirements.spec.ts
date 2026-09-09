@@ -1,39 +1,49 @@
 import { expect, test } from "@playwright/test";
-import { defineToolcraft } from "@/toolcraft/runtime";
+import { defineToolcraft, spatialViewModule } from "@/toolcraft/runtime";
 
 import { deriveToolcraftBrowserRuntimeRequirements } from "./browser-runtime-evidence-requirements";
 
 test("orientation gizmo coverage derives behavior-specific runtime evidence", () => {
   const schema = defineToolcraft({
-    canvas: { enabled: true },
-    panels: {
-      controls: {
-        sections: [
-          {
-            controls: {
-              orientation: {
-                defaultValue: {
-                  position: [0, 0, 5],
-                  up: [0, 1, 0],
+    base: {
+      identity: {
+        id: "orientation-requirements",
+        title: "Orientation Requirements",
+      },
+      canvas: { enabled: true },
+      panels: {
+        controls: {
+          sections: [
+            {
+              id: "model",
+              controls: {
+                orientation: {
+                  applicability: { mode: "always" },
+                  defaultValue: {
+                    position: [0, 0, 5],
+                    up: [0, 1, 0],
+                  },
+                  keyframeable: false,
+                  label: false,
+                  target: "view.orbit",
+                  type: "orientationGizmo",
                 },
-                keyframeable: false,
-                label: false,
-                target: "view.orbit",
-                type: "orientationGizmo",
+                scale: {
+                  applicability: { mode: "always" },
+                  defaultValue: 1,
+                  label: "Scale",
+                  target: "model.scale",
+                  type: "slider",
+                },
               },
-              scale: {
-                defaultValue: 1,
-                label: "Scale",
-                target: "model.scale",
-                type: "slider",
-              },
+              title: "Model",
             },
-            title: "Model",
-          },
-        ],
-        title: "Controls",
+          ],
+          title: "Controls",
+        },
       },
     },
+    modules: [spatialViewModule()],
   });
   const requirements = deriveToolcraftBrowserRuntimeRequirements(
     [
@@ -50,8 +60,7 @@ test("orientation gizmo coverage derives behavior-specific runtime evidence", ()
         },
         evidence: "product-output",
         id: "model.orientation",
-        orientationGizmoCoverage:
-          "all-required-orientation-gizmo-behavior",
+        orientationGizmoCoverage: "all-required-orientation-gizmo-behavior",
       },
     ],
     schema,

@@ -8,6 +8,14 @@ import { parseToolcraftFeatureVerificationPlanSource } from "../scripts/toolcraf
 import { TOOLCRAFT_BROWSER_PROOF_TIMEOUT_MS } from "../src/app/acceptance/browser-proof-policy.mjs";
 
 export { expect };
+export { expectExportExcludesCanvasHandles } from "./canvas-handle-helpers";
+export {
+  expectToolcraftOrientationAxisDrag,
+  expectToolcraftOrientationAxisSnap,
+  expectToolcraftOrientationCanvasMissPan,
+  expectToolcraftOrientationModelDrag,
+  expectToolcraftOrientationUndoReset,
+} from "./browser-orientation-gizmo-evidence-helpers";
 
 export type ToolcraftProductTestFixtures = Readonly<{
   page: Page;

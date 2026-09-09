@@ -1,26 +1,21 @@
 import fs from "node:fs";
 import path from "node:path";
 
+import { toolcraftModuleExtensions } from "./toolcraft-product-dependency-resolution.mjs";
+
 export const toolcraftSourceExtensions = new Set([
-  ".cjs",
+  ...toolcraftModuleExtensions,
   ".css",
-  ".cts",
-  ".js",
-  ".jsx",
-  ".mjs",
-  ".mts",
-  ".ts",
-  ".tsx",
 ]);
 
 const defaultGeneratedFilePatterns = [/\/route-tree\.gen\.ts$/u];
 const defaultTestFilePatterns = [
-  /(?:^|\/)[^/]+\.(?:test|spec)\.[cm]?[jt]sx?$/u,
+  /(?:^|\/)[^/]+\.(?:test|spec|story|stories)\.[cm]?[jt]sx?$/u,
 ];
 const defaultTestSupportPatterns = [
   /^e2e\//u,
-  /(?:^|\/)test-evidence\//u,
-  /(?:^|\/)[^/]*(?:test-utils|fixtures)\.[cm]?[jt]sx?$/u,
+  /(?:^|\/)(?:__mocks__|__tests__|fixtures|story|stories|support|test-evidence|test-support|tests?)(?:\/|$)/u,
+  /(?:^|\/)[^/]*(?:[.-](?:fixtures?|support|test-support|test-utils))\.[cm]?[jt]sx?$/u,
 ];
 
 function toPosixPath(value) {
@@ -59,7 +54,8 @@ export function classifyToolcraftSourcePath(
       toPosixPath(filePath).replace(/^\.\//u, ""),
     ),
   );
-  const normalizedFrameworkPrefixes = frameworkPathPrefixes.map(normalizePrefix);
+  const normalizedFrameworkPrefixes =
+    frameworkPathPrefixes.map(normalizePrefix);
 
   const owner = protectedPathSet.has(normalizedPath)
     ? "platform"
@@ -235,7 +231,9 @@ export function resolveToolcraftRootResourcePath(resourcePath, rootDir) {
       "must be root-relative and stay within the configured root boundary",
     );
   }
-  const normalizedPath = path.posix.normalize(resourcePath.replaceAll("\\", "/"));
+  const normalizedPath = path.posix.normalize(
+    resourcePath.replaceAll("\\", "/"),
+  );
   const absolutePath = path.resolve(rootDir, ...normalizedPath.split("/"));
   if (
     normalizedPath === ".." ||
@@ -272,7 +270,10 @@ export function createCanonicalGraphEntries({
     ]),
   );
   for (const resourcePath of explicitResourcePaths) {
-    const absolutePath = resolveToolcraftRootResourcePath(resourcePath, rootDir);
+    const absolutePath = resolveToolcraftRootResourcePath(
+      resourcePath,
+      rootDir,
+    );
     const repoPath = toPosixPath(path.relative(rootDir, absolutePath));
     if (entriesByRepoPath.has(repoPath)) continue;
 

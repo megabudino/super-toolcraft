@@ -1,56 +1,60 @@
 import { defineToolcraft } from "@/toolcraft/runtime";
 import { describe, expect, it } from "vitest";
-
 import { createToolcraftFeatureVerificationSelection } from "./feature-verification-selection";
 import type {
   ToolcraftComponentAcceptance,
   ToolcraftControlSectionInventoryEntry,
 } from "./types";
-
 const schema = defineToolcraft({
-  canvas: { enabled: true },
-  panels: {
-    controls: {
-      sections: [
-        {
-          controls: {
-            frosting: {
-              applicability: {
-                all: [{ equals: "frosted", target: "material.layer" }],
-                mode: "conditional",
+  base: {
+    identity: {
+      id: "acceptance-fixture",
+      title: "Acceptance fixture",
+    },
+    canvas: { enabled: true },
+    panels: {
+      controls: {
+        sections: [
+          {
+            controls: {
+              frosting: {
+                applicability: {
+                  all: [{ equals: "frosted", target: "material.layer" }],
+                  mode: "conditional",
+                },
+                defaultValue: "#ffffff",
+                target: "material.frosting",
+                type: "color",
               },
-              defaultValue: "#ffffff",
-              target: "material.frosting",
-              type: "color",
+              gloss: {
+                applicability: { mode: "always" },
+                defaultValue: 0.5,
+                max: 1,
+                min: 0,
+                target: "material.gloss",
+                type: "slider",
+              },
+              layer: {
+                applicability: { mode: "always" },
+                defaultValue: "frosted",
+                options: [
+                  { label: "Frosted", value: "frosted" },
+                  { label: "Plain", value: "plain" },
+                ],
+                target: "material.layer",
+                type: "segmented",
+              },
             },
-            gloss: {
-              applicability: { mode: "always" },
-              defaultValue: 0.5,
-              max: 1,
-              min: 0,
-              target: "material.gloss",
-              type: "slider",
-            },
-            layer: {
-              applicability: { mode: "always" },
-              defaultValue: "frosted",
-              options: [
-                { label: "Frosted", value: "frosted" },
-                { label: "Plain", value: "plain" },
-              ],
-              target: "material.layer",
-              type: "segmented",
-            },
+            id: "material",
+            title: "Material",
           },
-          id: "material",
-          title: "Material",
-        },
-      ],
-      title: "Controls",
+        ],
+        title: "Controls",
+      },
     },
   },
+  modules: [],
 });
-
 const validInventory = [
   {
     entity: "Material",
@@ -58,7 +62,8 @@ const validInventory = [
     finiteSelectors: [
       {
         affectedTargets: ["material.gloss"],
-        reason: "Layer selects material branches with different coating controls.",
+        reason:
+          "Layer selects material branches with different coating controls.",
         role: "branch",
         target: "material.layer",
       },
@@ -69,8 +74,11 @@ const validInventory = [
     title: "Material",
   },
 ] as const satisfies readonly ToolcraftControlSectionInventoryEntry[];
-
-const acceptance = ["material.frosting", "material.gloss", "material.layer"].map(
+const acceptance = [
+  "material.frosting",
+  "material.gloss",
+  "material.layer",
+].map(
   (id): ToolcraftComponentAcceptance => ({
     automated: true,
     automatedTestName: `${id} unit`,
@@ -89,7 +97,6 @@ const acceptance = ["material.frosting", "material.gloss", "material.layer"].map
     userAction: `Change ${id}.`,
   }),
 );
-
 function createPlan(
   sectionInventory: readonly ToolcraftControlSectionInventoryEntry[],
 ) {
@@ -104,7 +111,6 @@ function createPlan(
     sectionInventory,
   });
 }
-
 function withFiniteSelectors(
   finiteSelectors: readonly unknown[],
 ): readonly ToolcraftControlSectionInventoryEntry[] {
@@ -112,25 +118,26 @@ function withFiniteSelectors(
     { ...validInventory[0], finiteSelectors },
   ] as unknown as readonly ToolcraftControlSectionInventoryEntry[];
 }
-
 describe("Toolcraft feature verification selector fail-closed boundary", () => {
   it("rejects a predicate-owning branch mislabeled as a parameter", () => {
     expect(() =>
-      createPlan(withFiniteSelectors([
-        {
-          reason: "Layer changes only its own material output.",
-          role: "parameter",
-          target: "material.layer",
-        },
-      ])),
+      createPlan(
+        withFiniteSelectors([
+          {
+            reason: "Layer changes only its own material output.",
+            role: "parameter",
+            target: "material.layer",
+          },
+        ]),
+      ),
     ).toThrow(/material\.layer.*applicability predicates.*branch/iu);
   });
-
   it.each([
     [
       "missing",
       {
-        reason: "Layer selects material branches with different coating controls.",
+        reason:
+          "Layer selects material branches with different coating controls.",
         role: "branch",
         target: "material.layer",
       },
@@ -140,7 +147,8 @@ describe("Toolcraft feature verification selector fail-closed boundary", () => {
       "unknown",
       {
         affectedTargets: ["material.missing"],
-        reason: "Layer selects material branches with different coating controls.",
+        reason:
+          "Layer selects material branches with different coating controls.",
         role: "branch",
         target: "material.layer",
       },
@@ -149,46 +157,51 @@ describe("Toolcraft feature verification selector fail-closed boundary", () => {
   ])("rejects %s branch affected targets", (_label, selector, expected) => {
     expect(() => createPlan(withFiniteSelectors([selector]))).toThrow(expected);
   });
-
   it("rejects structural section inventory errors before selection", () => {
     expect(() =>
       createPlan([{ ...validInventory[0], id: "wrong-section" }]),
     ).toThrow(/wrong-section.*no rendered product controls section/iu);
   });
-
   it("rejects a predicate selector without a finite case domain", () => {
     const unsupportedSchema = defineToolcraft({
-      canvas: { enabled: true },
-      panels: {
-        controls: {
-          sections: [
-            {
-              controls: {
-                amount: {
-                  applicability: { mode: "always" },
-                  defaultValue: 0.5,
-                  max: 1,
-                  min: 0,
-                  target: "shape.amount",
-                  type: "slider",
-                },
-                detail: {
-                  applicability: {
-                    all: [{ greaterThan: 0.5, target: "shape.amount" }],
-                    mode: "conditional",
+      base: {
+        identity: {
+          id: "acceptance-fixture",
+          title: "Acceptance fixture",
+        },
+        canvas: { enabled: true },
+        panels: {
+          controls: {
+            sections: [
+              {
+                controls: {
+                  amount: {
+                    applicability: { mode: "always" },
+                    defaultValue: 0.5,
+                    max: 1,
+                    min: 0,
+                    target: "shape.amount",
+                    type: "slider",
                   },
-                  defaultValue: "#ffffff",
-                  target: "shape.detail",
-                  type: "color",
+                  detail: {
+                    applicability: {
+                      all: [{ greaterThan: 0.5, target: "shape.amount" }],
+                      mode: "conditional",
+                    },
+                    defaultValue: "#ffffff",
+                    target: "shape.detail",
+                    type: "color",
+                  },
                 },
+                id: "shape",
+                title: "Shape",
               },
-              id: "shape",
-              title: "Shape",
-            },
-          ],
-          title: "Controls",
+            ],
+            title: "Controls",
+          },
         },
       },
+      modules: [],
     });
     const unsupportedInventory = [
       {
@@ -201,7 +214,6 @@ describe("Toolcraft feature verification selector fail-closed boundary", () => {
         title: "Shape",
       },
     ] as const satisfies readonly ToolcraftControlSectionInventoryEntry[];
-
     expect(() =>
       createToolcraftFeatureVerificationSelection({
         acceptance: [

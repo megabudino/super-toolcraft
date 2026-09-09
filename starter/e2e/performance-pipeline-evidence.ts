@@ -84,21 +84,22 @@ export async function expectToolcraftPipelinePassExecutions(
       "Toolcraft pipeline execution expectation must be a non-negative safe integer.",
     );
   }
-  if (!isToolcraftRendererPipelineRegistration(appPerformance.rendererPipeline)) {
+  const rendererPipeline = appPerformance.rendererPipeline;
+  if (!isToolcraftRendererPipelineRegistration(rendererPipeline)) {
     throw new Error(
       "Toolcraft pipeline execution assertion requires the canonical executable renderer pipeline registration.",
     );
   }
-  if (!appPerformance.rendererPipeline.passes.some((pass) => pass.id === passId)) {
+  if (!rendererPipeline.passes.some((pass) => pass.id === passId)) {
     throw new Error(`Unknown canonical Toolcraft renderer pass "${passId}".`);
   }
 
   await expect
     .poll(async () => {
       const snapshot = await readToolcraftPipelineSnapshot(page);
-      if (snapshot.runtimeId !== appPerformance.rendererPipeline.runtimeId) {
+      if (snapshot.runtimeId !== rendererPipeline.runtimeId) {
         throw new Error(
-          `Toolcraft pipeline runtimeId "${snapshot.runtimeId}" does not match executable registration runtimeId "${appPerformance.rendererPipeline.runtimeId}".`,
+          `Toolcraft pipeline runtimeId "${snapshot.runtimeId}" does not match executable registration runtimeId "${rendererPipeline.runtimeId}".`,
         );
       }
       const pass = snapshot.passes.find((candidate) => candidate.passId === passId);

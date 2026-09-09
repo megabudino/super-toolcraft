@@ -23,13 +23,26 @@ Do not edit implementation files until this preflight is complete.
 
 Renderer and performance work also completes this pre-code sequence: reachable controls and inputs; workload dimensions and enforced boundaries; pass cost, frequency, lifecycle, and invalidation; render-plan assessment and protected kernel benchmark when required; derived paths and combined fixtures. Development uses feature-focused functional and browser checks without minting delivery evidence. First delivery runs no measured performance; only exact request authority creates one targeted iteration. Full certification is a separate operator/CI action described in the canonical performance docs.
 
-Renderer-provider version work follows [VGPU Provider Version Authority](renderer-technique.md#vgpu-provider-version-authority). The version check is read-only release information, not permission to edit an app. Generated applications must never auto-update; they receive a promoted provider only through an explicit Toolcraft tuple migration.
+Renderer-provider version work follows [VGPU Provider Version Authority](renderer-technique.md#vgpu-provider-version-authority). The agent automatically resolves and verifies latest stable on first activation and records exact versions in the application's `toolcraft.rendererProviders.vgpu` metadata and lockfile. The version check is read-only. Existing applications never auto-update; a deliberate migration moves dependencies, lockfile, adapter and compatibility proof together. Routine activation and integration fixes require no user confirmation.
 
 ## Local Contract Authority
 
-The signed local `AGENTS.md` plus `docs/toolcraft/*` are sufficient and mandatory workflow input for a standalone generated app. External workflow skills should be used when available, but missing skills never invalidate `--no-skills` generation and never justify skipping the equivalent local spec, plan, debugging, browser, or verification requirement. `pnpm ai:check` enforces local code health and the product AST boundary only; it neither discovers nor validates workflow skill installations.
+The signed local `AGENTS.md` plus `docs/toolcraft/*` are sufficient and mandatory workflow input for a standalone generated app. Use available skills only at the task's actual scale under the proportional planning policy below. Missing skills never invalidate `--no-skills` generation: continue with local reasoning, debugging and the relevant verification, without installing skills, restarting the session or adding spec/plan files solely for a ritual. `pnpm ai:check` enforces local code health and the product AST boundary only; it neither discovers nor validates workflow skill installations.
 
 Core modules are required reading when listed by the routing table. Read each listed module fully, one phase at a time. Open exactly one listed document per terminal or tool read, even when several documents belong to the same route and phase. Do not concatenate documents or rely on a truncated excerpt; finish the current phase, then open the next phase when the work reaches it. The signed host and runtime validators enforce platform boundaries, while product organization remains open inside those boundaries.
+
+## Proportional Planning And Autonomous Execution
+
+This policy applies to building, porting, changing, fixing and reviewing Toolcraft apps and their shared source. Judge scale by behavior, coupling and unresolved design decisions, not by line count, verification tier, or the number of required checks.
+
+- **Small, localized edits:** inspect the relevant owner, implement the requested change, and run focused checks. Do not create a written spec or implementation plan, propose ceremonial alternatives, or wait for approval. Examples include a label font change from 11px → 12px, a known spacing/token correction, or a bounded bug fix with an established behavior.
+- **Substantial work:** a new multi-capability product, a cross-subsystem behavior change, a state/persistence migration, or a renderer redesign warrants a concise agent-owned implementation plan. State the concrete reason it is substantial; include necessary design decisions, affected owners, dependencies, risks and relevant checks in that one plan. A separate design document is not mandatory. If inspection reveals a substantial scope, announce it, write the plan, then continue without waiting for plan approval.
+- **Read-only and plan-only requests:** inspection or review does not authorize implementation. If the user requests only a plan, provide the plan and stop; an explicit user-requested approval gate remains binding. Do not infer implementation permission from a request to diagnose.
+- **Autonomous implementation:** a request to build, port, change or fix authorizes the necessary in-scope work. Choose a safe approach from the request, reference and existing contract; do not ask the user to approve an already specified value, review a spec, choose an execution method, or say “go ahead” again.
+- **Questions and authority:** ask one concise question only when material ambiguity cannot be resolved from available evidence, an action is outside the authorized scope, or the user explicitly required approval. Planning never supplies permission for destructive actions, optional features, publication or external side effects. Existing explicit authority requirements, including optional export and performance work, remain unchanged.
+- **Skill scope:** Generic workflow skills support this policy; they do not impose universal spec/plan files, repeated approval, visual-companion offers, extra worktrees, delegation, or an execution-choice ceremony. Use brainstorming for necessary design reasoning and writing-plans when substantial work warrants a plan (or the user asks for one); for small edits, skip their document and approval rituals. Missing skills use the local equivalent without installation or session restart solely for workflow compliance.
+
+Plan phase is a contract-reading phase and does not require a plan document. Read the relevant contract before editing even for a small fix; do not expand a localized task into unrelated doc routes. A plan does not broaden verification: keep the existing first-delivery versus focused-later-edit lifecycle and request-authorized performance boundaries. Small edits need only a compact worklog entry, not rewritten product inventories or invented alternatives.
 
 ## Manual Browser Surface Routing
 
@@ -70,7 +83,7 @@ Use the smallest route set that covers the changed surface. When a task matches 
 
 ## Worklog Gate
 
-For product app work, update `docs/toolcraft/agent-worklog.md` before reporting completion. Record:
+For product app work, update `docs/toolcraft/agent-worklog.md` before reporting completion. A small edit needs only a compact entry with the request, changed owner, result and focused checks; do not rewrite unchanged decisions or invent rejected alternatives. For first delivery and substantial work, record:
 
 - one `Decision Trail` entry for each coherent user-visible delivery batch, including:
   - request;
@@ -92,14 +105,38 @@ If the folder is still the neutral starter, do not invent product decisions. Onc
 
 Protected receipts own first-delivery and performance proof. The worklog records which focused tests and browser checks were selected for later edits; those edits do not create another functional receipt.
 
+### Text journal
+
+Use `pnpm journal` for text-only recovery of requests, changes, commands, errors and retries. It adds no screenshots, videos or binary browser traces. `docs/agent-journal/changes/<changeId>.json` holds the request and decision; `.toolcraft/journal/runs/<runId>/run.json` and `events.jsonl` hold one attempt and its ordered stdout/stderr. These diagnostic files do not grant execution authority or replace protected receipts.
+
+Create a change from a JSON file with `title`, `request: { text, messageRef }`, `owners`, `decision`, `result`, `checks`, `risks` and `status` (`open` or `complete`). Unknown optional text is `null`; original request text is preserved.
+
+```sh
+pnpm journal -- change --input /absolute/path/change.json
+TOOLCRAFT_CHANGE_ID=<changeId> pnpm test:feature -- <acceptance-id>
+TOOLCRAFT_CHANGE_ID=<changeId> TOOLCRAFT_RETRY_OF=<failedRunId> pnpm test:feature -- <acceptance-id>
+pnpm journal -- show --change <changeId>
+pnpm journal -- show --run <runId>
+pnpm journal -- update --change <changeId> --revision 1 --input /absolute/path/updated-change.json
+```
+
+`test:feature` journals automatically, including preflight failures. Without a change ID it records `unlinked`; use explicit IDs for useful recovery and parallel tasks. Wrap other focused commands with `pnpm journal -- run --change <changeId> -- <executable> <arguments>`; add `--retry <failedRunId>` before the separator for a retry. Do not wrap an already journaled feature command merely to create another log. Arguments are passed directly without a shell. Never place secrets in command arguments or journal input.
+
+`pnpm journal -- list` is the compact entry point. `running` means unfinished with an unknown outcome; it is never inferred to have passed after a crash. Output is limited to 16 MiB per attempt and omitted bytes are reported explicitly. Source fingerprints cover selected files and product entrypoints, with Git/dirty context; they are deliberately marked incomplete and do not claim a complete source snapshot. No full inventory/build is added for logging. Copy `docs/agent-journal` and `.toolcraft/journal` together when transferring history; the latter is ignored by Git. There is no automatic deletion of attempts.
+
+Import a legacy worklog with `pnpm journal -- import`. It preserves the original worklog, creates a byte-exact archive, extracts separate records and writes `docs/agent-journal/README.md`. Source order and duplicate headings are preserved; historical timestamps, revisions and message references are not invented. On older generated apps use the upstream `starter/scripts/toolcraft-journal.mjs` with `--project <app-path>`; do not patch copied framework scripts. Re-importing the same source is idempotent.
+
+`Verification` is human result text, including command output summaries; it never authorizes performance. New worklog entries use unique `Change ID` values and an explicit `Active change: <id>`. Missing performance intent means ordinary work. Legacy consistently numbered history can be read in either direction; misplaced entries, duplicated numbers and ambiguous order require repair or explicit selection. The performance request, exact quote and canonical paths remain separately validated. First-delivery receipts retain their existing meaning.
+
+
 ## Runtime Boundary
 
 Use the runtime extension points described in the current contracts:
 
 - schema controls;
 - `canvasContent` for product output only;
-- `controlRenderers` only for true custom controls;
-- `onPanelAction` for sticky product actions;
+- `controls.renderers` only for true custom controls;
+- `actions.onPanelAction` for sticky product actions;
 - runtime commands and hooks.
 
 Do not recreate controls, panels, toolbar, timeline, layers, canvas shell, or runtime surfaces by hand. If a shared behavior is wrong, fix the shared runtime/template source and regenerate when needed.

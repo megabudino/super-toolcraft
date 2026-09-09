@@ -1,8 +1,9 @@
 import type { ToolcraftControlSectionInventoryEntry } from "./types";
+import { getToolcraftUserRequestEvidenceErrors } from "./user-request-evidence";
 
 export type SelectorInventoryEntryRecord = Record<string, unknown>;
 
-const branchKeys = ["affectedTargets", "reason", "role", "target"] as const;
+const branchKeys = ["affectedTargets", "productMode", "reason", "role", "target"] as const;
 const parameterKeys = ["reason", "role", "target"] as const;
 
 function isRecord(value: unknown): value is SelectorInventoryEntryRecord {
@@ -74,6 +75,22 @@ export function validateSelectorEntryShape(
     errors.push(
       `Control Section Inventory entry "${sectionId}" contains a finite selector without a non-empty target.`,
     );
+  }
+
+  if (candidate.role === "branch" && "productMode" in candidate) {
+    const intent = candidate.productMode;
+    if (
+      !isRecord(intent) ||
+      Object.keys(intent).some((key) => key !== "request" && key !== "sharedTargets") ||
+      !Array.isArray(intent.sharedTargets) ||
+      intent.sharedTargets.some((target) => typeof target !== "string" || !target.trim())
+    ) {
+      errors.push(`Product mode "${target}" requires { request, sharedTargets: string[] }.`);
+      return false;
+    }
+    for (const error of getToolcraftUserRequestEvidenceErrors(intent.request)) {
+      errors.push(`Product mode "${target}" ${error}`);
+    }
   }
 
   return true;

@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { defineToolcraft } from "@/toolcraft/runtime";
+import {
+  defineToolcraft,
+  imageExportModule,
+  svgExportModule,
+  videoExportModule,
+} from "@/toolcraft/runtime";
 
 import {
   schemaHasPngExportPanelAction,
@@ -9,40 +14,12 @@ import {
 
 function createOutputSchema() {
   return defineToolcraft({
-    canvas: { enabled: true },
-    panels: {
-      controls: {
-        sections: [
-          {
-            controls: {
-              output: {
-                actions: [
-                  {
-                    label: "Guardar vector",
-                    role: "export-svg",
-                    value: "salida.vector",
-                  },
-                  {
-                    label: "Guardar imagen",
-                    role: "export-image",
-                    value: "salida.imagen",
-                  },
-                  {
-                    label: "Guardar movimiento",
-                    role: "export-video",
-                    value: "salida.movimiento",
-                  },
-                ],
-                target: "salida.acciones",
-                type: "panelActions",
-              },
-            },
-            title: "Salida",
-          },
-        ],
-        title: "Controles",
-      },
+    base: {
+      identity: { id: "contract-fixture", title: "Contract fixture" },
+      canvas: { enabled: true },
+      panels: { controls: { sections: [], title: "Controles" } },
     },
+    modules: [imageExportModule(), svgExportModule(), videoExportModule()],
   });
 }
 
@@ -57,24 +34,30 @@ describe("Toolcraft typed output action roles", () => {
 
   it("does not treat export-like prose as semantic output evidence", () => {
     const schema = defineToolcraft({
-      canvas: { enabled: true },
-      panels: {
-        controls: {
-          sections: [
-            {
-              controls: {
-                output: {
-                  actions: [{ label: "Export PNG", value: "export.png" }],
-                  target: "actions.output",
-                  type: "panelActions",
+      base: {
+        identity: { id: "contract-fixture", title: "Contract fixture" },
+        canvas: { enabled: true },
+        panels: {
+          controls: {
+            sections: [
+              {
+                id: "test-section-2",
+                controls: {
+                  output: {
+                    applicability: { mode: "always" as const },
+                    actions: [{ label: "Export PNG", value: "export.png" }],
+                    target: "local.actions",
+                    type: "panelActions",
+                  },
                 },
+                title: "Output",
               },
-              title: "Output",
-            },
-          ],
-          title: "Controls",
+            ],
+            title: "Controls",
+          },
         },
       },
+      modules: [],
     });
 
     expect(schemaHasPngExportPanelAction(schema)).toBe(false);

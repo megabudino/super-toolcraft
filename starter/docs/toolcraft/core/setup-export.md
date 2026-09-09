@@ -5,18 +5,34 @@ Read this module before changing Setup, canvas sizing, background, image export,
 ## Runtime Setup
 
 - Runtime `Setup` is always the first visible controls block in generated product apps.
+- Explicitly user-requested application modes occupy the first product section immediately after Setup (Settings); the canonical rule and typed inventory are in [Explicit Product Modes](./layout.md#explicit-product-modes). Only controls applicable to the selected mode remain visible; hidden values are preserved.
 - `Setup` is headerless, not collapsible, and has no section reset action.
-- `Setup` always contains `Export Settings` and `Import Settings`.
-- Do not implement settings import/export through `panelActions`, route-local file inputs, or app-authored controls.
-- Do not gate settings import/export by app complexity.
+- Local `Setup` contains `Save as Defaults`; Export Settings and Import Settings are absent. The existing panel-header Reset controls action remains available and restores the active schema defaults.
+- Do not add settings import/export through `panelActions`, route-local file inputs, or app-authored controls.
+- Source authoring is provided by the local host; deployed apps retain header Reset without source-writing or settings-file buttons.
+- The retained runtime settings API uses JSON v3 to store control values, finite/Infinity canvas sizing, timeline playback settings and every runtime attachment's available source paths plus durable resource references. It does not embed file bytes or archive the whole workspace/keyframe timeline. Browser uploads expose file names or folder-relative paths, never absolute disk paths; model packages also record their internal source paths. Paths are metadata, not instructions to fetch a URL or reopen a disk file.
+- The settings API validates the current app-specific settings envelope, checks attachments independently in the browser's Toolcraft repository, then applies settings and the available attachment list as one undoable operation. Missing, corrupt or malformed attachments are skipped, not inserted as unavailable placeholders and never allowed to fail otherwise valid settings. The list is restored in exported order with stable media IDs for per-file controls; an empty or wholly unavailable list restores no attachments. Non-media product layers remain intact. A different origin/browser or cleared repository may make every attachment unavailable even if the original file still exists on disk; the JSON is not a portable project archive. Do not create app-owned restoration or legacy-format fallbacks.
 - Product-output, exportable, shader, procedural, reference-clone, and uploaded-background/source apps use `editable-output`.
-- Product apps declare the standard background state pair in one authored `Background` source section. Runtime removes that visible section and places a `Background` switch beside `Infinity canvas` immediately after settings transfer, with Background first.
+- Product apps declare the standard background state pair in one authored `Background` source section. Runtime removes that visible section and places a `Background` switch beside `Infinity canvas` after the local defaults action when available, with Background first.
 - Runtime places `Background color` below that row, before finite canvas sizing.
 - When the standard Background pair exists, `Infinity canvas` is available only while Background is on. Turning Background off exits infinite mode; turning it back on restores availability without enabling Infinity automatically.
 - Finite `Aspect ratio`, `Canvas width`, and `Canvas height` follow Color; optional `Resolution scale` follows sizing.
-- When enabled, `Timeline` is the final Setup control.
+- When present, `Timeline` and `Lock rotation` share the final Setup row, with Timeline on the left.
 - Timeline and Infinity canvas are self-explanatory runtime switches and do not render help icons.
-- App-authored sections must not declare runtime Setup targets: `runtime.settingsTransfer`, `canvas.infinity`, `canvas.aspectRatio`, `canvas.size.width`, `canvas.size.height`, `canvas.renderScale`, or `panels.timeline.extended`.
+- App-authored sections must not declare runtime Setup targets: `runtime.settingsTransfer`, `canvas.infinity`, `canvas.aspectRatio`, `canvas.size.width`, `canvas.size.height`, `canvas.renderScale`, `canvas.rotationLocked`, or `panels.timeline.extended`.
+
+## Save App Defaults
+
+During local development, runtime Setup exposes `Save as Defaults` in place of Export Settings / Import Settings. Click once to make the complete current workspace the application's starting state. The host saves files into the project, commits `src/app/app-defaults.json`, and reloads the application. The standard Button loading indicator remains active during resource capture, uploads and the final write, keeps its width and blocks duplicate clicks. Failures restore the idle button with a retryable error.
+
+- Keep the generated JSON import with `with { type: "json" }` and `defaults: appDefaults` input in `defineToolcraft({ base, defaults, modules })`. The file starts as `null`; new saves use version 2 (`appId`, `state`, `resources`, `theme`). Version 1 parameter snapshots remain readable. Existing apps receive the updated source template and host integration through regeneration.
+- The snapshot captures all runtime values, including hidden branches, compound and per-file values, collections, selection, Background, rotation lock, Resolution scale and export settings. It also saves finite/Infinity mode and dormant finite dimensions, canvas pan/zoom, panel positions/visibility/scroll/collapsed sections, layers and their order/visibility, and timeline duration, playhead, playback/loop state, keyframes and easing. Parameter values and keyframes remain separate; saving does not bake the evaluated frame into parameters. Theme preference is saved too.
+- Uploaded resources are copied from the runtime repository into immutable `public/toolcraft-defaults/<folder>/<sha256>.bin` files. Images use `images/`, ordinary attachments use `files/`, and model resources use `models/sources/`, `models/bundles/`, `models/documents/`, `models/repairs/` and `models/textures/`. The JSON records project paths and resource metadata while preserving original source filenames/paths and stable media IDs. A path alone never substitutes for missing bytes. Missing resources or unfinished file operations prevent saving the snapshot. Legacy flat resource paths remain readable; the next save migrates active files into the appropriate folders.
+- New workspaces start from this full snapshot even when local workspace persistence is disabled or excludes some slices. Existing local workspace data retains precedence until Reset. The panel-header Reset restores the saved workspace, media and theme; document Reset remains undoable. Section resets remain scoped and use the saved values/media for their targets. Undo/redo history, active uploads/repairs/exports and transient rendering resources are session operations and are not published as startup defaults.
+- Builds include both JSON and packaged files, so media restoration works in a clean browser. Preview and deployed builds expose neither the source-writing endpoint nor Save as Defaults. Header Reset remains available. Publishing remains a separate action.
+- The host validates app identity, the full snapshot through canonical workspace/control codecs, resource reachability and byte hashes. Local session tokens and stale-revision checks protect writes. It atomically replaces the fixed JSON file only after every referenced binary exists; validation or commit failure preserves the previous snapshot and its files. Immutable files uploaded before a failed commit may remain unused and do not change the active defaults. Filesystem writes belong to the signed host, never product controls or routes.
+- After committing the snapshot, the host removes files from previous saved defaults that are no longer referenced, then removes empty managed folders. Shared files and transitive model resources remain while the current snapshot needs them. Cleanup only considers previously recorded managed paths and verifies their original bytes; unrelated project files, edited files and symlinks are never deleted. A host-private pending-cleanup record survives interruption and retries on the next save. If cleanup fails after the JSON was committed, the panel reports that defaults were saved but file cleanup is incomplete, and retains the new revision so Save as Defaults can retry.
+- When changing schema targets or accepted values, migrate the saved workspace with the schema. Malformed or lossy state is rejected rather than silently discarded. Source default values are separate from the runtime's authored initial defaults: a saved user-selected Resolution scale or rotation lock becomes the new reset value without changing the authoring contract for these controls.
 
 ## Canvas Size Defaults
 
@@ -30,17 +46,17 @@ Read this module before changing Setup, canvas sizing, background, image export,
 
 - `Infinity canvas` is the one runtime-owned mode switch for an unbounded workspace. Product code does not mirror it in `state.values` or create another canvas-mode control.
 - Turning it on removes only the finite artboard boundary and clipping. `Aspect ratio`, `Canvas width`, and `Canvas height` disappear because they do not constrain the workspace.
-- Infinity canvas suppresses the bounded product-rendered preview background so the dormant finite output does not appear as a second canvas. While Background is on, `CanvasShell` fills the complete infinite viewport with the selected `Background color`; product code must not draw a synthetic workspace rectangle.
+- Runtime owns both live background surfaces. In finite mode it renders one pointer-transparent evaluated background layer below model/image media and below the transparent product foreground. Infinity mode omits that finite layer and fills the complete viewport with the same evaluated `Background color`; product code must not draw either background surface.
 - Product output that semantically represents an editor environment rather than
-  bounded scene geometry may use `ToolcraftAppComposition.infiniteCanvasContent`.
+  bounded scene geometry may use the `scene.infiniteCanvasContent` port.
   Runtime mounts it only in Infinity mode, below the transformed product world,
   across the full viewport, with pointer input disabled. It does not pan, zoom,
   contribute to `sceneBoundsProvider`, or enter image/SVG/video export.
 - The last finite `canvas.size` remains dormant and immutable while Infinity canvas is on. Turning it off restores that exact size and clipping at the current offset and zoom without centering; reset, undo/redo, persistence, and settings transfer preserve the same canonical `canvas.mode` behavior.
 - Offset, zoom, product/image/model world frames, mounted component and renderer identity, and live custom-renderer backing remain unchanged in both mode transitions. Zoom, pan, radar, and model orientation change presentation, not scene geometry or export bounds.
-- Product `canvasContent` and custom renderer output declare one direct `ToolcraftAppComposition.sceneBoundsProvider`. It returns product world-space rectangles for the supplied exact frame state in both finite and infinite modes; do not use a registry, DOM measurement, source pixel dimensions, or app-authored time-range envelope.
+- Product `scene.canvasContent` and custom renderer output declare one direct `scene.sceneBoundsProvider`. It returns product world-space rectangles for the supplied exact frame state in both finite and infinite modes; do not use a registry, DOM measurement, source pixel dimensions, or app-authored time-range envelope.
 - Runtime resolves that provider for the live committed state and positions one canonical product scene surface at the exact union in both modes. It gives product export the same provider rect as live output. Finite mode displays a centered artboard as the clip and output boundary without changing the scene or view; only a provider-less finite composition may fall back to the artboard rect.
-- Canvas 2D, WebGL, and WebGPU renderers call `useToolcraftProductSceneFrame()` inside `canvasContent` and use its canonical product rect for backing dimensions plus world-to-local translation. The live backing stays unchanged during a mode toggle. The hook reports `ready`, `empty`, or `unavailable`; `ready` carries the same canonical rect in finite and infinite modes, while empty/unavailable Infinity frames never silently render through finite fallback geometry.
+- Canvas 2D, WebGL, and WebGPU renderers call `useToolcraftProductSceneFrame()` inside `scene.canvasContent` and use its canonical product rect for backing dimensions plus world-to-local translation. The live backing stays unchanged during a mode toggle. The hook reports `ready`, `empty`, or `unavailable`; `ready` carries the same canonical rect in finite and infinite modes, while empty/unavailable Infinity frames never silently render through finite fallback geometry.
 - Image source pixels and image scene geometry are separate: intrinsic dimensions describe the decoded resource, while the runtime image transform supplies its world frame.
 - Infinite PNG and SVG export crop to the outward-rounded union of visible product, image, and model frames. Hidden or unavailable layers, runtime media suppressed by the composition, and editor-only handles or gizmos are excluded. SVG still requires the product to author real vector content; runtime media/model pixels are not silently traced or wrapped in SVG.
 - Prove unavailable-image exclusion with `createToolcraftUnavailableImageResourceFixture` and `expectToolcraftInfinityCanvasUnavailableImageExportEvidence`; product tests never mutate storage/state or call the reserved bridge, and evidence publishes only after deterministic cleanup restores the ready resource.
@@ -63,11 +79,19 @@ Read this module before changing Setup, canvas sizing, background, image export,
 
 ## Timeline Setup Switch
 
-- When `panels.timeline` is enabled, runtime adds the `Timeline` mode switch to Setup.
+- When a Timeline module is present, runtime adds the `Timeline` mode switch to Setup.
 - Off shows compact Play-only transport.
 - On shows the extended timeline with scrubber, duration, loop, and keyframe UI.
 - The switch controls runtime presentation only. It does not pause playback, change product values, remove keyframes, alter export, or reset with `Reset controls`.
-- When `panels.timeline` is omitted, the Timeline switch must not appear.
+- When no Timeline module is present, the Timeline switch must not appear.
+
+## Rotation Lock
+
+- An app with an `orientationGizmo` receives the runtime-owned `Lock rotation` switch (`canvas.rotationLocked`), off by default. It sits right of Timeline in the final Setup row, or alone when Timeline is absent; it does not enable Timeline. Apps without a gizmo do not receive this switch.
+- Turning it on stops manual gizmo drag, axis snap, double-click reset, and direct model orbit. Active gestures release pointer capture and pending snap/orbit frames are discarded immediately. Unlocking never replays those frames or changes the current pose.
+- The complete gizmo, including its backing, remains visible at `1 / 1.5` (two-thirds) normal opacity and exposes `aria-disabled`. Pan and zoom remain available; a locked model press passes through to canvas navigation.
+- This is a manual-interaction lock, not a fixed-camera product declaration: timeline evaluation, explicit runtime pose commands, settings import, undo/redo and export keep their normal semantics. The boolean uses canonical runtime values, local workspace persistence and settings transfer; Reset controls restores its source-saved value, or the initial default `false` when no source snapshot exists. It is not keyframeable.
+- Product code must not author a duplicate switch, rotate through a separate gesture handler, or recreate disabled gizmo visuals.
 
 ## Background
 
@@ -79,7 +103,7 @@ Read this module before changing Setup, canvas sizing, background, image export,
 - A separate visible Background section is stale layout and fails acceptance.
 - Use a schema `color` target such as `appearance.background` or `scene.background`.
 - Do not hardcode a configurable background in CSS, Canvas `fillStyle`, or WebGL clear color.
-- Live preview calls `shouldIncludeToolcraftPreviewBackground(state)` and hides only the bounded product-rendered background when Background is off or Infinity canvas is on. In Infinity mode, the runtime viewport—not the product renderer—uses the selected Background color.
+- Live preview never paints a product-owned bounded background. Runtime removes its finite layer when Background is off or Infinity canvas is on, and uses the timeline-evaluated Background color for the one active finite or Infinity surface.
 - Runtime image export reads Background directly: PNG can be transparent, while JPG remains opaque.
 - Runtime SVG export reads Background directly: enabled output gets one runtime-owned vector background rectangle; disabled output remains transparent.
 - Runtime video export keeps the selected background even when Background is off.
@@ -95,18 +119,75 @@ Use this sequence as the single authority for choosing product artifact delivery
 5. Keep image with requested SVG/video unless the user explicitly requests image removal.
 6. Record all three decisions in `productReadiness.exportIntent`.
 
-Product-mode readiness requires all three discriminated decisions. Image uses `toolcraft-default`, `user-requested`, or `user-removed`: `user-requested` requires non-empty user-request evidence, and `user-removed` requires non-empty explicit user-removal evidence. SVG and video each use `not-requested` or `user-requested`; `user-requested` requires non-empty explicit user-request evidence. Do not add optional modes, legacy fallbacks, or schema-derived inference.
+Product-mode readiness requires all three discriminated decisions. Image uses `toolcraft-default`, `user-requested`, or `user-removed`: `user-requested` requires non-empty structured user-message evidence, and `user-removed` requires non-empty structured user-removal evidence. SVG and video each use `not-requested` or `user-requested`; `user-requested` requires non-empty structured user-message evidence. Do not add optional modes, legacy fallbacks, or schema-derived inference.
+
+### Primary Request Evidence
+
+Before planning an optional export module, inspect the original user message,
+not an earlier agent's claim about that message. Every nondefault decision uses
+`ToolcraftExportRequestEvidence` with exactly these four fields (synthetic example):
+
+```ts
+video: {
+  mode: "user-requested",
+  evidence: {
+    source: "user-message",
+    messageRef: "conversation-id/user-message-id",
+    messageText: "Make a six-second loop. Add MP4 video export as well.",
+    quote: "Add MP4 video export as well.",
+  },
+}
+```
+
+- `messageRef` locates the inspected primary message: a host conversation/message
+  identifier or an actual transcript path with a message/line locator. A date,
+  invented identifier, plan path, or worklog reference is not sufficient.
+- `messageText` preserves the complete original user message relevant to this
+  decision. `quote` is a nonblank verbatim contiguous substring, including the
+  context needed to understand the requested artifact or removal. Do not
+  translate, normalize whitespace/Unicode, paraphrase, or clip away a negation.
+- Plans, worklogs, assistant messages, summaries, and reference apps are not
+  primary request evidence. Do not copy their attributed quotes forward without
+  finding the original. Generic approval to execute a plan does not authenticate
+  a quote that the plan attributed to the user. For a short acceptance of an
+  explicit export offer, inspect the actual offer/answer exchange; keep the
+  user's answer verbatim and record the interpretation separately in the worklog.
+- Reconcile later user exclusions before reusing earlier evidence. A request for
+  animation, a loop, timeline, presets, reference parity, or static comparison
+  renders does not request video delivery. Adding an export capability and
+  executing an artifact render are separate scope decisions.
+- If the primary request is unavailable or does not establish explicit artifact
+  intent, leave SVG/video `not-requested` and image `toolcraft-default`. Do not
+  invent consent or add optional export code/tests as a precaution. Preserve an
+  already established explicit user removal; ambiguity is not permission to
+  reverse it. Record the uncertainty rather than promoting an agent assertion.
+
+The protected validator checks source shape and exact quote membership. It does
+not authenticate chat authorship, fetch `messageRef`, or decide natural-language
+permission. Fabricating both `messageText` and `quote` cannot be detected without
+a trusted host transcript source; the agent must inspect and assess the original.
+Passing structural validation alone is not proof of user authorization.
 
 Image/video settings keep their existing base layout:
 
-| Resolved delivery | Settings layout | Sticky export actions | Artifact acceptance |
-| --- | --- | --- | --- |
-| Image only | `Image Export` directly above sticky actions | `Export PNG` primary | Complete image coverage only |
-| Image and video | `Image Export` immediately before `Video Export`; `Video Export` directly above sticky actions | `Export PNG` secondary, `Export Video` primary | Complete image and video coverage |
-| Video only | `Video Export` directly above sticky actions | `Export Video` primary | Complete video coverage only |
-| Explicit no image/video | No image or video settings section | No image or video export action | No image or video artifact row |
+| Resolved delivery       | Settings layout                                                                                | Sticky export actions                          | Artifact acceptance               |
+| ----------------------- | ---------------------------------------------------------------------------------------------- | ---------------------------------------------- | --------------------------------- |
+| Image only              | `Image Export` directly above sticky actions                                                   | Image action primary                           | Complete image coverage only      |
+| Image and video         | `Image Export` immediately before `Video Export`; `Video Export` directly above sticky actions | Image action secondary, Video action primary | Complete image and video coverage |
+| Video only              | `Video Export` directly above sticky actions                                                   | Video action primary                         | Complete video coverage only      |
+| Explicit no image/video | No image or video settings section                                                             | No image or video export action                | No image or video artifact row    |
 
 SVG is an orthogonal enabled capability: add one typed `Export SVG` action and complete SVG artifact row, but no SVG settings section. It joins the existing sticky actions without changing Image Export/Video Export adjacency. SVG-only requires explicit SVG request evidence plus explicit image removal and video `not-requested`. Explicit no-export requires non-empty image-removal evidence with SVG/video both `not-requested`.
+
+## Export Job Lifetime
+
+- Image, SVG, and video share one active export slot per runtime store. A second export reports `export-busy`; it is not queued. Non-export controls/actions remain usable, and hiding or remounting the panel does not replace the job.
+- Runtime captures one isolated, deeply readonly state snapshot when it accepts the export. Live edits apply to the next export, not an in-flight file. Product callbacks must treat their supplied `state` as immutable and use it instead of reading the live store.
+- Raster and SVG `renderFrame` contexts include an `AbortSignal` named `signal`. Check `signal.throwIfAborted()` around asynchronous work and pass the signal to cancellable APIs. Cancellation is cooperative: runtime waits for actual callback/encoder settlement and cleanup; it never frees an in-use resource to pretend that a job finished.
+- Root teardown and renderer-pipeline replacement cancel the affected export. Runtime checks cancellation again before downloading, so a late renderer, encoder, or `toBlob` result cannot download after cancellation. There is no product-owned queue or additional Cancel control.
+- Runtime retains source, model, and renderer resources for the job and releases them after settlement. Image decoding is cached within that job only; repeated frames or assets sharing a resource reuse the decoded source while retaining their own scene transforms.
+- Finite artboard crop, all-frame Infinity crop, selected resolution, and 30 FPS video cadence are unchanged. Video keeps schedule/bounds metadata and evaluates immutable frame states on demand rather than retaining a complete state copy per frame.
+- Low-level runtime export requests now require `signal` and readonly state; runtime scene rendering also receives the session image loader. Generated product code continues to supply `scene.rasterFrameRenderer` / `scene.vectorFrameRenderer` callbacks, not low-level exporters or resource owners. Cleanup failures remain failures, including when cancellation or rendering also failed.
 
 ## Image Export
 
@@ -116,8 +197,8 @@ SVG is an orthogonal enabled capability: add one typed `Export SVG` action and c
   - `export.image.resolution`, default `4k`, with baseline `2K`, `4K`, and `8K` options.
 - Image-only apps place `Image Export` directly above sticky footer actions.
 - Apps with both image and video export place `Image Export` immediately before `Video Export`.
-- Typed `export-image` actions are handled by the runtime. It resolves the current scene frame, selected format and resolution, allocates the exact backing, composites background plus visible runtime media/models, awaits `ToolcraftAppComposition.exportRenderer`, encodes the selected artifact, downloads it, and reports typed progress/failures.
-- Product code supplies only the shared deterministic `exportRenderer.renderFrame` callback in scene coordinates. It must not allocate an export canvas, call `toBlob`/`toDataURL`, create object URLs, or download the artifact.
+- `imageExportModule()` owns the typed action/settings. Runtime resolves the current scene frame, selected format and resolution, allocates the exact backing, composites background plus visible runtime media/models, awaits `scene.rasterFrameRenderer`, encodes the selected artifact, downloads it, and reports typed progress/failures.
+- Product code supplies only the shared deterministic `scene.rasterFrameRenderer.renderFrame` callback in scene coordinates. It must not allocate an export canvas, call `toBlob`/`toDataURL`, create object URLs, or download the artifact.
 - The selected `export.image.resolution` must produce real 2048/4096/8192px long-edge PNG output for 2K/4K/8K. Retina sizing is only the fallback for current/omitted resolution.
 
 When `rendererTechnique.gpu.export` selects VGPU, follow the canonical
@@ -150,15 +231,19 @@ preview-only VGPU selection adds no VGPU export requirement.
 - Only products with SVG `user-requested` intent and non-empty explicit request evidence expose `Export SVG`.
 - SVG means a standalone, self-contained, editable vector artifact. Raster-in-SVG (`image`, data URLs), `foreignObject`, scripts, event handlers, animation elements, external resources, and external `url(...)` references are rejected.
 - SVG has no export settings section. Runtime derives `width`, `height`, and `viewBox` from the same finite or Infinity scene frame used by artifact export.
-- Use a typed `export-svg` sticky action and provide `ToolcraftAppComposition.svgExportRenderer`. The product callback appends namespace-aware vector nodes only to the supplied detached group:
+- Use `svgExportModule()` and provide the renderer value as `scene.vectorFrameRenderer` through `composeToolcraftApp`. The product `svgExportRenderer` callback appends namespace-aware vector nodes only to the supplied detached group:
 
 ```ts
 export const svgExportRenderer = {
   baseFileName: "column-graph",
   renderFrame: ({ container, frame, state }) => {
-    const rect = container.ownerDocument.createElementNS("http://www.w3.org/2000/svg", "rect");
+    const rect = container.ownerDocument.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "rect",
+    );
     rect.setAttribute("data-column-track", "true");
-    rect.setAttribute("x", String(frame.x)); rect.setAttribute("y", String(frame.y));
+    rect.setAttribute("x", String(frame.x));
+    rect.setAttribute("y", String(frame.y));
     rect.setAttribute("width", String(frame.width));
     rect.setAttribute("height", String(frame.height));
     rect.setAttribute("fill", String(state.values["appearance.foreground"]));
@@ -175,6 +260,6 @@ export const svgExportRenderer = {
 
 - Export actions in sticky `panelActions` match the resolved artifact intent exactly. Explicit no-export products have no image, SVG, or video export action.
 - Clipboard copy may be an additional product action, but it never changes or substitutes for the recorded artifact intent.
-- Export PNG, Export SVG, and Export Video use `icon: "upload-simple"` to match the runtime `Export Settings` action.
+- Runtime button text and accessible names follow the selected format: `Export PNG` / `Export JPG` from `export.image.format`, `Export MP4` / `Export WebM` from `export.video.format`, and fixed `Export SVG`. This applies immediately, after restore/import, Undo/Redo and reset. Roles and action values stay fixed; schema labels are metadata, not current-format authority. Product code must not rename or replace these actions. Keep the runtime export icon `upload-simple`. Changes during an export affect the next request, not the accepted job snapshot.
 - Runtime export actions own their real Promise and report render/encode/download progress through the sticky footer indicator.
-- Async non-export download/copy/generate/apply handlers return the real Promise from `onPanelAction` and use `reportProgress(0..1)` when determinate progress is available.
+- Async non-export download/copy/generate/apply handlers return the real Promise from `actions.onPanelAction` and use `reportProgress(0..1)` when determinate progress is available.

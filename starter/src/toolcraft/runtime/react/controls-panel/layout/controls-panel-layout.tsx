@@ -11,6 +11,10 @@ import {
   getToolcraftCanvasSizeTargetDimension,
   isToolcraftRuntimeOwnedTarget,
 } from "../../../schema/runtime-targets";
+import {
+  getToolcraftSliderStepPositionCount,
+  getToolcraftVisualDiscreteSliderMarkerIssue,
+} from "../../../schema/slider-marker-policy";
 import { getToolcraftControlRendererKind } from "../renderers/controls-panel-renderer-registry";
 
 export type ControlEntry = [string, ResolvedToolcraftControlSchema];
@@ -25,7 +29,7 @@ export type RenderedControlRenderGroup = {
 };
 
 export function isControlsPanelRenderableControl(
-  control: ToolcraftControlSchema,
+  control: Pick<ToolcraftControlSchema, "type">,
 ): boolean {
   return getToolcraftControlRendererKind(control.type) !== "canvas-handle";
 }
@@ -258,18 +262,16 @@ export function shouldShowColorFieldLabel({
 
 export function getControlMarkerCount(
   control: ToolcraftControlSchema,
-  markerLimit?: number,
 ): number | undefined {
-  const markerCount = control.markerCount;
-
   if (
-    markerLimit &&
     control.variant === "discrete" &&
-    typeof markerCount === "number" &&
-    markerCount > markerLimit
+    getToolcraftVisualDiscreteSliderMarkerIssue(control) !== null
   ) {
     return hiddenDiscreteMarkerCount;
   }
 
-  return markerCount;
+  return control.variant === "discrete"
+    ? (getToolcraftSliderStepPositionCount(control) ??
+        hiddenDiscreteMarkerCount)
+    : control.markerCount;
 }

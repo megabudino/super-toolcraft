@@ -14,7 +14,7 @@ import { getToolcraftOutputExportLayoutErrors } from "./output-export-layout-rul
 import { buildToolcraftOutputExportFacts } from "./output-export-model";
 import { getToolcraftImageExportErrors } from "./output-image-export-rules";
 import { getToolcraftVideoExportErrors } from "./output-video-export-rules";
-import { getToolcraftExportArtifactCoverageErrors } from "./export-artifact-coverage";
+import { getToolcraftExportArtifactActionPlacementErrors } from "./export-artifact-coverage";
 import type {
   ToolcraftComponentAcceptance,
   ToolcraftProductReadiness,
@@ -39,10 +39,8 @@ export function getToolcraftOutputExportErrors({
   productReadiness: ToolcraftProductReadiness;
   schema: ResolvedToolcraftAppSchema;
 }): string[] {
-  const exportArtifactCoverageErrors = getToolcraftExportArtifactCoverageErrors({
-    acceptance,
-    schema,
-  });
+  const exportArtifactCoverageErrors =
+    getToolcraftExportArtifactActionPlacementErrors(schema);
   if (productReadiness.mode === "starter") {
     return exportArtifactCoverageErrors;
   }

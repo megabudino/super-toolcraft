@@ -181,7 +181,12 @@ function getControlGroupDependencies({
     getToolcraftControlRendererStateDependencies(control.type).includes(
       "value",
     ) || keyframeTargets.includes(control.target)
-      ? [control.target]
+      ? [
+          control.target,
+          ...(control.type === "collectionActions" && control.selectionTarget
+            ? [control.selectionTarget]
+            : []),
+        ]
       : [],
   );
   const rendererDependencies = entries.flatMap(([, control]) =>
@@ -311,10 +316,15 @@ export const ControlsPanelControlGroup = React.memo(
                 : null,
             selectedKeyframeId: getSelectedKeyframeId(state, keyframeTargetSet),
             valuesByTarget: Object.fromEntries(
-              entries.map(([, control]) => [
-                control.target,
-                getToolcraftTargetValue(state, control.target) ??
-                  control.defaultValue,
+              entries.flatMap(([, control]) => [
+                [
+                  control.target,
+                  getToolcraftTargetValue(state, control.target) ??
+                    control.defaultValue,
+                ],
+                ...(control.type === "collectionActions" && control.selectionTarget
+                  ? [[control.selectionTarget, state.values[control.selectionTarget]]]
+                  : []),
               ]),
             ),
             visible: entries.every(([, control]) =>
@@ -421,7 +431,12 @@ export const ControlsPanelControlGroup = React.memo(
       case "collection":
         node = renderCollectionControl({
           control,
+          dispatchCommand,
           name,
+          selectedIndex:
+            control.type === "collectionActions" && control.selectionTarget
+              ? (selection.valuesByTarget[control.selectionTarget] as number | null)
+              : null,
           setControlValue,
           value,
         });
@@ -456,7 +471,6 @@ export const ControlsPanelControlGroup = React.memo(
         break;
       case "settings":
         node = renderSettingsTransferControl({
-          dispatch,
           getState: store.getState,
           id,
         });

@@ -8,13 +8,14 @@ if (fixtureSource && process.env.VITEST) {
 }
 
 if (!fixtureSource) {
-  const [vitest, performance, pipeline, runtime, feedbackOperations] =
+  const [vitest, performance, pipeline, runtime, feedbackOperations, feedbackExport] =
     await Promise.all([
       import("vitest"),
       import("./app-performance"),
       import("./pipeline"),
       import("@/toolcraft/runtime"),
       import("./feedback-operations"),
+      import("./feedback-export"),
     ]);
   const { describe, expect, it } = vitest;
   type Resource = Awaited<
@@ -70,6 +71,52 @@ if (!fixtureSource) {
     context.getOrCreateResource(["feedback"], () => resource, () => undefined);
 
   describe("VGPU physical feedback operation ownership", () => {
+    it("exports no disabled field and leaves the runtime background untouched", async () => {
+      const allocate = vitest.vi
+        .spyOn(pipeline, "createPhysicalFeedbackResource")
+        .mockRejectedValue(new Error("Disabled export must not allocate GPU resources."));
+      const execute = vitest.vi
+        .spyOn(pipeline, "executePhysicalFeedbackPasses")
+        .mockRejectedValue(new Error("Disabled export must not execute GPU passes."));
+      const context = {
+        clearRect: vitest.vi.fn(),
+        drawImage: vitest.vi.fn(),
+        fillRect: vitest.vi.fn(),
+        restore: vitest.vi.fn(),
+        save: vitest.vi.fn(),
+      };
+      try {
+        for (const includeBackground of [true, false]) {
+          await expect(
+            feedbackExport.physicalFeedbackExportRenderer.renderFrame({
+              context: context as unknown as CanvasRenderingContext2D,
+              frame: { height: 16, width: 16, x: 0, y: 0 },
+              pixelRatio: 1,
+              rendererPipeline: null,
+              state: {
+                timeline: { durationSeconds: 2 },
+                values: {
+                  "export.includeBackground": includeBackground,
+                  "simulation.enabled": false,
+                  "simulation.impulse": 0.5,
+                },
+              } as never,
+              timeSeconds: 0,
+              timelineProgress: 0,
+            }),
+          ).resolves.toBeUndefined();
+        }
+        expect(allocate).not.toHaveBeenCalled();
+        expect(execute).not.toHaveBeenCalled();
+        for (const method of Object.values(context)) {
+          expect(method).not.toHaveBeenCalled();
+        }
+      } finally {
+        allocate.mockRestore();
+        execute.mockRestore();
+      }
+    });
+
     it("executes each surface simulation and every destination presentation", async () => {
       const rendererPipeline = runtime.createToolcraftRendererPipelineRuntime(
         performance.appRendererPipelineRegistration,

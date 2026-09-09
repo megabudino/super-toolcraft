@@ -10,34 +10,18 @@ import { makeControlAcceptance } from "./app-acceptance.test-utils";
 
 function createMandatorySetupSchema(settingsTransfer: false | "auto" = false) {
   return defineContractSchemaFixture({
-    canvas: { enabled: true },
-    panels: {
-      controls: {
-        sections: [
-          {
-            controls: Object.fromEntries(
-              Array.from({ length: 6 }, (_, index) => [
-                `control${index}`,
-                {
-                  defaultValue: index,
-                  label: `Control ${index + 1}`,
-                  orderRole: "detail",
-                  semanticGroup: "transform",
-                  target: `settings.control${index}`,
-                  type: "slider",
-                },
-              ]),
-            ),
-            id: "transform-primary",
-            title: "Transform Primary",
-          },
-          {
-            controls: Object.fromEntries(
-              Array.from({ length: 6 }, (_, offset) => {
-                const index = offset + 6;
-                return [
+    base: {
+      identity: { id: "contract-fixture", title: "Contract fixture" },
+      canvas: { enabled: true },
+      panels: {
+        controls: {
+          sections: [
+            {
+              controls: Object.fromEntries(
+                Array.from({ length: 6 }, (_, index) => [
                   `control${index}`,
                   {
+                    applicability: { mode: "always" as const },
                     defaultValue: index,
                     label: `Control ${index + 1}`,
                     orderRole: "detail",
@@ -45,17 +29,40 @@ function createMandatorySetupSchema(settingsTransfer: false | "auto" = false) {
                     target: `settings.control${index}`,
                     type: "slider",
                   },
-                ];
-              }),
-            ),
-            id: "transform-secondary",
-            title: "Transform Secondary",
-          },
-        ],
-        title: "Complex Settings",
+                ]),
+              ),
+              id: "transform-primary",
+              title: "Transform Primary",
+            },
+            {
+              controls: Object.fromEntries(
+                Array.from({ length: 6 }, (_, offset) => {
+                  const index = offset + 6;
+                  return [
+                    `control${index}`,
+                    {
+                      applicability: { mode: "always" as const },
+                      defaultValue: index,
+                      label: `Control ${index + 1}`,
+                      orderRole: "detail",
+                      semanticGroup: "transform",
+                      target: `settings.control${index}`,
+                      type: "slider",
+                    },
+                  ];
+                }),
+              ),
+              id: "transform-secondary",
+              title: "Transform Secondary",
+            },
+          ],
+          title: "Complex Settings",
+        },
       },
+      settingsTransfer,
+      persistence: { storage: "none" },
     },
-    settingsTransfer,
+    modules: [],
   });
 }
 
@@ -67,32 +74,38 @@ function createMandatorySetupAcceptance() {
 
 function createMandatorySetupWithCanvasSizeSchema() {
   return defineContractSchemaFixture({
-    canvas: { enabled: true, size: { height: 720, unit: "px", width: 1280 } },
-    panels: {
-      controls: {
-        sections: [
-          {
-            controls: Object.fromEntries(
-              Array.from({ length: 10 }, (_, index) => [
-                `control${index}`,
-                {
-                  defaultValue: index,
-                  label: `Control ${index + 1}`,
-                  orderRole: "detail",
-                  semanticGroup: "transform",
-                  target: `settings.control${index}`,
-                  type: "slider",
-                },
-              ]),
-            ),
-            id: "transform",
-            title: "Transform",
-          },
-        ],
-        title: "Runtime Setup Settings",
+    base: {
+      identity: { id: "contract-fixture", title: "Contract fixture" },
+      canvas: { enabled: true, size: { height: 720, unit: "px", width: 1280 } },
+      panels: {
+        controls: {
+          sections: [
+            {
+              id: "transform",
+              controls: Object.fromEntries(
+                Array.from({ length: 10 }, (_, index) => [
+                  `control${index}`,
+                  {
+                    applicability: { mode: "always" as const },
+                    defaultValue: index,
+                    label: `Control ${index + 1}`,
+                    orderRole: "detail",
+                    semanticGroup: "transform",
+                    target: `settings.control${index}`,
+                    type: "slider",
+                  },
+                ]),
+              ),
+              title: "Transform",
+            },
+          ],
+          title: "Runtime Setup Settings",
+        },
       },
+      settingsTransfer: false,
+      persistence: { storage: "none" },
     },
-    settingsTransfer: false,
+    modules: [],
   });
 }
 
@@ -104,11 +117,13 @@ function createMandatorySetupWithCanvasSizeAcceptance(): ToolcraftComponentAccep
       browser: {
         budget: "standard",
         file: "e2e/app-controls.spec.ts",
-        testName: "browser: Infinity canvas removes the artboard and restores finite size",
+        testName:
+          "browser: Infinity canvas removes the artboard and restores finite size",
       },
       componentType: "canvas",
       evidence: "viewport-side-effect" as const,
-      expectedObservable: "Infinity mode restores the previous finite canvas size.",
+      expectedObservable:
+        "Infinity mode restores the previous finite canvas size.",
       fixture: "editable-output canvas",
       id: "canvas.infinity.mode",
       infinityCanvasCoverage: "mode-continuity-and-restoration" as const,
@@ -132,18 +147,22 @@ describe("Toolcraft starter setup and readiness acceptance coverage", () => {
         entity: "Transform",
         entityId: "transform",
         finiteSelectors: [],
-        groupingReason: "Primary controls edit the first transform workflow stage.",
+        groupingReason:
+          "Primary controls edit the first transform workflow stage.",
         id: "transform-primary",
-        splitReason: "The transform entity exceeds ten controls and uses two balanced stages.",
+        splitReason:
+          "Transform geometry and its finishing settings have distinct workflow and reset scopes.",
         workflowStage: "primary",
       },
       {
         entity: "Transform",
         entityId: "transform",
         finiteSelectors: [],
-        groupingReason: "Secondary controls edit the final transform workflow stage.",
+        groupingReason:
+          "Secondary controls edit the final transform workflow stage.",
         id: "transform-secondary",
-        splitReason: "The transform entity exceeds ten controls and uses two balanced stages.",
+        splitReason:
+          "Transform geometry and its finishing settings have distinct workflow and reset scopes.",
         workflowStage: "secondary",
       },
     ]);
@@ -151,14 +170,21 @@ describe("Toolcraft starter setup and readiness acceptance coverage", () => {
 
   it("rejects generated apps without the mandatory runtime setup controls panel", () => {
     const schema = defineContractSchemaFixture({
-      canvas: { enabled: true },
-      panels: {},
+      base: {
+        identity: { id: "contract-fixture", title: "Contract fixture" },
+        canvas: { enabled: true },
+        panels: {},
+        persistence: { storage: "none" },
+      },
+      modules: [],
     });
 
-    expect(validateContractAcceptance({
-      schema: schema,
-      acceptance: [],
-    })).toEqual(
+    expect(
+      validateContractAcceptance({
+        schema: schema,
+        acceptance: [],
+      }),
+    ).toEqual(
       expect.arrayContaining([
         "Generated Toolcraft apps must define a controls panel so the mandatory runtime Setup section is visible.",
       ]),
@@ -182,103 +208,120 @@ describe("Toolcraft starter setup and readiness acceptance coverage", () => {
     const errors = validateContractAcceptance({
       schema: smallSchema,
       acceptance: createMandatorySetupWithCanvasSizeAcceptance(),
-      sectionInventory: createContractSectionInventoryFixture(smallSchema, [{
-        entity: "Transform",
-        entityId: "transform",
-        finiteSelectors: [],
-        groupingReason: "Transform controls edit one product transform entity.",
-        id: "transform",
-      }]),
+      sectionInventory: createContractSectionInventoryFixture(smallSchema, [
+        {
+          entity: "Transform",
+          entityId: "transform",
+          finiteSelectors: [],
+          groupingReason:
+            "Transform controls edit one product transform entity.",
+          id: "transform",
+        },
+      ]),
     });
 
     expect(errors).toEqual([]);
   });
 
-  it("passes complex schemas with auto settings transfer enabled", () => {
+  it("passes complex schemas with the runtime defaults authoring slot", () => {
     const complexSchema = createMandatorySetupSchema("auto");
     const acceptance: ToolcraftComponentAcceptance[] = [
       {
         automated: true,
-        automatedTestName: "settings transfer exports and imports complex settings",
+        automatedTestName:
+          "source defaults save complex settings",
         browser: {
           budget: "standard",
           file: "e2e/app-controls.spec.ts",
-          testName: "browser: settings transfer exports and imports complex settings",
+          testName:
+            "browser: source defaults save complex settings",
         },
         componentType: "settingsTransfer",
         evidence: "persistence-state",
         expectedObservable:
-          "Export Settings downloads app-scoped JSON and Import Settings restores edited controls.",
-        fixture: "settings transfer complex fixture",
+          "Save as Defaults writes app-scoped source defaults and header Reset restores them.",
+        fixture: "source defaults complex fixture",
         id: "settings.transfer",
         kind: "control",
         target: "runtime.settingsTransfer",
         userAction:
-          "Change one complex setting, export settings, change it again, import the JSON, and observe the restored value.",
+          "Change one complex setting, save defaults, edit it again, and use header Reset to observe the saved value.",
       },
       ...createMandatorySetupAcceptance(),
     ];
 
-    expect(validateContractAcceptance({
-      schema: complexSchema,
-      acceptance: acceptance,
-      sectionInventory: createComplexSectionInventory(complexSchema),
-    })).toEqual([]);
+    expect(
+      validateContractAcceptance({
+        schema: complexSchema,
+        acceptance: acceptance,
+        sectionInventory: createComplexSectionInventory(complexSchema),
+      }),
+    ).toEqual([]);
   });
 
   it("rejects app-authored controls that try to own runtime setup targets", () => {
     const schema = defineContractSchemaFixture({
-      canvas: {
-        enabled: true,
-        renderScale: true,
-        size: { height: 1080, unit: "px", width: 1920 },
-      },
-      panels: {
-        controls: {
-          sections: [
-            {
-              controls: {
-                manualWidth: {
-                  defaultValue: 1200,
-                  label: "Width",
-                  target: "canvas.size.width",
-                  textValueKind: "single-line",
-                  type: "text",
-                },
-                manualRenderScale: {
-                  defaultValue: 1,
-                  label: "Scale",
-                  max: 2,
-                  min: 1,
-                  target: "canvas.renderScale",
-                  type: "slider",
-                },
-                manualTimeline: {
-                  defaultValue: true,
-                  label: "Timeline",
-                  target: "panels.timeline.extended",
-                  type: "switch",
-                },
-              },
-              title: "Runtime Duplicates",
-            },
-          ],
-          title: "Controls",
+      base: {
+        identity: { id: "contract-fixture", title: "Contract fixture" },
+        canvas: {
+          enabled: true,
+          renderScale: true,
+          size: { height: 1080, unit: "px", width: 1920 },
         },
+        panels: {
+          controls: {
+            sections: [
+              {
+                id: "test-section-3",
+                controls: {
+                  manualWidth: {
+                    applicability: { mode: "always" as const },
+                    defaultValue: "1200",
+                    label: "Width",
+                    target: "canvas.size.width",
+                    textValueKind: "single-line",
+                    type: "text",
+                  },
+                  manualRenderScale: {
+                    applicability: { mode: "always" as const },
+                    defaultValue: 1,
+                    label: "Scale",
+                    max: 2,
+                    min: 1,
+                    target: "canvas.renderScale",
+                    type: "slider",
+                  },
+                  manualTimeline: {
+                    applicability: { mode: "always" as const },
+                    defaultValue: true,
+                    label: "Timeline",
+                    target: "panels.timeline.extended",
+                    type: "switch",
+                  },
+                },
+                title: "Runtime Duplicates",
+              },
+            ],
+            title: "Controls",
+          },
+        },
+        persistence: { storage: "none" },
       },
+      modules: [],
     });
 
-    expect(validateContractAcceptance({
-      schema: schema,
-      acceptance: [],
-    })).toEqual(
+    expect(
+      validateContractAcceptance({
+        schema: schema,
+        acceptance: [],
+      }),
+    ).toEqual(
       expect.arrayContaining([
-        'Runtime Setup must not include the Timeline switch unless panels.timeline is enabled.',
-        'Runtime Duplicates / manualWidth uses runtime Setup target "canvas.size.width". Runtime Setup owns Export Settings, Import Settings, Infinity canvas, Aspect ratio, Canvas width, Canvas height, Resolution scale, and Timeline; do not declare these controls in app-authored sections.',
-        'Runtime Duplicates / manualRenderScale uses runtime Setup target "canvas.renderScale". Runtime Setup owns Export Settings, Import Settings, Infinity canvas, Aspect ratio, Canvas width, Canvas height, Resolution scale, and Timeline; do not declare these controls in app-authored sections.',
-        'Runtime Duplicates / manualTimeline uses runtime Setup target "panels.timeline.extended". Runtime Setup owns Export Settings, Import Settings, Infinity canvas, Aspect ratio, Canvas width, Canvas height, Resolution scale, and Timeline; do not declare these controls in app-authored sections.',
+        "Runtime Setup must not include the Timeline switch unless panels.timeline is enabled.",
+        'Runtime Duplicates / manualWidth uses runtime Setup target "canvas.size.width". Runtime Setup owns Save as Defaults, Infinity canvas, Aspect ratio, Canvas width, Canvas height, Resolution scale, Timeline, and Lock rotation; do not declare these controls in app-authored sections.',
+        'Runtime Duplicates / manualRenderScale uses runtime Setup target "canvas.renderScale". Runtime Setup owns Save as Defaults, Infinity canvas, Aspect ratio, Canvas width, Canvas height, Resolution scale, Timeline, and Lock rotation; do not declare these controls in app-authored sections.',
+        'Runtime Duplicates / manualTimeline uses runtime Setup target "panels.timeline.extended". Runtime Setup owns Save as Defaults, Infinity canvas, Aspect ratio, Canvas width, Canvas height, Resolution scale, Timeline, and Lock rotation; do not declare these controls in app-authored sections.',
       ]),
     );
   });
-
 });

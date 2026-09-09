@@ -3,6 +3,7 @@
 import * as React from "react";
 
 import { ToolcraftArtifactExportError } from "../../../export/export-error";
+import { useToolcraftExportOwner } from "../../app-shell/toolcraft-export-context";
 import { ToolcraftSceneExportError } from "../../../export/export-frame";
 import type { ToolcraftRendererPipelineClient } from "../../../rendering";
 import { defaultToolcraftRuntimeSceneVisibility } from "../../../scene";
@@ -16,14 +17,14 @@ import type {
   ToolcraftState,
 } from "../../../state/types";
 import type { ActionControlRunAction } from "../renderers/controls-panel-action-renderer";
-import { renderToolcraftRuntimeSceneToCanvas } from "../../canvas/runtime-scene-export";
 import { useToolcraftPipeline } from "../../app-shell/use-toolcraft-pipeline";
-import { useToolcraftSourceAssetCoordinator } from "../../app-shell/toolcraft-source-asset-context";
+import { useToolcraftSourceAssetCoordinator, useToolcraftSourceAssetRetention } from "../../app-shell/toolcraft-source-asset-context";
+import { useToolcraftPipelineExportRetention } from "../../app-shell/toolcraft-pipeline-context";
 import { useOptionalToolcraftModelRenderHost } from "../../model-rendering/model-render-provider";
 import {
-  runToolcraftExportAction,
   type ToolcraftControlsSceneExport,
 } from "./export-action-runner";
+import { runToolcraftExportSession } from "./export-action-session";
 
 export type { ToolcraftControlsSceneExport } from "./export-action-runner";
 
@@ -109,8 +110,14 @@ export function useControlsPanelActions({
   stickyFooterProgress: number | null;
 } {
   const rendererPipeline = useToolcraftPipeline();
+  const exportOwner = useToolcraftExportOwner();
+  const exportStatus = React.useSyncExternalStore(
+    exportOwner.subscribe, exportOwner.getStatus, exportOwner.getStatus,
+  );
   const modelRenderHost = useOptionalToolcraftModelRenderHost();
   const sourceAssetCoordinator = useToolcraftSourceAssetCoordinator();
+  const retainSourceOwner = useToolcraftSourceAssetRetention();
+  const pipelineLifetime = useToolcraftPipelineExportRetention();
   const resolveMediaResource =
     sourceAssetCoordinator.resolveResource ?? (async () => null);
   const nextActionIdRef = React.useRef(0);
@@ -213,7 +220,7 @@ export function useControlsPanelActions({
       return;
     }
 
-    const footerActionProgressTracker = options.trackFooterPending
+    const footerActionProgressTracker = options.trackFooterPending && !runtimeOwnsExport
       ? createFooterActionProgressTracker(reportFeedback)
       : null;
     const actionState = getState();
@@ -221,25 +228,26 @@ export function useControlsPanelActions({
     try {
       const reportProgress =
         footerActionProgressTracker?.reportProgress ?? noopReportProgress;
-      const exportResult = runToolcraftExportAction({
-        action,
-        renderRuntimeScene: (canvas, frame, state) =>
-          renderToolcraftRuntimeSceneToCanvas({
-            canvas,
-            host: modelRenderHost,
-            outputFrame: frame,
-            resolveImageResource: sourceAssetCoordinator.resolveResource,
-            state,
-            visibility: sceneExport.visibility,
-          }),
-        rendererPipeline,
-        reportProgress,
-        sceneExport,
-        state: actionState,
-      });
-      result =
-        exportResult ??
-        onPanelAction?.({
+      if (runtimeOwnsExport) {
+        const admitted = exportOwner.start((context) => runToolcraftExportSession({
+          ...context,
+          action,
+          cancel: exportOwner.cancel,
+          coordinator: sourceAssetCoordinator,
+          host: modelRenderHost,
+          pipelineLifetime,
+          rendererPipeline,
+          retainSourceOwner,
+          sceneExport,
+          state: actionState,
+        }));
+        if (admitted.status === "busy") {
+          reportFeedback({ code: "export-busy", message: "An export is already in progress." });
+          return;
+        }
+        result = admitted.completion;
+      } else {
+        result = onPanelAction?.({
           action,
           dispatch,
           reportFeedback,
@@ -248,6 +256,7 @@ export function useControlsPanelActions({
           rendererPipeline,
           state: actionState,
         });
+      }
     } catch (error) {
       if (
         error instanceof ToolcraftSceneExportError ||
@@ -260,13 +269,23 @@ export function useControlsPanelActions({
       }
     }
 
-    footerActionProgressTracker?.trackResult(result);
+    if (footerActionProgressTracker) {
+      footerActionProgressTracker.trackResult(result);
+    } else if (isPromiseLike(result)) {
+      void Promise.resolve(result).catch((error: unknown) => {
+        if (error instanceof ToolcraftSceneExportError || error instanceof ToolcraftArtifactExportError) {
+          reportFeedback(error.feedback);
+        } else {
+          console.error("Toolcraft panel action failed.", error);
+        }
+      });
+    }
   }
 
   return {
     panelActionFeedback,
     runAction,
-    stickyFooterActive: footerActionProgressEntries.length > 0,
-    stickyFooterProgress,
+    stickyFooterActive: footerActionProgressEntries.length > 0 || "progress" in exportStatus,
+    stickyFooterProgress: "progress" in exportStatus ? exportStatus.progress : stickyFooterProgress,
   };
 }

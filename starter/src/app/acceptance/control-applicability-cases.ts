@@ -2,6 +2,7 @@ import {
   doesToolcraftApplicabilityMatch,
   doesToolcraftPredicateMatchValue,
   getToolcraftApplicabilityPredicates,
+  isToolcraftBuiltInControlType,
   type ResolvedToolcraftAppSchema,
   type ResolvedToolcraftControlSchema,
   type ToolcraftControlPredicateSchema,
@@ -54,7 +55,9 @@ function indexControls(
 function getApplicabilitySelectorControlType(
   control: ResolvedToolcraftControlSchema,
 ): ApplicabilitySelectorControlType | null {
-  switch (control.type) {
+  const type = control.type;
+  if (!isToolcraftBuiltInControlType(type)) return null;
+  switch (type) {
     case "checkbox":
     case "imagePicker":
     case "segmented":
@@ -62,7 +65,7 @@ function getApplicabilitySelectorControlType(
     case "slider":
     case "switch":
     case "tabs":
-      return control.type;
+      return type;
     default:
       return null;
   }

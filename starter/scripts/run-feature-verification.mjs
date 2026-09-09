@@ -3,10 +3,12 @@
 import { realpath, stat } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { withJournalRun } from "./toolcraft-journal-runs.mjs";
 
 import { TOOLCRAFT_BROWSER_PROOF_TIMEOUT_MS } from "../src/app/acceptance/browser-proof-policy.mjs";
 import {
   ensureToolcraftChromium,
+  captureToolcraftProofIpcProcess,
   getToolcraftBinaryPath,
   runToolcraftProofProcess,
 } from "./toolcraft-proof-process.mjs";
@@ -96,17 +98,20 @@ export function parseToolcraftFeatureVerificationArguments(arguments_) {
   });
 }
 
-function createDefaultDependencies() {
+function createDefaultDependencies(onOutput) {
   return Object.freeze({
     async ensureChromium({ projectDir }) {
       await ensureToolcraftChromium({
         playwright: await import("@playwright/test"),
         projectDir,
+        runProcess: (command, args, options) => runToolcraftProofProcess(command, args, { ...options, onOutput }),
       });
     },
     getBinaryPath: getToolcraftBinaryPath,
     loadFeaturePlan: async (input) => (await import("./toolcraft-feature-source-loader.mjs"))
-      .loadToolcraftFeatureVerificationPlanInIsolatedProcess(input),
+      .loadToolcraftFeatureVerificationPlanInIsolatedProcess({ ...input, dependencies: {
+        runIpcProcess: (command, args, options) => captureToolcraftProofIpcProcess(command, args, { ...options, onOutput }),
+      } }),
     runProcess: runToolcraftProofProcess,
     validatePlaywrightAuthority: validateToolcraftFeaturePlaywrightAuthority,
     validatePlaywrightPreflightAuthority: validateToolcraftFeaturePlaywrightPreflightAuthority,
@@ -183,16 +188,19 @@ function getSelectedPlaywrightArguments(projectDir, featurePlan) {
   };
 }
 
-export async function runToolcraftFeatureVerificationCore({
-  dependencies = createDefaultDependencies(),
+async function executeFeatureVerification({
+  dependencies,
   env = process.env,
   projectDir = defaultProjectDir,
   request,
+  journal,
 }) {
   const resolvedProjectDir = path.resolve(projectDir);
   const sanitizedEnv = getFeatureVerificationEnvironment(env);
+  await journal.stage("authority-preflight", { request });
   const preflight = await dependencies.validatePlaywrightPreflightAuthority?.({ projectDir: resolvedProjectDir });
   if (preflight) await dependencies.revalidatePlaywrightAuthoritySeal?.(preflight.seal);
+  await journal.stage("load-feature-plan");
   const featurePlan = await dependencies.loadFeaturePlan({
     env: sanitizedEnv,
     projectDir: resolvedProjectDir,
@@ -207,6 +215,7 @@ export async function runToolcraftFeatureVerificationCore({
     files,
     projectDir: resolvedProjectDir,
   });
+  await journal.source([...files, ...(authoritySeal?.seal?.files ?? []).map((file) => file.filePath)]);
 
   dependencies.writeOutput(
     `[toolcraft] Focused feature verification: ${featurePlan.acceptanceIds.join(", ")}\n`,
@@ -216,6 +225,7 @@ export async function runToolcraftFeatureVerificationCore({
       .map(({ testName }) => testName)
       .join(" | ")}\n`,
   );
+  await journal.stage("chromium-readiness");
   await dependencies.ensureChromium({ projectDir: resolvedProjectDir });
   const playwrightBin = dependencies.getBinaryPath(
     resolvedProjectDir,
@@ -223,7 +233,10 @@ export async function runToolcraftFeatureVerificationCore({
   );
   if (preflight) await dependencies.revalidatePlaywrightAuthoritySeal?.(preflight.seal);
   await dependencies.revalidatePlaywrightAuthoritySeal?.(authoritySeal?.seal);
+  await journal.stage("browser-checks", { acceptanceIds: featurePlan.acceptanceIds, scenarios: featurePlan.scenarios,
+    command: playwrightBin, arguments: playwrightArguments });
   await dependencies.runProcess(playwrightBin, playwrightArguments, {
+    onOutput: journal.output,
     cwd: resolvedProjectDir,
     deadlineMs:
       FEATURE_PROCESS_ALLOWANCE_MS +
@@ -239,6 +252,21 @@ export async function runToolcraftFeatureVerificationCore({
     },
   });
   return featurePlan;
+}
+
+export async function runToolcraftFeatureVerificationCore({ dependencies,
+  env = process.env, projectDir = defaultProjectDir, request }) {
+  return withJournalRun({ projectDir, kind: "feature", command: "test:feature",
+    arguments_: request.mode === "all" ? ["--all"] : [...request.acceptanceIds],
+    changeId: env.TOOLCRAFT_CHANGE_ID ?? null, retryOf: env.TOOLCRAFT_RETRY_OF ?? null }, async (journal) => {
+    const resolvedDependencies = dependencies ?? createDefaultDependencies(journal.output);
+    resolvedDependencies.writeOutput?.(`[toolcraft] Text journal run: ${journal.runId}\n`);
+    const observedDependencies = { ...resolvedDependencies, writeOutput(source) {
+      journal.output("stdout", source);
+      resolvedDependencies.writeOutput(source);
+    } };
+    return executeFeatureVerification({ dependencies: observedDependencies, env, projectDir, request, journal });
+  });
 }
 
 export async function runToolcraftFeatureVerification({

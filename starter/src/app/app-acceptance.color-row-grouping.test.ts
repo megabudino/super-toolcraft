@@ -10,84 +10,99 @@ function makeMixedColorSchema(includeSemanticGroups: boolean) {
     includeSemanticGroups ? { semanticGroup } : {};
 
   return defineToolcraft({
-    canvas: { enabled: true },
-    panels: {
-      controls: {
-        sections: [
-          {
-            controls: {
-              trackEnabled: {
-                defaultValue: true,
-                label: "Track",
-                target: "track.enabled",
-                type: "switch",
+    base: {
+      identity: { id: "contract-fixture", title: "Contract fixture" },
+      canvas: { enabled: true },
+      panels: {
+        controls: {
+          sections: [
+            {
+              controls: {
+                trackEnabled: {
+                  applicability: { mode: "always" as const },
+                  defaultValue: true,
+                  label: "Track",
+                  target: "track.enabled",
+                  type: "switch",
+                },
+                trackColor: {
+                  applicability: { mode: "always" as const },
+                  ...withSemanticGroup("track-line"),
+                  defaultValue: { hex: "#F1F1F1" },
+                  label: "Track color",
+                  target: "track.color",
+                  type: "color",
+                },
+                lowerColor: {
+                  applicability: { mode: "always" as const },
+                  ...withSemanticGroup("track-range"),
+                  defaultValue: { hex: "#7A9CBD" },
+                  label: "Lower",
+                  target: "track.lower",
+                  type: "color",
+                },
+                upperColor: {
+                  applicability: { mode: "always" as const },
+                  ...withSemanticGroup("track-range"),
+                  defaultValue: { hex: "#52AAFF" },
+                  label: "Upper",
+                  target: "track.upper",
+                  type: "color",
+                },
               },
-              trackColor: {
-                ...withSemanticGroup("track-line"),
-                defaultValue: { hex: "#F1F1F1" },
-                label: "Track color",
-                target: "track.color",
-                type: "color",
-              },
-              lowerColor: {
-                ...withSemanticGroup("track-range"),
-                defaultValue: { hex: "#7A9CBD" },
-                label: "Lower",
-                target: "track.lower",
-                type: "color",
-              },
-              upperColor: {
-                ...withSemanticGroup("track-range"),
-                defaultValue: { hex: "#52AAFF" },
-                label: "Upper",
-                target: "track.upper",
-                type: "color",
-              },
+              id: "track-appearance",
+              title: "Track Appearance",
             },
-            id: "track-appearance",
-            title: "Track Appearance",
-          },
-        ],
-        title: "Controls",
+          ],
+          title: "Controls",
+        },
       },
     },
+    modules: [],
   });
 }
 
 function makeColorOnlySchema() {
   return defineToolcraft({
-    canvas: { enabled: true },
-    panels: {
-      controls: {
-        sections: [
-          {
-            controls: {
-              trackColor: {
-                defaultValue: { hex: "#F1F1F1" },
-                label: "Track",
-                target: "track.color",
-                type: "color",
+    base: {
+      identity: { id: "contract-fixture", title: "Contract fixture" },
+      canvas: { enabled: true },
+      panels: {
+        controls: {
+          sections: [
+            {
+              controls: {
+                trackColor: {
+                  applicability: { mode: "always" as const },
+                  defaultValue: { hex: "#F1F1F1" },
+                  label: "Track",
+                  target: "track.color",
+                  type: "color",
+                },
+                lowerColor: {
+                  applicability: { mode: "always" as const },
+                  defaultValue: { hex: "#7A9CBD" },
+                  label: "Lower",
+                  target: "track.lower",
+                  type: "color",
+                },
+                upperColor: {
+                  applicability: { mode: "always" as const },
+                  defaultValue: { hex: "#52AAFF" },
+                  label: "Upper",
+                  target: "track.upper",
+                  type: "color",
+                },
               },
-              lowerColor: {
-                defaultValue: { hex: "#7A9CBD" },
-                label: "Lower",
-                target: "track.lower",
-                type: "color",
-              },
-              upperColor: {
-                defaultValue: { hex: "#52AAFF" },
-                label: "Upper",
-                target: "track.upper",
-                type: "color",
-              },
+              id: "track-palette",
+              title: "Track Palette",
             },
-            id: "track-palette",
-            title: "Track Palette",
-          },
-        ],
-        title: "Controls",
+          ],
+          title: "Controls",
+        },
       },
     },
+    modules: [],
   });
 }
 

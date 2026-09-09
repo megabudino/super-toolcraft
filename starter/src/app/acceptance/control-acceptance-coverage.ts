@@ -1,5 +1,6 @@
 import {
   getToolcraftControlKeyframeCapability,
+  resolveToolcraftAppCapabilities,
   type ResolvedToolcraftAppSchema,
   type ResolvedToolcraftControlSchema,
   type ToolcraftTimelineMode,
@@ -12,7 +13,6 @@ import {
   requiredCustomControlCoverage,
 } from "./custom-controls";
 import { hasControlPartCoverage, hasCustomControlCoverage } from "./coverage";
-import { getFileDropLifecycleCoverageErrors } from "./media-upload";
 import {
   isOutputBackgroundToggleControl,
   schemaHasPngExportPanelAction,
@@ -24,6 +24,68 @@ import type {
   ToolcraftOrientationGizmoCoverage,
   ToolcraftProductReadiness,
 } from "./types";
+
+type ToolcraftCollectionItemKeyframeCoverageInput = Readonly<{
+  control: ResolvedToolcraftControlSchema;
+  coverage: readonly string[] | undefined;
+  label: string;
+  timelineMode: ToolcraftTimelineMode | null;
+}>;
+
+function getCollectionKeyframeFieldIds(
+  control: ResolvedToolcraftControlSchema,
+): string[] {
+  return Object.entries(control.itemControls ?? {})
+    .filter(([, field]) => field.keyframeable === true)
+    .map(([fieldId]) => fieldId)
+    .sort();
+}
+
+export function getToolcraftCollectionItemKeyframeCoverageErrors({
+  control,
+  coverage,
+  label,
+  timelineMode,
+}: ToolcraftCollectionItemKeyframeCoverageInput): string[] {
+  if (coverage !== undefined && control.type !== "collectionActions") {
+    return [
+      `${label} collectionItemKeyframeCoverage is owned only by collectionActions controls.`,
+    ];
+  }
+  if (coverage !== undefined && timelineMode !== "keyframes") {
+    return [
+      `${label} collectionItemKeyframeCoverage requires timeline mode keyframes.`,
+    ];
+  }
+  if (control.type !== "collectionActions" || timelineMode !== "keyframes") {
+    return [];
+  }
+
+  const expectedFields = getCollectionKeyframeFieldIds(control);
+  if (coverage !== undefined && expectedFields.length === 0) {
+    return [
+      `${label} collectionItemKeyframeCoverage requires at least one keyframeable item field.`,
+    ];
+  }
+  if (expectedFields.length === 0) return [];
+
+  const declaredFields = [...(coverage ?? [])].sort();
+  return expectedFields.length !== declaredFields.length ||
+    expectedFields.some((fieldId, index) => fieldId !== declaredFields[index])
+    ? [
+        `${label} must declare collectionItemKeyframeCoverage for exactly: ${expectedFields.join(", ")}.`,
+      ]
+    : [];
+}
+
+export function hasExactToolcraftCollectionItemKeyframeCoverage(
+  input: ToolcraftCollectionItemKeyframeCoverageInput,
+): boolean {
+  return (
+    input.coverage !== undefined &&
+    getToolcraftCollectionItemKeyframeCoverageErrors(input).length === 0
+  );
+}
 
 const requiredOrientationGizmoCoverage = [
   "axis-drag",
@@ -45,6 +107,24 @@ function hasTypedCoverage<T extends string>(
     (Array.isArray(coverage) &&
       required.every((requiredItem) => coverage.includes(requiredItem)))
   );
+}
+
+export function getToolcraftOrientationGizmoCoverageErrors({
+  entry,
+  label,
+}: Readonly<{
+  entry: ToolcraftComponentAcceptance;
+  label: string;
+}>): string[] {
+  return hasTypedCoverage<ToolcraftOrientationGizmoCoverage>(
+    entry.orientationGizmoCoverage,
+    "all-required-orientation-gizmo-behavior",
+    requiredOrientationGizmoCoverage,
+  )
+    ? []
+    : [
+        `${label} must declare orientationGizmoCoverage for: ${requiredOrientationGizmoCoverage.join(", ")}.`,
+      ];
 }
 
 function getControlAcceptanceEntryErrors({
@@ -83,45 +163,17 @@ function getControlAcceptanceEntryErrors({
   return errors;
 }
 
-function getControlLifecycleAndCustomErrors({
-  acceptance,
+function getControlCustomErrors({
   control,
   entry,
   label,
-  layersEnabled,
-  productReadiness,
-  schema,
 }: {
-  acceptance: readonly ToolcraftComponentAcceptance[];
   control: ResolvedToolcraftControlSchema;
   entry: ToolcraftComponentAcceptance;
   label: string;
-  layersEnabled: boolean;
-  productReadiness: ToolcraftProductReadiness;
-  schema: ResolvedToolcraftAppSchema;
 }): string[] {
   const errors: string[] = [];
   const isCustomControl = isCustomToolcraftControl(control);
-
-  if (control.type === "fileDrop") {
-    const hasDefaultMediaAssets = schema.media.defaultAssets.some(
-      (asset) => asset.sourceTarget === control.target,
-    );
-
-    errors.push(
-      ...getFileDropLifecycleCoverageErrors(
-        {
-          acceptance,
-          control,
-          entry,
-          hasDefaultMediaAssets,
-          label,
-          layersEnabled,
-          productReadiness,
-        },
-      ),
-    );
-  }
 
   if (
     isCustomControl &&
@@ -160,25 +212,15 @@ function getControlEvidenceErrors({
   const errors: string[] = [];
 
   if (
-    control.type === "orientationGizmo" &&
-    !hasTypedCoverage<ToolcraftOrientationGizmoCoverage>(
-      entry.orientationGizmoCoverage,
-      "all-required-orientation-gizmo-behavior",
-      requiredOrientationGizmoCoverage,
-    )
-  ) {
-    errors.push(
-      `${label} must declare orientationGizmoCoverage for: ${requiredOrientationGizmoCoverage.join(", ")}.`,
-    );
-  }
-
-  if (
     schemaHasPngExportPanelAction(schema) &&
     isOutputBackgroundToggleControl({ control, controlId, sectionTitle })
   ) {
     const requiredCoverage: ToolcraftBackgroundOutputCoverage[] = [
       "preview-hidden-when-excluded",
       "image-transparent-when-excluded",
+      ...(resolveToolcraftAppCapabilities(schema).hasMedia
+        ? (["finite-media-stacking"] as const)
+        : []),
       ...(schema.canvas.sizing.mode === "editable-output"
         ? (["infinity-viewport-color-and-dependency"] as const)
         : []),
@@ -236,6 +278,15 @@ function getControlPartAndRuntimeCoverageErrors({
     }
   }
 
+  errors.push(
+    ...getToolcraftCollectionItemKeyframeCoverageErrors({
+      control,
+      coverage: entry.collectionItemKeyframeCoverage,
+      label,
+      timelineMode,
+    }),
+  );
+
   return errors;
 }
 
@@ -264,14 +315,10 @@ export function getControlAcceptanceCoverageErrors({
 }): string[] {
   return [
     ...getControlAcceptanceEntryErrors({ control, entry, label }),
-    ...getControlLifecycleAndCustomErrors({
-      acceptance,
+    ...getControlCustomErrors({
       control,
       entry,
       label,
-      layersEnabled,
-      productReadiness,
-      schema,
     }),
     ...getControlEvidenceErrors({
       control,

@@ -1,5 +1,6 @@
 import type { ToolcraftArtifactExportActionRole } from "@/toolcraft/runtime";
 
+import { getToolcraftExportRequestEvidenceErrors } from "./artifact-export-request-evidence";
 import type { ToolcraftArtifactExportIntent } from "./types";
 
 export type ToolcraftArtifactExportDelivery = Readonly<{
@@ -36,31 +37,18 @@ export function getToolcraftArtifactExportIntentEvidenceErrors(
 ): readonly string[] {
   const errors: string[] = [];
 
-  if (
-    intent.svg.mode === "user-requested" &&
-    intent.svg.evidence.trim() === ""
-  ) {
-    errors.push(
-      "SVG export user-requested intent requires non-empty evidence.",
-    );
-  }
-
-  if (
-    intent.image.mode !== "toolcraft-default" &&
-    intent.image.evidence.trim() === ""
-  ) {
-    errors.push(
-      `Image export ${intent.image.mode} intent requires non-empty evidence.`,
-    );
-  }
-
-  if (
-    intent.video.mode === "user-requested" &&
-    intent.video.evidence.trim() === ""
-  ) {
-    errors.push(
-      "Video export user-requested intent requires non-empty evidence.",
-    );
+  for (const [artifact, decision] of [
+    ["SVG", intent.svg],
+    ["Image", intent.image],
+    ["Video", intent.video],
+  ] as const) {
+    if (decision.mode === "user-requested" || decision.mode === "user-removed") {
+      errors.push(
+        ...getToolcraftExportRequestEvidenceErrors(decision.evidence).map(
+          (error) => `${artifact} export ${decision.mode} intent ${error}`,
+        ),
+      );
+    }
   }
 
   return errors;

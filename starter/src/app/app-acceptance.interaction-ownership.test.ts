@@ -9,52 +9,69 @@ import type {
   ToolcraftProductReadiness,
 } from "./acceptance/types";
 import { collectToolcraftVisibleAcceptanceControls } from "./acceptance/validate-coverage";
-import { defineContractSchemaFixture, validateContractAcceptance } from "./app-acceptance.contract-fixtures";
+import {
+  defineContractSchemaFixture,
+  validateContractAcceptance,
+} from "./app-acceptance.contract-fixtures";
 
 const schema = defineContractSchemaFixture({
-  canvas: { enabled: true },
-  panels: {
-    controls: {
-      sections: [
-        {
-          controls: {
-            position: {
-              defaultValue: { x: 0, y: 0 },
-              label: "Position",
-              target: "output.position",
-              type: "vector",
+  base: {
+    identity: { id: "contract-fixture", title: "Contract fixture" },
+    canvas: { enabled: true },
+    panels: {
+      controls: {
+        sections: [
+          {
+            id: "test-section-1",
+            controls: {
+              position: {
+                applicability: { mode: "always" as const },
+                defaultValue: { x: 0, y: 0 },
+                label: "Position",
+                target: "output.position",
+                type: "vector",
+              },
             },
+            title: "Output",
           },
-          title: "Output",
-        },
-      ],
-      title: "Controls",
+        ],
+        title: "Controls",
+      },
     },
+    persistence: { storage: "none" },
   },
+  modules: [],
 });
 
 const controls = collectToolcraftVisibleAcceptanceControls(schema);
 
 const customSchema = defineContractSchemaFixture({
-  canvas: { enabled: true },
-  panels: {
-    controls: {
-      sections: [
-        {
-          controls: {
-            spatialMap: {
-              defaultValue: { x: 0, y: 0 },
-              label: "Spatial map",
-              target: "output.position",
-              type: "spatialMap",
-            } as never,
+  base: {
+    identity: { id: "contract-fixture", title: "Contract fixture" },
+    canvas: { enabled: true },
+    panels: {
+      controls: {
+        sections: [
+          {
+            id: "test-section-2",
+            controls: {
+              spatialMap: {
+                applicability: { mode: "always" as const },
+                defaultValue: { x: 0, y: 0 },
+                label: "Spatial map",
+                target: "output.position",
+                type: "spatialMap",
+              } as never,
+            },
+            title: "Output",
           },
-          title: "Output",
-        },
-      ],
-      title: "Controls",
+        ],
+        title: "Controls",
+      },
     },
+    persistence: { storage: "none" },
   },
+  modules: [],
 });
 
 const customControls = collectToolcraftVisibleAcceptanceControls(customSchema);
@@ -76,8 +93,9 @@ function ownership({
         surface === "canvas"
           ? "A panel copy would separate the same operation from visible output without adding a useful capability."
           : "A canvas copy would add output chrome without improving this non-spatial operation.",
-      surface: (surface === "canvas" ? "panel" : "canvas") as
-        ToolcraftInteractionSurface,
+      surface: (surface === "canvas"
+        ? "panel"
+        : "canvas") as ToolcraftInteractionSurface,
     },
     evidence: {
       detail:
@@ -95,10 +113,7 @@ function ownership({
     target: "output.position",
   };
 
-  if (
-    capability === "precise-value-entry" ||
-    capability === "property-edit"
-  ) {
+  if (capability === "precise-value-entry" || capability === "property-edit") {
     return {
       ...base,
       capability,
@@ -122,10 +137,12 @@ function readiness(
     mode: "product",
     productName: "Interaction fixture",
     productSummary: "A fixture for canvas and panel ownership decisions.",
-    requestedBehavior: "Edit one product output through Toolcraft interactions.",
+    requestedBehavior:
+      "Edit one product output through Toolcraft interactions.",
     viewInteraction: {
       mode: "non-spatial",
-      reason: "The fixture edits two-dimensional output without a three-dimensional view.",
+      reason:
+        "The fixture edits two-dimensional output without a three-dimensional view.",
     },
   };
 }
@@ -164,7 +181,8 @@ function acceptance({
     interactionId,
     kind,
     target: "output.position",
-    userAction: kind === "canvas-handle" ? "Drag the output." : "Edit its property.",
+    userAction:
+      kind === "canvas-handle" ? "Drag the output." : "Edit its property.",
   };
 }
 
@@ -178,7 +196,8 @@ describe("Toolcraft interaction surface ownership", () => {
       },
       mode: "product",
       productName: "Legacy fixture",
-      productSummary: "A product declaration created before interaction ownership.",
+      productSummary:
+        "A product declaration created before interaction ownership.",
       requestedBehavior: "Edit product output.",
       viewInteraction: {
         mode: "non-spatial",
@@ -186,11 +205,11 @@ describe("Toolcraft interaction surface ownership", () => {
       },
     } as unknown as ToolcraftProductReadiness;
 
-    expect(
-      validateContractAcceptance({ productReadiness }),
-    ).toEqual(
+    expect(validateContractAcceptance({ productReadiness })).toEqual(
       expect.arrayContaining([
-        expect.stringContaining("must declare interactionOwnership before controls"),
+        expect.stringContaining(
+          "must declare interactionOwnership before controls",
+        ),
       ]),
     );
   });
@@ -204,7 +223,8 @@ describe("Toolcraft interaction surface ownership", () => {
       },
       mode: "product",
       productName: "Legacy fixture",
-      productSummary: "A product declaration created before interaction ownership.",
+      productSummary:
+        "A product declaration created before interaction ownership.",
       requestedBehavior: "Edit product output.",
       viewInteraction: {
         mode: "non-spatial",
@@ -219,7 +239,9 @@ describe("Toolcraft interaction surface ownership", () => {
         productReadiness,
       }),
     ).toEqual([
-      expect.stringContaining("must declare interactionOwnership before controls"),
+      expect.stringContaining(
+        "must declare interactionOwnership before controls",
+      ),
     ]);
   });
 
@@ -340,7 +362,9 @@ describe("Toolcraft interaction surface ownership", () => {
       }),
     ).toEqual(
       expect.arrayContaining([
-        expect.stringContaining("canvas-position canvas handle must reference interactionId"),
+        expect.stringContaining(
+          "canvas-position canvas handle must reference interactionId",
+        ),
         expect.stringContaining(
           "panel-position panel control shares output.position with a canvas handle and must reference interactionId",
         ),
@@ -429,9 +453,15 @@ describe("Toolcraft interaction surface ownership", () => {
       expect.arrayContaining([
         expect.stringContaining("invalid-property target missing.target"),
         expect.stringContaining("invalid-property reason must explain"),
-        expect.stringContaining("invalid-property evidence.detail must identify"),
-        expect.stringContaining("invalid-property alternative.surface must be canvas"),
-        expect.stringContaining("invalid-property alternative.reason must explain"),
+        expect.stringContaining(
+          "invalid-property evidence.detail must identify",
+        ),
+        expect.stringContaining(
+          "invalid-property alternative.surface must be canvas",
+        ),
+        expect.stringContaining(
+          "invalid-property alternative.reason must explain",
+        ),
       ]),
     );
   });

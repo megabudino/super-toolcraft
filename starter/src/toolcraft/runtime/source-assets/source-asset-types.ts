@@ -1,9 +1,6 @@
-import type { FileDropPresentation } from "@/toolcraft/ui";
-
 import type { ToolcraftControlSchema } from "../schema/types";
 import type { ToolcraftCanvasFrame } from "../state/canvas-frame";
 import type {
-  ToolcraftMediaAsset,
   ToolcraftMediaAssetDraft,
   ToolcraftPreparedSourceImageAssetDraft,
 } from "../state/types";
@@ -121,28 +118,10 @@ export type ToolcraftPreparedSourceAsset<
   stagedResourceRefs: readonly string[];
 };
 
-export type ToolcraftSourceAssetPresentationContext = {
-  control: ToolcraftControlSchema;
-  mediaAssets: readonly ToolcraftMediaAsset[];
-  operation: ToolcraftSourceAssetOperation;
-};
-
 export type ToolcraftSourceAssetImportOutcome =
   | { assetIds: readonly string[]; kind: "committed" }
   | { feedback: ToolcraftSourceAssetFeedback; kind: "rejected" }
   | { kind: "cancelled" };
-
-export type ToolcraftFileDropPresentationStatus = {
-  label: string;
-  phase: Exclude<ToolcraftSourceAssetOperationPhase, "idle">;
-  progress?: number;
-};
-
-export type ToolcraftFileDropPresentation = FileDropPresentation<
-  ToolcraftSourceAssetKind,
-  ToolcraftSourceAssetFeedback,
-  ToolcraftFileDropPresentationStatus
->;
 
 export type ToolcraftSourceAssetHandler<
   Kind extends ToolcraftSourceAssetKind,
@@ -161,9 +140,6 @@ export type ToolcraftSourceAssetHandler<
   prepare: (
     context: ToolcraftSourceAssetPrepareContext,
   ) => Promise<ToolcraftPreparedSourceAsset<Asset>>;
-  present: (
-    context: ToolcraftSourceAssetPresentationContext,
-  ) => ToolcraftFileDropPresentation;
 };
 
 export type ToolcraftSourceAssetRegistrableHandler =

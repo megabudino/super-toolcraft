@@ -1,16 +1,29 @@
 import { describe, expect, it } from "vitest";
+import { canvasEditingModule } from "@/toolcraft/runtime";
 
 import {
   contractAcceptanceFixture,
-  contractSchemaFixture,
+  defineContractSchemaFixture,
   validateContractAcceptance,
 } from "./app-acceptance.contract-fixtures";
+import { canvasProductReadiness } from "./acceptance/capability-proofs/test-proof-fixtures";
+
+const canvasEditingSchema = defineContractSchemaFixture({
+  base: {
+    canvas: { enabled: true },
+    identity: { id: "canvas-handle-fixture", title: "Canvas handle fixture" },
+    panels: { controls: { sections: [], title: "Controls" } },
+    persistence: { storage: "none" },
+  },
+  modules: [canvasEditingModule()],
+});
 
 describe("Toolcraft starter canvas handle acceptance coverage", () => {
   it("requires canvas handles to declare runtime, browser, and export-clean coverage", () => {
     expect(
       validateContractAcceptance({
-        schema: contractSchemaFixture,
+        productReadiness: canvasProductReadiness,
+        schema: canvasEditingSchema,
         acceptance: [
           ...contractAcceptanceFixture,
           {
@@ -23,7 +36,8 @@ describe("Toolcraft starter canvas handle acceptance coverage", () => {
             },
             componentType: "canvas-handle",
             evidence: "product-output",
-            expectedObservable: "Dragging the focus handle moves the gradient hotspot.",
+            expectedObservable:
+              "Dragging the focus handle moves the gradient hotspot.",
             fixture: "radial gradient fixture",
             id: "shader.focus.handle",
             kind: "canvas-handle",
@@ -41,7 +55,8 @@ describe("Toolcraft starter canvas handle acceptance coverage", () => {
   it("requires canvas handle write targets to exist in schema or editor commands", () => {
     expect(
       validateContractAcceptance({
-        schema: contractSchemaFixture,
+        productReadiness: canvasProductReadiness,
+        schema: canvasEditingSchema,
         acceptance: [
           ...contractAcceptanceFixture,
           {
@@ -53,13 +68,15 @@ describe("Toolcraft starter canvas handle acceptance coverage", () => {
               testName: "browser: gradient focus handle drags on canvas",
             },
             canvasHandle: {
-              outputObservable: "The gradient hotspot moves after dragging the handle.",
+              outputObservable:
+                "The gradient hotspot moves after dragging the handle.",
               testId: "gradient-focus-handle",
               writesTarget: "missing.target",
             },
             componentType: "canvas-handle",
             evidence: "product-output",
-            expectedObservable: "Dragging the focus handle moves the gradient hotspot.",
+            expectedObservable:
+              "Dragging the focus handle moves the gradient hotspot.",
             fixture: "radial gradient fixture",
             id: "shader.focus.handle",
             kind: "canvas-handle",

@@ -33,15 +33,16 @@ The exported starter may keep `appProductReadiness.mode: "starter"` only while i
 
 `viewInteraction` classifies the product as `non-spatial`, `orbit`,
 `fixed-camera`, or `timeline-camera`. Editable spatial scenes default to orbit;
-fixed/timeline modes require explicit request/reference evidence.
+fixed/timeline modes require the positive typed authority detailed under
+Orientation Gizmo. Static frames prove composition, not locked interaction.
 
-Product readiness requires controls, layers, timeline, `canvasContent`, or acceptance coverage. A renamed product cannot pass as a neutral starter.
+Product readiness also requires product surface: controls, layers, timeline, `canvasContent`, `infiniteCanvasContent`, `renderDefaultCanvasMedia: false`, or acceptance coverage. Folder names never establish readiness.
 
 ## Implementation Worklog
 
 Update `docs/toolcraft/agent-worklog.md` before delivery and after material decisions. Record renderer, view, timeline, layers, controls, export, and performance choices.
 
-The worklog declares `Mode: product`. Every `Decision Trail` records `Request:`, `Task type:`, `User-visible result:`, `Source/reference checked:`, `Reference inputs:`, `Docs/contracts read:`, `Contract rules applied:`, `View interaction intent:`, `Interaction ownership:`, `Decision:`, `Alternatives rejected:`, `State/output mapping:`, `Performance intent:`, bare-delivery `Verification:`, and `Risks:`. Steering stays in its request batch. Reference inputs list every asset or `None`; state/output mapping links state to output or export.
+The worklog declares `Mode: product`. Initial `Decision Trail` entries record `Request:`, `Task type:`, `User-visible result:`, `Source/reference checked:`, `Reference inputs:`, `Docs/contracts read:`, `Contract rules applied:`, `View interaction intent:`, `Interaction ownership:`, `Decision:`, `Alternatives rejected:`, `State/output mapping:`, result-narrative `Verification:`, and `Risks:`. Focused entries: see `workflow.md`. Reference inputs list every asset or `None`; state/output mapping links state to output or export.
 
 The `Renderer`, `View Interaction`, `Interaction Ownership`, `Timeline`, `Layers`, `Controls`, `Export`, and `Performance` sections each include `Decision:`, `Reason:`, and `Evidence:`. View interaction adds mode, source, alternatives, and targets. Performance adds workload, lifecycle, assessment, paths, and for complaints exact `Performance request evidence:` plus unique canonical `Performance paths:`.
 
@@ -125,7 +126,7 @@ Required parts:
 | `anchorGrid`        | `anchorGrid.position`                                                                                                                                                                     |
 | `channelMixer`      | `channelMixer.activeChannel`, `channelMixer.values`; only for RGB channel matrix behavior                                                                                                 |
 | `collectionActions` | `collectionActions.add`, `collectionActions.remove`, `collectionActions.items`                                                                                                            |
-| `sourceCollection`  | `sourceCollection.items`                                                                                                                                                                   |
+| `sourceCollection`  | `sourceCollection.items`                                                                                                                                                                  |
 | `colorOpacity`      | `colorOpacity.hex`, `colorOpacity.opacity`                                                                                                                                                |
 | `curves`            | RGB variant: `curves.activeChannel`, `curves.points`; `variant: "single"`: `curves.points`                                                                                                |
 | `fontPicker`        | `fontPicker.fontId`, `fontPicker.fontWeight`, `fontPicker.fontSize`, `fontPicker.letterSpacing`, `fontPicker.lineHeight`, `fontPicker.textCase`, `fontPicker.color`, `fontPicker.opacity` |
@@ -143,18 +144,18 @@ For `curves`, the acceptance row must match the intended variant. Semantic one-d
 
 For `fontPicker`, product output evidence must come from actual rendered/exported product text after changing the font, weight, size, letter spacing, line height, text case, color, and opacity. Runtime value changes, selected labels, or popup font previews are preflight checks, not final acceptance.
 
-For `vector`, acceptance must prove both axes affect output and that the pad represents a user-authored stable two-axis parameter. Do not accept `vector` controls for current animation state, keyboard/pointer movement, physics state, timeline phase, velocity, target pose, current pose, or simulated position/direction; those belong to timeline/input/simulation state plus higher-level tuning controls such as Speed, Step, Spread, Path, Duration, or Timeline.
+For `vector`, prove both axes and stable user-authored parameter ownership, never timeline/input/simulation-owned state. Spatial pads, including nested fields, additionally require schema-derived `vector-screen-motion`: four real drags with matching pixel direction, not generic changed-output proof. Read [Vector direction proof](vector-controls.md) before implementing spatial mapping or browser acceptance.
 
-For `orientationGizmo`, use one `kind: "canvas-handle"` row per declared handle whose `canvasHandle.writesTarget` is the schema pose target and whose `testId` is `toolcraft-orientation-gizmo`. Declare `orientationGizmoCoverage: "all-required-orientation-gizmo-behavior"` or every required part: axis drag, axis snap, model drag, canvas miss-pan, shared pose/output, undo/reset, and export-clean.
+For `orientationGizmo`, use one `kind: "canvas-handle"` row per handle with `canvasHandle.writesTarget` set to its schema pose target and `testId: "toolcraft-orientation-gizmo"`. Declare `orientationGizmoCoverage: "all-required-orientation-gizmo-behavior"` or every required part: axis drag, axis snap, model drag, canvas miss-pan with Space + primary drag, shared pose/output, undo/reset, and export-clean.
 
-Orientation coverage begins with product readiness, not with an already-present
-control. Every product declares `viewInteraction`. `orbit` must list a non-empty,
-unique set of targets that exactly matches all schema `orientationGizmo`
-targets. `non-spatial`, `fixed-camera`, and `timeline-camera` reject direct-orbit
-gizmos. Fixed and timeline camera modes require explicit request/reference
-evidence; timeline camera additionally requires timeline playback or keyframes
-intent and an enabled Toolcraft timeline. This prevents a renderer from silently
-choosing a fixed camera and thereby escaping gizmo acceptance.
+Orientation coverage begins with product readiness. `orbit` targets are
+non-empty, unique, and exactly match schema gizmos. Other modes reject gizmos.
+Fixed/timeline authority is either `{ kind: "explicit-user-request",
+requestQuote }` with verbatim text or `{ kind:
+"inspected-behavioral-reference", referenceId, observedBehavior }` from an
+observed interaction; static frames do not qualify. Timeline camera also needs
+timeline intent and an enabled Toolcraft timeline. This blocks silent fixed-camera
+choices from escaping gizmo acceptance.
 
 Use protected `expectToolcraftOrientationAxisDrag`/`AxisSnap`/`ModelDrag`/`CanvasMissPan`/`UndoReset` recipes. Axis drag finds blank circular background and performs the pointer drag; axis snap projects and clicks the requested endpoint from canonical pose. Evidence follows pose/output/ownership/history assertions. Arbitrary mutations, endpoint-only or generic drag, source spelling, and value changes do not qualify. Use `expectExportExcludesCanvasHandles` for export-clean proof.
 
@@ -175,7 +176,7 @@ High-confidence wrong-substitution cases:
 - curve, remap, easing, or response without `curves`;
 - manual stable two-axis position, direction, focus, anchor, light, or vector parameters without `vector`;
 - user-rotatable 3D model/view orientation implemented as `vector`, paired sliders, axis buttons, or custom gizmo instead of `orientationGizmo`;
-- a visible editable spatial scene classified as fixed/non-spatial without explicit request or inspected-reference evidence;
+- a visible editable spatial scene classified as fixed/non-spatial without positive typed authority from a verbatim user request or observed behavioral reference;
 - source upload without `fileDrop`;
 - app-wide transport in the controls panel instead of timeline;
 - segmented choices that clip instead of falling back to `select`;
@@ -221,7 +222,7 @@ Artifact acceptance follows `productReadiness.exportIntent`. Image/video use com
 
 Export-content proof is distinct from export mechanics: content inspects selected artifact semantics; mechanics proves lifecycle, format, dimensions, transport, and errors. Neither substitutes.
 
-Every app with `Export PNG` must exercise the separate `Image Export` section: choose at least two `export.image.format` values, choose at least two `export.image.resolution` values, export the image, and decode the result to prove file type and actual pixel dimensions changed. Apps with both `Export PNG` and explicitly requested `Export Video` still need this image-export coverage; `Video Export` does not replace it.
+Image-enabled apps test two `export.image.format` and two `export.image.resolution` values in `Image Export`, then decode downloads to prove type and dimensions; video coverage never replaces this. For every image/video format, assert button text and accessible name: `Export PNG/JPG` or `Export MP4/WebM`, also after restore/import, Undo/Redo and reset. The same action exports the selected format; SVG stays `Export SVG`.
 
 Runtime Export acceptance must prove the sticky footer top accent indicator advances through real render/encode/download work and hides only after the artifact settles. Async non-export Download, Copy, Generate, or Apply acceptance must prove the indicator is visible while the returned `onPanelAction` Promise is pending, advances when `reportProgress(0..1)` is called, and hides after it settles.
 
@@ -229,11 +230,11 @@ Every video-enabled app exercises two video formats and resolutions. It proves r
 
 Footer action acceptance must not include Reset. Reset is already available in the controls panel header and uses schema `defaultValue`; duplicating it in sticky `panelActions` fails acceptance.
 
-Local `actions` acceptance must click every visible action and prove the nearby entity changed through runtime state or product output. A section-level `Randomize palette` must change palette output, `Normalize weights` must change weights/output, and `Clear selection` must clear only the scoped selection. Do not accept a test that only proves the button rendered. A single-button `actions` control fails validation when the control label duplicates the button label; the label must add concise context. Visual acceptance rejects side-label actions; labels sit above a two-column button grid where each button cell is 50% width.
+Local `actions` acceptance clicks every action and proves nearby runtime state or product output changed. A single-button label adds context instead of duplicating its button. Visual acceptance rejects side labels and puts labels above the two-column grid.
 
-`collectionActions` keeps parts `collectionActions.add`, `collectionActions.remove`, `collectionActions.items`. Prove limits, full-default add, sibling-preserving edit, preview/export, and whole-record removal. `sourceCollection` proves source count, item edit, output, and no add/remove.
+`collectionActions` keeps parts `collectionActions.add`, `collectionActions.remove`, `collectionActions.items`. Prove limits, full-default add, sibling-preserving edit, preview/export, and whole-record removal. For compound records, `collectionItemKeyframeCoverage` exactly matches `keyframeable: true` fields and derives one `timeline-keyframes` requirement per field; selected scope binds the exact `selectionTarget` and proves two-entity isolation. `sourceCollection` proves source count, item edit, output, and no add/remove.
 
-Image export proves background changes in preview/artifact/infinite viewport; Background off restores finite mode, disables Infinity, hides bounded preview background, and makes PNG transparent while JPEG/video stay opaque. Restoring it enables Infinity availability without entering that mode. Protected proof decodes real type, selected dimensions, product bounds/pixels, and pixel hash; bytes or dimensions alone are insufficient.
+Image export proves background changes in preview/artifact/Infinity. Background off restores finite mode, disables Infinity, removes the runtime finite layer, and makes PNG transparent while JPEG/video stay opaque; restoring it only restores Infinity availability. Media-enabled apps declare `finite-media-stacking` and prove the evaluated background stays below visible runtime media and the transparent product foreground. Artifact proof decodes real type, dimensions, product pixels/bounds, and hash; bytes or dimensions alone are insufficient.
 
 Hard acceptance semantics are typed, not inferred from prose. Both selector roles come from required `finiteSelectors`. Applicability cases come only from a `branch` selector's exact `affectedTargets` plus explicit `applicability` predicates; no section-wide fanout exists. A `parameter` still proves its own accepted outcome and option coverage but adds no peer cases. Predicate owners are branches, preserving missing-predicate detection. Non-matches prove absence; matches and declared branch peers prove presence plus the row's existing product outcomes under canonical case-suffixed requirement IDs. The `export.includeBackground` row separately declares `backgroundOutputCoverage` for preview exclusion, transparent image alpha, and preserved video background when exposed. Its protected recipe verifies those preview and artifact semantics. `expectedObservable` and `userAction` remain human-readable context; words such as “hidden”, “PNG”, or “video” never satisfy evidence by themselves.
 
@@ -302,7 +303,7 @@ Do not treat a few generic checks as a complete reference transfer. The acceptan
 
 When animation controls exist without `panels.timeline`, acceptance validation requires `appTransferMode.animationIntent.mode = "autonomous"`. That intent must explain why the animation is decorative/self-running and must cover no user-facing transport, no play/pause, no scrub, no duration control, no loop control, and no export-at-time.
 
-Playback timeline coverage must prove play/pause, scrub, duration, loop, restart when exposed, non-looping Play at the end restarts from 0, and export/copy at selected time when relevant. Timeline animation intent must match the enabled timeline mode and declare `loopDuration` with source, seconds, and evidence; `panels.timeline.defaultDurationSeconds` must match that value. Reference clones using `referenceTimeline.mode: "toolcraft-playback"` or `"toolcraft-keyframes"` must declare the same proof on `referenceTimeline.loopDuration`. Duration coverage must edit the real `Edit timeline duration` control, prove the playback range changes, and prove the renderer maps one full product animation cycle to `state.timeline.durationSeconds`. Loop coverage must prove a seamless forward-only product loop: motion advances in one direction, mirror/yoyo/ping-pong/reverse fallbacks are absent unless explicitly requested, first and last frames stitch without a visible jump, and the same seam holds after changing timeline duration. Tests should compare visible or exported output at 0, midpoint, end minus epsilon, and the wrapped first frame after changing the timeline duration. Prefer `getToolcraftTimelineLoopTime` or `getToolcraftTimelineLoopProgress` in the renderer so this phase math is shared. Do not accept a renderer that uses a separate fixed local duration while the timeline displays another duration, and do not accept a renderer effect that watches `state.timeline.durationSeconds` only to dispatch `timeline.setDuration` back to a computed local value.
+Playback timeline coverage must prove play/pause, scrub, duration, loop, restart when exposed, non-looping Play at the end restarts from 0, and export/copy at selected time when relevant. Timeline animation intent must match the enabled timeline module mode and declare `loopDuration` with source, seconds, and evidence; `timelineModule({ mode, defaultDurationSeconds })` must match that value. Reference clones using `referenceTimeline.mode: "toolcraft-playback"` or `"toolcraft-keyframes"` must declare the same proof on `referenceTimeline.loopDuration`. Duration coverage must edit the real `Edit timeline duration` control, prove the playback range changes, and prove the renderer maps one full product animation cycle to `state.timeline.durationSeconds`. Loop coverage must prove a seamless forward-only product loop: motion advances in one direction, mirror/yoyo/ping-pong/reverse fallbacks are absent unless explicitly requested, first and last frames stitch without a visible jump, and the same seam holds after changing timeline duration. Tests should compare visible or exported output at 0, midpoint, end minus epsilon, and the wrapped first frame after changing the timeline duration. Prefer `getToolcraftTimelineLoopTime` or `getToolcraftTimelineLoopProgress` in the renderer so this phase math is shared. Do not accept a renderer that uses a separate fixed local duration while the timeline displays another duration, and do not accept a renderer effect that watches `state.timeline.durationSeconds` only to dispatch `timeline.setDuration` back to a computed local value.
 
 Keyframe timeline coverage must prove diamond creation, expanded rows, keyframe updates on control change, scrub/playback evaluation, and product output changes for every inferred keyframe-capable control. Tests must prove renderers consume typed evaluated values from the Toolcraft keyframe evaluator; checking `valueLabel`, row count, or source strings is not enough.
 

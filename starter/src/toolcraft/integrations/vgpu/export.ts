@@ -7,6 +7,7 @@ import type {
 import { compositeStraightAlphaSourceOver } from "./rgba-composite";
 
 export type ToolcraftVgpuExportFailureCode =
+  | "vgpu-export-disposed"
   | "vgpu-export-device-lost"
   | "vgpu-export-failed"
   | "vgpu-export-not-ready"
@@ -42,6 +43,8 @@ function providerStateError(
   state: Exclude<ToolcraftVgpuProviderState, { status: "ready" }>,
 ): ToolcraftVgpuExportError {
   switch (state.status) {
+    case "disposed":
+      return new ToolcraftVgpuExportError("vgpu-export-disposed", state.message);
     case "unsupported":
       return new ToolcraftVgpuExportError(
         "vgpu-export-unsupported",

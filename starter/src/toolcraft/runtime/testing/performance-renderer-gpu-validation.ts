@@ -65,7 +65,7 @@ function getProviderErrors(
       if (
         backend !== "webgpu" ||
         entry.capability !== "shader-webgpu-vgpu" ||
-        entry.versionPolicy !== "toolcraft-pinned"
+        entry.versionPolicy !== "app-pinned"
       ) {
         errors.push(
           `${path} provider "vgpu" requires the fixed VGPU capability and version policy.`,

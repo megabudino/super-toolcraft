@@ -36,7 +36,6 @@ test("keeps artifact encoding and download mechanics runtime-owned", async (cont
       import * as Runtime from "@/toolcraft/runtime";
       import {
         getToolcraftImageExportSize,
-        shouldIncludeToolcraftPreviewBackground,
         validateToolcraftArtifactSize,
       } from "@/toolcraft/runtime";
       import type {
@@ -47,7 +46,6 @@ test("keeps artifact encoding and download mechanics runtime-owned", async (cont
       export const renderFrame = ({ context }) => context.fillRect(0, 0, 1, 1);
       void Runtime;
       void getToolcraftImageExportSize;
-      void shouldIncludeToolcraftPreviewBackground;
       void validateToolcraftArtifactSize;
       void (null as unknown as ToolcraftExportFrame);
       void (null as unknown as ToolcraftProductExportRenderer);

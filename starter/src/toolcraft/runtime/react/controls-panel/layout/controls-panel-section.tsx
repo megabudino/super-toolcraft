@@ -312,6 +312,7 @@ export const ControlsPanelSection = React.memo(function ControlsPanelSection({
       allowCompoundDividers={renderableEntries.length > 1}
       collapsed={isSectionCollapsible && collapsed}
       collapsible={isSectionCollapsible}
+      description={section.description}
       onCollapsedChange={(nextCollapsed) => {
         onCollapsedChange(sectionCollapseKey, nextCollapsed);
       }}

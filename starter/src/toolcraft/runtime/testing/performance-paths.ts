@@ -1,4 +1,4 @@
-import type { ResolvedToolcraftAppSchema } from "../schema/types";
+import type { ResolvedToolcraftAppSchema } from "../schema/resolved-app-schema";
 import { getToolcraftPerformanceProfileForInteraction } from "./performance-interaction-policy";
 import { createToolcraftPerformancePathId } from "./performance-path-codec.mjs";
 import type { ToolcraftPerformancePath } from "./performance-path-model";
@@ -53,7 +53,9 @@ export function deriveToolcraftPerformancePathsFromParsedPipeline(
       interaction: invalidation.interaction,
       invalidates,
       preparationInvalidates,
-      profile: getToolcraftPerformanceProfileForInteraction(invalidation.interaction),
+      profile: getToolcraftPerformanceProfileForInteraction(
+        invalidation.interaction,
+      ),
       retainedAccesses,
       runsOn: uniqueSorted(invalidatedPasses.map((pass) => pass.runsOn)),
       workloadDimensions: uniqueSorted(

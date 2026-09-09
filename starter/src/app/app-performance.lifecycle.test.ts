@@ -7,8 +7,13 @@ import {
   TOOLCRAFT_FULL_PERFORMANCE_VERIFICATION_COMMAND,
 } from "../../scripts/toolcraft-performance-authority-policy.mjs";
 import { requiredPackageScriptNames } from "../../scripts/toolcraft-integrity-policy.mjs";
+import { isToolcraftFrameworkOwnedPath } from "../../scripts/toolcraft-source-ownership.mjs";
 
 import { projectDir } from "./app-performance-test-utils";
+import {
+  createAgentWorklogFixture,
+  getAgentWorklogValidationErrors,
+} from "./app-acceptance.worklog-test-utils";
 
 const expectedRequiredPackageScriptNames = [
   "ai:check", "build", "dev", "dev:restart", "docs:check", "preview",
@@ -192,7 +197,7 @@ describe("Toolcraft starter performance lifecycle", () => {
     expect(packageJson.scripts?.["verify:receipt"]).toContain("validate");
   });
 
-  it("documents adaptive delivery routing without command-shaped authority", () => {
+  function readDeliveryRoutingDocs() {
     const routedDocs = [
       "AGENTS.md",
       "docs/toolcraft/README.md",
@@ -203,11 +208,18 @@ describe("Toolcraft starter performance lifecycle", () => {
       "docs/toolcraft/performance.md",
       "docs/toolcraft/workflow.md",
     ];
-    const docSources = routedDocs.map((relativePath) => ({
+    return routedDocs.map((relativePath) => ({
       relativePath,
       source: readFileSync(join(projectDir, relativePath), "utf8"),
     }));
+  }
 
+  function expectDeliveryRoutingDocs(
+    sources: readonly { relativePath: string; source: string }[],
+  ) {
+    const docSources = sources.filter(({ relativePath }) =>
+      isToolcraftFrameworkOwnedPath(relativePath),
+    );
     for (const { relativePath, source } of docSources) {
       expect(source, relativePath).toMatch(/first (?:product )?delivery/i);
       expect(source, relativePath).toMatch(/later[^\n]{0,60}(?:edits|feature work)/i);
@@ -245,6 +257,52 @@ describe("Toolcraft starter performance lifecycle", () => {
     );
     expect(allRoutedDocs).not.toMatch(/matching (?:executed )?`?Run\b`?/i);
     expect(allRoutedDocs).not.toContain("app-performance-impact.json");
+  }
+
+  it("documents adaptive delivery routing without command-shaped authority", () => {
+    expectDeliveryRoutingDocs(readDeliveryRoutingDocs());
+  });
+
+  it("allows a valid product worklog to record its required first-delivery tier", () => {
+    const source = createAgentWorklogFixture({
+      verificationLines: [
+        "Verification tier: Tier 4",
+        "Reason: First generated product delivery with renderer and image export.",
+        "Run: pnpm verify:delivery",
+        "Skip: Measured performance; no performance work was requested.",
+      ],
+    });
+    expect(getAgentWorklogValidationErrors(source)).toEqual([]);
+    expectDeliveryRoutingDocs(
+      readDeliveryRoutingDocs().map((doc) =>
+        doc.relativePath === "docs/toolcraft/agent-worklog.md"
+          ? { ...doc, source }
+          : doc,
+      ),
+    );
+  });
+
+  it("does not treat product workflow observations as framework routing policy", () => {
+    expectDeliveryRoutingDocs([
+      ...readDeliveryRoutingDocs(),
+      {
+        relativePath: "docs/toolcraft/workflow-observation.md",
+        source: "# Workflow observation\n\nInitial Tier 4 functional proof passed.",
+      },
+    ]);
+  });
+
+  it.each([
+    "Run pnpm verify:quick before delivery.",
+    "Run pnpm verify:delivery --tier=4.",
+    "Verification tier: Tier 4",
+  ])("still rejects obsolete framework routing guidance: %s", (obsolete) => {
+    const docs = readDeliveryRoutingDocs().map((doc) =>
+      doc.relativePath === "docs/toolcraft/workflow.md"
+        ? { ...doc, source: `${doc.source}\n${obsolete}` }
+        : doc,
+    );
+    expect(() => expectDeliveryRoutingDocs(docs)).toThrow();
   });
 
   it("keeps workload guidance structural instead of prescribing domain constants", () => {

@@ -1,11 +1,20 @@
-import type {
-  ToolcraftCanvasSize,
-  ResolvedToolcraftAppSchema,
-} from "../schema/types";
+import type { ToolcraftTimelineCommand } from "../modules/built-ins/timeline/contracts";
+import type { ToolcraftLayersCommand } from "../modules/built-ins/layers/contracts";
+import type { ToolcraftCanvasSize } from "../schema/types";
+import type { ResolvedToolcraftAppSchema } from "../schema/resolved-app-schema";
 import type { ToolcraftModelAssetRecord } from "../model-import/model-import-types";
 import type { ToolcraftPanelSnapEdge } from "../contracts/types";
+import type { ToolcraftCanvasAspectRatioValue } from "./canvas-state";
+
+export type ToolcraftSettingsState = {
+  assets: readonly ToolcraftMediaAsset[];
+  canvas: Pick<ToolcraftCanvasState, "mode" | "size"> & { aspectRatio?: ToolcraftCanvasAspectRatioValue };
+  timeline: Pick<ToolcraftTimelineState, "currentTimeSeconds" | "durationSeconds" | "expanded" | "isLooping"> & { isPlaying: false };
+  values: Record<string, unknown>;
+};
 
 export type ToolcraftCommand =
+  | { type: "settings.apply"; settings: ToolcraftSettingsState }
   | {
       history?: ToolcraftHistoryMode;
       historyGroup?: string;
@@ -14,17 +23,34 @@ export type ToolcraftCommand =
       type: "controls.setValue";
       value: unknown;
     }
-  | { type: "controls.apply" }
+  | {
+      history?: ToolcraftHistoryMode;
+      historyGroup?: string;
+      label?: string;
+      type: "controls.apply";
+      values?: Record<string, unknown>;
+    }
+  | { label?: string; target: string; type: "controls.addCollectionItem" }
+  | { label?: string; target: string; type: "controls.removeCollectionItem" }
+  | {
+      itemIndex: number | null;
+      label?: string;
+      target: string;
+      type: "controls.selectCollectionItem";
+    }
+  | {
+      fieldId: string;
+      history?: ToolcraftHistoryMode;
+      historyGroup?: string;
+      itemIndex: number;
+      label?: string;
+      target: string;
+      type: "controls.setCollectionItemField";
+      value: unknown;
+    }
   | { type: "controls.reset" }
   | { label?: string; targets: string[]; type: "controls.resetTargets" }
-  | { insertIndex?: number; layer?: ToolcraftLayerDraft; type: "layers.add" }
-  | { layerId: string; type: "layers.delete" }
-  | { layerIds: string[]; parentGroupId: string | null; type: "layers.moveToGroup" }
-  | { layerId: string; type: "layers.select" }
-  | { layerId: string; name: string; type: "layers.rename" }
-  | { layerId: string; type: "layers.toggleCollapsed" }
-  | { layerId: string; type: "layers.toggleVisibility" }
-  | { layers: ToolcraftLayer[]; selectedLayerId?: string | null; type: "layers.reorder" }
+  | ToolcraftLayersCommand
   | { delta: ToolcraftPoint; type: "canvas.panBy" }
   | { offset: ToolcraftPoint; type: "canvas.setOffset" }
   | { size: ToolcraftCanvasSize; type: "canvas.setSize" }
@@ -63,11 +89,6 @@ export type ToolcraftCommand =
       type: "panels.setSectionCollapsed";
     }
   | { panelId: ToolcraftPanelId; type: "panels.resetOffset" }
-  | {
-      asset: ToolcraftMediaImportAsset;
-      replaceExisting?: boolean;
-      type: "media.import";
-    }
   | {
       assets: readonly ToolcraftMediaBatchImportAsset[];
       replaceExisting?: boolean;
@@ -122,46 +143,19 @@ export type ToolcraftCommand =
       operation: ToolcraftMediaTransformOperation;
       type: "media.transform";
     }
-  | { currentTimeSeconds: number; type: "timeline.setCurrentTime" }
-  | { durationSeconds: number; type: "timeline.setDuration" }
-  | { expanded: boolean; type: "timeline.setExpanded" }
-  | { isPlaying: boolean; type: "timeline.setPlaying" }
-  | { type: "timeline.toggleExpanded" }
-  | { type: "timeline.togglePlayback" }
-  | { type: "timeline.toggleLoop" }
-  | { keyframeId: string | null; type: "timeline.selectKeyframe" }
-  | { keyframeId: string; type: "timeline.deleteKeyframe" }
-  | { controlId: string; type: "timeline.deleteControlKeyframes" }
-  | {
-      controlId: string;
-      controlLabel: string;
-      timeSeconds?: number;
-      type: "timeline.toggleControlKeyframes";
-      value: unknown;
-      valueLabel: string;
-    }
-  | {
-      controlId: string;
-      controlLabel: string;
-      timeSeconds?: number;
-      type: "timeline.upsertControlKeyframe";
-      value: unknown;
-      valueLabel: string;
-    }
-  | { keyframeId: string; timeSeconds: number; type: "timeline.moveKeyframe" }
-  | {
-      easing: ToolcraftTimelineKeyframeEasing;
-      keyframeId: string;
-      type: "timeline.changeKeyframeEasing";
-    }
+  | ToolcraftTimelineCommand
   | { type: "history.undo" }
   | { type: "history.redo" };
 
 export const toolcraftRuntimeCommandTypes = [
   "controls.setValue",
   "controls.apply",
+  "controls.addCollectionItem",
+  "controls.removeCollectionItem",
   "controls.reset",
   "controls.resetTargets",
+  "controls.selectCollectionItem",
+  "controls.setCollectionItemField",
   "layers.add",
   "layers.delete",
   "layers.moveToGroup",
@@ -184,8 +178,8 @@ export const toolcraftRuntimeCommandTypes = [
   "panels.update",
   "panels.setSectionCollapsed",
   "panels.resetOffset",
-  "media.import",
   "media.importBatch",
+  "settings.apply",
   "media.commitCanonicalImportAllocation",
   "media.commitModelRepair",
   "media.hydrateDefaultModel",
@@ -252,12 +246,16 @@ export type ToolcraftLayerDraft = {
   visible?: boolean;
 };
 
-export type ToolcraftMediaAssetBase<AssetKind extends "file" | "image" | "model"> = {
+export type ToolcraftMediaAssetBase<
+  AssetKind extends "file" | "image" | "model",
+> = {
   assetKind: AssetKind;
   fileName: string;
   id: string;
   layerId: string;
   mimeType: string;
+  /** Browser-visible names/folder-relative paths, never filesystem authority. */
+  sourcePaths?: readonly string[];
   sourceTarget?: string;
 };
 
@@ -289,10 +287,6 @@ export type ToolcraftFileAsset = ToolcraftBinaryMediaAssetBase<"file"> & {
 
 export type ToolcraftModelAsset = ToolcraftMediaAssetBase<"model"> &
   ToolcraftSceneElementFrame &
-  ToolcraftModelAssetRecord;
-
-export type ToolcraftLegacyModelAsset = ToolcraftMediaAssetBase<"model"> &
-  Partial<ToolcraftSceneElementFrame> &
   ToolcraftModelAssetRecord;
 
 export type ToolcraftMediaAsset =
@@ -336,90 +330,16 @@ export type ToolcraftMediaAssetDraft =
   | ToolcraftImageAssetDraft
   | ToolcraftModelAssetDraft;
 
-export type ToolcraftLegacyImageAsset = Omit<
-  ToolcraftMediaAssetBase<"image">,
-  "assetKind"
-> & {
-  assetKind?: "image";
-  dataUrl: string;
-  position: ToolcraftPoint;
-  size?: ToolcraftCanvasSize;
-  sourceSize?: ToolcraftCanvasSize;
-  transform?: ToolcraftMediaTransform;
-};
-
-type ToolcraftImageAssetWithoutGeometry<Asset> = Asset extends unknown
-  ? Omit<Asset, "position" | "size" | "sourceSize">
-  : never;
-
-export type ToolcraftLegacyRuntimeImageAsset =
-  ToolcraftImageAssetWithoutGeometry<ToolcraftImageAsset> &
-  Partial<ToolcraftSceneElementFrame> & {
-    sourceSize?: ToolcraftCanvasSize;
-  };
-
-export type ToolcraftLegacyRuntimeImageAssetDraft =
-  ToolcraftAssetDraftFor<ToolcraftLegacyRuntimeImageAsset>;
-
 export type ToolcraftImageAssetIngress =
-  | {
-      asset: ToolcraftImageAssetDraft;
-      policy: "canonical-runtime";
-    }
-  | {
-      asset: ToolcraftLegacyRuntimeImageAssetDraft;
-      policy: "legacy-record";
-    }
+  | { asset: ToolcraftImageAssetDraft; policy: "canonical-runtime" }
   | {
       asset: ToolcraftPreparedSourceImageAssetDraft;
       policy: "prepared-source";
     };
 
 export type ToolcraftInitialImageAssetIngress =
-  | {
-      asset: ToolcraftImageAsset;
-      policy: "canonical-runtime";
-    }
-  | {
-      asset: ToolcraftLegacyRuntimeImageAsset;
-      policy: "legacy-record";
-    }
-  | {
-      asset: ToolcraftPreparedSourceImageAsset;
-      policy: "prepared-source";
-    };
-
-export type ToolcraftLegacyFileAsset = ToolcraftMediaAssetBase<"file"> & {
-  assetKind: "file";
-  dataUrl: string;
-  position: ToolcraftPoint;
-};
-
-export type ToolcraftLegacyImageAssetDraft = Omit<
-  ToolcraftLegacyImageAsset,
-  "assetKind" | "id" | "layerId"
-> & {
-  assetKind?: "image";
-  id?: string;
-  layerId?: string;
-  layerName?: string;
-};
-
-export type ToolcraftLegacyFileAssetDraft = Omit<
-  ToolcraftLegacyFileAsset,
-  "id" | "layerId"
-> & {
-  id?: string;
-  layerId?: string;
-  layerName?: string;
-};
-
-export type ToolcraftMediaImportAsset =
-  | ToolcraftLegacyFileAssetDraft
-  | ToolcraftLegacyImageAssetDraft
-  | ToolcraftFileAssetDraft
-  | ToolcraftImageAssetIngress
-  | ToolcraftModelAssetDraft;
+  | { asset: ToolcraftImageAsset; policy: "canonical-runtime" }
+  | { asset: ToolcraftPreparedSourceImageAsset; policy: "prepared-source" };
 
 export type ToolcraftMediaBatchImportAsset =
   | ToolcraftFileAssetDraft
@@ -440,10 +360,7 @@ export type ToolcraftCanonicalMediaImportAllocation = {
 };
 
 export type ToolcraftInitialMediaAsset =
-  | ToolcraftLegacyFileAsset
-  | ToolcraftLegacyImageAsset
   | ToolcraftInitialImageAssetIngress
-  | ToolcraftLegacyModelAsset
   | ToolcraftMediaAsset;
 
 export type ToolcraftMediaTransform = {
@@ -467,7 +384,12 @@ export type ToolcraftHistoryPatch = {
 
 export type ToolcraftHistoryMode = "merge" | "record" | "skip";
 
-export type ToolcraftTimelineBezierControlPoints = [number, number, number, number];
+export type ToolcraftTimelineBezierControlPoints = [
+  number,
+  number,
+  number,
+  number,
+];
 
 export type ToolcraftTimelineKeyframeEasing =
   | {
@@ -511,13 +433,14 @@ export type ToolcraftPanelState = {
   extended?: boolean;
   hidden?: boolean;
   offset: { x: number; y: number };
+  scrollTop?: number;
   snapEdge?: ToolcraftPanelSnapEdge;
 };
 
 export type ToolcraftPanelPatch = Partial<
   Pick<
     ToolcraftPanelState,
-    "collapsed" | "extended" | "hidden" | "offset" | "snapEdge"
+    "collapsed" | "extended" | "hidden" | "offset" | "scrollTop" | "snapEdge"
   >
 >;
 

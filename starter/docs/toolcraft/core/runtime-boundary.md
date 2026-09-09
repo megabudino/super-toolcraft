@@ -4,7 +4,8 @@ Read this module before changing app assembly, routes, runtime surfaces, custom 
 
 ## Required Runtime Shell
 
-- Build through `defineToolcraft`.
+- Build through `defineToolcraft({ base, modules })`.
+- Create the product composition through `composeToolcraftApp(appSchema, ports)`.
 - Render through `ToolcraftApp`.
 - Read `appSchema.assembly` before adding custom JSX. It lists the enabled runtime surfaces, capabilities, commands, and assumptions for the current app.
 - Keep app state in the Toolcraft runtime schema and runtime commands.
@@ -16,20 +17,20 @@ Read this module before changing app assembly, routes, runtime surfaces, custom 
 Use only these app-specific extension points. Shared runtime changes happen upstream and reach generated apps through regeneration:
 
 - schema controls;
-- schema `canvas`, `panels`, `toolbar`, `panelActions`, `persistence`, `media`, `assembly`, and transfer-mode metadata;
-- `canvasContent` for product output only;
-- `infiniteCanvasContent` for editor-only product output that must fill the
+- product-owned `base.canvas`, `base.panels.controls`, `base.toolbar`, `base.persistence`, `base.media`, settings transfer, and canonical capability `modules`;
+- `scene.canvasContent` for product output only;
+- `scene.infiniteCanvasContent` for editor-only product output that must fill the
   complete Infinity viewport without inheriting world pan, zoom, product scene
   bounds, or export bounds;
-- `renderDefaultCanvasMedia={false}` only when a product renderer replaces generic image/file preview; it does not suppress runtime model layers;
-- typed `modelPresentation`, with `{ mode: "runtime" }` as the default standard preview/export owner or `{ mode: "custom", consumers }` for declared model targets with checked consumers;
-- `controlRenderers` only for true custom controls that pass the built-in fit check;
-- one `exportRenderer` that draws a deterministic product frame for runtime-owned image/video export;
-- one `svgExportRenderer` that appends namespace-aware editable vector content for runtime-owned SVG export;
-- one `sceneBoundsProvider` that returns exact-state product world-space rectangles for live output and runtime-owned export in both finite and infinite modes;
-- `onPanelAction` for non-export sticky product actions;
-- optional `rendererPipelineRegistration` for one compiled executable custom-renderer pipeline shared by product work, runtime evidence, and performance assessment;
-- runtime commands and hooks, including `useToolcraftProductSceneFrame` inside `canvasContent` when a raster/WebGL renderer needs the active finite or infinite frame.
+- `scene.renderDefaultCanvasMedia: false` only when a product renderer replaces generic image/file preview; it does not suppress runtime model layers;
+- typed custom `modelPresentation`; omission is the standard runtime preview/export owner, while `{ mode: "custom", consumers }` is only for declared model targets with checked consumers;
+- `controls.renderers` only for true custom controls that pass the built-in fit check;
+- one `scene.rasterFrameRenderer` that draws a deterministic product frame for runtime-owned image/video export;
+- one `scene.vectorFrameRenderer` that appends namespace-aware editable vector content for runtime-owned SVG export;
+- one `scene.sceneBoundsProvider` that returns exact-state product world-space rectangles for live output and runtime-owned export in both finite and infinite modes;
+- `actions.onPanelAction` for non-export sticky product actions;
+- optional `renderer.pipelineRegistration` for one compiled executable custom-renderer pipeline shared by product work, runtime evidence, and performance assessment;
+- runtime commands and hooks, including `useToolcraftProductSceneFrame` inside `scene.canvasContent` when a raster/WebGL renderer needs the active finite or infinite frame.
 
 ## Forbidden Rebuilds
 
@@ -51,7 +52,7 @@ Use only these app-specific extension points. Shared runtime changes happen upst
 - If upload/import is part of the source-material flow, the pre-content canvas stays neutral and runtime-backed. Upload affordance belongs in `fileDrop`.
 - DOM product text rendered inside `canvasContent` must be marked with `data-toolcraft-product-output` or `data-toolcraft-product-text` so tests and performance fixtures can target product output instead of app chrome.
 - Product editing handles must be textless overlays, write to runtime state, and stay out of export/copy output.
-- Preserve the runtime canvas backing. Product renderers may draw their own product background, but must not hide, replace, or make the Toolcraft canvas shell/backing transparent.
+- Preserve the runtime canvas backing. Runtime owns both finite and Infinity background surfaces; product renderers draw a transparent foreground and must not duplicate the configurable background or hide, replace, or make the Toolcraft canvas shell/backing transparent. Follow `core/setup-export.md` for background and export semantics.
 - Runtime owns one product scene surface across finite and infinite modes. It resolves `sceneBoundsProvider` for the exact committed state in both modes and applies the same product rect before mounting live output or invoking product export. Product code does not position another scene wrapper from `canvas.size`, source pixel dimensions, or DOM measurement.
 - Finite mode centers the artboard as a clip and output boundary around that canonical scene. A composition without `sceneBoundsProvider` may use the finite artboard rect as a finite-only product-frame fallback; Infinity has no such fallback.
 - Canvas 2D, WebGL, and WebGPU product output reads `useToolcraftProductSceneFrame()` for the canonical product rect, backing size, and world-to-local translation. Mode toggles preserve the mounted component, renderer, and live backing. `empty` and `unavailable` are explicit Infinity states and never fall back to dormant finite dimensions.
@@ -60,7 +61,7 @@ Use only these app-specific extension points. Shared runtime changes happen upst
 ## Model Presentation Boundary
 
 - Runtime presentation is the default and owns model preview, hit testing, appearance resources, export composition, and cleanup.
-- `renderDefaultCanvasMedia={false}` controls only generic image/file media. It never hides a standard runtime model layer.
+- `scene.renderDefaultCanvasMedia: false` controls only generic image/file media. It never hides a standard runtime model layer.
 - Custom model presentation is explicit: set `modelPresentation.mode` to `"custom"`, declare one unique consumer id per model `sourceTarget`, and include the matching visible `orientationGizmo` target when the model orbits.
 - A custom canvas consumer calls `useToolcraftModelPresentationConsumer(declaration)` and acquires/releases presentation leases. It does not decode source formats, call `resolveDocument` to build a second Three cache, or reconstruct materials.
 - Runtime reports typed retryable feedback when a declared consumer is missing or cannot acquire the presentation. Successful acquisition clears that feedback without deleting the committed model.
@@ -77,6 +78,7 @@ Use only these app-specific extension points. Shared runtime changes happen upst
 ## Generated App Source Boundary
 
 - Generated applications keep their public entry surface in `src/app/app-composition.tsx` and `src/app/app-schema.ts`. Supporting product modules may live anywhere under `src`; every product production module is discovered by the same source inventory and checked by the same AST boundary.
+- `src/app/app-identity.ts` is generator-owned and protected even though it lives beside editable product modules. Choose the product identity and title with the CLI `--name` option before generation; import the generated `appIdentity` into `base.identity` without editing that file or duplicating its values. A different generated identity requires fresh generation, not an integrity-manifest rewrite.
 - The signed framework bootstrap includes `index.html`, `src/main.tsx`, `src/router.tsx`, `src/routes/index.tsx`, `src/routes/root.tsx`, and `src/styles.css`. Do not edit or replace those host files in a generated app.
 - Product styling is local by construction: use locally imported `*.module.css` files only. Every selector starts with a compound containing a local class. A first-compound `:is()` or `:where()` remains local only when every branch is locally anchored; `:not()` and `:has()` do not create a local anchor. Descendants may style product-owned children, but `:global`, bare/root selectors, host-attribute selectors, sibling escapes, CSS `@import`, package CSS imports, and product-created global `<style>`/`CSSStyleSheet` injection are rejected because they cross the product/runtime boundary.
 - Product `import()` and `require()` specifiers must be statically resolvable from literals, same-file constants, templates, or string concatenation. Production and test source share this rule, so computed module loading cannot hide a runtime/control import or a protected evidence channel. Every deep control implementation import is rejected regardless of imported symbol name, and JSX control-substitute checks follow public `Input` aliases.

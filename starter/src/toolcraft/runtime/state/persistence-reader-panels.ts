@@ -4,19 +4,15 @@ import {
 } from "./persistence-shared";
 import { readPoint } from "./persistence-reader-primitives";
 import type { ToolcraftPanelSnapEdge } from "../contracts/types";
-import type {
-  ToolcraftInitialState,
-  ToolcraftPanelState,
-} from "./types";
-import type { ResolvedToolcraftAppSchema } from "../schema/types";
+import type { ToolcraftInitialState, ToolcraftPanelState } from "./types";
+import type { ResolvedToolcraftAppSchema } from "../schema/resolved-app-schema";
 
 function isAllowedPanelSnapEdge(
   value: unknown,
   allowedEdges: readonly ToolcraftPanelSnapEdge[],
 ): value is ToolcraftPanelSnapEdge {
   return (
-    typeof value === "string" &&
-    allowedEdges.some((edge) => edge === value)
+    typeof value === "string" && allowedEdges.some((edge) => edge === value)
   );
 }
 
@@ -45,6 +41,13 @@ function readPanel(
 
   if (typeof value.hidden === "boolean") {
     panel.hidden = value.hidden;
+  }
+
+  if (
+    typeof value.scrollTop === "number" &&
+    Number.isFinite(value.scrollTop) && value.scrollTop >= 0
+  ) {
+    panel.scrollTop = value.scrollTop;
   }
 
   if (isAllowedPanelSnapEdge(value.snapEdge, allowedSnapEdges)) {

@@ -26,6 +26,7 @@ import type {
 } from "../panel-host/panel-host-types";
 import { useToolcraftDependencySelector } from "../app-shell/toolcraft-selectors";
 import { useToolcraftStore } from "../app-shell/toolcraft-store-context";
+import { ToolcraftThemeContext } from "../app-shell/theme-runtime";
 import { useToolcraftDispatch } from "../app-shell/use-toolcraft";
 import {
   type ToolcraftControlsSceneExport,
@@ -43,6 +44,7 @@ import {
 import { getControlsPanelTargetDependencies } from "./conditions/control-condition-dependencies";
 import type { ControlsPanelSetControlValue } from "./layout/controls-panel-control-group";
 import { ControlsPanelSectionNavigation } from "./layout/controls-panel-section-navigation";
+import { useControlsPanelScroll } from "./layout/use-controls-panel-scroll";
 import {
   type ControlEntry,
   countControlsByType,
@@ -196,6 +198,8 @@ export function ControlsPanel({
 }: ControlsPanelProps): React.JSX.Element | null {
   const dispatch = useToolcraftDispatch();
   const store = useToolcraftStore();
+  const theme = React.useContext(ToolcraftThemeContext);
+  const contentRef = useControlsPanelScroll();
   const schema = store.getCommittedState().schema;
   const controlsPanel = schema.panels.controls;
   const keyframesSupported =
@@ -301,6 +305,7 @@ export function ControlsPanel({
           className,
         )}
         collapsed={resolvedPanelState.collapsed}
+        contentRef={contentRef}
         contentTransitionSuppressionKey={
           selection.keyframeControlsEnabled ? "keyframes" : "plain"
         }
@@ -308,7 +313,11 @@ export function ControlsPanel({
         onCollapsedChange={(collapsed) =>
           panelBinding.onPanelStateChange({ collapsed })
         }
-        onResetControls={() => dispatchCommand({ type: "controls.reset" })}
+        onResetControls={() => {
+          const savedTheme = store.getCommittedState().schema.sourceDefaults?.theme;
+          if (savedTheme) theme?.setThemePreference(savedTheme);
+          dispatchCommand({ type: "controls.reset" });
+        }}
         stickyFooterActive={stickyFooterActive}
         stickyFooterProgress={stickyFooterProgress}
         title={controlsPanel.title}
@@ -342,8 +351,10 @@ export function ControlsPanel({
         )}
       </Panel>
       <PanelActionFeedback feedback={panelActionFeedback} />
+      {/* Reset replaces Panel; discard its navigation listeners and hover timers too. */}
       <ControlsPanelSectionNavigation
         items={navigationItems}
+        key={`navigation-${selection.controlsResetKey}`}
         rootElement={navigationRootElement}
       />
     </div>

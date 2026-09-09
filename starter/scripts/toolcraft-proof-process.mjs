@@ -3,6 +3,7 @@ import { access } from "node:fs/promises";
 import path from "node:path";
 
 import spawn from "cross-spawn";
+import { createProofProcessError, createProofProcessSpawnError, createProofProcessDeadlineError, createProofProcessResourceError } from "./toolcraft-proof-process-errors.mjs";
 
 const chromiumInstallPromises = new Map();
 const defaultCaptureLimits = Object.freeze({ ipcBytes: 4 * 1024 * 1024, ipcMessages: 32,
@@ -42,70 +43,6 @@ export function getToolcraftFrozenInstallCommand(packageManager) {
     pnpm: { args: ["install", "--frozen-lockfile"], command: "pnpm" },
     yarn: { args: ["install", "--immutable"], command: "yarn" },
   }[packageManager];
-}
-
-function createProofProcessError({
-  command,
-  code,
-  signal,
-  stderr,
-  stdout,
-}) {
-  const outcome = signal
-    ? `after signal ${signal}`
-    : `with code ${code ?? 1}`;
-  const capturedOutput = [stdout, stderr]
-    .filter((output) => output.length > 0)
-    .join("\n");
-  const error = new Error(
-    `${path.basename(command)} exited ${outcome}.${capturedOutput ? `\n${capturedOutput}` : ""}`,
-  );
-  error.code = code;
-  error.signal = signal;
-  error.stderr = stderr;
-  error.stdout = stdout;
-  return error;
-}
-
-function createProofProcessSpawnError({ command, error, stderr, stdout }) {
-  const reason = error.code ? `${error.code}: ${error.message}` : error.message;
-  const capturedOutput = [stdout, stderr]
-    .filter((output) => output.length > 0)
-    .join("\n");
-  const wrapped = new Error(
-    `${path.basename(command)} failed to start: ${reason}.${capturedOutput ? `\n${capturedOutput}` : ""}`,
-    { cause: error },
-  );
-  wrapped.code = error.code ?? null;
-  wrapped.signal = null;
-  wrapped.stderr = stderr;
-  wrapped.stdout = stdout;
-  return wrapped;
-}
-
-function createProofProcessDeadlineError({ cleanupErrors = [], command, deadlineMs, stderr, stdout }) {
-  const capturedOutput = [stdout, stderr]
-    .filter((output) => output.length > 0)
-    .join("\n");
-  const cleanupSummary = cleanupErrors.length === 0
-    ? ""
-    : ` Cleanup failures: ${cleanupErrors.map((error) => error.message).join(" | ")}.`;
-  const error = new Error(
-    `${path.basename(command)} exceeded its protected ${deadlineMs}ms wall deadline.${cleanupSummary}${capturedOutput ? `\n${capturedOutput}` : ""}`,
-  );
-  error.code = "TOOLCRAFT_PROOF_PROCESS_DEADLINE";
-  error.signal = "SIGKILL";
-  error.stderr = stderr;
-  error.stdout = stdout;
-  error.cleanupErrors = cleanupErrors;
-  return error;
-}
-
-function createProofProcessResourceError({ command, resource }) {
-  const error = new Error(`${path.basename(command)} exceeded its protected proof-process resource limit (${resource}).`);
-  error.code = "TOOLCRAFT_PROOF_PROCESS_RESOURCE_LIMIT";
-  error.resource = resource;
-  return error;
 }
 
 export async function terminateToolcraftProofProcessTree({
@@ -161,6 +98,8 @@ function spawnToolcraftProofProcess(
   args,
   {
     capture = false,
+    onOutput,
+    abortSignal,
     cwd,
     deadlineMs,
     env = process.env,
@@ -187,7 +126,7 @@ function spawnToolcraftProofProcess(
       env,
       stdio: useIpc
         ? ["ignore", "pipe", "pipe", "ipc"]
-        : capture ? ["ignore", "pipe", "pipe"] : "inherit",
+        : capture || onOutput ? ["ignore", "pipe", "pipe"] : "inherit",
     });
     let settled = false;
     let stdout = "";
@@ -195,6 +134,7 @@ function spawnToolcraftProofProcess(
     const messages = [];
     let deadlineExceeded = false;
     let resourceExceeded = false;
+    let observerFailure;
     const deadlineTimer = deadlineMs === undefined
       ? undefined
       : setTimeout(() => {
@@ -219,6 +159,7 @@ function spawnToolcraftProofProcess(
         }, deadlineMs);
     const clearProcessTimers = () => {
       if (deadlineTimer) clearTimeout(deadlineTimer);
+      abortSignal?.removeEventListener("abort", onAbort);
     };
     child.stdout?.setEncoding("utf8");
     child.stderr?.setEncoding("utf8");
@@ -234,8 +175,42 @@ function spawnToolcraftProofProcess(
         const error = createProofProcessResourceError({ command, resource }); error.cleanupErrors = [cleanupError]; reject(error);
       });
     };
-    const onStdout = (chunk) => { stdoutBytes += Buffer.byteLength(chunk); if (stdoutBytes > limits.stdoutBytes) stopForResource("stdout-bytes"); else stdout += chunk; };
-    const onStderr = (chunk) => { stderrBytes += Buffer.byteLength(chunk); if (stderrBytes > limits.stderrBytes) stopForResource("stderr-bytes"); else stderr += chunk; };
+    const failObservedProcess = (error) => {
+      if (settled || observerFailure) return;
+      observerFailure = error;
+      clearProcessTimers();
+      void Promise.resolve(terminateProcessTree({ child, platform, signal: "SIGKILL", spawnProcess })).then(() => {
+        if (settled) return; settled = true; reject(error);
+      }, (cleanupError) => {
+        if (settled) return; settled = true;
+        reject(new AggregateError([error, cleanupError], "Observed proof process cleanup failed.", { cause: error }));
+      });
+    };
+    const onAbort = () => {
+      const error = new Error("Proof process interrupted.");
+      error.name = "AbortError";
+      error.signal = typeof abortSignal.reason === "string" ? abortSignal.reason : "SIGTERM";
+      failObservedProcess(error);
+    };
+    const observeOutput = (stream, chunk) => {
+      if (!onOutput || observerFailure) return;
+      try {
+        onOutput(stream, chunk);
+        if (!capture && !useIpc) process[stream].write(chunk);
+      } catch (error) { failObservedProcess(error); }
+    };
+    const onStdout = (chunk) => {
+      observeOutput("stdout", chunk);
+      if (!capture && !useIpc) return;
+      stdoutBytes += Buffer.byteLength(chunk);
+      if (stdoutBytes > limits.stdoutBytes) stopForResource("stdout-bytes"); else stdout += chunk;
+    };
+    const onStderr = (chunk) => {
+      observeOutput("stderr", chunk);
+      if (!capture && !useIpc) return;
+      stderrBytes += Buffer.byteLength(chunk);
+      if (stderrBytes > limits.stderrBytes) stopForResource("stderr-bytes"); else stderr += chunk;
+    };
     const onMessage = (message) => {
       if (messages.length + 1 > limits.ipcMessages) return stopForResource("ipc-message-count");
       let serialized;
@@ -243,8 +218,11 @@ function spawnToolcraftProofProcess(
       ipcBytes += Buffer.byteLength(serialized); if (ipcBytes > limits.ipcBytes) return stopForResource("ipc-serialized-bytes"); messages.push(message);
     };
     child.stdout?.on("data", onStdout); child.stderr?.on("data", onStderr); child.on?.("message", onMessage);
+    abortSignal?.addEventListener("abort", onAbort, { once: true });
+    if (abortSignal?.aborted) onAbort();
     child.once("error", (error) => {
       if (settled) return;
+      if (observerFailure) return;
       if (resourceExceeded) return;
       if (deadlineExceeded) return;
       settled = true;
@@ -253,6 +231,7 @@ function spawnToolcraftProofProcess(
     });
     child.once("close", (code, signal) => {
       if (settled) return;
+      if (observerFailure) return;
       if (resourceExceeded) return;
       if (deadlineExceeded) return;
       settled = true;

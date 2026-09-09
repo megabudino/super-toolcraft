@@ -153,6 +153,7 @@ export function VectorPadField({
       ) : null}
       <button
         aria-label={`${accessibleName} X/Y pad`}
+        data-slot="vector-pad"
         className={cn(
           "relative w-full cursor-default! touch-none overflow-hidden rounded-[calc(var(--radius)+2px)] bg-[linear-gradient(180deg,color-mix(in_oklab,var(--foreground)_4%,transparent),color-mix(in_oklab,var(--foreground)_1%,transparent))] select-none focus-visible:shadow-[0_0_0_3px_color-mix(in_oklab,var(--foreground)_12%,transparent)] focus-visible:outline-none",
           padShape === "square" ? "aspect-square" : "h-[142px]",

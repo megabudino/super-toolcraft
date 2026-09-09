@@ -1,4 +1,3 @@
-import crypto from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
 import ts from "typescript";
@@ -10,7 +9,6 @@ import { collectToolcraftSourceInventory } from "./toolcraft-source-inventory.mj
 import { collectToolcraftFrameworkOwnedLocalPaths } from "./toolcraft-source-ownership.mjs";
 import { collectToolcraftPlaywrightBindingProvenanceViolations } from "./toolcraft-playwright-test-type-provenance.mjs";
 import { createToolcraftDependencySourceRecord, getToolcraftDependencyImports } from "./toolcraft-dependency-source-record.mjs";
-import { hasValidToolcraftIntegrityManifestSignature } from "./toolcraft-integrity-manifest.mjs";
 import { createToolcraftFeaturePlaywrightAuthoritySeal, createToolcraftFeaturePreflightSeal, createToolcraftFeaturePreflightSnapshot, revalidateToolcraftFeaturePlaywrightAuthoritySeal } from "./toolcraft-feature-playwright-authority-seal.mjs";
 import { createToolcraftNodeEsmResolver } from "./toolcraft-node-esm-resolution.mjs";
 import { collectToolcraftPackageContentClosure } from "./toolcraft-package-content-closure.mjs";
@@ -19,37 +17,14 @@ import { assertToolcraftSignedConfigSources, assertToolcraftSignedLoaderSources,
 import { assertToolcraftPlaywrightConfigStaticUse } from "./toolcraft-playwright-config-mutation.mjs";
 import { createToolcraftStaticStringSetResolver } from "./toolcraft-static-string.mjs";
 import { createToolcraftTypeScriptChecker } from "./toolcraft-typescript-analysis.mjs";
+import { parseToolcraftTypeScriptSource } from "./toolcraft-typescript-source-evidence.mjs";
+import { getVerifiedProductTestFacade } from "./toolcraft-product-test-facade.mjs";
+export { hasVerifiedProductTestFacade, revalidateToolcraftProductTestFacade } from "./toolcraft-product-test-facade.mjs";
 export { revalidateToolcraftFeaturePlaywrightAuthoritySeal }; const compareCodeUnits = (left, right) => left < right ? -1 : left > right ? 1 : 0;
 const isWithinPath = (root, candidate) => { const relative = path.relative(root, candidate);
   return relative === "" || (!path.isAbsolute(relative) && relative !== ".." && !relative.startsWith(`..${path.sep}`)); };
 const authorityConfigPaths = ["package.json", "playwright.config.cjs", "playwright.config.cts", "playwright.config.js", "playwright.config.mjs", "playwright.config.mts", "playwright.config.ts", "vite.config.cjs", "vite.config.cts", "vite.config.js", "vite.config.mjs", "vite.config.mts", "vite.config.ts", "tsconfig.app.json", "tsconfig.json"];
 const pathTouchesSymbolicLink = (repoPath, symbolicLinkPath) => repoPath === symbolicLinkPath || repoPath.startsWith(`${symbolicLinkPath}/`);
-async function getVerifiedProductTestFacade(projectDir, graph) {
-  try {
-    const manifest = JSON.parse(await fs.readFile(path.join(projectDir, "src/toolcraft/.toolcraft-manifest.json"), "utf8"));
-    const expected = manifest.protectedFiles?.["e2e/toolcraft-product-test.ts"];
-    if (!hasValidToolcraftIntegrityManifestSignature(manifest) || typeof expected !== "string") return undefined;
-    const facadePath = path.join(projectDir, "e2e/toolcraft-product-test.ts");
-    const fileStat = await fs.lstat(facadePath);
-    if (!fileStat.isFile() || fileStat.isSymbolicLink()) return undefined;
-    const pinnedSource = graph?.sourceRecords.get("e2e/toolcraft-product-test.ts")?.rawSource;
-    if (typeof pinnedSource !== "string") return undefined;
-    const actual = crypto.createHash("sha256").update(pinnedSource).digest("hex");
-    return actual === expected ? Object.freeze({ digest: expected, facadePath }) : undefined;
-  } catch {
-    return undefined;
-  }
-}
-export async function hasVerifiedProductTestFacade(projectDir, graph) {
-  return Boolean(await getVerifiedProductTestFacade(projectDir, graph));
-}
-export async function revalidateToolcraftProductTestFacade(receipt) {
-  if (!receipt) return;
-  const fileStat = await fs.lstat(receipt.facadePath);
-  if (!fileStat.isFile() || fileStat.isSymbolicLink()) throw new Error("Protected product-test facade changed after authority validation.");
-  const actual = crypto.createHash("sha256").update(await fs.readFile(receipt.facadePath)).digest("hex");
-  if (actual !== receipt.digest) throw new Error("Protected product-test facade changed after authority validation.");
-}
 async function findAuthorityBoundaryRoot(projectDir) {
   const realRoot = await fs.realpath(projectDir);
   for (let cursor = realRoot; path.dirname(cursor) !== cursor; cursor = path.dirname(cursor)) try {
@@ -118,7 +93,9 @@ async function collectAuthorityConfigClosure(projectDir) {
         }
         continue;
       }
-      const parsed = ts.createSourceFile(repoPath, source.toString("utf8"), ts.ScriptTarget.Latest, true);
+      const parsedEvidence = parseToolcraftTypeScriptSource({ absolutePath: filePath, rawSource: source.toString("utf8") });
+      if (!parsedEvidence) throw new Error(`${repoPath} requires the TypeScript compiler for Playwright config authority.`);
+      const parsed = parsedEvidence.sourceFile;
       const checker = createToolcraftTypeScriptChecker(parsed, ts), defineConfigSymbols = new Set(), defineConfigNamespaces = new Set();
       for (const statement of parsed.statements) if (ts.isImportDeclaration(statement) && ts.isStringLiteral(statement.moduleSpecifier) && statement.moduleSpecifier.text === "@playwright/test") {
         const bindings = statement.importClause?.namedBindings;

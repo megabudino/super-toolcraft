@@ -366,6 +366,17 @@ test("CLI accepts direct and documented pnpm enable forms without running instal
       ),
     ]);
 
+    for (const relative of [
+      "scripts/toolcraft-renderer-activation.mjs",
+      "scripts/toolcraft-renderer-activation-proof.mjs",
+      "scripts/renderer-provider-registry-client.mjs",
+      "scripts/renderer-provider-release-codec.mjs",
+      "src/toolcraft/renderer-providers/provider-resolution.mjs",
+      "src/toolcraft/renderer-providers/release-codec.mjs",
+    ]) {
+      await fs.copyFile(new URL(`../${relative}`, import.meta.url), path.join(appRoot, relative));
+    }
+
     const { stdout } = await execFileAsync(
       "pnpm",
       ["toolcraft:renderer", "--", "enable", "vgpu"],

@@ -15,16 +15,20 @@ const controlsPanelContract = panel(
 );
 
 const runtimeSetupModeRowRule =
-  "Runtime Setup places the standard Background switch beside Infinity canvas immediately after settings transfer, then Background color and finite sizing; Timeline is the final Setup control when enabled.";
+  "Runtime Setup places the standard Background switch beside Infinity canvas after the local Save as Defaults action when available, then Background color and finite sizing; Timeline and optional Lock rotation share the final Setup row when enabled.";
 const runtimeSetupModeHelpRule =
   "Timeline and Infinity canvas are self-explanatory runtime mode switches and do not render help icons.";
 
 export const TOOLCRAFT_RUNTIME_COMPONENT_CONTRACTS = {
   canvas: {
     aiUsageRules: [
+      "CanvasShell owns Space + primary drag panning when canvas.draggable is enabled, with grab while Space is held and grabbing during the drag. Space-pan takes priority over scene handles and model orbit; plain mouse drag does not pan. Text editors and keyboard-focused controls retain Space input/activation. Pointer-focused panel controls yield Space to the hand tool when the pointer returns to the canvas.",
+      "Trackpad pinch, Ctrl/Meta-wheel, and native gesture events zoom only the canvas under the pointer. ToolcraftRoot suppresses browser zoom across the app, including panels and portaled popups; ordinary panel scrolling remains available. Product code must not recreate these input handlers.",
       "Choose canvas.sizing.mode from product context instead of copying a universal 1024px artboard.",
       "Editable-output apps expose the runtime Infinity canvas switch before finite sizing controls; generated apps do not recreate or shadow that mode in product state.",
       `Follow decision rule ${TOOLCRAFT_INFINITY_CANVAS_DECISION_RULE_ID} as the canonical authority for finite/infinite scene continuity, product bounds, output framing, export crop, and restoration.`,
+      "Infinity canvas removes finite artboard bounds and clipping, hides Aspect ratio, Canvas width, and Canvas height, and preserves the dormant finite canvas size for exact restoration when disabled.",
+      "CanvasShell owns one evaluated Background authority: finite mode renders a pointer-transparent runtime layer below model/image media and product scene content, while Infinity fills the complete viewport without a duplicate finite layer.",
       "Infinity canvas suppresses the bounded product-rendered preview background so the dormant finite output does not appear as a second canvas; when the standard Background pair is enabled, CanvasShell fills the complete infinite viewport with the selected Background color.",
       "When the standard Background pair exists, disabling Background atomically restores finite mode and disables Infinity canvas; re-enabling Background restores switch availability without enabling Infinity automatically.",
       "Custom Canvas 2D, WebGL, and WebGPU output consumes useToolcraftProductSceneFrame for the canonical product rect and keeps its live backing and renderer instance unchanged across finite/infinite mode toggles.",
@@ -63,7 +67,6 @@ export const TOOLCRAFT_RUNTIME_COMPONENT_CONTRACTS = {
       "canvas.zoomOut",
       "canvas.zoomReset",
       "media.delete",
-      "media.import",
       "media.importBatch",
       "media.reorder",
       "media.transform",
@@ -80,10 +83,10 @@ export const TOOLCRAFT_RUNTIME_COMPONENT_CONTRACTS = {
       "Do not write app state to localStorage directly.",
       "Use schema persistence policy for app state that should survive reload.",
       "Persistence may include values, canvas, panels, timeline, layers, and media; history is not persisted.",
-      "Use persistence include: [\"media\"] only when runtime media state must survive reload, such as predefined attached files that users can delete, reorder, or transform. Do not use ad hoc storage for media state.",
+      'Use persistence include: ["media"] only when runtime media state must survive reload, such as predefined attached files that users can delete, reorder, or transform. Do not use ad hoc storage for media state.',
       'Apps with visible runtime panels and localStorage persistence must include "panels" so dragged panel positions survive reload.',
-      'Apps with localStorage persistence must include acceptance coverage for changing a user setting, reloading the browser page, and seeing the restored value or product output.',
-      "Settings import/export is a mandatory runtime preset transfer feature; it must not be used to hide or replace broken persistence reload behavior.",
+      "Apps with localStorage persistence must include acceptance coverage for changing a user setting, reloading the browser page, and seeing the restored value or product output.",
+      "Saving source defaults must not hide or replace broken workspace persistence reload behavior.",
       "Do not store media blobs, files, or large generated images in localStorage.",
     ],
     capabilities: ["themePreference", "appStatePolicy"],
@@ -98,17 +101,18 @@ export const TOOLCRAFT_RUNTIME_COMPONENT_CONTRACTS = {
   settingsTransfer: {
     aiUsageRules: [
       "Generated apps keep a controls panel so runtime Setup is visible from the first run; product controls are added after that mandatory runtime section.",
-      "Do not gate Export Settings / Import Settings behind complexity thresholds, app size, or prompt wording.",
-      "Do not hand-roll settings import/export through app routes, hidden file inputs, or panelActions.",
-      "Settings transfer appears in the first visible headerless Setup controls-panel block; it imports and exports control values, canvas size, and timeline state.",
+      "Local Setup offers Save as Defaults instead of Export Settings / Import Settings; the panel-header Reset remains available in every host.",
+      "Save as Defaults captures the full current workspace and reachable binary resources into the project; header Reset restores that saved workspace. Incomplete media prevents publishing partial defaults.",
+      "Do not add settings file actions or source-writing controls in product routes or panelActions.",
+      "The runtime settings codecs support control values, canvas size, timeline playback settings, and attachment paths with durable resource references; they do not expose settings-file actions in Setup. Runtime restores available attachments and settings atomically; missing or invalid attachments are skipped independently. Paths are browser-visible names/relative paths, not permission to read the filesystem or network; JSON does not embed file bytes.",
       "App-authored sections must not declare runtime Setup targets such as runtime.settingsTransfer, canvas.aspectRatio, canvas.size.width, canvas.size.height, canvas.renderScale, or panels.timeline.extended; those controls never suppress the mandatory runtime Setup controls.",
       runtimeSetupModeRowRule,
       runtimeSetupModeHelpRule,
       "Keep sticky footer panelActions for product delivery actions only, such as Export PNG, Export Video, Copy, Generate, Apply, or Download.",
       "Typed Export PNG/Video actions consume ToolcraftAppComposition.exportRenderer and typed Export SVG consumes svgExportRenderer; all are runtime-owned, so use onPanelAction only for non-export product actions.",
     ],
-    capabilities: ["settings-import-export"],
-    commands: ["controls.setValue", "timeline.setCurrentTime", "timeline.setDuration"],
+    capabilities: ["source-defaults-authoring", "settings-import-export"],
+    commands: ["settings.apply"],
     historyPolicy: "patch",
     id: "settingsTransfer",
     kind: "settings",
@@ -130,7 +134,7 @@ export const TOOLCRAFT_RUNTIME_COMPONENT_CONTRACTS = {
       "A generic canvas hash difference is not enough for workload or semantic controls; assert the intended direction of the effect.",
       "Component variants are accepted entities too; tests should fail if a non-default Toolcraft control variant falls back to the default variant or custom markup.",
       "Conditional entities require fixtures that make the condition observable.",
-      'Every generated product control declares applicability as mode: "always" or mode: "conditional"; omitted applicability and legacy visibleWhen are runtime compatibility only and fail starter acceptance.',
+      'Every generated product control declares applicability as mode: "always" or mode: "conditional"; omitted applicability and control-level visibleWhen are rejected before materialization.',
       "Conditional applicability combines every predicate with AND, hides controls outside mode/type/source/include/variant/count branches, and preserves their runtime values while hidden.",
       "Every bounded finite product selector is classified exactly once in its Control Section Inventory finiteSelectors array as branch or parameter; continuous controls stay out, and sections without bounded selectors declare finiteSelectors: [].",
       "A branch lists only the exact always-visible same-entity peers it changes in affectedTargets; explicit applicability predicates add their dependents automatically and are not duplicated, and every predicate owner is a branch so missing predicates remain detectable.",
@@ -245,17 +249,20 @@ export const TOOLCRAFT_RUNTIME_COMPONENT_CONTRACTS = {
       "A concise property label such as Speed, Color, Size, or Opacity is allowed when the nearest visible section or group clearly names the affected product entity.",
       "When the section is generic, mixed, missing, or otherwise weak context, include the affected entity or role in the label: Pattern color, Background opacity, Wave speed, Stroke width.",
       "Acceptance validators suggest semantic replacement labels for weak generic labels; fix the schema label instead of relying on runtime fallback rewriting.",
-      "One to seven controls is the normal section size. Eight to ten controls are allowed only for one cohesive entity and require semanticGroup on every control; ten is the hard maximum.",
-      "Every Control Section Inventory entry declares required entityId, entity, exact targets, and groupingReason. One entity with ten or fewer controls stays in one section regardless of control type, visual height, or target namespace.",
-      "An entity above ten controls splits into balanced workflow sections of two to ten controls. Every split section keeps the same entityId and entity and declares a unique workflowStage plus splitReason.",
-      "Section splitting must preserve dependency cohesion: a selector stays with the applicability-gated controls it owns when they share the same target entity or selected branch. Use internal spacing/dividers or a more specific section title before splitting dependent branch controls away.",
+      "Ten declared controls is a non-blocking density-review threshold, not a section limit. Inspect simultaneously visible controls in reachable modes, compound-editor complexity, panel height, navigation, and reset scope; declaration count alone does not prove visual density.",
+      "Every Control Section Inventory entry declares required entityId, entity, exact targets, and groupingReason. Group by user task and dependency cohesion, not by component type or target namespace. Recommend semanticGroup where helpful; mixed plain-color rows retain their mandatory grouping.",
+      "A coherent section may exceed ten controls, and smaller entities may have justified workflow stages. Every split section keeps the same entityId and entity and declares a unique workflowStage plus concrete splitReason. A complete task may have one control; never split or merge solely to satisfy a count.",
+      "Section splitting must preserve dependency cohesion: keep selectors with their applicability-gated controls by default. A justified workflow split may share the same inventory entity across sections; unique stages and concrete split reasons remain mandatory. A selector option alone is not a separate task.",
       "Every app-authored controls-panel body section must have a short meaningful visible title. Runtime-created Setup renders as the first visible headerless controls block with no title, reset action, collapse button, or collapsed state; sticky footer action sections use the technical title Export but render without a visible heading.",
-      "Every visible app-authored controls-panel section title renders through the standard 36px collapsible header row with vertically centered text and the runtime collapse icon; generated apps must not hand-build section headers.",
+      "Controls-panel section titles normally use one to three words and name only the edited product entity or workflow stage. Four words is the exceptional maximum; starter acceptance rejects more than four semantic words or 32 Unicode code points.",
+      "Use section.description only when the section scope or output relationship is not obvious from its concise title and visible controls. The runtime renders it only behind the standard filled question-mark help icon and never as a visible descriptor or subtitle.",
+      "An actually overflowing legacy or localized section title stays on one line, fades at the right edge, and exposes its full text on hover. This defensive fallback never authorizes a generated app to keep an overlong title.",
+      "Every visible app-authored controls-panel section title renders through the standard 36px collapsible header row with vertically centered, left-aligned text and a separate rightmost 24px design-system collapse icon button; title, help, reset and collapse controls are never nested, and generated apps must not hand-build section headers.",
       "Controls-panel section expand and collapse uses the standard runtime height/opacity animation; generated apps must not replace it with instant custom section visibility.",
       "Controls-panel section collapsed/expanded state persists as a runtime UI preference per app. It is not undo/redo state, not settings import/export state, and Reset controls must not clear it. Runtime Setup is not collapsible; sticky footer Export sections are not collapsible.",
       "Ordinary controls-panel section headers expose the runtime section reset action before the collapse button; it dispatches controls.resetTargets and restores only that section's control targets to their schema defaultValue.",
       "Runtime Setup uses 12px top spacing so its first control row has equal top, left, and right insets. Ordinary controls-panel body sections keep 8px top spacing. Both use 24px bottom spacing; sticky footer action sections keep their dedicated spacing.",
-      "Broad section titles such as Flow, Icon, Shapes, Scene, Text, Typography, or Motion are only valid for small cohesive groups; use specific titles such as Flow Motion, Flow Geometry, Letter Burst, Shape Colors, Logo Glow, Logo Plate, or Text Block for larger groups.",
+      "Section titles must identify the edited entity or workflow stage. Use more specific names when the scope is unclear, not merely because the section has many controls.",
       "Section titles in one controls panel must be unique.",
       "Use section titles, option labels, tests, or renderer/spec prose for details instead of long field labels.",
       "Bad: Grid Density (every Nth). Good: Grid Density, with Every 6th as the select option label.",
@@ -267,7 +274,13 @@ export const TOOLCRAFT_RUNTIME_COMPONENT_CONTRACTS = {
       "The runtime renders a filled Phosphor question icon beside each visible ControlFieldLabel; generated apps must not hand-build their own help icon beside built-in labels.",
       "If a source label is unavoidably long, keep the visible label concise and rely on the native title tooltip for the full text.",
     ],
-    capabilities: ["short-labels", "control-description-tooltip", "native-title-tooltip"],
+    capabilities: [
+      "short-labels",
+      "control-description-tooltip",
+      "native-title-tooltip",
+      "section-description-tooltip",
+      "section-title-overflow-fade",
+    ],
     commands: [],
     historyPolicy: "never",
     id: "controlLabels",
@@ -281,11 +294,9 @@ export const TOOLCRAFT_RUNTIME_COMPONENT_CONTRACTS = {
     aiUsageRules: [
       ...controlsPanelContract.aiUsageRules,
       "An overflowing controls panel reveals runtime-owned section navigation only after a 300ms pointer dwell within its 12px inner-left padding strip, ending before control content begins. Fast crossings cancel the reveal; while visible, the popup and direct 8px corridor retain it by pointer geometry, remaining outside for 50ms starts a fast 120ms reduced-motion-aware exit before unmount, and reopening requires another dwell. It reuses PanelSurface and the shared ScrollFade, keeps its scrollbar at the right surface edge, shows position-aware top and bottom fades, uses a 12px list inset with zero horizontal item padding, sits 8px to the left centered on the content viewport, enters and exits with opacity and a 2px horizontal offset, renders 13px labels with 8px item gaps at foreground 50%, uses foreground 80% on hover and full foreground for the current item, renders no vertical item markers, jumps immediately to clicked sections, lets focused Arrow Up and Arrow Down wrap, focus, and immediately activate visible sections, includes Setup, and excludes sticky action sections.",
+      "Overflowing navigation labels use the shared right-edge ScrollFade mask without ellipsis and expose the full title on hover. Short labels remain unfaded. Navigation shares the panel reset lifecycle: stale listeners and hover timers are discarded, and a fresh dwell opens it on the replacement panel.",
     ],
-    capabilities: [
-      ...controlsPanelContract.capabilities,
-      "section-navigation",
-    ],
+    capabilities: [...controlsPanelContract.capabilities, "section-navigation"],
   },
   layersPanel: {
     ...panel("layersPanel", "LayersPanel", "left", ["left", "right"], "handle"),
@@ -322,7 +333,13 @@ export const TOOLCRAFT_RUNTIME_COMPONENT_CONTRACTS = {
     ],
   },
   timelinePanel: {
-    ...panel("timelinePanel", "TimelinePanel", "top", ["top", "bottom"], "panel"),
+    ...panel(
+      "timelinePanel",
+      "TimelinePanel",
+      "top",
+      ["top", "bottom"],
+      "panel",
+    ),
     aiUsageRules: [
       "Any product output animation must enable the top Toolcraft timeline; do not ship animated product output with only local requestAnimationFrame playback.",
       "Before choosing no timeline for any animated product, write an Animation Intent Inventory: product transport, editable keyframes, or autonomous decorative output, plus the user-facing time behaviors present or intentionally absent.",

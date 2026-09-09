@@ -153,6 +153,7 @@ export async function createToolcraftDeliveryArchitectureReport({
   const graph = await createToolcraftLocalDependencyGraph({
     entries: inventory.entries,
     rootDir,
+    sourceRecordMode: "module-shape",
   });
   const productionRoots = prefixed(
     scriptsRoot,

@@ -32,7 +32,7 @@ export async function expectNoToolcraftVgpuPageErrors(page: Page): Promise<void>
   expect(errorsByPage.get(page) ?? []).toEqual([]);
 }
 
-async function readCanvasSample(page: Page): Promise<readonly number[]> {
+export async function readCanvasSample(page: Page): Promise<readonly number[]> {
   const canvas = page.locator('canvas[data-toolcraft-vgpu-product=""]');
   const screenshot = await canvas.screenshot();
   return page.evaluate(async (base64) => {

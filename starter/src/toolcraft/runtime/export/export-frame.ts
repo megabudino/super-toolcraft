@@ -5,7 +5,7 @@ import {
   type ToolcraftSceneRect,
 } from "../scene";
 import { getToolcraftCanvasFrame } from "../state/canvas-frame";
-import type { ToolcraftState } from "../state/types";
+import type { ReadonlyToolcraftState } from "../state/readonly-state";
 
 export const TOOLCRAFT_MAX_EXPORT_EDGE_PX = 8192;
 export const TOOLCRAFT_MAX_EXPORT_PIXELS =
@@ -44,7 +44,7 @@ function isSceneBoundsResult(
 }
 
 export function resolveToolcraftExportFrame(
-  state: ToolcraftState,
+  state: ReadonlyToolcraftState,
   sceneBounds: ToolcraftSceneBoundsResult | ToolcraftSceneRect | null,
 ): ToolcraftExportFrameResult {
   const canvas = getToolcraftCanvasFrame(state.canvas);

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 
+import { getSliderVariantClassificationErrors } from "./acceptance/control-component-rules";
 import {
   contractSchemaFixture,
   createContractSectionInventoryFixture,
@@ -18,6 +19,10 @@ describe("starter acceptance slider marker contract", () => {
             {
               controls: {
                 grain: {
+                  applicability: {
+                    mode: "always" as const,
+                    origin: "explicit" as const,
+                  },
                   defaultValue: 0.08,
                   label: "Grain",
                   markerCount: 6,
@@ -26,8 +31,8 @@ describe("starter acceptance slider marker contract", () => {
                   sliderValueKind: "discrete" as const,
                   step: 0.1,
                   target: "shader.grain",
-                  type: "slider",
-                  variant: "discrete",
+                  type: "slider" as const,
+                  variant: "discrete" as const,
                 },
               },
               id: "volume",
@@ -70,90 +75,90 @@ describe("starter acceptance slider marker contract", () => {
   });
 
   it("rejects visual discrete sliders with too many positions", () => {
-    const schemaWithDenseDiscreteSlider = defineContractSchemaFixture({
-      canvas: { enabled: true },
-      panels: {
-        controls: {
-          sections: [
-            {
-              controls: {
-                revealSpeed: {
-                  defaultValue: 118,
-                  label: "Reveal speed",
-                  max: 150,
-                  min: 0,
-                  orderRole: "primary",
-                  sliderValueKind: "discrete",
-                  step: 1,
-                  target: "ascii.speed",
-                  type: "slider",
-                  unit: "cols/s",
-                  variant: "discrete",
-                },
-              },
-              title: "Timing",
-            },
-          ],
-          title: "ASCII",
+    expect(
+      getSliderVariantClassificationErrors({
+        control: {
+          applicability: { mode: "always" },
+          defaultValue: 118,
+          label: "Reveal speed",
+          max: 150,
+          min: 0,
+          orderRole: "primary",
+          sliderValueKind: "discrete",
+          step: 1,
+          target: "ascii.speed",
+          type: "slider" as const,
+          unit: "cols/s",
+          variant: "discrete" as const,
         },
-      },
-    });
+        controlId: "revealSpeed",
+        label: "Timing / revealSpeed (ascii.speed)",
+      }),
+    ).toEqual([
+      'Timing / revealSpeed (ascii.speed) declares variant "discrete" with 151 positions, which would overload tick markers. Keep it stepped continuous or use a different control.',
+    ]);
+  });
+
+  it("uses the shared 32-position acceptance boundary", () => {
+    const base = {
+      applicability: { mode: "always" as const },
+      defaultValue: 16,
+      min: 0,
+      sliderValueKind: "discrete" as const,
+      step: 1,
+      target: "shape.count",
+      type: "slider" as const,
+    };
 
     expect(
-      validateContractAcceptance({
-        schema: schemaWithDenseDiscreteSlider,
-        acceptance: [
-          {
-            automated: true,
-            automatedTestName: "reveal speed changes rendered output",
-            browser: {
-              budget: "standard",
-              file: "e2e/app-controls.spec.ts",
-              testName: "browser: reveal speed slider changes rendered output",
-            },
-            componentType: "slider",
-            evidence: "rendered-pixels",
-            expectedObservable: "Changing Reveal speed changes reveal density.",
-            fixture: "ASCII fixture",
-            id: "ascii.speed",
-            kind: "control",
-            target: "ascii.speed",
-            userAction: "Drag the Reveal speed slider.",
-          },
-        ],
+      getSliderVariantClassificationErrors({
+        control: { ...base, max: 31, variant: "discrete" },
+        controlId: "count",
+        label: "Shape / count (shape.count)",
       }),
-    ).toEqual(
-      expect.arrayContaining([
-        'Timing / revealSpeed (ascii.speed) declares variant "discrete" with 151 positions, which would overload tick markers. Keep it stepped continuous or use a different control.',
-      ]),
-    );
+    ).toEqual([]);
+    const overloadedErrors = getSliderVariantClassificationErrors({
+      control: { ...base, max: 32, variant: "discrete" },
+      controlId: "count",
+      label: "Shape / count (shape.count)",
+    });
+
+    expect(overloadedErrors).toEqual([
+      'Shape / count (shape.count) declares variant "discrete" with 33 positions, which would overload tick markers. Keep it stepped continuous or use a different control.',
+    ]);
   });
 
   it("accepts continuous stepped sliders without visual markers", () => {
     const schemaWithNormalizedSlider = defineContractSchemaFixture({
-      canvas: { enabled: true },
-      panels: {
-        controls: {
-          sections: [
-            {
-              controls: {
-                grain: {
-                  defaultValue: 0.08,
-                  label: "Grain",
-                  max: 1,
-                  min: 0,
-                  step: 0.1,
-                  target: "shader.grain",
-                  type: "slider",
+      base: {
+        identity: { id: "contract-fixture", title: "Contract fixture" },
+        persistence: { storage: "none" },
+        canvas: { enabled: true },
+        panels: {
+          controls: {
+            sections: [
+              {
+                controls: {
+                  grain: {
+                    applicability: { mode: "always" },
+                    defaultValue: 0.08,
+                    label: "Grain",
+                    max: 1,
+                    min: 0,
+                    step: 0.1,
+                    target: "shader.grain",
+                    type: "slider" as const,
+                  },
                 },
+                id: "volume",
+                title: "Volume",
               },
-              id: "volume",
-              title: "Volume",
-            },
-          ],
-          title: "Shader",
+            ],
+            title: "Shader",
+          },
         },
       },
+      modules: [],
     });
 
     expect(
@@ -180,13 +185,15 @@ describe("starter acceptance slider marker contract", () => {
         ],
         sectionInventory: createContractSectionInventoryFixture(
           schemaWithNormalizedSlider,
-          [{
-            entity: "Volume",
-            entityId: "volume",
-            finiteSelectors: [],
-            groupingReason: "Grain controls the rendered shader volume.",
-            id: "volume",
-          }],
+          [
+            {
+              entity: "Volume",
+              entityId: "volume",
+              finiteSelectors: [],
+              groupingReason: "Grain controls the rendered shader volume.",
+              id: "volume",
+            },
+          ],
         ),
       }),
     ).toEqual([]);

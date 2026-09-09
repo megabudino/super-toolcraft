@@ -5,31 +5,70 @@ Read this module before changing sections, labels, helper icons, inline rows, di
 ## Sections
 
 - Build controls-panel sections from logical product entities, not component types, visual control size, or target namespaces. Before writing controls, export `appControlSectionInventory`; every section declares stable `entityId`, human-readable `entity`, exact targets, and `groupingReason`.
-- One to seven controls is the normal section size. Eight to ten controls are allowed for one cohesive entity and require `semanticGroup` on every control. Ten controls is the hard maximum.
-- One entity with ten or fewer controls stays in one section. Different source, settings, placement, or presentation roles do not create sections by themselves.
-- An entity above ten controls splits into balanced workflow sections containing two to ten controls. Every split section keeps the same `entityId` and `entity` and declares a unique `workflowStage` plus concrete `splitReason`; it may not leave a one-control tail. A one-control section is valid only when that control is the entity's complete editable surface.
+- Section boundaries follow user tasks, dependency cohesion, and a meaningful reset scope. Keep a coherent workflow together even above ten controls; smaller entities may have multiple justified workflow stages. Never split or merge solely to satisfy a count, and do not move a setting away from its owner merely because an eleventh control was added.
+- Ten declared controls is a non-blocking density-review threshold, not a section limit. The static warning counts declarations, not simultaneously visible controls. In the feature's ordinary browser inspection, review the busiest reachable modes, actual panel height, compound-editor complexity, navigation, and reset scope. Mutually exclusive controls are not added together as visible workload. A short list of large compound editors may also need review; no automatic weighted score or declaration count proves usability.
+- Use `semanticGroup` where it clarifies product subgroups; there is no count-based requirement to annotate every control. Mixed plain-color rows retain their mandatory grouping contract below. Do not split atomic built-ins or replace them with custom controls to reduce the count.
+- Every workflow split, regardless of size, keeps the same `entityId` and `entity` and declares a unique `workflowStage` plus concrete `splitReason` describing the user task and reset boundary. A one-control stage is valid for a complete task, including an atomic compound editor, not as a numeric remainder. Record a density decision in the existing `groupingReason` or worklog; no extra plan, approval, waiver flag, or inventory field is required.
 - Do not reuse the same section title for multiple sections.
 - Bad titles: `Controls`, `Settings`, `Options`, `Sliders`, `Inputs`, `Buttons`, `Color`, `Colors`.
 - Good titles name the edited thing: `Background`, `Object`, `Token Pattern`, `Motion`, `Tone Mapping`, `Export`.
 - Every app-authored controls-panel body section has a short meaningful visible title.
+- A section title normally uses one to three words and names only the edited product entity or workflow stage. Four words is the exceptional maximum. Starter acceptance rejects titles with more than four semantic words or more than 32 Unicode code points.
+- Remove indices, modes, explanations, and secondary context from section titles. Put necessary non-obvious scope or output relationships in `description`, not in the title.
 - Runtime `Setup` is the first visible headerless controls block. Sticky footer export actions render without a visible heading.
 
 ## Dependency Cohesion
 
 - Typed `entityId` is the primary authority for section cohesion. Target-prefix checks are secondary diagnostics and never redefine an inventory entity.
-- A selector that controls mode, type, source, variant, or include state stays with the controls it gates when they share the same product entity.
+- A selector that controls mode, type, source, variant, or include state stays with its dependent controls by default. A justified workflow split may cross sections with the same inventory entity; the split metadata and exact target ownership remain mandatory.
 - Declare conditional control applicability for inactive product branches so the panel shows only usable controls while preserving hidden values.
-- Do not create a separate section that merely mirrors one selector option unless that branch is a genuinely separate product entity with its own workflow evidence.
+- A selector option alone does not justify a separate section. Use conditional controls within the owning workflow, or document a distinct user task with its own workflow evidence; do not invent another entity to bypass grouping checks.
 - A section with no visible controls is hidden automatically.
 - Do not use `disabled: true` or `disabledWhen` for generated product controls.
+
+## Explicit Product Modes
+
+When the user explicitly requests distinct application modes, put their one canonical selector in the **first product section immediately after runtime Setup** (the Settings block). Keep it available in every mode. Do not infer application modes from a reference image, a selector label, or an ordinary local parameter. Entity choices such as font weight or an object's line style remain in their semantic sections.
+
+Mark that selector as a `branch` in `appControlSectionInventory.finiteSelectors` and add `productMode`. Inspect the original user message and retain its exact request evidence. A plan or worklog does not supply primary permission. Local validation checks the supplied quote and structure; it cannot authenticate chat authorship or decide whether the quote actually requests modes.
+
+```ts
+{
+  target: "scene.mode", role: "branch",
+  reason: "Choose the requested Diagram or Map scene and its editable controls.",
+  affectedTargets: [],
+  productMode: {
+    request: {
+      source: "user-message", messageRef: "<actual user message reference>",
+      messageText: "Add Diagram and Map modes.", quote: "Diagram and Map modes",
+    },
+    sharedTargets: ["scene.scale"],
+  },
+}
+```
+
+Use a built-in `select`, `segmented`, or `tabs` with at least two distinct options, a valid default, `applicability: { mode: "always" }`, and `keyframeable: false`. The selector's section is unconditional. Author it after the Background source section if present: runtime relocates Background into Setup before checking the resulting order. Do not bury Mode inside a late effect section or move it into runtime Setup.
+
+Every other product control outside runtime Setup and action-only controls must either directly reference this selector in its conditional `applicability` or appear exactly once in `sharedTargets`. A mode predicate selects a non-empty proper subset of mode values, for example `{ mode: "conditional", all: [{ target: "scene.mode", oneOf: ["diagram"] }] }`. Shared means availability independent of the application mode; local predicates may still apply. A local selector must be available in every mode of its dependent. Keep shared declarations deliberate and trace actual output consumers; an unrelated mode's controls must not be marked shared simply to pass validation.
+
+Inactive controls and sections with no applicable controls are absent; do not gray them out or hide them with CSS or a separate section-only predicate. Preserve their values, defaults, history and persistence. The same mode value drives product output and applicability. Do not add a hidden selector, derived persisted scope, layout-effect synchronization, duplicated section targets, or a second panel mode store. Prefer direct options for the requested product states; additional genuinely local choices can stay conditional beneath the main selector.
+
+This explicit application selector may govern multiple product entities. Each entity retains its own section identity and grouping rules. Other finite selectors retain normal dependency cohesion and `branch`/`parameter` classification. `affectedTargets` still lists only always-applicable controls whose outcome actually depends on the selector; explicit applicability adds dependents automatically. `sharedTargets` does not create unrelated browser case fanout.
+
+Prove each declared mode through the existing applicability browser cases: active controls present and affecting that mode's output, other modes' controls absent, no empty section headings, and the mode selector reachable. Switch back, exercise Undo, and reload to prove saved mode and hidden values survive. A new product control without direct mode applicability or an explicit shared declaration fails the inventory gate.
 
 ## Section Headers And Reset
 
 - Every visible section title renders through the standard 36px collapsible header row.
+- Section text is explicitly left-aligned. Help stays beside the title; reset/action precedes a separate rightmost 24px design-system icon button for collapse, with its standard rounded hover/focus surface. The title remains clickable, but never wraps help, reset, or the collapse icon button.
+- The runtime keeps every section title on one line. An actually overflowing title uses the shared right-edge opacity fade and exposes its full text on hover.
+- Overflow handling is a defensive fallback for legacy content and localization. It never authorizes a generated app to keep an overlong title.
 - Do not hand-build section headers in generated apps.
 - Section expand/collapse uses the standard runtime height/opacity animation.
 - Collapsed/expanded state persists as per-app runtime UI preference.
 - Collapsed/expanded state is not undo/redo state, settings import/export state, or Reset controls state.
+- Controls-panel scroll position persists automatically in the per-app runtime `panels` slice and restores on page reload, together with collapsed sections. Do not implement app-owned scroll storage or restoration.
+- Scroll is a workspace preference, not undo/redo, settings import/export, or Reset controls state. The runtime preserves it across panel collapse/remount, restores without animation, and clamps to the nearest valid position if content is shorter. User scrolling takes priority over delayed restoration. `persistence.storage: "none"` disables reload persistence, including panel scroll.
 - Ordinary section headers expose the runtime section reset action before the collapse button.
 - Section reset dispatches `controls.resetTargets` and restores only that section's targets to schema `defaultValue`.
 - Runtime `Setup` is not collapsible and has no reset action. Sticky footer export sections are not collapsible.
@@ -56,6 +95,8 @@ Read this module before changing sections, labels, helper icons, inline rows, di
 
 - Keep labels short but semantically sufficient with the nearest visible section/group context.
 - Put product-specific behavior help in schema `description`.
+- Use section `description` only when the section scope or output relationship is not obvious from its concise title and visible controls.
+- Runtime renders a section description only behind the standard filled `?` help icon beside the title, never as a visible descriptor or subtitle. Obvious sections omit `description` and show no section help icon.
 - Runtime shows the help icon only when `description` adds meaning beyond the label.
 - Do not use descriptions that recap the label, such as `Adjusts Opacity`.
 - Do not add helper icons to obvious homogeneous groups when the section title and label already explain the control.

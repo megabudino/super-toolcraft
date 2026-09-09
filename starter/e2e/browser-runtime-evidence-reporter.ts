@@ -272,7 +272,9 @@ export default class ToolcraftBrowserRuntimeEvidenceReporter implements Reporter
     }
   }
 
-  onEnd(_result: FullResult): { status: "failed" } | undefined {
+  async onEnd(
+    _result: FullResult,
+  ): Promise<void | { status: "failed" }> {
     const selectedTitles = new Set(this.selectedTests.map((test) => test.title));
     const acceptanceRequirements = this.validateFullAcceptance
       ? this.acceptanceRequirements

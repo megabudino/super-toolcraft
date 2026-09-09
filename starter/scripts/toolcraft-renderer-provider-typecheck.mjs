@@ -1,3 +1,4 @@
+import { resolveRendererProviderDefinition, rendererProviderDependencyNames } from "../src/toolcraft/renderer-providers/provider-resolution.mjs";
 import { execFile } from "node:child_process";
 import fs from "node:fs/promises";
 import { createRequire } from "node:module";
@@ -44,17 +45,19 @@ export async function runRendererProviderTypecheck({
   assertRecord(packageJson, "packageJson");
   const dependencies = packageJson.dependencies ?? {};
   assertRecord(dependencies, "packageJson.dependencies");
-  const provider = catalog.providers[supportedProviderId];
-  if (!provider) {
+  const descriptor = catalog.providers[supportedProviderId];
+  if (!descriptor) {
     throw new TypeError(`Provider catalog must define "${supportedProviderId}".`);
   }
 
-  const hasProviderDependency = provider.dependencies.some(({ name }) =>
+  const provider = resolveRendererProviderDefinition(descriptor, packageJson);
+  const hasProviderDependency = rendererProviderDependencyNames.some((name) =>
     Object.hasOwn(dependencies, name),
   );
   if (!hasProviderDependency) {
     return Object.freeze({ providerId: null, status: "skipped" });
   }
+  if (provider.dependencies.length === 0) throw new Error("VGPU dependencies require verified app-local resolution; run toolcraft:renderer enable vgpu.");
   for (const dependency of provider.dependencies) {
     if (dependencies[dependency.name] !== dependency.version) {
       throw new TypeError(

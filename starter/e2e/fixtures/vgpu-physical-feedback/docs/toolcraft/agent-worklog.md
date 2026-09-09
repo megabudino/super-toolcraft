@@ -37,14 +37,14 @@ Mode: product
 - Evidence: appSchema.panels.layers is omitted.
 
 ### Controls
-- Decision: Use built-in switch, slider, and panelActions controls.
+- Decision: Use built-in switch and slider controls; `imageExportModule()` owns image settings and the export action.
 - Reason: Field availability, impulse strength, and PNG delivery map directly to existing Toolcraft components.
 - Evidence: src/app/app-schema.ts and appControlSectionInventory.
 
 ### Export
 - Decision: Supply deterministic VGPU pixels through one runtime-owned image export action and the registered renderer pipeline only.
 - Reason: Runtime owns scene cropping, image encoding, download, and typed failure while product export obtains its retained provider/storage exclusively through the pass context `getOrCreateResource`; a missing pipeline or Canvas2D context rejects deterministically and creates no fallback owner.
-- Evidence: appComposition.exportRenderer and sceneBoundsProvider.
+- Evidence: `composeToolcraftApp` receives `scene.rasterFrameRenderer` and `scene.sceneBoundsProvider`.
 
 ### Performance
 - Decision: Declare the five-pass surface-specific resources/preview-compute/preview-present/export-compute/export-present VGPU pipeline, its Canvas2D final presentation surface, and bounded surface-pixel × replay-step workload without running measured performance.
@@ -90,6 +90,44 @@ Mode: product
 - Performance intent: ordinary-product-work
 - Verification: One bare `pnpm verify:delivery` will derive and run the protected proof.
 - Risks: None beyond the catalog-pinned API seams already recorded above.
+
+### Focused edit - capability module assembly migration
+- Request: Integrate the approved capability assembly API into the canonical physical feedback framework fixture without running the physical GPU compatibility story.
+- Task type: Focused framework test-fixture schema, composition, and acceptance mapping migration.
+- User-visible result: Image settings and the permanent image export action come from `imageExportModule()`; the two-second playback timeline comes from `timelineModule()`.
+- Source/reference checked: Current module constructors, `composeToolcraftApp` named ports, the existing physical feedback fixture, and current canonical scene/background contracts. No excluded documentation branch inputs were used.
+- Reference inputs: None.
+- Docs/contracts read: workflow.md, core/runtime-boundary.md, assembly-workflow.md, decision-contract.md, core/setup-export.md, and acceptance-testing.md.
+- Contract rules applied: runtime-shell-required, canvas-surface-preserved, infinity-canvas-scene-bounds, controls-section-inventory-required, output-export-required, and focused later-edit verification.
+- View interaction intent: non-spatial and unchanged.
+- Interaction ownership: Field and Impulse remain panel-owned; runtime owns timeline, background, viewport, and artifact delivery.
+- Implementation plan: Migrate both schema definitions to `base`/`modules`; connect scene and renderer named ports; reconcile the module-owned image inventory and exact selector roles; then run source-level type, acceptance, and installer checks only.
+- Decision: Preserve canonical scene bounds and enabled GPU passes verbatim. The product preview stays transparent so the runtime paints finite and Infinity backgrounds; raster export keeps the existing runtime background and decoded-pixel contract. The export action is always visible, including when Field is off. Disabled Field means no field contribution in preview or export: export returns without allocating resources, executing passes, or touching the runtime-painted destination. Field remains a branch only for the explicitly conditional Impulse control, and independent complete image export acceptance remains registered.
+- Alternatives rejected: Compatibility aliases, duplicate authored image settings/actions, product-painted preview background, and retention of the obsolete conditional export footer behavior.
+- State/output mapping: `base` retains Field, Impulse, Background, canvas defaults, and toolbar; modules supply image settings/actions and playback. `scene.rasterFrameRenderer`, `scene.sceneBoundsProvider`, and `renderer.pipelineRegistration` connect the existing export, canonical frame, and five-pass physical pipeline. Image inventory uses `runtime.image-export`; bounded selectors declare exact branch/parameter roles.
+- Performance intent: ordinary-product-work
+- Verification: The pre-migration source load reproduced `definition.modules is not iterable`. After migration, TypeScript reports zero diagnostics for schema, acceptance data, workload, and their complete dependency graph; all eight changed TS/TSX sources transpile; direct source loading confirms exactly image-export/timeline, two-second playback, one always-visible image action, and ten unchanged performance scenarios. Full acceptance validation returns no errors. All five fixture-installer contract tests pass. No delivery gate, browser, physical GPU execution, or measured performance ran.
+- Disabled export regression: A focused mocked source-load test reproduced GPU execution while Field was disabled, then proved the early return leaves the destination untouched and executes no GPU work with background included or excluded. The installed fixture includes the matching mocked unit regression; enabled rendering still follows the unchanged GPU algorithm.
+- Size-boundary ownership: `app-control-inventory.ts` owns the section and finite-selector inventory, reexported without copying through `app-acceptance-data.ts`. The disabled-export regression belongs to the existing operation-ownership test module. This extraction changes neither thresholds, algorithms, fixture values, nor test behavior. The four split sources transpile; the schema/acceptance/workload dependency graph has zero TypeScript diagnostics; full acceptance validation remains clean; and the updated closed-inventory installer tests pass 5/5.
+- Risks: Physical browser pixels are not re-proved in this scoped migration; the existing compatibility browser story remains the physical-output authority.
+
+### Compatibility delivery - verified provider updates
+- Request: Certify the exact stable VGPU candidate and current adapter source before publishing a refreshed Toolcraft starter.
+- Task type: Isolated first functional delivery of the canonical provider compatibility fixture.
+- User-visible result: Candidate promotion requires correct translucent pixels, provider API compatibility, direct surface lifecycle, and the existing physical preview/export story.
+- Source/reference checked: VGPU target/surface documentation, current public Toolcraft provider adapter, and the original physical feedback fixture.
+- Reference inputs: None.
+- Docs/contracts read: workflow.md, renderer-technique.md, core/runtime-boundary.md, core/performance.md, and acceptance-testing.md.
+- Contract rules applied: renderer-gpu-provider, renderer-technique-inventory, output-export-required, and workflow-required.
+- View interaction intent: non-spatial; no camera changes.
+- Interaction ownership: Existing panel Field/Impulse, runtime timeline, background, canvas viewport, and image export owners remain unchanged.
+- Decision: Keep straight-alpha bytes at target readback/Canvas2D boundaries; independently test the premultiplied public GPU surface. Preserve all earlier historical verification records.
+- Alternatives rejected: Changing an approved version string without proof, inferring color correctness from changing hashes, or silently enabling measured performance.
+- State/output mapping: The WGSL field output supplies straight RGB/alpha to target presentation and runtime export. Node pixels prove the analytic color and source-over result; the separate browser fixture proves direct surface frames, sizing, and disposal.
+- Performance intent: ordinary-product-work
+- Verification: One bare `pnpm verify:delivery` will derive and run the protected proof.
+- Compatibility prerequisites: Focused adapter types, unit tests, and direct surface browser checks run before initial functional delivery. Direct surface proof uses the full Chromium headless channel: headless-shell reproduced an external-instance error, while full Chromium preserved color, second-frame output, resizing, and disposal.
+- Risks: Physical tests require a working Node WebGPU adapter and Chromium software WebGPU. Any failed prerequisite or functional delivery rejects promotion; no fallback marks it successful.
 
 ## Evidence
 

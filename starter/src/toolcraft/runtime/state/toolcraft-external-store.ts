@@ -1,4 +1,3 @@
-import { toolcraftReducer } from "./reducer";
 import {
   getToolcraftStoreChanges,
   toolcraftStoreDependenciesChanged,
@@ -104,6 +103,7 @@ function createEffectiveState(
 
 export function createToolcraftExternalStore(
   initialState: ToolcraftState,
+  toolcraftReducer: (state: ToolcraftState, command: ToolcraftCommand) => ToolcraftState,
 ): ToolcraftExternalStore {
   let committedState = initialState;
   let effectiveState = initialState;
@@ -241,6 +241,7 @@ export function createToolcraftExternalStore(
       committedState,
       effectiveState,
       command,
+      toolcraftReducer,
     );
 
     if (!transition.changed) {

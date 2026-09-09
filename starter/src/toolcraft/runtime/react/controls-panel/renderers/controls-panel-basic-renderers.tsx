@@ -17,6 +17,7 @@ import {
 
 import { toolcraftCanvasAspectRatioPresets } from "../../../schema/canvas-aspect-ratio-presets";
 import type { ToolcraftControlSchema } from "../../../schema/types";
+import { isToolcraftBuiltInControlSchema } from "../../../schema/control-schema";
 import {
   getControlMarkerCount,
   shouldCommitTextControlOnBlur,
@@ -132,6 +133,7 @@ export function renderBasicControl({
   vectorPadShape,
   withKeyframeLabelAction,
 }: BasicControlRenderArgs): React.ReactNode | null {
+  if (!isToolcraftBuiltInControlSchema(control)) return null;
   switch (control.type) {
     case "aspectRatio":
       return (

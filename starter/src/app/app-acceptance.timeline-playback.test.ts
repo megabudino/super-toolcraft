@@ -1,30 +1,95 @@
+import { exportRequestFixture } from "./app-acceptance.export-request-test-fixtures";
 import { describe, expect, it } from "vitest";
+import { timelineModule } from "@/toolcraft/runtime";
 
-import type { ToolcraftTransferMode } from "./acceptance/types";
+import type {
+  ToolcraftComponentAcceptance,
+  ToolcraftProductReadiness,
+  ToolcraftTransferMode,
+} from "./acceptance/types";
 import {
-  contractSchemaFixture,
-  validateContractAcceptance,
+  defineContractSchemaFixture,
+  validateContractAcceptance as validateBaseContractAcceptance,
 } from "./app-acceptance.contract-fixtures";
-import {
-  playbackTimelineAcceptance,
-} from "./app-acceptance.timeline-test-utils";
+import { playbackTimelineAcceptance } from "./app-acceptance.timeline-test-utils";
 
 function createTimelineSchema(mode: "keyframes" | "playback" = "playback") {
-  return {
-    ...contractSchemaFixture,
-    panels: {
-      ...contractSchemaFixture.panels,
-      timeline: { defaultDurationSeconds: 8, enabled: true, mode },
+  return defineContractSchemaFixture({
+    base: {
+      canvas: { enabled: true },
+      identity: { id: "timeline-fixture", title: "Timeline fixture" },
+      panels: { controls: { sections: [], title: "Controls" } },
     },
-  };
+    modules: [timelineModule({ mode })],
+  });
+}
+
+const timelineProductReadiness: ToolcraftProductReadiness = {
+  exportIntent: {
+    image: {
+      evidence: exportRequestFixture(
+        "Remove image export; this fixture must not offer downloadable artifacts.",
+      ),
+      mode: "user-removed",
+    },
+    svg: { mode: "not-requested" },
+    video: { mode: "not-requested" },
+  },
+  interactionOwnership: [],
+  mode: "product",
+  productName: "Timeline fixture",
+  productSummary: "A non-spatial timeline behavior fixture.",
+  requestedBehavior: "Control animation playback through the runtime timeline.",
+  viewInteraction: {
+    mode: "non-spatial",
+    reason: "The timeline fixture has no spatial view.",
+  },
+};
+
+const timelinePersistenceAcceptance: ToolcraftComponentAcceptance = {
+  automated: true,
+  automatedTestName: "timeline state restores after reload",
+  browser: {
+    budget: "standard" as const,
+    file: "e2e/app-controls.spec.ts",
+    testName: "browser: timeline state restores after reload",
+  },
+  componentType: "persistence",
+  evidence: "persistence-state",
+  expectedObservable: "Timeline state restores after a real browser reload.",
+  fixture: "timeline persistence fixture",
+  id: "persistence.reload",
+  kind: "runtime",
+  persistenceCoverage: "reload",
+  persistenceSlices: ["timeline"],
+  userAction: "Edit the timeline, reload the page, and inspect restored state.",
+};
+
+type TimelineValidationOverrides = Parameters<
+  typeof validateBaseContractAcceptance
+>[0];
+
+function validateContractAcceptance(
+  overrides: TimelineValidationOverrides = {},
+): string[] {
+  return validateBaseContractAcceptance({
+    ...overrides,
+    acceptance: [
+      ...(overrides.acceptance ?? []),
+      timelinePersistenceAcceptance,
+    ],
+    productReadiness: timelineProductReadiness,
+  });
 }
 
 describe("starter acceptance timeline playback contract", () => {
   it("requires timeline playback coverage when a playback timeline is enabled", () => {
-    expect(validateContractAcceptance({
-      schema: createTimelineSchema(),
-      acceptance: [],
-    })).toEqual(
+    expect(
+      validateContractAcceptance({
+        schema: createTimelineSchema(),
+        acceptance: [],
+      }),
+    ).toEqual(
       expect.arrayContaining([
         'panels.timeline mode "playback" requires a runtime acceptance entry with timelineCoverage "playback" proving pause, scrub, duration/loop, and rendered-frame behavior.',
       ]),
@@ -38,21 +103,28 @@ describe("starter acceptance timeline playback contract", () => {
         acceptance: [
           {
             automated: true,
-            automatedTestName: "timeline playback controls drive rendered output",
+            automatedTestName:
+              "timeline playback controls drive rendered output",
             browser: {
               budget: "standard",
               file: "e2e/app-controls.spec.ts",
-              testName: "browser: timeline playback controls drive rendered output",
+              testName:
+                "browser: timeline playback controls drive rendered output",
             },
             componentType: "timeline",
             evidence: "timeline-output",
-            expectedObservable: "Pause, scrub, and playback update visible renderer output.",
+            expectedObservable:
+              "Pause, scrub, and playback update visible renderer output.",
             fixture: "timeline playback fixture",
             id: "timeline.playback",
             kind: "runtime",
             target: "timeline.playback",
             timelineCoverage: "playback",
-            timelinePlaybackCoverage: ["pause-resume", "scrub", "rendered-frame"],
+            timelinePlaybackCoverage: [
+              "pause-resume",
+              "scrub",
+              "rendered-frame",
+            ],
             userAction: "Pause, scrub, and resume timeline playback.",
           },
         ],
@@ -118,7 +190,8 @@ describe("starter acceptance timeline playback contract", () => {
         transferMode: {
           animationIntent: {
             loopDuration: {
-              evidence: "The product timing model derives a six second forward animation cycle from the authored baseline.",
+              evidence:
+                "The product timing model derives a six second forward animation cycle from the authored baseline.",
               seconds: 6,
               source: "product-derived",
             },
@@ -167,11 +240,13 @@ describe("starter acceptance timeline playback contract", () => {
             browser: {
               budget: "standard",
               file: "e2e/app-controls.spec.ts",
-              testName: "browser: timeline duration edit drives renderer output",
+              testName:
+                "browser: timeline duration edit drives renderer output",
             },
             componentType: "timeline",
             evidence: "timeline-output",
-            expectedObservable: "Editing timeline duration changes the playback range and renderer follows state.timeline.durationSeconds.",
+            expectedObservable:
+              "Editing timeline duration changes the playback range and renderer follows state.timeline.durationSeconds.",
             fixture: "timeline playback fixture",
             id: "timeline.playback",
             kind: "runtime",
@@ -184,7 +259,8 @@ describe("starter acceptance timeline playback contract", () => {
               "loop",
               "rendered-frame",
             ],
-            userAction: "Edit timeline duration, scrub the range, pause, and resume playback.",
+            userAction:
+              "Edit timeline duration, scrub the range, pause, and resume playback.",
           },
         ],
       }),
@@ -200,7 +276,8 @@ describe("starter acceptance timeline playback contract", () => {
         acceptance: [
           {
             automated: true,
-            automatedTestName: "timeline duration edit verifies a seamless forward-only loop",
+            automatedTestName:
+              "timeline duration edit verifies a seamless forward-only loop",
             browser: {
               budget: "standard",
               file: "e2e/app-controls.spec.ts",
@@ -208,7 +285,8 @@ describe("starter acceptance timeline playback contract", () => {
             },
             componentType: "timeline",
             evidence: "timeline-output",
-            expectedObservable: "Editing timeline duration keeps a seamless forward-only loop and stitches first and last frames.",
+            expectedObservable:
+              "Editing timeline duration keeps a seamless forward-only loop and stitches first and last frames.",
             fixture: "timeline playback fixture",
             id: "timeline.playback",
             kind: "runtime",
@@ -227,7 +305,8 @@ describe("starter acceptance timeline playback contract", () => {
               "loop",
               "rendered-frame",
             ],
-            userAction: "Edit timeline duration and verify first and last frames stitch with no mirror fallback.",
+            userAction:
+              "Edit timeline duration and verify first and last frames stitch with no mirror fallback.",
           },
         ],
       }),
@@ -247,11 +326,13 @@ describe("starter acceptance timeline playback contract", () => {
             browser: {
               budget: "standard",
               file: "e2e/app-controls.spec.ts",
-              testName: "browser: timeline duration edit verifies a generic loop",
+              testName:
+                "browser: timeline duration edit verifies a generic loop",
             },
             componentType: "timeline",
             evidence: "timeline-output",
-            expectedObservable: "La salida mantiene el ciclo previsto tras editar la duración.",
+            expectedObservable:
+              "La salida mantiene el ciclo previsto tras editar la duración.",
             fixture: "timeline playback fixture",
             id: "timeline.playback",
             kind: "runtime",

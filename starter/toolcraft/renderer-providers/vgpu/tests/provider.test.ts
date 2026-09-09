@@ -288,7 +288,7 @@ describe("createToolcraftVgpuProvider", () => {
 
     expect(gpuDouble.dispose).toHaveBeenCalledTimes(1);
     expect(gpuDouble.onError).not.toHaveBeenCalled();
-    expect(provider.getState()).toEqual({ status: "initializing" });
+    expect(provider.getState()).toMatchObject({ status: "disposed" });
     expect(states).not.toContain("ready");
   });
 

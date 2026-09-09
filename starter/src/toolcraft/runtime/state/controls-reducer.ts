@@ -1,3 +1,4 @@
+import { createToolcraftState } from "./create-template-state";
 import {
   isToolcraftTimelinePanelExtendedTarget,
   isToolcraftTimelinePanelVisibleTarget,
@@ -6,30 +7,58 @@ import {
   getToolcraftCanvasResetPatch,
   reduceToolcraftCanvasControlValue,
 } from "./canvas-control-target-reducer";
-import { commitToolcraftStatePatch, commitToolcraftValuePatch } from "./history-patches";
+import {
+  commitToolcraftStatePatch,
+  commitToolcraftValuePatch,
+} from "./history-patches";
 import {
   tagToolcraftCanvasStateHistoryPatch,
   tagToolcraftControlsResetHistoryPatch,
+  tagToolcraftHistoryPatchDomains,
+  tagToolcraftWorkspaceResetHistoryPatch,
 } from "./history-patch-metadata";
 import { getToolcraftResetMediaPatch } from "./media-state";
-import {
-  areToolcraftControlValuesEqual,
-} from "./control-value-codecs";
+import { areToolcraftControlValuesEqual } from "./control-value-codecs";
+import { commitToolcraftControlStateReplacement } from "./control-state-replacement";
 import {
   getToolcraftValueControls,
   normalizeToolcraftControlValue,
+  normalizeToolcraftLiveControlValue,
 } from "./control-value-normalization";
-import type {
-  ToolcraftCommand,
-  ToolcraftState,
-} from "./types";
+import type { ToolcraftCommand, ToolcraftState } from "./types";
+import { applyToolcraftCollectionParentReplacements } from "./collection-control-state";
 
 type ToolcraftControlsCommand = Extract<
   ToolcraftCommand,
   {
-    type: "controls.apply" | "controls.reset" | "controls.resetTargets" | "controls.setValue";
+    type:
+      | "controls.apply"
+      | "controls.reset"
+      | "controls.resetTargets"
+      | "controls.setValue";
   }
 >;
+
+function getChangedValuePatch(
+  beforeValues: Readonly<Record<string, unknown>>,
+  afterValues: Readonly<Record<string, unknown>>,
+): Readonly<{
+  after: Record<string, unknown>;
+  before: Record<string, unknown>;
+}> {
+  const changedTargets = Object.keys(afterValues).filter(
+    (target) => !Object.is(afterValues[target], beforeValues[target]),
+  );
+
+  return {
+    after: Object.fromEntries(
+      changedTargets.map((target) => [target, afterValues[target]]),
+    ),
+    before: Object.fromEntries(
+      changedTargets.map((target) => [target, beforeValues[target]]),
+    ),
+  };
+}
 
 export function reduceToolcraftControlsCommand(
   state: ToolcraftState,
@@ -85,7 +114,7 @@ export function reduceToolcraftControlsCommand(
         command.target,
       );
       const normalized = control
-        ? normalizeToolcraftControlValue(control, command.value)
+        ? normalizeToolcraftLiveControlValue(control, command.value)
         : { accepted: true as const, value: command.value };
 
       if (!normalized.accepted) {
@@ -98,17 +127,30 @@ export function reduceToolcraftControlsCommand(
           normalized.value,
         )
       ) {
-        return state;
+        const collectionReplacement =
+          applyToolcraftCollectionParentReplacements({
+            replacedTargets: new Set([command.target]),
+            state,
+            values: { ...state.values, [command.target]: normalized.value },
+          });
+        if (collectionReplacement.timeline === state.timeline) return state;
+        return commitToolcraftControlStateReplacement(
+          state,
+          collectionReplacement,
+          command.label ?? command.target,
+          { group: command.historyGroup, mode: command.history },
+        );
       }
 
-      return commitToolcraftValuePatch(
+      const replacement = applyToolcraftCollectionParentReplacements({
+        replacedTargets: new Set([command.target]),
         state,
-        {
-          after: { [command.target]: normalized.value },
-          before: { [command.target]: state.values[command.target] },
-          label: command.label ?? command.target,
-        },
-        { ...state.values, [command.target]: normalized.value },
+        values: { ...state.values, [command.target]: normalized.value },
+      });
+      return commitToolcraftControlStateReplacement(
+        state,
+        replacement,
+        command.label ?? command.target,
         {
           group: command.historyGroup,
           mode: command.history,
@@ -116,84 +158,165 @@ export function reduceToolcraftControlsCommand(
       );
     }
 
-    case "controls.apply":
-      return state;
+    case "controls.apply": {
+      if (command.values === undefined) return state;
+      const controls = getToolcraftValueControls(state.schema);
+      const additionalTargets = new Set([
+        ...state.schema.settingsTransfer.additionalValueTargets,
+        ...(state.schema.persistence.storage === "localStorage"
+          ? state.schema.persistence.additionalValueTargets
+          : []),
+      ]);
+      const values = { ...state.values };
+      const replacedTargets = new Set<string>();
+      for (const [target, candidate] of Object.entries(command.values)) {
+        const control = controls.get(target);
+        if (control) {
+          const normalized = normalizeToolcraftControlValue(control, candidate);
+          values[target] = normalized.accepted
+            ? normalized.value
+            : normalized.fallback;
+          replacedTargets.add(target);
+        } else if (
+          Object.hasOwn(state.values, target) ||
+          additionalTargets.has(target)
+        ) {
+          values[target] = candidate;
+        }
+      }
+      const replacement = applyToolcraftCollectionParentReplacements({
+        replacedTargets,
+        state,
+        values,
+      });
+      return commitToolcraftControlStateReplacement(
+        state,
+        replacement,
+        command.label ?? "Apply controls",
+        { group: command.historyGroup, mode: command.history },
+      );
+    }
 
     case "controls.reset": {
+      if (state.schema.sourceDefaults) {
+        const fresh = createToolcraftState(state.schema);
+        const fields = ["canvas", "panels", "timeline", "layers", "mediaAssets", "selectedLayerId"] as const;
+        return commitToolcraftStatePatch(state, tagToolcraftWorkspaceResetHistoryPatch(tagToolcraftControlsResetHistoryPatch(
+          { after: {}, before: {}, label: "Reset to saved defaults" },
+          { values: { before: state.values, after: fresh.values }, state: {
+            before: Object.fromEntries(fields.map(field => [field, state[field]])),
+            after: Object.fromEntries(fields.map(field => [field, fresh[field]])),
+          } },
+        )));
+      }
+      const replacement = applyToolcraftCollectionParentReplacements({
+        replacedTargets: new Set(Object.keys(state.defaults)),
+        state,
+        values: { ...state.values, ...state.defaults },
+      });
       const resetCanvasPatch = getToolcraftCanvasResetPatch(state);
-      const resetMediaPatch = getToolcraftResetMediaPatch(state);
-
-      if (resetCanvasPatch || resetMediaPatch) {
-        return commitToolcraftStatePatch(
-          state,
-          tagToolcraftControlsResetHistoryPatch({
-            after: {
-              ...state.defaults,
-              ...resetCanvasPatch?.after,
-              ...resetMediaPatch?.after,
-            },
+      const resetMediaPatch = getToolcraftResetMediaPatch({
+        ...state,
+        timeline: replacement.timeline,
+      });
+      const valuePatch = getChangedValuePatch(state.values, replacement.values);
+      const patch = tagToolcraftControlsResetHistoryPatch(
+        { after: {}, before: {}, label: "Reset controls" },
+        {
+          values: {
             before: {
-              ...state.values,
+              ...Object.fromEntries(
+                Object.keys(state.defaults).map((target) => [
+                  target,
+                  state.values[target],
+                ]),
+              ),
+              ...valuePatch.before,
+            },
+            after: { ...state.defaults, ...valuePatch.after },
+          },
+          state: {
+            before: {
               ...resetCanvasPatch?.before,
               ...resetMediaPatch?.before,
+              ...(replacement.timeline === state.timeline
+                ? {}
+                : { timeline: state.timeline }),
             },
-            label: "Reset controls",
-          }),
-        );
-      }
-
-      return commitToolcraftValuePatch(
-        state,
-        tagToolcraftControlsResetHistoryPatch({
-          after: { ...state.defaults },
-          before: { ...state.values },
-          label: "Reset controls",
-        }),
-        { ...state.defaults },
+            after: {
+              ...resetCanvasPatch?.after,
+              ...(replacement.timeline === state.timeline
+                ? {}
+                : { timeline: replacement.timeline }),
+              ...resetMediaPatch?.after,
+            },
+          },
+        },
       );
+
+      if (
+        resetCanvasPatch ||
+        resetMediaPatch ||
+        replacement.timeline !== state.timeline
+      ) {
+        return commitToolcraftStatePatch(state, patch);
+      }
+      return commitToolcraftValuePatch(state, patch, replacement.values);
     }
 
     case "controls.resetTargets": {
       const targetSet = new Set(command.targets);
-      const before: Record<string, unknown> = {};
-      const after: Record<string, unknown> = {};
+      const defaults = Object.fromEntries(
+        [...targetSet]
+          .filter((target) => Object.hasOwn(state.defaults, target))
+          .map((target) => [target, state.defaults[target]]),
+      );
+      const replacement = applyToolcraftCollectionParentReplacements({
+        replacedTargets: targetSet,
+        state,
+        values: { ...state.values, ...defaults },
+      });
+      const valuePatch = getChangedValuePatch(state.values, replacement.values);
       const resetCanvasPatch = getToolcraftCanvasResetPatch(state, targetSet);
-      const resetMediaPatch = getToolcraftResetMediaPatch(state, targetSet);
+      const resetMediaPatch = getToolcraftResetMediaPatch(
+        { ...state, timeline: replacement.timeline },
+        targetSet,
+      );
 
-      for (const target of targetSet) {
-        if (!(target in state.defaults) || Object.is(state.values[target], state.defaults[target])) {
-          continue;
-        }
-
-        before[target] = state.values[target];
-        after[target] = state.defaults[target];
-      }
-
-      if (resetCanvasPatch) {
-        Object.assign(before, resetCanvasPatch.before);
-        Object.assign(after, resetCanvasPatch.after);
-      }
-
-      if (resetMediaPatch) {
-        Object.assign(before, resetMediaPatch.before);
-        Object.assign(after, resetMediaPatch.after);
-      }
-
-      if (Object.keys(after).length === 0) {
+      if (
+        Object.keys(valuePatch.after).length === 0 &&
+        !resetCanvasPatch &&
+        !resetMediaPatch &&
+        replacement.timeline === state.timeline
+      )
         return state;
-      }
 
-      const patch = {
-        after,
-        before,
-        label: command.label ?? "Reset section",
-      };
+      const patch = tagToolcraftHistoryPatchDomains(
+        { after: {}, before: {}, label: command.label ?? "Reset section" },
+        {
+          values: valuePatch,
+          state: {
+            before: {
+              ...resetCanvasPatch?.before,
+              ...resetMediaPatch?.before,
+              ...(replacement.timeline === state.timeline
+                ? {}
+                : { timeline: state.timeline }),
+            },
+            after: {
+              ...resetCanvasPatch?.after,
+              ...(replacement.timeline === state.timeline
+                ? {}
+                : { timeline: replacement.timeline }),
+              ...resetMediaPatch?.after,
+            },
+          },
+        },
+      );
 
       return commitToolcraftStatePatch(
         state,
-        resetCanvasPatch
-          ? tagToolcraftCanvasStateHistoryPatch(patch)
-          : patch,
+        resetCanvasPatch ? tagToolcraftCanvasStateHistoryPatch(patch) : patch,
       );
     }
   }

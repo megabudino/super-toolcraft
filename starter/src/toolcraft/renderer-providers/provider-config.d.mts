@@ -17,12 +17,13 @@ export type RendererProviderDependency<
 
 export type RendererProviderDefinition = Readonly<{
   adapterContractVersion: number;
-  approvedRelease: RendererProviderApprovedRelease;
+  approvedRelease: RendererProviderApprovedRelease | null;
+  resolutionPolicy?: "latest-stable";
   capability: string;
   dependencies: readonly [
     RendererProviderDependency<"runtime">,
     RendererProviderDependency<"wgsl-tooling">,
-  ];
+  ] | readonly [];
   requiredExports: readonly string[];
   viteLoader: string;
 }>;
@@ -49,7 +50,7 @@ export type RendererProviderApprovedRelease = Readonly<{
 }>;
 
 export type RendererProviderCatalog = Readonly<{
-  schemaVersion: 2;
+  schemaVersion: 2 | 3;
   providers: Readonly<Record<string, RendererProviderDefinition>>;
 }>;
 

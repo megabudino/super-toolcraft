@@ -1,12 +1,13 @@
 import type { ToolcraftRendererPipelineClient } from "../rendering";
-import type { ToolcraftState } from "../state/types";
+import type { ReadonlyToolcraftState } from "../state/readonly-state";
 import type { ToolcraftExportFrame } from "./export-frame";
 
 export type ToolcraftProductSvgExportFrameContext = Readonly<{
   container: SVGGElement;
   frame: ToolcraftExportFrame;
   rendererPipeline: ToolcraftRendererPipelineClient | null;
-  state: Readonly<ToolcraftState>;
+  signal: AbortSignal;
+  state: ReadonlyToolcraftState;
   timeSeconds: number;
   timelineProgress: number;
 }>;

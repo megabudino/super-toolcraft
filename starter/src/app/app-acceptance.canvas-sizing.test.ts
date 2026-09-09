@@ -1,4 +1,10 @@
+import { exportRequestFixture } from "./app-acceptance.export-request-test-fixtures";
 import { describe, expect, it } from "vitest";
+import {
+  imageExportModule,
+  mediaSourceModule,
+  videoExportModule,
+} from "@/toolcraft/runtime";
 
 import {
   contractAcceptanceFixture,
@@ -35,7 +41,9 @@ const infinityVideoProductReadiness: ToolcraftProductReadiness = {
     image: { mode: "toolcraft-default" },
     svg: { mode: "not-requested" },
     video: {
-      evidence: "The Infinity canvas fixture explicitly exercises video export bounds.",
+      evidence: exportRequestFixture(
+        "Add video export of the full infinite scene.",
+      ),
       mode: "user-requested",
     },
   },
@@ -49,48 +57,58 @@ function createFixedOutputSchema({
   width?: number;
 } = {}) {
   return defineContractSchemaFixture({
-    canvas: {
-      enabled: true,
-      size: { height, unit: "px", width },
-      sizing: { mode: "fixed-output" },
-    },
-    panels: {
-      controls: {
-        sections: [
-          {
-            controls: {
-              prompt: {
-                defaultValue: "Describe the effect",
-                label: "Prompt",
-                orderRole: "input",
-                target: "generation.prompt",
-                textValueKind: "single-line",
-                type: "text",
-              },
-          },
-            id: "generation",
-            title: "Generation",
-          },
-        ],
-        title: "Controls",
+    base: {
+      identity: { id: "contract-fixture", title: "Contract fixture" },
+      canvas: {
+        enabled: true,
+        size: { height, unit: "px", width },
+        sizing: { mode: "fixed-output" },
       },
+      panels: {
+        controls: {
+          sections: [
+            {
+              id: "generation",
+              controls: {
+                prompt: {
+                  applicability: { mode: "always" as const },
+                  defaultValue: "Describe the effect",
+                  label: "Prompt",
+                  orderRole: "input",
+                  target: "generation.prompt",
+                  textValueKind: "single-line",
+                  type: "text",
+                },
+              },
+              title: "Generation",
+            },
+          ],
+          title: "Controls",
+        },
+      },
+      persistence: { storage: "none" },
     },
+    modules: [],
   });
 }
 
 function createIntrinsicMediaUploadSchema() {
   return defineContractSchemaFixture({
-    canvas: {
-      enabled: true,
-      sizing: { mode: "intrinsic-media" },
-      upload: true,
-    },
-    panels: {
-      controls: {
-        sections: [],
-        title: "Controls",
+    base: {
+      identity: { id: "contract-fixture", title: "Contract fixture" },
+      canvas: {
+        enabled: true,
+        sizing: { mode: "intrinsic-media" },
+        upload: true,
+      },
+      panels: {
+        controls: {
+          sections: [],
+          title: "Controls",
+        },
       },
     },
+    modules: [mediaSourceModule()],
   });
 }
 
@@ -98,35 +116,30 @@ function createEditableOutputSchema(
   exportRole?: "export-image" | "export-video",
 ) {
   return defineContractSchemaFixture({
-    canvas: {
-      enabled: true,
-      size: { height: 1080, unit: "px", width: 1920 },
-      sizing: { mode: "editable-output" },
-    },
-    panels: {
-      controls: {
-        sections: exportRole
-          ? [
-              {
-                controls: {
-                  outputActions: {
-                    actions: [
-                      {
-                        label: exportRole === "export-image" ? "Export PNG" : "Export Video",
-                        role: exportRole,
-                        value: exportRole === "export-image" ? "export.png" : "export.video",
-                      },
-                    ],
-                    target: "actions.output",
-                    type: "panelActions",
-                  },
-                },
-              },
-            ]
-          : [],
-        title: "Controls",
+    base: {
+      identity: { id: "contract-fixture", title: "Contract fixture" },
+      canvas: {
+        enabled: true,
+        size: { height: 1080, unit: "px", width: 1920 },
+        sizing: { mode: "editable-output" },
       },
+      panels: {
+        controls: {
+          sections: [],
+          title: "Controls",
+        },
+      },
+      ...(exportRole === "export-video"
+        ? {}
+        : { persistence: { storage: "none" as const } }),
     },
+    modules: exportRole
+      ? [
+          exportRole === "export-image"
+            ? imageExportModule()
+            : videoExportModule(),
+        ]
+      : [],
   });
 }
 
@@ -177,7 +190,9 @@ describe("Toolcraft canvas sizing acceptance coverage", () => {
     expect(
       validateContractAcceptance({
         schema: createEditableOutputSchema("export-image"),
-        acceptance: [makeInfinityCanvasAcceptance("mode-continuity-and-restoration")],
+        acceptance: [
+          makeInfinityCanvasAcceptance("mode-continuity-and-restoration"),
+        ],
         productReadiness: infinityProductReadiness,
       }),
     ).toEqual(
@@ -191,7 +206,9 @@ describe("Toolcraft canvas sizing acceptance coverage", () => {
     expect(
       validateContractAcceptance({
         schema: createEditableOutputSchema("export-video"),
-        acceptance: [makeInfinityCanvasAcceptance("mode-continuity-and-restoration")],
+        acceptance: [
+          makeInfinityCanvasAcceptance("mode-continuity-and-restoration"),
+        ],
         productReadiness: infinityVideoProductReadiness,
       }),
     ).toEqual(
@@ -211,7 +228,9 @@ describe("Toolcraft canvas sizing acceptance coverage", () => {
       productReadiness: infinityProductReadiness,
     });
 
-    expect(errors.filter((error) => error.includes("infinityCanvasCoverage"))).toEqual([]);
+    expect(
+      errors.filter((error) => error.includes("infinityCanvasCoverage")),
+    ).toEqual([]);
   });
 
   it("requires explicit runtime acceptance before locking canvas output size", () => {
@@ -254,13 +273,15 @@ describe("Toolcraft canvas sizing acceptance coverage", () => {
         ],
         sectionInventory: createContractSectionInventoryFixture(
           createFixedOutputSchema(),
-          [{
-            entity: "Generation",
-            entityId: "generation",
-            finiteSelectors: [],
-            groupingReason: "Prompt controls the generated product content.",
-            id: "generation",
-          }],
+          [
+            {
+              entity: "Generation",
+              entityId: "generation",
+              finiteSelectors: [],
+              groupingReason: "Prompt controls the generated product content.",
+              id: "generation",
+            },
+          ],
         ),
       }),
     ).toEqual([]);
@@ -268,34 +289,22 @@ describe("Toolcraft canvas sizing acceptance coverage", () => {
 
   it("rejects fixed canvas sizing for exportable product apps even when reference dimensions are fixed", () => {
     const fixedExportSchema = defineContractSchemaFixture({
-      canvas: {
-        enabled: true,
-        size: { height: 900, unit: "px", width: 1440 },
-        sizing: { mode: "fixed-output" },
-      },
-      panels: {
-        controls: {
-          sections: [
-            {
-              controls: {
-                outputActions: {
-                  actions: [
-                    {
-                      icon: "upload-simple",
-                      label: "Export PNG",
-                      role: "export-image",
-                      value: "export.png",
-                    },
-                  ],
-                  target: "actions.output",
-                  type: "panelActions",
-                },
-              },
-            },
-          ],
-          title: "Controls",
+      base: {
+        identity: { id: "contract-fixture", title: "Contract fixture" },
+        canvas: {
+          enabled: true,
+          size: { height: 900, unit: "px", width: 1440 },
+          sizing: { mode: "fixed-output" },
         },
+        panels: {
+          controls: {
+            sections: [],
+            title: "Controls",
+          },
+        },
+        persistence: { storage: "none" },
       },
+      modules: [imageExportModule()],
     });
 
     expect(
@@ -314,7 +323,8 @@ describe("Toolcraft canvas sizing acceptance coverage", () => {
             canvasSizingCoverage: "fixed-output-size",
             componentType: "fixed-output canvas",
             evidence: "product-output",
-            expectedObservable: "The exported shader canvas remains reference-defined and fixed at 1440x900.",
+            expectedObservable:
+              "The exported shader canvas remains reference-defined and fixed at 1440x900.",
             fixture: "shader reference fixture",
             id: "canvas.sizing",
             kind: "runtime",
@@ -354,16 +364,38 @@ describe("Toolcraft canvas sizing acceptance coverage", () => {
             browser: {
               budget: "standard",
               file: "e2e/app-controls.spec.ts",
-              testName: "browser: upload source-native image updates canvas.size",
+              testName:
+                "browser: upload source-native image updates canvas.size",
             },
             canvasSizingCoverage: "intrinsic-media-size",
             componentType: "canvas",
             evidence: "media-lifecycle",
-            expectedObservable: "Uploading a 1400x900 image intentionally changes canvas.size to the image natural dimensions.",
+            expectedObservable:
+              "Uploading a 1400x900 image intentionally changes canvas.size to the image natural dimensions.",
             fixture: "source-native media viewer fixture",
             id: "canvas.intrinsicSizing",
             kind: "runtime",
             userAction: "Upload an image with known natural dimensions.",
+          },
+          {
+            automated: true,
+            automatedTestName: "media viewer state restores after reload",
+            browser: {
+              budget: "standard" as const,
+              file: "e2e/app-controls.spec.ts",
+              testName: "browser: media viewer state restores after reload",
+            },
+            componentType: "persistence",
+            evidence: "persistence-state",
+            expectedObservable:
+              "Uploaded media restores after a real browser reload.",
+            fixture: "source-native media persistence fixture",
+            id: "persistence.reload",
+            kind: "runtime",
+            persistenceCoverage: "reload",
+            persistenceSlices: ["canvas", "media", "panels", "values"],
+            userAction:
+              "Upload media, reload the page, and inspect restored state.",
           },
         ],
       }),

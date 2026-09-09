@@ -106,6 +106,7 @@ export function ImagePickerControl({
             <button
               aria-label={item.alt ?? item.value}
               aria-pressed={isSelected}
+              data-slot="image-picker-option"
               className={cn(
                 "group/image-picker-item relative min-w-0 cursor-pointer rounded-lg border border-[color:color-mix(in_oklab,var(--border)_10%,transparent)] bg-[color:var(--muted)] p-0 outline-none transition-[border-color,background-color,box-shadow] duration-150 ease-out",
                 "hover:border-[color:color-mix(in_oklab,var(--border)_22%,transparent)] hover:bg-[color:var(--muted)]",

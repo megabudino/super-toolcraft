@@ -15,7 +15,6 @@ import {
   validateToolcraftAcceptanceCoverage,
 } from "./app-acceptance";
 import { getToolcraftRendererProviderConfigurationErrors } from "./acceptance/renderer-provider";
-import { isNeutralTemplateProject } from "./app-acceptance.product-readiness-test-utils";
 import { appSchema } from "./app-schema";
 import { schemaHasProductSurface } from "./app-acceptance.schema-test-utils";
 import { appPerformance } from "./app-performance";
@@ -49,9 +48,11 @@ describe("Toolcraft starter base acceptance coverage", () => {
         packageJson,
       }),
     ).toEqual([]);
-    if (isNeutralTemplateProject()) {
+    if (appProductReadiness.mode === "starter") {
       expect(appPerformance).not.toHaveProperty("rendererTechnique");
-      expect(performanceSource).not.toMatch(/rendererTechnique|integrations\/vgpu/u);
+      expect(performanceSource).not.toMatch(
+        /rendererTechnique|integrations\/vgpu/u,
+      );
       for (const dependency of provider.dependencies) {
         expect(packageJson.dependencies?.[dependency.name]).toBeUndefined();
       }
@@ -66,7 +67,9 @@ describe("Toolcraft starter base acceptance coverage", () => {
     const clonedSchema = structuredClone(appSchema);
     const clonedAcceptance = structuredClone(appAcceptance);
     const clonedTransferMode = structuredClone(appTransferMode);
-    const clonedSectionInventory = structuredClone(appControlSectionInventory);
+    const clonedSectionInventory = structuredClone(
+      appControlSectionInventory,
+    );
     const clonedProductReadiness = structuredClone(appProductReadiness);
 
     expect(
@@ -92,5 +95,4 @@ describe("Toolcraft starter base acceptance coverage", () => {
     ).toBeGreaterThan(0);
     expect(validateProductAcceptanceCoverage()).toEqual([]);
   });
-
 });

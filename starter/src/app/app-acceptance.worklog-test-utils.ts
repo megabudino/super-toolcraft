@@ -391,9 +391,17 @@ export function getAgentWorklogValidationErrors(
 
   const decisionTrail = parseToolcraftDecisionTrail(source);
   errors.push(...decisionTrail.errors);
+  const isFocusedEntry = (body: string) => /^-[ \t]*Entry type:[ \t]*focused[ \t]*$/imu.test(body);
+  if (decisionTrail.iterations.length > 0 && decisionTrail.iterations.every((iteration) => isFocusedEntry(iteration.body))) {
+    errors.push("agent-worklog.md must retain its initial delivery decision entry before adding focused follow-ups.");
+  }
 
   for (const iteration of decisionTrail.iterations) {
-    for (const field of requiredAgentWorklogDecisionTrailFields) {
+    const focused = isFocusedEntry(iteration.body);
+    const requiredFields: readonly string[] = focused
+      ? ["Change ID", "Request", "Changed owner", "User-visible result", "Verification", "Risks"]
+      : requiredAgentWorklogDecisionTrailFields;
+    for (const field of requiredFields) {
       if (field === "Performance intent") continue;
 
       const fieldPattern = new RegExp(`\\b${escapeRegExp(field)}:\\s*\\S`, "i");

@@ -48,7 +48,7 @@ describe("starter acceptance worklog performance intent", () => {
     expect(getAgentWorklogValidationErrors(normalizedUnicode)).not.toEqual([]);
   });
 
-  it("requires exactly one performance intent in every Decision Trail iteration", () => {
+  it("defaults missing intent to ordinary and rejects duplicate intent", () => {
     const missing = createAgentWorklogFixture({
       omitDecisionTrailFields: ["Performance intent"],
     });
@@ -57,9 +57,7 @@ describe("starter acceptance worklog performance intent", () => {
       "- Performance intent: ordinary-product-work\n- Performance intent: ordinary-product-work",
     );
 
-    expect(getAgentWorklogValidationErrors(missing)).toContain(
-      'agent-worklog.md Decision Trail iteration "Delivery 1 - Product build" must include exactly one "Performance intent:".',
-    );
+    expect(getAgentWorklogValidationErrors(missing)).toEqual([]);
     expect(getAgentWorklogValidationErrors(duplicate)).toContain(
       'agent-worklog.md Decision Trail iteration "Delivery 1 - Product build" must include exactly one "Performance intent:".',
     );

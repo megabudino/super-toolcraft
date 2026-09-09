@@ -7,6 +7,8 @@ import path from "node:path";
 import test from "node:test";
 import { promisify } from "node:util";
 
+import { fetchLatestRendererProviderRelease } from "./renderer-provider-registry-client.mjs";
+import { rendererProviderActivationChecks } from "../src/toolcraft/renderer-providers/provider-resolution.mjs";
 import { loadToolcraftRendererVitePlugins } from "./toolcraft-renderer-vite-plugins.mjs";
 
 const execFileAsync = promisify(execFile);
@@ -71,7 +73,7 @@ async function findOwningPackage(entryPath, expectedName) {
 }
 
 async function withTemporaryApp(
-  { dependencies = {}, providers = { vgpu: vgpuProvider } },
+  { dependencies = {}, providers = { vgpu: vgpuProvider }, resolution },
   callback,
 ) {
   const appRoot = await fs.mkdtemp(
@@ -88,14 +90,14 @@ async function withTemporaryApp(
         catalogPath,
         `${JSON.stringify({
           providers: Object.fromEntries(
-            Object.entries(providers).map(([id, provider]) => [id, rawProvider(provider)]),
+            Object.entries(providers).map(([id, provider]) => [id, resolution ? provider : rawProvider(provider)]),
           ),
-          schemaVersion: 2,
+          schemaVersion: resolution ? 3 : 2,
         }, null, 2)}\n`,
       ),
       fs.writeFile(
         path.join(appRoot, "package.json"),
-        `${JSON.stringify({ dependencies, name: "temporary-app", private: true }, null, 2)}\n`,
+        `${JSON.stringify({ dependencies, name: "temporary-app", private: true, ...(resolution ? { toolcraft: { rendererProviders: { vgpu: resolution } } } : {}) }, null, 2)}\n`,
       ),
     ]);
     await callback(appRoot);
@@ -318,8 +320,14 @@ test(
       new URL("../src/toolcraft/renderer-providers/catalog.json", import.meta.url),
       "utf8",
     ));
+    const latest = await fetchLatestRendererProviderRelease({ packageName: "vgpu" });
+    const resolution = {
+      schemaVersion: 1, resolvedAt: new Date().toISOString(),
+      compatibilitySourceHash: "a".repeat(64), checks: rendererProviderActivationChecks,
+      dependencies: latest.providerDependencies,
+    };
     const dependencies = Object.fromEntries(
-      productionCatalog.providers.vgpu.approvedRelease.dependencies.map(
+      resolution.dependencies.map(
         ({ name, version }) => [name, version],
       ),
     );
@@ -327,6 +335,7 @@ test(
       {
         dependencies,
         providers: productionCatalog.providers,
+        resolution,
       },
       async (appRoot) => {
         await execFileAsync(
@@ -335,8 +344,8 @@ test(
           { cwd: appRoot },
         );
 
-        const provider = rawProvider(productionCatalog.providers.vgpu);
-        const toolingDependency = provider.approvedRelease.dependencies.find(
+        const provider = productionCatalog.providers.vgpu;
+        const toolingDependency = resolution.dependencies.find(
           ({ role }) => role === "wgsl-tooling",
         );
         const appRequire = createRequire(path.join(appRoot, "package.json"));

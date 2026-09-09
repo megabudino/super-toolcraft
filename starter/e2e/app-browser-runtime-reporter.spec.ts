@@ -26,15 +26,16 @@ const focusedPersistenceTestName =
   "browser: app restores exact canvas, values, and panel workspace slices after reload";
 const focusedPersistencePlanSource = JSON.stringify({
   acceptanceIds: ["persistence.reload"],
-  scenarios: [{
-    acceptanceIds: ["persistence.reload"],
-    budget: "extended-io",
-    file: "e2e/app-controls.spec.ts",
-    testName: focusedPersistenceTestName,
-  }],
+  scenarios: [
+    {
+      acceptanceIds: ["persistence.reload"],
+      budget: "extended-io",
+      file: "e2e/app-controls.spec.ts",
+      testName: focusedPersistenceTestName,
+    },
+  ],
   version: 2,
 });
-
 
 test("runtime evidence reporter fails full runs with a missing required test", async () => {
   const errors: string[] = [];
@@ -52,7 +53,9 @@ test("runtime evidence reporter fails full runs with a missing required test", a
 
   expect(status).toEqual({ status: "failed" });
   expect(errors).toContainEqual(
-    expect.stringContaining(`Missing required browser test "${fakeRequirement.testName}"`),
+    expect.stringContaining(
+      `Missing required browser test "${fakeRequirement.testName}"`,
+    ),
   );
 });
 
@@ -83,7 +86,7 @@ test("runtime evidence reporter limits marker-free runs to selected declared tes
   expect(status).toBeUndefined();
 });
 
-test("focused runtime evidence ignores unrelated requirements and performance configuration", () => {
+test("focused runtime evidence ignores unrelated requirements and performance configuration", async () => {
   const selectedRequirement: ToolcraftBrowserRuntimeRequirement = {
     evidenceType: "persistence-state",
     requirementId: "persistence.reload",
@@ -117,12 +120,13 @@ test("focused runtime evidence ignores unrelated requirements and performance co
     title: focusedPersistenceTestName,
   });
 
-  expect(() => reporter.onBegin?.({} as never, fakeSuite([selectedTest])))
-    .not.toThrow();
-  expect(reporter.onEnd?.({ status: "passed" } as never)).toBeUndefined();
+  expect(() =>
+    reporter.onBegin?.({} as never, fakeSuite([selectedTest])),
+  ).not.toThrow();
+  expect(await reporter.onEnd?.({ status: "passed" } as never)).toBeUndefined();
 });
 
-test("focused canvas-handle scenario cannot pass without its export-clean evidence", () => {
+test("focused canvas-handle scenario cannot pass without its export-clean evidence", async () => {
   const interactionRequirement: ToolcraftBrowserRuntimeRequirement = {
     evidenceType: "canvas-handle-interaction",
     requirementId: "persistence.reload",
@@ -135,10 +139,7 @@ test("focused canvas-handle scenario cannot pass without its export-clean eviden
   };
   const errors: string[] = [];
   const reporter = new ToolcraftBrowserRuntimeEvidenceReporter({
-    acceptanceRequirements: [
-      interactionRequirement,
-      exportCleanRequirement,
-    ],
+    acceptanceRequirements: [interactionRequirement, exportCleanRequirement],
     featureVerificationPlanSource: focusedPersistencePlanSource,
     reportError: (error) => errors.push(error),
   });
@@ -148,17 +149,21 @@ test("focused canvas-handle scenario cannot pass without its export-clean eviden
   });
 
   reporter.onBegin?.({} as never, fakeSuite([selectedTest]));
-  expect(reporter.onEnd?.({ status: "passed" } as never)).toEqual({
+  expect(await reporter.onEnd?.({ status: "passed" } as never)).toEqual({
     status: "failed",
   });
   expect(errors.join("\n")).toMatch(/canvas-export-clean/iu);
 });
 
-test("runtime evidence reporter rejects unreachable evidence and runtime skips", () => {
+test("runtime evidence reporter rejects unreachable evidence and runtime skips", async () => {
   const candidates = [
     fakeTestCase({
       results: [
-        { attachments: [], retry: 0, status: "passed" } as TestCase["results"][number],
+        {
+          attachments: [],
+          retry: 0,
+          status: "passed",
+        } as TestCase["results"][number],
       ],
       title: fakeRequirement.testName,
     }),
@@ -181,13 +186,13 @@ test("runtime evidence reporter rejects unreachable evidence and runtime skips",
     });
 
     reporter.onBegin?.({} as never, fakeSuite([candidate]));
-    expect(reporter.onEnd?.({ status: "passed" } as never)).toEqual({
-      status: "failed",
-    });
+    await expect(
+      reporter.onEnd?.({ status: "passed" } as never),
+    ).resolves.toEqual({ status: "failed" });
   }
 });
 
-test("performance marker requires every derived scenario evidence type", () => {
+test("performance marker requires every derived scenario evidence type", async () => {
   const performanceRequirements: ToolcraftBrowserRuntimeRequirement[] = [
     {
       evidenceType: "performance-measurement",
@@ -216,13 +221,13 @@ test("performance marker requires every derived scenario evidence type", () => {
   });
 
   reporter.onBegin?.({} as never, fakeSuite([marker, scenarioTest]));
-  expect(reporter.onEnd?.({ status: "passed" } as never)).toEqual({
-    status: "failed",
-  });
+  await expect(
+    reporter.onEnd?.({ status: "passed" } as never),
+  ).resolves.toEqual({ status: "failed" });
   expect(errors).toContainEqual(expect.stringContaining("performance-budget"));
 });
 
-test("performance reporter rejects missing warm and sustained raster quality evidence", () => {
+test("performance reporter rejects missing warm and sustained raster quality evidence", async () => {
   const testName = "browser perf: toolcraft path performance-path:color";
   const requirements: ToolcraftBrowserRuntimeRequirement[] = [
     "cold",
@@ -250,14 +255,14 @@ test("performance reporter rejects missing warm and sustained raster quality evi
   });
 
   reporter.onBegin?.({} as never, fakeSuite([marker, scenarioTest]));
-  expect(reporter.onEnd?.({ status: "passed" } as never)).toEqual({
-    status: "failed",
-  });
+  await expect(
+    reporter.onEnd?.({ status: "passed" } as never),
+  ).resolves.toEqual({ status: "failed" });
   expect(errors).toContainEqual(expect.stringContaining("#warm"));
   expect(errors).toContainEqual(expect.stringContaining("#sustained"));
 });
 
-test("runtime evidence reporter requires render-scale proof for every covered state", () => {
+test("runtime evidence reporter requires render-scale proof for every covered state", async () => {
   const testName = "browser: canvas render scale backing pixels";
   const requirements: ToolcraftBrowserRuntimeRequirement[] = [
     "interaction",
@@ -285,12 +290,12 @@ test("runtime evidence reporter requires render-scale proof for every covered st
     fakeSuite([fakeTestCase({ results: [result], title: testName })]),
   );
 
-  expect(reporter.onEnd?.({ status: "passed" } as never)).toEqual({
-    status: "failed",
-  });
+  await expect(
+    reporter.onEnd?.({ status: "passed" } as never),
+  ).resolves.toEqual({ status: "failed" });
 });
 
-test("runtime evidence reporter requires exact targets for layer base and specialized proof", () => {
+test("runtime evidence reporter requires exact targets for layer base and specialized proof", async () => {
   const testName = "browser: layer order changes output";
   const requirements: ToolcraftBrowserRuntimeRequirement[] = [
     {
@@ -317,7 +322,9 @@ test("runtime evidence reporter requires exact targets for layer base and specia
       ),
     } as TestCase["results"][number];
   };
-  const evaluate = (evidence: readonly ToolcraftBrowserRuntimeRequirement[]) => {
+  const evaluate = async (
+    evidence: readonly ToolcraftBrowserRuntimeRequirement[],
+  ) => {
     const errors: string[] = [];
     const reporter = new ToolcraftBrowserRuntimeEvidenceReporter({
       acceptanceRequirements: requirements,
@@ -334,24 +341,29 @@ test("runtime evidence reporter requires exact targets for layer base and specia
     );
     return {
       errors,
-      status: reporter.onEnd?.({ status: "passed" } as never),
+      status: await reporter.onEnd?.({ status: "passed" } as never),
     };
   };
 
-  const missingTarget = requirements.map(({ target: _target, ...requirement }) => ({
-    ...requirement,
-  }));
+  const missingTarget = requirements.map(
+    ({ target: _target, ...requirement }) => ({
+      ...requirement,
+    }),
+  );
   const wrongTarget = requirements.map((requirement) => ({
     ...requirement,
     target: "layers.visibility",
   }));
 
-  expect(evaluate(missingTarget).status).toEqual({ status: "failed" });
-  expect(evaluate(wrongTarget).status).toEqual({ status: "failed" });
-  expect(evaluate(requirements)).toEqual({ errors: [], status: undefined });
+  expect((await evaluate(missingTarget)).status).toEqual({ status: "failed" });
+  expect((await evaluate(wrongTarget)).status).toEqual({ status: "failed" });
+  expect(await evaluate(requirements)).toEqual({
+    errors: [],
+    status: undefined,
+  });
 });
 
-test("browser execution ledger emits app-root canonical nested spec paths", () => {
+test("browser execution ledger emits app-root canonical nested spec paths", async () => {
   const ledgerDirectory = mkdtempSync(
     path.join(tmpdir(), "toolcraft-browser-ledger-root-"),
   );
@@ -397,14 +409,12 @@ test("browser execution ledger emits app-root canonical nested spec paths", () =
       } as FullConfig,
       fakeSuite([selectedTest]),
     );
-    expect(reporter.onEnd?.({ status: "passed" } as never)).toBeUndefined();
+    expect(await reporter.onEnd?.({ status: "passed" } as never)).toBeUndefined();
     const [ledgerFile] = readdirSync(ledgerDirectory);
     const ledger = JSON.parse(
       readFileSync(path.join(ledgerDirectory, ledgerFile!), "utf8"),
     );
-    expect(ledger.tests[0].file).toBe(
-      "e2e/nested/product.spec.ts",
-    );
+    expect(ledger.tests[0].file).toBe("e2e/nested/product.spec.ts");
   } finally {
     rmSync(ledgerDirectory, { force: true, recursive: true });
   }

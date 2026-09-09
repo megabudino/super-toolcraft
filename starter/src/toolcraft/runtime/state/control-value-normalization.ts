@@ -1,19 +1,16 @@
-import {
-  isToolcraftBuiltInControlType,
-} from "../contracts/component-contracts";
+import { isToolcraftBuiltInControlType } from "../contracts/component-contracts";
 import {
   getToolcraftCanvasSizeTargetDimension,
   isToolcraftCanvasAspectRatioTarget,
   isToolcraftCanvasInfinityTarget,
   isToolcraftTimelinePanelRuntimeTarget,
 } from "../schema/runtime-targets";
-import type {
-  ResolvedToolcraftAppSchema,
-  ResolvedToolcraftControlSchema,
-} from "../schema/types";
+import type { ResolvedToolcraftControlSchema } from "../schema/types";
+import type { ResolvedToolcraftAppSchema } from "../schema/resolved-app-schema";
 import {
   cloneToolcraftJsonValue,
   decodeToolcraftBuiltInControlDefault,
+  decodeToolcraftBuiltInLiveValue,
   decodeToolcraftBuiltInControlValue,
   TOOLCRAFT_CONTROL_VALUE_CODEC_REGISTRY,
   type ToolcraftControlValueDecodeResult,
@@ -71,6 +68,7 @@ function matchesDefaultContainer(
 function decodeToolcraftControlCandidate(
   control: ResolvedToolcraftControlSchema,
   candidate: unknown,
+  live = false,
 ): ToolcraftControlValueDecodeResult {
   if (getToolcraftCanvasSizeTargetDimension(control.target)) {
     const value = asToolcraftCanvasSizeDimension(candidate);
@@ -82,7 +80,9 @@ function decodeToolcraftControlCandidate(
     return value === null ? { accepted: false } : { accepted: true, value };
   }
 
-  const builtIn = decodeToolcraftBuiltInControlValue(control, candidate);
+  const builtIn = live
+    ? decodeToolcraftBuiltInLiveValue(control, candidate)
+    : decodeToolcraftBuiltInControlValue(control, candidate);
   if (builtIn !== null) {
     return builtIn;
   }
@@ -99,10 +99,11 @@ export function getCanonicalToolcraftControlDefault(
     return cloneToolcraftJsonValue(control.defaultValue);
   }
 
-  const decoded = isToolcraftCanvasAspectRatioTarget(control.target) ||
+  const decoded =
+    isToolcraftCanvasAspectRatioTarget(control.target) ||
     getToolcraftCanvasSizeTargetDimension(control.target)
-    ? decodeToolcraftControlCandidate(control, control.defaultValue)
-    : decodeToolcraftBuiltInControlDefault(control);
+      ? decodeToolcraftControlCandidate(control, control.defaultValue)
+      : decodeToolcraftBuiltInControlDefault(control);
   if (decoded?.accepted) {
     return decoded.value;
   }
@@ -117,6 +118,19 @@ export function normalizeToolcraftControlValue(
   candidate: unknown,
 ): ToolcraftNormalizedControlValue {
   const decoded = decodeToolcraftControlCandidate(control, candidate);
+  return decoded.accepted
+    ? decoded
+    : {
+        accepted: false,
+        fallback: getCanonicalToolcraftControlDefault(control),
+      };
+}
+
+export function normalizeToolcraftLiveControlValue(
+  control: ResolvedToolcraftControlSchema,
+  candidate: unknown,
+): ToolcraftNormalizedControlValue {
+  const decoded = decodeToolcraftControlCandidate(control, candidate, true);
   return decoded.accepted
     ? decoded
     : {
@@ -151,8 +165,7 @@ function compileToolcraftValueControls(
         decision === null ||
         decision.kind === "codec" ||
         decision.kind === "runtime-owned" ||
-        (decision.kind === "conditional-codec" &&
-          decision.ownsValue(control))
+        (decision.kind === "conditional-codec" && decision.ownsValue(control))
       ) {
         controls.set(control.target, control);
       }

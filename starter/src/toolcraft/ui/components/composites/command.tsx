@@ -1,5 +1,6 @@
 "use client";
 
+import { sanitizeComposedHostProps, sanitizeInteractionHostProps, type SafeComposedHostElementProps } from "../primitives/sanitize-composed-host-props";
 import * as React from "react";
 import { Command as CommandPrimitive } from "cmdk";
 
@@ -12,19 +13,24 @@ import {
   DialogTitle,
 } from "./dialog";
 import { MagnifyingGlassIcon, CheckIcon } from "@phosphor-icons/react";
-import { ScrollFade } from "../primitives";
+import {
+  ScrollFade,
+} from "../primitives";
 
 const commandWindowFrameClassName =
   "floating-popup-surface overflow-hidden rounded-3xl border popup-text-xs-plus text-[color:var(--popover-foreground)]";
 
-const CommandWindowFrame = React.forwardRef<HTMLDivElement, React.ComponentProps<"div">>(
+const CommandWindowFrame = React.forwardRef<
+  HTMLDivElement,
+  SafeComposedHostElementProps<"div">
+>(
   ({ className, ...props }, ref) => {
     return (
       <div
         data-slot="command-window-frame"
         ref={ref}
         className={cn(commandWindowFrameClassName, className)}
-        {...props}
+        {...sanitizeComposedHostProps(props)}
       />
     );
   },
@@ -86,7 +92,7 @@ const CommandInput = React.forwardRef<
 >(({ className, leadingVisual, ...props }, ref) => {
   return (
     <label
-      data-slot="command-input-wrapper"
+      data-slot="command-primitive-input-wrapper"
       className="flex w-full items-center gap-3 px-4 py-3 text-[color:var(--foreground)]"
     >
       <span
@@ -118,7 +124,7 @@ const CommandTextInput = React.forwardRef<
 >(({ className, leadingVisual, typography = "popup", ...props }, ref) => {
   return (
     <label
-      data-slot="command-input-wrapper"
+      data-slot="command-text-input-wrapper"
       className="flex w-full items-center gap-3 px-4 py-3 text-[color:var(--foreground)]"
     >
       <span
@@ -138,12 +144,12 @@ const CommandTextInput = React.forwardRef<
           typography === "default" ? "text-base/relaxed" : "popup-text-xs-plus leading-relaxed",
           className,
         )}
-        data-slot="command-input"
         ref={ref}
-        role="combobox"
         spellCheck={false}
+        {...sanitizeInteractionHostProps(props)}
+        role="combobox"
         type="text"
-        {...props}
+        data-slot="command-input"
       />
     </label>
   );
@@ -268,7 +274,7 @@ function CommandItem({
   );
 }
 
-function CommandShortcut({ className, ...props }: React.ComponentProps<"span">) {
+function CommandShortcut({ className, ...props }: SafeComposedHostElementProps<"span">) {
   return (
     <span
       data-slot="command-shortcut"
@@ -276,7 +282,7 @@ function CommandShortcut({ className, ...props }: React.ComponentProps<"span">) 
         "ml-auto text-[0.625rem] tracking-widest text-[color:color-mix(in_oklab,var(--foreground)_60%,transparent)] group-data-selected/command-item:text-[color:color-mix(in_oklab,var(--foreground)_95%,transparent)] group-data-[active=true]/command-item:text-[color:var(--foreground)]",
         className,
       )}
-      {...props}
+      {...sanitizeComposedHostProps(props)}
     />
   );
 }

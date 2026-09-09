@@ -1,53 +1,59 @@
+import { spatialViewModule } from "@/toolcraft/runtime";
+import { defineToolcraftCustomControlType } from "@/toolcraft/runtime";
 import { defineToolcraft } from "@/toolcraft/runtime";
 import { describe, expect, it } from "vitest";
-
 import { createToolcraftFeatureVerificationSelection } from "./feature-verification-selection";
 import type {
   ToolcraftComponentAcceptance,
   ToolcraftControlSectionInventoryEntry,
 } from "./types";
-
 const schema = defineToolcraft({
-  canvas: { enabled: true },
-  panels: {
-    controls: {
-      sections: [
-        {
-          controls: {
-            mode: {
-              applicability: { mode: "always" },
-              defaultValue: "orbit",
-              options: [
-                { label: "Orbit", value: "orbit" },
-                { label: "Fixed", value: "fixed" },
-              ],
-              target: "model.mode",
-              type: "segmented",
-            },
-            orientation: {
-              applicability: {
-                all: [{ equals: "orbit", target: "model.mode" }],
-                mode: "conditional",
+  base: {
+    identity: {
+      id: "acceptance-fixture",
+      title: "Acceptance fixture",
+    },
+    canvas: { enabled: true },
+    panels: {
+      controls: {
+        sections: [
+          {
+            controls: {
+              mode: {
+                applicability: { mode: "always" },
+                defaultValue: "orbit",
+                options: [
+                  { label: "Orbit", value: "orbit" },
+                  { label: "Fixed", value: "fixed" },
+                ],
+                target: "model.mode",
+                type: "segmented" as const,
               },
-              defaultValue: {
-                position: [0, 0, 5],
-                up: [0, 1, 0],
+              orientation: {
+                applicability: {
+                  all: [{ equals: "orbit", target: "model.mode" }],
+                  mode: "conditional",
+                },
+                defaultValue: {
+                  position: [0, 0, 5],
+                  up: [0, 1, 0],
+                },
+                keyframeable: false,
+                label: false,
+                target: "view.orbit",
+                type: "orientationGizmo",
               },
-              keyframeable: false,
-              label: false,
-              target: "view.orbit",
-              type: "orientationGizmo",
             },
+            id: "model",
+            title: "Model",
           },
-          id: "model",
-          title: "Model",
-        },
-      ],
-      title: "Controls",
+        ],
+        title: "Controls",
+      },
     },
   },
+  modules: [spatialViewModule()],
 });
-
 const sectionInventory = [
   {
     entity: "Model",
@@ -66,7 +72,6 @@ const sectionInventory = [
     title: "Model",
   },
 ] as const satisfies readonly ToolcraftControlSectionInventoryEntry[];
-
 const commonAcceptance = {
   automated: true,
   automatedTestName: "model view unit",
@@ -75,7 +80,6 @@ const commonAcceptance = {
   fixture: "visible 3D model",
   userAction: "Change the model view.",
 };
-
 const acceptance: readonly ToolcraftComponentAcceptance[] = [
   {
     ...commonAcceptance,
@@ -107,7 +111,6 @@ const acceptance: readonly ToolcraftComponentAcceptance[] = [
     orientationGizmoCoverage: "all-required-orientation-gizmo-behavior",
   },
 ];
-
 describe("Toolcraft feature verification orientation gizmo closure", () => {
   it("includes the conditional gizmo browser proof for its branch selector", () => {
     expect(
@@ -140,49 +143,55 @@ describe("Toolcraft feature verification orientation gizmo closure", () => {
       version: 2,
     });
   });
-
   it("uses the canonical mapped target for the next fixed-point step", () => {
     const transitiveSchema = defineToolcraft({
-      canvas: { enabled: true },
-      panels: {
-        controls: {
-          sections: [
-            {
-              controls: {
-                mode: {
-                  applicability: { mode: "always" },
-                  defaultValue: "orbit",
-                  options: [
-                    { label: "Orbit", value: "orbit" },
-                    { label: "Fixed", value: "fixed" },
-                  ],
-                  target: "model.mode",
-                  type: "segmented",
+      base: {
+        identity: {
+          id: "acceptance-fixture",
+          title: "Acceptance fixture",
+        },
+        canvas: { enabled: true },
+        panels: {
+          controls: {
+            sections: [
+              {
+                controls: {
+                  mode: {
+                    applicability: { mode: "always" },
+                    defaultValue: "orbit",
+                    options: [
+                      { label: "Orbit", value: "orbit" },
+                      { label: "Fixed", value: "fixed" },
+                    ],
+                    target: "model.mode",
+                    type: "segmented" as const,
+                  },
+                  orbitMode: {
+                    applicability: { mode: "always" },
+                    defaultValue: "free",
+                    options: [
+                      { label: "Free", value: "free" },
+                      { label: "Axis", value: "axis" },
+                    ],
+                    target: "view.orbit",
+                    type: "segmented" as const,
+                  },
+                  exposure: {
+                    applicability: { mode: "always" },
+                    defaultValue: 1,
+                    target: "view.exposure",
+                    type: defineToolcraftCustomControlType("numberField"),
+                  },
                 },
-                orbitMode: {
-                  applicability: { mode: "always" },
-                  defaultValue: "free",
-                  options: [
-                    { label: "Free", value: "free" },
-                    { label: "Axis", value: "axis" },
-                  ],
-                  target: "view.orbit",
-                  type: "segmented",
-                },
-                exposure: {
-                  applicability: { mode: "always" },
-                  defaultValue: 1,
-                  target: "view.exposure",
-                  type: "numberField",
-                },
+                id: "model",
+                title: "Model",
               },
-              id: "model",
-              title: "Model",
-            },
-          ],
-          title: "Controls",
+            ],
+            title: "Controls",
+          },
         },
       },
+      modules: [],
     });
     const transitiveInventory = [
       {
@@ -220,7 +229,6 @@ describe("Toolcraft feature verification orientation gizmo closure", () => {
       kind: "control",
       target: "view.exposure",
     };
-
     const selection = createToolcraftFeatureVerificationSelection({
       acceptance: [...acceptance, exposureAcceptance],
       request: {
@@ -231,7 +239,6 @@ describe("Toolcraft feature verification orientation gizmo closure", () => {
       schema: transitiveSchema,
       sectionInventory: transitiveInventory,
     });
-
     expect(selection.acceptanceIds).toEqual([
       "model.exposure",
       "model.mode",

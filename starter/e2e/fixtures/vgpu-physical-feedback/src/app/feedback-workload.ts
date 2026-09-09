@@ -164,9 +164,12 @@ export const physicalFeedbackWorkloadEnvelope = {
 } satisfies ToolcraftEnvelopePerformanceConfig["workloadEnvelope"];
 
 const rendererPathSchema = defineToolcraft({
-  canvas: { enabled: true },
-  identity: appIdentity,
-  panels: { controls: { sections: [], title: "Controls" } },
+  base: {
+    canvas: { enabled: true },
+    identity: appIdentity,
+    panels: { controls: { sections: [], title: "Controls" } },
+  },
+  modules: [],
 });
 
 export function derivePhysicalFeedbackPerformancePaths(

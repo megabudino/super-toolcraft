@@ -43,6 +43,8 @@ test("classifies framework infrastructure and product extension points", () => {
     false,
   );
   assert.equal(isToolcraftFrameworkOwnedPath("src/features/product.ts"), false);
+  assert.equal(isToolcraftFrameworkOwnedPath("src/app/app-defaults.json"), false);
+  assert.equal(isToolcraftFrameworkOwnedPath("scripts/toolcraft-app-defaults-plugin.mjs"), true);
 });
 
 test("collects the same ownership policy for starter-local and generated paths", async () => {
@@ -55,6 +57,17 @@ test("collects the same ownership policy for starter-local and generated paths",
     [...new Set(localPaths.map(toToolcraftGeneratedPath))].sort(),
   );
   assert.ok(localPaths.includes("src/app/acceptance/actions.ts"));
+  for (const vectorProofPath of [
+    "src/app/acceptance/vector-screen-motion.ts",
+    "e2e/browser-vector-screen-motion.ts",
+    "e2e/browser-vector-marker.ts",
+    "e2e/browser-vector-screen-motion-fixture.tsx",
+    "e2e/browser-vector-shader-fixture.ts",
+    "docs/toolcraft/vector-controls.md",
+  ]) {
+    assert.ok(localPaths.includes(vectorProofPath), `Vector direction authority must be signed: ${vectorProofPath}`);
+    assert.ok(generatedPaths.includes(vectorProofPath));
+  }
   assert.equal(
     localPaths.filter(
       (relativePath) =>

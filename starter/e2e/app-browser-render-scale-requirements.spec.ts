@@ -23,7 +23,8 @@ function renderScaleAcceptance(
     },
     componentType: "canvas-render-scale",
     evidence: "rendered-pixels",
-    expectedObservable: "Canvas backing pixels match the selected resolution scale.",
+    expectedObservable:
+      "Canvas backing pixels match the selected resolution scale.",
     fixture: "A visible raster canvas.",
     id: "canvas.render-scale",
     kind: "runtime",
@@ -123,8 +124,12 @@ test("every raster performance path derives cold, warm, and sustained 2x require
   const requirements = deriveToolcraftPerformancePathRuntimeRequirements(
     unrelatedPerformancePaths,
     defineToolcraft({
-      canvas: { enabled: true, renderScale: true },
-      panels: {},
+      base: {
+        identity: { id: "contract-fixture", title: "Contract fixture" },
+        canvas: { enabled: true, renderScale: true },
+        panels: {},
+      },
+      modules: [],
     }),
   ).filter(({ evidenceType }) => evidenceType === "performance-render-scale");
 
@@ -134,8 +139,12 @@ test("every raster performance path derives cold, warm, and sustained 2x require
     expect.objectContaining({
       requirementId: "performance-path:color#sustained",
     }),
-    expect.objectContaining({ requirementId: "performance-path:viewport#cold" }),
-    expect.objectContaining({ requirementId: "performance-path:viewport#warm" }),
+    expect.objectContaining({
+      requirementId: "performance-path:viewport#cold",
+    }),
+    expect.objectContaining({
+      requirementId: "performance-path:viewport#warm",
+    }),
     expect.objectContaining({
       requirementId: "performance-path:viewport#sustained",
     }),
@@ -145,7 +154,14 @@ test("every raster performance path derives cold, warm, and sustained 2x require
 test("vector performance paths derive no raster quality requirements", () => {
   const requirements = deriveToolcraftPerformancePathRuntimeRequirements(
     unrelatedPerformancePaths,
-    defineToolcraft({ canvas: { enabled: true }, panels: {} }),
+    defineToolcraft({
+      base: {
+        identity: { id: "contract-fixture", title: "Contract fixture" },
+        canvas: { enabled: true },
+        panels: {},
+      },
+      modules: [],
+    }),
   );
 
   expect(requirements.map(({ evidenceType }) => evidenceType)).not.toContain(

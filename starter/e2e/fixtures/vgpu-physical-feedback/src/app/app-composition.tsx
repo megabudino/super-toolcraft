@@ -1,6 +1,6 @@
 import * as React from "react";
 import type { ToolcraftSceneRect } from "@/toolcraft/runtime";
-import type { ToolcraftAppComposition } from "@/toolcraft/runtime/react";
+import { composeToolcraftApp } from "@/toolcraft/runtime/react";
 import { appRendererPipelineRegistration } from "./app-performance";
 import { physicalFeedbackExportRenderer } from "./feedback-export";
 import { getPhysicalFeedbackReplaySteps } from "./feedback-values";
@@ -55,9 +55,6 @@ function ActivePhysicalFeedbackCanvas({
       data-vgpu-rendered-time={renderer.runtime.renderedTime.toFixed(3)}
       ref={renderer.canvasRef}
       style={{
-        backgroundColor: renderer.previewBackgroundIncluded
-          ? renderer.backgroundColor
-          : "transparent",
         display: "block",
       }}
     />
@@ -85,11 +82,12 @@ function PhysicalFeedbackCanvas(): React.JSX.Element {
   );
 }
 
-export const appComposition: ToolcraftAppComposition = {
-  canvasContent: <PhysicalFeedbackCanvas />,
-  exportRenderer: physicalFeedbackExportRenderer,
-  renderDefaultCanvasMedia: false,
-  rendererPipelineRegistration: appRendererPipelineRegistration,
-  sceneBoundsProvider: () => [physicalFeedbackSceneBounds],
-  schema: appSchema,
-};
+export const appComposition = composeToolcraftApp(appSchema, {
+  renderer: { pipelineRegistration: appRendererPipelineRegistration },
+  scene: {
+    canvasContent: <PhysicalFeedbackCanvas />,
+    rasterFrameRenderer: physicalFeedbackExportRenderer,
+    renderDefaultCanvasMedia: false,
+    sceneBoundsProvider: () => [physicalFeedbackSceneBounds],
+  },
+});

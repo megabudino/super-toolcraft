@@ -22,7 +22,7 @@ export type ToolcraftThemeContextValue = {
 
 const colorSchemeMediaQuery = "(prefers-color-scheme: dark)";
 
-const ToolcraftThemeContext = React.createContext<ToolcraftThemeContextValue | null>(null);
+export const ToolcraftThemeContext = React.createContext<ToolcraftThemeContextValue | null>(null);
 
 function isToolcraftThemePreference(
   value: unknown,
@@ -70,20 +70,18 @@ function writeStoredThemePreference(themePreference: ToolcraftThemePreference): 
   }
 }
 
-function getInitialThemePreference(): ToolcraftThemePreference {
-  return readStoredThemePreference() ?? TOOLCRAFT_DEFAULT_THEME_PREFERENCE;
-}
-
 export function ToolcraftThemeProvider({
   children,
+  defaultPreference = TOOLCRAFT_DEFAULT_THEME_PREFERENCE,
 }: {
   children: React.ReactNode;
+  defaultPreference?: ToolcraftThemePreference;
 }): React.JSX.Element {
   const [initialized, setInitialized] = React.useState(false);
   const [themePreference, setThemePreferenceState] =
-    React.useState<ToolcraftThemePreference>(getInitialThemePreference);
+    React.useState<ToolcraftThemePreference>(() => readStoredThemePreference() ?? defaultPreference);
   const [resolvedTheme, setResolvedTheme] = React.useState<ToolcraftResolvedTheme>(() =>
-    resolveThemePreference(getInitialThemePreference()),
+    resolveThemePreference(readStoredThemePreference() ?? defaultPreference),
   );
 
   const setThemePreference = React.useCallback(
@@ -156,7 +154,6 @@ export function ToolcraftThemeProvider({
           <TooltipProvider>{children}</TooltipProvider>
         </PortalLayerContainerProvider>
         <div
-          aria-hidden="true"
           data-toolcraft-portal-root=""
           ref={portalRootRef}
           style={{ display: "contents" }}

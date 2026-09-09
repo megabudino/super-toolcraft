@@ -1,3 +1,4 @@
+import { resolveRendererProviderDefinition, rendererProviderDependencyNames } from "../src/toolcraft/renderer-providers/provider-resolution.mjs";
 import fs from "node:fs/promises";
 import { createRequire } from "node:module";
 import path from "node:path";
@@ -58,16 +59,19 @@ export async function loadToolcraftRendererVitePlugins({
   const dependencies = packageJson.dependencies ?? {};
   assertRecord(dependencies, "packageJson.dependencies");
 
-  const enabledProviders = Object.entries(catalog.providers).filter(
+  const enabledProviders = Object.entries(catalog.providers).map(([id, provider]) => [id, resolveRendererProviderDefinition(provider, packageJson)]).filter(
     ([, provider]) => {
       const runtimeDependency = getProviderDependency(provider, "runtime");
-      return Object.hasOwn(dependencies, runtimeDependency.name);
+      return provider.resolutionPolicy === "latest-stable"
+        ? rendererProviderDependencyNames.some((name) => Object.hasOwn(dependencies, name))
+        : Object.hasOwn(dependencies, runtimeDependency.name);
     },
   );
   for (const [providerId, provider] of enabledProviders) {
     if (providerId !== supportedProviderId) {
       throw new TypeError(`Unknown enabled renderer provider "${providerId}".`);
     }
+    if (provider.dependencies.length === 0) throw new Error("VGPU dependencies require verified app-local resolution; run toolcraft:renderer enable vgpu.");
     for (const dependency of provider.dependencies) {
       const actualVersion = dependencies[dependency.name];
       if (actualVersion !== dependency.version) {

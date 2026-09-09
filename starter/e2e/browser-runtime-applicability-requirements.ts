@@ -10,8 +10,8 @@ import {
 
 type ApplicabilityAcceptanceSource = Pick<
   ToolcraftComponentAcceptance,
-  "browser" | "id" | "kind" | "target"
->;
+  "browser" | "id" | "target"
+> & Partial<Pick<ToolcraftComponentAcceptance, "kind">>;
 
 const layoutOnlyEvidenceTypes = new Set<
   ToolcraftBrowserRuntimeRequirement["evidenceType"]

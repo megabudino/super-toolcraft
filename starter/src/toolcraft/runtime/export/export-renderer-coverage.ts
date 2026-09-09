@@ -1,7 +1,5 @@
-import {
-  getToolcraftArtifactExportActions,
-} from "../schema/artifact-export-actions";
-import type { ResolvedToolcraftAppSchema } from "../schema/types";
+import { getToolcraftArtifactExportActions } from "../schema/artifact-export-actions";
+import type { ResolvedToolcraftAppSchema } from "../schema/resolved-app-schema";
 import type { ToolcraftProductExportRenderer } from "./product-export-renderer";
 import type { ToolcraftProductSvgExportRenderer } from "./product-svg-export-renderer";
 
@@ -25,13 +23,17 @@ export function getToolcraftExportRendererCoverageErrors({
   const hasSvgExportAction = exportRoles.has("export-svg");
 
   if (hasRasterExportAction && productSceneRequired && !exportRenderer) {
-    errors.push("Product-owned image/video export actions require exportRenderer.");
+    errors.push(
+      "Product-owned image/video export actions require exportRenderer.",
+    );
   }
   if (exportRenderer && !productSceneRequired) {
     errors.push("exportRenderer requires a product-owned scene.");
   }
   if (exportRenderer && !hasRasterExportAction) {
-    errors.push("exportRenderer requires a typed image or video export action.");
+    errors.push(
+      "exportRenderer requires a typed image or video export action.",
+    );
   }
   if (exportRenderer && exportRenderer.baseFileName.trim().length === 0) {
     errors.push("exportRenderer.baseFileName must not be blank.");
@@ -43,10 +45,7 @@ export function getToolcraftExportRendererCoverageErrors({
   if (svgExportRenderer && !hasSvgExportAction) {
     errors.push("svgExportRenderer requires a typed SVG export action.");
   }
-  if (
-    svgExportRenderer &&
-    svgExportRenderer.baseFileName.trim().length === 0
-  ) {
+  if (svgExportRenderer && svgExportRenderer.baseFileName.trim().length === 0) {
     errors.push("svgExportRenderer.baseFileName must not be blank.");
   }
 

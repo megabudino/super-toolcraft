@@ -16,7 +16,7 @@ Source: https://github.com/Vanilagy/mediabunny
 ## VGPU
 
 Toolcraft contains dormant optional VGPU integration source. The neutral starter
-does not install or activate it. An application that enables the catalog-pinned
-provider installs the catalog-declared VGPU runtime and its exact WGSL tooling role
+does not install or activate it. An application that enables the optional
+provider installs the app-resolved VGPU runtime and its exact WGSL tooling role
 under the MIT License.
 Source: https://github.com/vgpu/vgpu

@@ -64,7 +64,7 @@ export type ToolcraftGpuTechnique =
       backend: "webgpu";
       capability: "shader-webgpu-vgpu";
       provider: "vgpu";
-      versionPolicy: "toolcraft-pinned";
+      versionPolicy: "app-pinned";
     }>
   | Readonly<{
       backend: "webgpu";

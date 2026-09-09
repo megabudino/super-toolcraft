@@ -131,6 +131,7 @@ export const physicalFeedbackExportRenderer: ToolcraftProductExportRenderer = {
         "Physical feedback export requires the runtime Canvas2D destination context.",
       );
     }
+    if (state.values["simulation.enabled"] === false) return;
     if (!rendererPipeline) {
       throw new PhysicalFeedbackExportPipelineError(
         "physical-feedback-export-pipeline-required",

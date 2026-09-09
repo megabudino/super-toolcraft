@@ -6,6 +6,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { defineConfig, type Plugin } from "vite";
 
+import { toolcraftAppDefaultsPlugin } from "./scripts/toolcraft-app-defaults-plugin.mjs";
 import { loadToolcraftRendererVitePlugins } from "./scripts/toolcraft-renderer-vite-plugins.mjs";
 
 const rootDir = fileURLToPath(new URL(".", import.meta.url));
@@ -66,6 +67,7 @@ export default defineConfig(async () => ({
   plugins: [
     ...(await loadToolcraftRendererVitePlugins({ appRoot: rootDir })),
     toolcraftServerIdentityPlugin(),
+    toolcraftAppDefaultsPlugin({ appRoot: rootDir }),
     tailwindcss(),
     react(),
   ],

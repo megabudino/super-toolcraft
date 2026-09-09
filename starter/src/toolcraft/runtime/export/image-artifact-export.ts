@@ -75,6 +75,7 @@ function encodeCanvas(
 export async function exportToolcraftImageArtifact(
   request: ToolcraftImageArtifactExportRequest,
 ): Promise<ToolcraftImageArtifactExportResult> {
+  request.signal.throwIfAborted();
   const settings = resolveToolcraftImageExportSettings(request.state);
   const frameState = createToolcraftArtifactFrameState(
     request.state,
@@ -118,12 +119,16 @@ export async function exportToolcraftImageArtifact(
       renderProductFrame: request.exportRenderer?.renderFrame ?? null,
       renderRuntimeScene: request.renderRuntimeScene,
       rendererPipeline: request.rendererPipeline,
+      signal: request.signal,
       state: frameState,
     });
     request.reportProgress(0.75);
+    request.signal.throwIfAborted();
 
     const blob = await encodeCanvas(canvas, mediaType);
+    request.signal.throwIfAborted();
     request.reportProgress(0.9);
+    request.signal.throwIfAborted();
     (request.downloadArtifact ?? downloadToolcraftArtifact)({
       blob,
       extension,

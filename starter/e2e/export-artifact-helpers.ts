@@ -338,7 +338,6 @@ export function getToolcraftSemanticArtifactSignature(
   validateToolcraftExportArtifactInspection(inspection, requirementId);
   if (inspection.kind === "image") {
     return JSON.stringify({
-      backgroundColor: inspection.backgroundColor,
       decodedPixelHash: inspection.decodedPixelHash,
       height: inspection.height,
       mediaType: inspection.mediaType,

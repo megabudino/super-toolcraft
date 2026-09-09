@@ -21,7 +21,7 @@ const vgpuSurface = {
   backend: "webgpu",
   capability: "shader-webgpu-vgpu",
   provider: "vgpu",
-  versionPolicy: "toolcraft-pinned",
+  versionPolicy: "app-pinned",
 } as const;
 
 const basePerformance = defineToolcraftPerformance({

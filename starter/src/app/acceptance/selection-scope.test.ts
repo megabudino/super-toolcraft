@@ -203,4 +203,124 @@ describe("Toolcraft selection scope", () => {
       ),
     ]);
   });
+
+  it("binds selected collection properties to the exact collection selectionTarget", () => {
+    const schema = {
+      panels: {
+        controls: {
+          sections: [
+            {
+              controls: {
+                notes: {
+                  selectionTarget: "storyboard.selectedNote",
+                  target: "storyboard.notes",
+                  type: "collectionActions",
+                },
+              },
+            },
+          ],
+        },
+      },
+    } as const;
+    const collectionSelection = {
+      ...validOwnership[0],
+      target: "storyboard.wrongSelection",
+    } as const;
+    const collectionProperty = {
+      ...validOwnership[1],
+      target: "storyboard.notes",
+    } as const;
+
+    expect(
+      getToolcraftSelectionScopeErrors({
+        acceptance: [
+          { ...selectionAcceptance, target: "storyboard.wrongSelection" },
+          { ...fillAcceptance, target: "storyboard.notes" },
+        ],
+        layersEnabled: false,
+        productReadiness: readiness([
+          collectionSelection,
+          collectionProperty,
+        ]),
+        schema,
+      }),
+    ).toEqual([
+      expect.stringContaining(
+        "must bind selection ownership to exact selectionTarget storyboard.selectedNote",
+      ),
+    ]);
+  });
+
+  it("rejects selected collection ownership when the collection has no selectionTarget", () => {
+    const schema = {
+      panels: {
+        controls: {
+          sections: [
+            {
+              controls: {
+                notes: {
+                  target: "storyboard.notes",
+                  type: "collectionActions",
+                },
+              },
+            },
+          ],
+        },
+      },
+    } as const;
+
+    expect(
+      getToolcraftSelectionScopeErrors({
+        acceptance: [
+          { ...selectionAcceptance, target: "storyboard.selectedNote" },
+          { ...fillAcceptance, target: "storyboard.notes" },
+        ],
+        layersEnabled: false,
+        productReadiness: readiness([
+          { ...validOwnership[0], target: "storyboard.selectedNote" },
+          { ...validOwnership[1], target: "storyboard.notes" },
+        ]),
+        schema,
+      }),
+    ).toEqual([
+      expect.stringContaining(
+        "selected-entity collection scope requires selectionTarget",
+      ),
+    ]);
+  });
+
+  it("accepts selected collection ownership bound to its exact selectionTarget", () => {
+    const schema = {
+      panels: {
+        controls: {
+          sections: [
+            {
+              controls: {
+                notes: {
+                  selectionTarget: "storyboard.selectedNote",
+                  target: "storyboard.notes",
+                  type: "collectionActions",
+                },
+              },
+            },
+          ],
+        },
+      },
+    } as const;
+
+    expect(
+      getToolcraftSelectionScopeErrors({
+        acceptance: [
+          { ...selectionAcceptance, target: "storyboard.selectedNote" },
+          { ...fillAcceptance, target: "storyboard.notes" },
+        ],
+        layersEnabled: false,
+        productReadiness: readiness([
+          { ...validOwnership[0], target: "storyboard.selectedNote" },
+          { ...validOwnership[1], target: "storyboard.notes" },
+        ]),
+        schema,
+      }),
+    ).toEqual([]);
+  });
 });

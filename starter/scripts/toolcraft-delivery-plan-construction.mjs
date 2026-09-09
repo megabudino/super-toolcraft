@@ -21,9 +21,9 @@ function initialSteps(inputs) {
     { kind: "build" },
     {
       kind: "browser-functional",
-      testNames: inputs.catalog.acceptance
-        .map((row) => row.testName)
-        .sort(compare),
+      testNames: [
+        ...new Set(inputs.catalog.acceptance.map((row) => row.testName)),
+      ].sort(compare),
     },
   ];
 }

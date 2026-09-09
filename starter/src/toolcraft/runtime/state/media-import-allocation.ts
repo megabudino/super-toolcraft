@@ -74,7 +74,9 @@ export function createToolcraftMediaImportAllocation(
             replacementTargets.has(asset.sourceTarget)),
       )
     : [];
-  const replacedMediaIds = new Set(replacedMediaAssets.map((asset) => asset.id));
+  const replacedMediaIds = new Set(
+    replacedMediaAssets.map((asset) => asset.id),
+  );
   const replacedLayerIds = new Set(
     replacedMediaAssets.map((asset) => asset.layerId),
   );

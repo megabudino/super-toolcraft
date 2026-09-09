@@ -166,7 +166,12 @@ export function preparationPipelineAttachments(
   measuredPreparationMutation = false,
 ) {
   return (["cold", "warm", "sustained"] as const).map((phase, index) => {
-    const before = preparedSimulationSnapshot(index, index + 1, index + 1, true);
+    const before = preparedSimulationSnapshot(
+      index,
+      index + 1,
+      index + 1,
+      true,
+    );
     const after = preparedSimulationSnapshot(
       index + 1,
       index + 1 + (measuredPreparationMutation && index === 0 ? 1 : 0),
@@ -306,14 +311,16 @@ export async function installPipelineEvidenceBridge(page: Page): Promise<void> {
       actionCount: 0,
       snapshot: {
         disposed: false,
-        passes: { composite: counters(), decode: counters(), simulate: counters() },
+        passes: {
+          composite: counters(),
+          decode: counters(),
+          simulate: counters(),
+        },
         runtimeId,
       },
     };
     Reflect.set(globalThis, "__toolcraftPipelineEvidenceTestState", state);
-    const bridge = document.querySelector(
-      "[data-toolcraft-pipeline-evidence]",
-    );
+    const bridge = document.querySelector("[data-toolcraft-pipeline-evidence]");
     Object.defineProperty(
       bridge,
       Symbol.for("toolcraft.renderer-pipeline-evidence.snapshot"),

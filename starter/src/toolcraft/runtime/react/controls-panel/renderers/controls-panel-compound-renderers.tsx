@@ -14,10 +14,10 @@ import {
   type ColorControlInput,
   type ColorControlInputPair,
   type ControlChangeMeta,
-  type ImagePickerItem,
 } from "@/toolcraft/ui";
 
 import type { ToolcraftControlSchema } from "../../../schema/types";
+import { isToolcraftBuiltInControlSchema } from "../../../schema/control-schema";
 import {
   asColorOpacityValue,
   asColorValue,
@@ -181,6 +181,7 @@ export function renderCompoundControl({
   value,
   withKeyframeLabelAction,
 }: CompoundControlRenderArgs): React.ReactNode | null {
+  if (!isToolcraftBuiltInControlSchema(control)) return null;
   switch (control.type) {
     case "channelMixer": {
       const channelMixerName = name;
@@ -325,7 +326,7 @@ export function renderCompoundControl({
     case "imagePicker":
       return (
         <ImagePicker
-          items={control.items as readonly ImagePickerItem[] | undefined}
+          items={control.items}
           key={id}
           name={name}
           onValueChange={commit}

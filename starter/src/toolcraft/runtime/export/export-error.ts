@@ -4,6 +4,8 @@ export type ToolcraftArtifactExportFailure = Readonly<{
   code:
     | "artifact-download-failed"
     | "canvas-context-unavailable"
+    | "export-owner-disposed"
+    | "export-snapshot-invalid"
     | "image-encode-failed"
     | "invalid-export-setting"
     | "product-frame-render-failed"

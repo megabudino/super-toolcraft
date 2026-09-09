@@ -1,4 +1,4 @@
-import type { ToolcraftState } from "../state/types";
+import type { ReadonlyToolcraftState } from "../state/readonly-state";
 import {
   resolveToolcraftProductSceneBounds,
   type ToolcraftProductSceneBoundsProvider,
@@ -16,7 +16,7 @@ export function resolveToolcraftProductSceneFrame({
 }: Readonly<{
   boundsProvider?: ToolcraftProductSceneBoundsProvider;
   fallbackRect?: ToolcraftSceneRect;
-  state: Readonly<ToolcraftState>;
+  state: ReadonlyToolcraftState;
 }>): ToolcraftProductSceneFrame {
   if (!boundsProvider) {
     return fallbackRect

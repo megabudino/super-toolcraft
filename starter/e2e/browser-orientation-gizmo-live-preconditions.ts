@@ -54,16 +54,20 @@ async function expectPausedPlaybackWhenPresent(
   await expect(play).toBeVisible();
 }
 
-async function readFiniteAriaNumber(
+async function readFiniteSliderNumber(
   slider: Locator,
-  name: "aria-valuemax" | "aria-valuenow",
+  name: "maximum" | "value",
 ): Promise<number> {
-  const raw = await slider.getAttribute(name);
+  const ariaName = name === "maximum" ? "aria-valuemax" : "aria-valuenow";
+  const nativeName = name === "maximum" ? "max" : "value";
+  const raw =
+    (await slider.getAttribute(ariaName)) ??
+    (await slider.getAttribute(nativeName));
   const value = raw === null || raw.trim() === "" ? Number.NaN : Number(raw);
 
   expect(
     Number.isFinite(value),
-    `Orientation axis-drag proof requires a finite ${name} on canvas.renderScale.`,
+    `Orientation axis-drag proof requires a finite ${ariaName} or native ${nativeName} on canvas.renderScale.`,
   ).toBe(true);
   return value;
 }
@@ -95,8 +99,8 @@ async function expectMaximumRenderScaleWhenPresent(
   ).toHaveCount(1);
   await expect(slider).toBeVisible();
 
-  const value = await readFiniteAriaNumber(slider, "aria-valuenow");
-  const maximum = await readFiniteAriaNumber(slider, "aria-valuemax");
+  const value = await readFiniteSliderNumber(slider, "value");
+  const maximum = await readFiniteSliderNumber(slider, "maximum");
   expect(
     value,
     "Orientation axis-drag proof requires canvas.renderScale at maximum quality before its baseline.",

@@ -5,6 +5,7 @@ import type {
   ToolcraftPersistableStateSlice,
 } from "@/toolcraft/runtime";
 import { TOOLCRAFT_BUILT_IN_CONTROL_TYPES } from "@/toolcraft/runtime";
+import type { ToolcraftExportRequestEvidence } from "./artifact-export-request-evidence";
 import type {
   ToolcraftCanvasSizingCoverage,
   ToolcraftInfinityCanvasCoverage,
@@ -23,6 +24,7 @@ import type { ToolcraftViewInteractionIntent } from "./view-interaction-intent";
 import type { ToolcraftBrowserProofBudget } from "./browser-proof-policy.mjs";
 
 export { TOOLCRAFT_REQUIRED_MODEL_IMPORT_COVERAGE } from "./model-import-coverage";
+export type { ToolcraftExportRequestEvidence } from "./artifact-export-request-evidence";
 export type {
   ToolcraftCanvasSizingCoverage,
   ToolcraftInfinityCanvasCoverage,
@@ -37,7 +39,7 @@ export type {
   ToolcraftInteractionSurface,
 } from "./interaction-ownership-intent";
 export type {
-  ToolcraftViewInteractionEvidenceSource,
+  ToolcraftViewInteractionAuthority,
   ToolcraftViewInteractionIntent,
 } from "./view-interaction-intent";
 export type {
@@ -111,6 +113,7 @@ export type ToolcraftOrientationGizmoCoverage =
   | "undo-reset";
 
 export type ToolcraftBackgroundOutputCoverage =
+  | "finite-media-stacking"
   | "infinity-viewport-color-and-dependency"
   | "image-transparent-when-excluded"
   | "preview-hidden-when-excluded"
@@ -203,16 +206,16 @@ export type ToolcraftCustomControlCapability =
 
 export type ToolcraftImageExportIntent =
   | Readonly<{ mode: "toolcraft-default" }>
-  | Readonly<{ evidence: string; mode: "user-requested" }>
-  | Readonly<{ evidence: string; mode: "user-removed" }>;
+  | Readonly<{ evidence: ToolcraftExportRequestEvidence; mode: "user-requested" }>
+  | Readonly<{ evidence: ToolcraftExportRequestEvidence; mode: "user-removed" }>;
 
 export type ToolcraftVideoExportIntent =
   | Readonly<{ mode: "not-requested" }>
-  | Readonly<{ evidence: string; mode: "user-requested" }>;
+  | Readonly<{ evidence: ToolcraftExportRequestEvidence; mode: "user-requested" }>;
 
 export type ToolcraftSvgExportIntent =
   | Readonly<{ mode: "not-requested" }>
-  | Readonly<{ evidence: string; mode: "user-requested" }>;
+  | Readonly<{ evidence: ToolcraftExportRequestEvidence; mode: "user-requested" }>;
 
 export type ToolcraftArtifactExportIntent = Readonly<{
   image: ToolcraftImageExportIntent;
@@ -290,6 +293,7 @@ export type ToolcraftComponentAcceptance = {
   backgroundOutputCoverage?:
     | "all-required-background-output"
     | readonly ToolcraftBackgroundOutputCoverage[];
+  collectionItemKeyframeCoverage?: readonly string[];
   userAction: string;
 };
 
@@ -308,9 +312,12 @@ export type ToolcraftControlOrderItem = {
   type: string;
 };
 
+export type { ToolcraftProductModeIntent } from "./product-mode-intent";
+
 export type ToolcraftFiniteSelectorInventoryEntry =
   | Readonly<{
       affectedTargets: readonly string[];
+      productMode?: import("./product-mode-intent").ToolcraftProductModeIntent;
       reason: string;
       role: "branch";
       target: string;

@@ -12,8 +12,6 @@ export type {
   ToolcraftVideoExportFormat,
   ToolcraftVideoExportPresetResolution,
 } from "./artifact-export-settings";
-export { shouldIncludeToolcraftPreviewBackground } from "./export-background";
-export type { ToolcraftPreviewBackgroundOptions } from "./export-background";
 export {
   TOOLCRAFT_MAX_EXPORT_EDGE_PX,
   TOOLCRAFT_MAX_EXPORT_PIXELS,

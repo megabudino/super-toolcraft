@@ -4,6 +4,7 @@ import {
 } from "@/toolcraft/runtime";
 
 import { getRequiredToolcraftControlPartCoverage } from "./acceptance/control-parts";
+export type { ToolcraftExportRequestEvidence } from "./acceptance/types";
 export {
   getToolcraftApplicabilitySelectorDomain,
   getToolcraftControlApplicabilityErrors,
@@ -48,6 +49,7 @@ import type {
   ToolcraftInfinityCanvasCoverage,
   ToolcraftMediaLifecycleCoverage,
   ToolcraftModelImportCoverage,
+  ToolcraftOrientationGizmoCoverage,
   ToolcraftMotionReferenceBehavior,
   ToolcraftMotionReferenceCoverage,
   ToolcraftMotionReferenceEvent,
@@ -80,7 +82,7 @@ import type {
   ToolcraftTimelineLoopDurationSource,
   ToolcraftTimelinePlaybackCoverage,
   ToolcraftTransferMode,
-  ToolcraftViewInteractionEvidenceSource,
+  ToolcraftViewInteractionAuthority,
   ToolcraftViewInteractionIntent,
   ToolcraftVisibleControl,
 } from "./acceptance/types";
@@ -136,6 +138,7 @@ export type {
   ToolcraftInfinityCanvasCoverage,
   ToolcraftMediaLifecycleCoverage,
   ToolcraftModelImportCoverage,
+  ToolcraftOrientationGizmoCoverage,
   ToolcraftMotionReferenceBehavior,
   ToolcraftMotionReferenceCoverage,
   ToolcraftMotionReferenceEvent,
@@ -168,7 +171,7 @@ export type {
   ToolcraftTimelineLoopDurationSource,
   ToolcraftTimelinePlaybackCoverage,
   ToolcraftTransferMode,
-  ToolcraftViewInteractionEvidenceSource,
+  ToolcraftViewInteractionAuthority,
   ToolcraftViewInteractionIntent,
   ToolcraftVisibleControl,
 };

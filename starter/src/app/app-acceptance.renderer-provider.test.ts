@@ -6,6 +6,7 @@ import { describe, expect, it } from "vitest";
 import type { ToolcraftRendererTechnique } from "@/toolcraft/runtime";
 
 import { parseRendererProviderCatalog } from "../toolcraft/renderer-providers/provider-config.mjs";
+import { parseRendererProviderResolution, rendererProviderActivationChecks } from "../toolcraft/renderer-providers/provider-resolution.mjs";
 import type { RendererProviderPackageJson } from "../toolcraft/renderer-providers/provider-config.mjs";
 import { getToolcraftRendererProviderConfigurationErrors } from "./acceptance/renderer-provider";
 
@@ -24,15 +25,26 @@ if (!provider) {
   throw new Error('The renderer provider catalog must define "vgpu".');
 }
 
+// This synthetic tuple exercises configuration validation, never release selection or GPU proof.
+const resolution = parseRendererProviderResolution({
+  schemaVersion: 1, resolvedAt: "2026-09-09T00:00:00.000Z",
+  compatibilitySourceHash: "a".repeat(64), checks: rendererProviderActivationChecks,
+  dependencies: [
+    { name: "vgpu", role: "runtime", version: "9.8.7", integrity: "sha512-synthetic-runtime" },
+    { name: "@vgpu/wgsl", role: "wgsl-tooling", version: "9.8.7", integrity: "sha512-synthetic-tooling" },
+  ],
+});
+const toolcraft = { rendererProviders: { vgpu: resolution } };
+
 const exactDependencies = Object.freeze(
   Object.fromEntries(
-    provider.dependencies.map(({ name, version }) => [name, version]),
+    resolution.dependencies.map(({ name, version }) => [name, version]),
   ),
 );
-const runtimeDependency = provider.dependencies.find(
+const runtimeDependency = resolution.dependencies.find(
   ({ role }) => role === "runtime",
 );
-const toolingDependency = provider.dependencies.find(
+const toolingDependency = resolution.dependencies.find(
   ({ role }) => role === "wgsl-tooling",
 );
 if (!runtimeDependency || !toolingDependency) {
@@ -53,7 +65,7 @@ function mismatchedVersion(version: string): string {
   return version === "0.0.0" ? "0.0.1" : "0.0.0";
 }
 
-const selectedVgpuInvalidDependencyCases = provider.dependencies.flatMap(
+const selectedVgpuInvalidDependencyCases = resolution.dependencies.flatMap(
   (dependency) => [
     {
       dependencies: withoutDependency(dependency.name),
@@ -76,7 +88,7 @@ const selectedVgpuInvalidDependencyCases = provider.dependencies.flatMap(
   ],
 );
 
-const unusedVgpuInvalidDependencyCases = provider.dependencies.flatMap(
+const unusedVgpuInvalidDependencyCases = resolution.dependencies.flatMap(
   (dependency) => [
     {
       dependencies: { [dependency.name]: dependency.version },
@@ -103,7 +115,7 @@ const vgpuSurface = {
   backend: "webgpu",
   capability: "shader-webgpu-vgpu",
   provider: "vgpu",
-  versionPolicy: "toolcraft-pinned",
+  versionPolicy: "app-pinned",
 } as const;
 const nativeSurface = {
   backend: "webgpu",
@@ -136,10 +148,10 @@ const vgpuSurfaceCases = [
 }>[];
 const invalidProviderDependencyValueCases = [
   {
-    createValue: () => ({ version: provider.dependencies[0].version }),
+    createValue: () => ({ version: resolution.dependencies[0].version }),
     name: "object",
   },
-  { createValue: () => [provider.dependencies[0].version], name: "array" },
+  { createValue: () => [resolution.dependencies[0].version], name: "array" },
   { createValue: () => 301, name: "number" },
   { createValue: () => null, name: "null" },
 ] as const;
@@ -154,7 +166,7 @@ function validate({
   return getToolcraftRendererProviderConfigurationErrors({
     catalog: catalogSource,
     gpu,
-    packageJson: { dependencies },
+    packageJson: { dependencies, toolcraft },
   });
 }
 
@@ -178,7 +190,7 @@ describe("Toolcraft renderer provider configuration", () => {
             gpu,
           }),
         ).toEqual([
-          "rendererTechnique selects VGPU, but the provider is not enabled. Run `pnpm toolcraft:renderer -- enable vgpu`, then `pnpm install`.",
+          "rendererTechnique selects VGPU, but the provider is not enabled. Run `pnpm toolcraft:renderer -- enable vgpu`; activation installs and verifies dependencies automatically.",
         ]);
       },
     );
@@ -187,6 +199,7 @@ describe("Toolcraft renderer provider configuration", () => {
       "reports the repair for a $name dependency value",
       ({ createValue }) => {
         const packageJson = {
+          toolcraft,
           dependencies: {
             ...exactDependencies,
             [runtimeDependency.name]: createValue(),
@@ -199,7 +212,7 @@ describe("Toolcraft renderer provider configuration", () => {
             packageJson,
           }),
         ).toEqual([
-          "rendererTechnique selects VGPU, but the provider is not enabled. Run `pnpm toolcraft:renderer -- enable vgpu`, then `pnpm install`.",
+          "rendererTechnique selects VGPU, but the provider is not enabled. Run `pnpm toolcraft:renderer -- enable vgpu`; activation installs and verifies dependencies automatically.",
         ]);
       },
     );

@@ -6,7 +6,6 @@ import type {
   ToolcraftImageAsset,
   ToolcraftImageAssetDraft,
   ToolcraftImageAssetIngress,
-  ToolcraftPoint,
   ToolcraftSceneElementFrame,
 } from "./types";
 
@@ -59,9 +58,8 @@ export function cloneToolcraftImageAsset(
 ): ToolcraftImageAsset {
   return {
     ...asset,
-    ...(asset.lifecycle === "unavailable"
-      ? { error: { ...asset.error } }
-      : {}),
+    ...(asset.sourcePaths ? { sourcePaths: [...asset.sourcePaths] } : {}),
+    ...(asset.lifecycle === "unavailable" ? { error: { ...asset.error } } : {}),
     ...cloneGeometry(asset),
     ...(asset.transform ? { transform: { ...asset.transform } } : {}),
   };
@@ -81,30 +79,11 @@ export function normalizeToolcraftImageAssetGeometry(
         context.sizingMode === "intrinsic-media";
 
       return withCanonicalGeometry(ingress.asset, {
-        position: preserveSourceFrame
-          ? ingress.asset.position
-          : { x: 0, y: 0 },
+        position: preserveSourceFrame ? ingress.asset.position : { x: 0, y: 0 },
         size: preserveSourceFrame
           ? ingress.asset.sourceSize
           : context.canvasSize,
         sourceSize: ingress.asset.sourceSize,
-      });
-    }
-
-    case "legacy-record": {
-      const position: ToolcraftPoint = ingress.asset.position ?? { x: 0, y: 0 };
-      const sourceSize =
-        ingress.asset.sourceSize ?? ingress.asset.size ?? context.canvasSize;
-      const preserveLegacyScene =
-        context.canvasMode === "infinite" ||
-        context.sizingMode === "intrinsic-media";
-
-      return withCanonicalGeometry(ingress.asset, {
-        position: preserveLegacyScene ? position : { x: 0, y: 0 },
-        size: preserveLegacyScene
-          ? (ingress.asset.size ?? sourceSize)
-          : context.canvasSize,
-        sourceSize,
       });
     }
   }

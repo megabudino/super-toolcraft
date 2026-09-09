@@ -14,19 +14,27 @@ describe("appSchema", () => {
     expect(appSchema.canvas.sizing).toEqual({ mode: "editable-output" });
     expect(appSchema.canvas.upload).toBe(true);
     expect(appSchema.panels.controls?.sections[0]?.title).toBe("Setup");
-    expect(appSchema.panels.controls?.sections[0]?.controls.settingsTransfer).toMatchObject({
+    expect(
+      appSchema.panels.controls?.sections[0]?.controls.settingsTransfer,
+    ).toMatchObject({
       target: "runtime.settingsTransfer",
       type: "settingsTransfer",
     });
-    expect(appSchema.panels.controls?.sections[0]?.controls.canvasAspectRatio).toMatchObject({
+    expect(
+      appSchema.panels.controls?.sections[0]?.controls.canvasAspectRatio,
+    ).toMatchObject({
       target: "canvas.aspectRatio",
       type: "aspectRatio",
     });
-    expect(appSchema.panels.controls?.sections[0]?.controls.canvasWidth).toMatchObject({
+    expect(
+      appSchema.panels.controls?.sections[0]?.controls.canvasWidth,
+    ).toMatchObject({
       target: "canvas.size.width",
       type: "text",
     });
-    expect(appSchema.panels.controls?.sections[0]?.controls.canvasHeight).toMatchObject({
+    expect(
+      appSchema.panels.controls?.sections[0]?.controls.canvasHeight,
+    ).toMatchObject({
       target: "canvas.size.height",
       type: "text",
     });
@@ -56,8 +64,12 @@ describe("appSchema", () => {
         "toolbar.zoom",
       ]),
     );
-    expect(appSchema.assembly.capabilities).not.toContain("timeline.playback");
-    expect(appSchema.assembly.capabilities).not.toContain("timeline.keyframes");
+    expect(appSchema.assembly.capabilities).not.toContain(
+      "timeline.playback",
+    );
+    expect(appSchema.assembly.capabilities).not.toContain(
+      "timeline.keyframes",
+    );
     expect(appSchema.assembly.commands).toEqual(
       expect.arrayContaining([
         "canvas.center",
@@ -68,16 +80,32 @@ describe("appSchema", () => {
         "controls.setValue",
         "history.undo",
         "media.delete",
-        "media.import",
+        "media.importBatch",
       ]),
     );
-    expect(appSchema.assembly.commands).not.toContain("timeline.setCurrentTime");
+    expect(appSchema.assembly.commands).not.toContain(
+      "timeline.setCurrentTime",
+    );
+    expect(
+      appSchema.modulePlan.capabilities.map(
+        ({ capabilityId }) => capabilityId,
+      ),
+    ).toEqual(["media.source"]);
+    expect(appSchema.modulePlan.modules.map(({ id }) => id)).toEqual([
+      "media-source",
+    ]);
+    expect(
+      appSchema.modulePlan.capabilities.some(({ capabilityId }) =>
+        capabilityId.startsWith("artifact."),
+      ),
+    ).toBe(false);
   });
 
   it("starts with runtime setup but without product-specific panels or controls", () => {
     const productSections =
-      appSchema.panels.controls?.sections.filter((section) => section.title !== "Setup") ??
-      [];
+      appSchema.panels.controls?.sections.filter(
+        (section) => section.title !== "Setup",
+      ) ?? [];
 
     expect(appSchema.panels.controls?.sections[0]?.title).toBe("Setup");
     expect(productSections).toEqual([]);
@@ -86,10 +114,18 @@ describe("appSchema", () => {
   });
 
   it("does not imply timeline behavior before a product needs it", () => {
-    expect(appSchema.assembly.capabilities).not.toContain("timeline.playback");
-    expect(appSchema.assembly.capabilities).not.toContain("timeline.keyframes");
-    expect(appSchema.assembly.commands).not.toContain("timeline.toggleControlKeyframes");
-    expect(appSchema.assembly.commands).not.toContain("timeline.moveKeyframe");
+    expect(appSchema.assembly.capabilities).not.toContain(
+      "timeline.playback",
+    );
+    expect(appSchema.assembly.capabilities).not.toContain(
+      "timeline.keyframes",
+    );
+    expect(appSchema.assembly.commands).not.toContain(
+      "timeline.toggleControlKeyframes",
+    );
+    expect(appSchema.assembly.commands).not.toContain(
+      "timeline.moveKeyframe",
+    );
   });
 
   it("keeps starter performance paths empty until the generated product adds controls", () => {
@@ -100,7 +136,9 @@ describe("appSchema", () => {
   it("declares production reload coverage for the starter schema", () => {
     expect(appSchema.persistence.storage).toBe("localStorage");
     if (appSchema.persistence.storage !== "localStorage") {
-      throw new Error("The starter must persist user settings in localStorage.");
+      throw new Error(
+        "The starter must persist user settings in localStorage.",
+      );
     }
     expect(appSchema.persistence.include).toContain("canvas");
     expect(

@@ -1,3 +1,4 @@
+import { parseVersionlessRendererProvider, resolveRendererProviderDefinition, rendererProviderDependencyNames } from "./provider-resolution.mjs";
 import { inspectRendererProviderDependencies } from "./provider-dependency-inspection.mjs";
 const catalogKeys = ["providers", "schemaVersion"];
 const providerKeys = [
@@ -177,8 +178,8 @@ function parseProvider(value, path) {
 export function parseRendererProviderCatalog(value) {
   assertRecord(value, "catalog");
   assertClosedKeys(value, catalogKeys, "catalog");
-  if (value.schemaVersion !== 2) {
-    throw new TypeError("catalog.schemaVersion must equal 2.");
+  if (value.schemaVersion !== 2 && value.schemaVersion !== 3) {
+    throw new TypeError("catalog.schemaVersion must equal 2 or 3.");
   }
   assertRecord(value.providers, "catalog.providers");
   const providerIds = Object.keys(value.providers);
@@ -196,12 +197,14 @@ export function parseRendererProviderCatalog(value) {
       }
       return [
         providerId,
-        parseProvider(value.providers[providerId], `catalog.providers.${providerId}`),
+        value.schemaVersion === 3
+          ? parseVersionlessRendererProvider(value.providers[providerId])
+          : parseProvider(value.providers[providerId], `catalog.providers.${providerId}`),
       ];
     }),
   );
 
-  return deepFreeze({ schemaVersion: 2, providers });
+  return deepFreeze({ schemaVersion: value.schemaVersion, providers });
 }
 
 function parseRendererProviderInput(input) {
@@ -214,8 +217,8 @@ function parseRendererProviderInput(input) {
   if (!Object.hasOwn(catalog.providers, input.providerId)) {
     throw new TypeError(`Unknown renderer provider "${input.providerId}".`);
   }
-  const provider = catalog.providers[input.providerId];
   assertRecord(input.packageJson, "packageJson");
+  const provider = resolveRendererProviderDefinition(catalog.providers[input.providerId], input.packageJson);
   const dependencies = input.packageJson.dependencies ?? {};
   assertRecord(dependencies, "packageJson.dependencies");
 
@@ -224,6 +227,12 @@ function parseRendererProviderInput(input) {
 
 export function inspectRendererProvider(input) {
   const { dependencies, provider } = parseRendererProviderInput(input);
+  if (provider.resolutionPolicy === "latest-stable" && provider.dependencies.length === 0) {
+    const present = rendererProviderDependencyNames.some((name) => Object.hasOwn(dependencies, name));
+    return deepFreeze({ provider, providerId: input.providerId, status: present ? "drifted" : "absent",
+      errors: present ? ["VGPU dependencies have no verified app-local resolution. Run toolcraft:renderer enable vgpu."] : [],
+      missingDependencies: [], mismatchedDependencies: [] });
+  }
   return deepFreeze({
     ...inspectRendererProviderDependencies({ dependencies, provider }),
     provider,
@@ -233,6 +242,9 @@ export function inspectRendererProvider(input) {
 
 export function enableRendererProvider(input) {
   const inspection = inspectRendererProvider(input);
+  if (inspection.provider.resolutionPolicy === "latest-stable" && inspection.provider.dependencies.length === 0) {
+    throw new TypeError("VGPU activation requires automatic latest-stable resolution and compatibility checks.");
+  }
   const conflict = inspection.mismatchedDependencies[0];
   if (conflict) {
     throw new TypeError(conflict.error);

@@ -47,9 +47,9 @@ export const TOOLCRAFT_MEDIA_CUSTOM_COMPONENT_CONTRACTS = {
       "Model package root selection is deterministic: normalize and sort supported root paths, then select the first. Missing appearance dependencies produce typed warnings and never expose Fix model; geometry repair is reserved for repairable topology.",
       "Standard preview and export use ToolcraftAppComposition modelPresentation mode runtime. Custom model output uses mode custom, declares unique checked consumers by source target, and acquires presentation leases through useToolcraftModelPresentationConsumer instead of source loaders or a second cache.",
       "renderDefaultCanvasMedia controls generic image and file preview only. It does not hide standard runtime model layers; modelPresentation custom mode suppresses only the declared model targets.",
-      "Rotatable models pair their source target with orientationGizmo. Gizmo drag, axis snap, direct model drag, preview, history/reset, and export consume the same pose and presentation lease; a geometry miss remains canvas pan.",
+      "Rotatable models pair their source target with orientationGizmo. Gizmo drag, axis snap, direct model drag, preview, history/reset, and export consume the same pose and presentation lease; Space + primary drag pans the canvas over or outside geometry; a plain geometry miss does not pan.",
       "If an app ships with predefined source files or background images, declare them as schema media.defaultAssets with sourceTarget matching the fileDrop control. They must render as ordinary attached files in fileDrop, not as hidden renderer constants or canvas placeholder artwork.",
-      "Predefined media files are default runtime state: users can remove them to get an empty source/canvas state, persistence may keep that removal with include: [\"media\"], and global or section Reset restores the default attached files.",
+      'Predefined media files are default runtime state: users can remove them to get an empty source/canvas state, persistence may keep that removal with include: ["media"], and global or section Reset restores the default attached files.',
       "When uploaded/imported content is part of the source-material flow, the canvas must not show agent-invented artwork, CTA text, fake sample output, decorative placeholders, or preset source designs before real content exists; keep the canvas neutral/runtime-backed and put upload affordance in fileDrop.",
       "Do not add procedural Source Preset modes only to avoid an empty canvas. A default procedural or reference source is allowed only when the prompt/reference explicitly defines it and the worklog records that evidence.",
       "In single-layer apps, the runtime shows the uploaded image as the fileDrop preview and provides the clear action.",
@@ -73,7 +73,6 @@ export const TOOLCRAFT_MEDIA_CUSTOM_COMPONENT_CONTRACTS = {
     ],
     commands: [
       "media.delete",
-      "media.import",
       "media.importBatch",
       "media.reorder",
       "media.transform",
@@ -99,9 +98,7 @@ export const TOOLCRAFT_MEDIA_CUSTOM_COMPONENT_CONTRACTS = {
         "Use Select for non-visual named options.",
         "Use FileDrop for user-uploaded source material.",
       ],
-      layoutConstraints: [
-        "Runtime owns tile sizing by option count.",
-      ],
+      layoutConstraints: ["Runtime owns tile sizing by option count."],
       requiredAcceptance: [
         "Prove each visible image choice changes product output or selected visual data.",
       ],

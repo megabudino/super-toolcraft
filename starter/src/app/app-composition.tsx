@@ -1,8 +1,5 @@
-import type { ToolcraftAppComposition } from "@/toolcraft/runtime/react";
+import { composeToolcraftApp } from "@/toolcraft/runtime/react";
 
 import { appSchema } from "./app-schema";
 
-export const appComposition: ToolcraftAppComposition = {
-  modelPresentation: { mode: "runtime" },
-  schema: appSchema,
-};
+export const appComposition = composeToolcraftApp(appSchema, {});

@@ -46,6 +46,7 @@ export const DIRECT_CANVAS_OPERATION_TARGET = "toolcraft.canvas.image";
 
 export const DIRECT_CANVAS_SOURCE_ASSET_CONTROL: ToolcraftControlSchema =
   Object.freeze({
+    applicability: { mode: "always" as const },
     multiple: true,
     target: DIRECT_CANVAS_OPERATION_TARGET,
     type: "fileDrop",
@@ -188,7 +189,9 @@ export function createToolcraftSourceAssetImportRunner({
       let handler;
       let plan;
       try {
-        selection = selectToolcraftSourceAssetHandler(registry, batch, [requestedControl]);
+        selection = selectToolcraftSourceAssetHandler(registry, batch, [
+          requestedControl,
+        ]);
         if (selection.kind === "ambiguous") {
           operationStore.setOperation({
             feedback: selection.feedback,
@@ -211,7 +214,10 @@ export function createToolcraftSourceAssetImportRunner({
           return { feedback, kind: "rejected" };
         }
 
-        handler = getToolcraftSourceAssetHandler(registry, selection.claim.handlerKind);
+        handler = getToolcraftSourceAssetHandler(
+          registry,
+          selection.claim.handlerKind,
+        );
         if (!handler) {
           throw new Error(
             `No source asset handler is registered for "${selection.claim.handlerKind}".`,
@@ -260,7 +266,8 @@ export function createToolcraftSourceAssetImportRunner({
       }
 
       await cleanupManager.retryRollbacks();
-      if (!jobManager.isAdmissionCurrent(admission)) return { kind: "cancelled" };
+      if (!jobManager.isAdmissionCurrent(admission))
+        return { kind: "cancelled" };
 
       const job = jobManager.beginJob(
         admission,
@@ -332,7 +339,8 @@ export function createToolcraftSourceAssetImportRunner({
 
         if (
           !jobManager.isCurrent(job) ||
-          (defaultReplacement && !isDefaultReplacementCurrent(defaultReplacement))
+          (defaultReplacement &&
+            !isDefaultReplacementCurrent(defaultReplacement))
         ) {
           jobManager.removeJob(job);
           await cleanupManager.collect();
@@ -407,7 +415,10 @@ export function createToolcraftSourceAssetImportRunner({
         await cleanupManager.collect();
         return { assetIds, kind: "committed" };
       } catch (error) {
-        const feedback = getToolcraftSourceAssetFeedback(error, "import-failed");
+        const feedback = getToolcraftSourceAssetFeedback(
+          error,
+          "import-failed",
+        );
         let shouldReportFailure = false;
 
         if (committed) {
@@ -433,7 +444,8 @@ export function createToolcraftSourceAssetImportRunner({
     requestedControl,
   ) => {
     const batchSnapshot = snapshotToolcraftSourceAssetBatch(batch);
-    const controlSnapshot = snapshotToolcraftSourceAssetControl(requestedControl);
+    const controlSnapshot =
+      snapshotToolcraftSourceAssetControl(requestedControl);
     if (jobManager.isDisposed()) {
       return Promise.resolve({
         feedback: createToolcraftSourceAssetFeedback(
@@ -455,8 +467,11 @@ export function createToolcraftSourceAssetImportRunner({
     }
     const usesDirectCanvasFallback =
       controlSnapshot === undefined && batchSnapshot.origin === "canvas";
-    const control = controlSnapshot ??
-      (usesDirectCanvasFallback ? DIRECT_CANVAS_SOURCE_ASSET_CONTROL : undefined);
+    const control =
+      controlSnapshot ??
+      (usesDirectCanvasFallback
+        ? DIRECT_CANVAS_SOURCE_ASSET_CONTROL
+        : undefined);
 
     if (!control) {
       return Promise.resolve({

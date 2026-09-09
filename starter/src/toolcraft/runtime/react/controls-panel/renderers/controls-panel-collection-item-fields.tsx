@@ -6,6 +6,7 @@ import type {
   ToolcraftCollectionItemControlsSchema,
   ToolcraftControlSchema,
 } from "../../../schema/types";
+import { decodeToolcraftBuiltInLiveValue } from "../../../state/control-value-codecs";
 import { renderBasicControl } from "./controls-panel-basic-renderers";
 import { renderCompoundControl } from "./controls-panel-compound-renderers";
 
@@ -49,6 +50,7 @@ export function ControlsPanelCollectionItemField({
   onChange,
   target,
   value,
+  withKeyframeLabelAction = renderWithoutKeyframeAction,
 }: {
   colorLabelMode: "authored" | "hidden";
   control: ToolcraftCollectionItemControlSchema;
@@ -57,24 +59,35 @@ export function ControlsPanelCollectionItemField({
   onChange: ItemFieldChange;
   target: string;
   value: unknown;
+  withKeyframeLabelAction?: (args: { children: React.ReactNode }) => React.ReactNode;
 }): React.JSX.Element {
-  const fieldSchema: ToolcraftControlSchema = { ...control, target };
+  const fieldSchema: ToolcraftControlSchema = {
+    ...control,
+    applicability: { mode: "always" },
+    target,
+  };
   const shouldShowColorFieldLabel = () =>
     colorLabelMode === "authored" && control.label !== false;
+  const commitCanonicalValue: ItemFieldChange = (nextValue, meta) => {
+    const decoded = decodeToolcraftBuiltInLiveValue(fieldSchema, nextValue);
+    if (decoded?.accepted) {
+      onChange(decoded.value, meta);
+    }
+  };
   const rendered =
     renderBasicControl({
-      commit: onChange,
+      commit: commitCanonicalValue,
       control: fieldSchema,
       id,
       name,
       usesHeaderKeyframeAction: false,
       value,
       vectorPadShape: "compact",
-      withKeyframeLabelAction: renderWithoutKeyframeAction,
+      withKeyframeLabelAction,
     }) ??
     renderCompoundControl({
-      commit: onChange,
-      commitWithLabel: () => onChange,
+      commit: commitCanonicalValue,
+      commitWithLabel: () => commitCanonicalValue,
       control: fieldSchema,
       id,
       name,
@@ -82,7 +95,7 @@ export function ControlsPanelCollectionItemField({
       shouldShowColorFieldLabel,
       usesHeaderKeyframeAction: false,
       value,
-      withKeyframeLabelAction: renderWithoutKeyframeAction,
+      withKeyframeLabelAction,
     });
 
   if (rendered == null) {
@@ -98,8 +111,10 @@ export function ControlsPanelCollectionItemFields({
   controls,
   id,
   onChange,
+  onFieldChange,
   target,
   value,
+  withFieldKeyframeAction,
 }: {
   controls: ToolcraftCollectionItemControlsSchema;
   id: string;
@@ -108,8 +123,22 @@ export function ControlsPanelCollectionItemFields({
     fieldName: string,
     meta?: ControlChangeMeta,
   ) => void;
+  onFieldChange?: (
+    fieldId: string,
+    fieldValue: unknown,
+    nextValue: Readonly<Record<string, unknown>>,
+    fieldName: string,
+    meta?: ControlChangeMeta,
+  ) => void;
   target: string;
   value: unknown;
+  withFieldKeyframeAction?: (args: {
+    children: React.ReactNode;
+    field: ToolcraftCollectionItemControlSchema;
+    fieldId: string;
+    name: string;
+    value: unknown;
+  }) => React.ReactNode;
 }): React.JSX.Element {
   const record = asItemRecord(value);
 
@@ -125,11 +154,31 @@ export function ControlsPanelCollectionItemFields({
             id={`${id}:${fieldId}`}
             key={fieldId}
             name={fieldName}
-            onChange={(nextValue, meta) =>
-              onChange({ ...record, [fieldId]: nextValue }, fieldName, meta)
-            }
+            onChange={(nextValue, meta) => {
+              const nextRecord = { ...record, [fieldId]: nextValue };
+              if (onFieldChange) {
+                onFieldChange(
+                  fieldId,
+                  nextValue,
+                  nextRecord,
+                  fieldName,
+                  meta,
+                );
+                return;
+              }
+              onChange(nextRecord, fieldName, meta);
+            }}
             target={target}
             value={record[fieldId] ?? field.defaultValue}
+            withKeyframeLabelAction={(args) =>
+              withFieldKeyframeAction?.({
+                ...args,
+                field,
+                fieldId,
+                name: fieldName,
+                value: record[fieldId] ?? field.defaultValue,
+              }) ?? args.children
+            }
           />
         );
       })}

@@ -10,40 +10,44 @@ import {
 describe("starter acceptance slider rule contract", () => {
   it("accepts stepped continuous sliders without forcing the discrete visual variant", () => {
     const schemaWithAmbiguousSlider = defineContractSchemaFixture({
-      canvas: {
-        enabled: true,
-        sizing: { mode: "editable-output" },
-        upload: true,
-      },
-      panels: {
-        controls: {
-          sections: [
-            {
-              controls: {
-                grain: {
-                  defaultValue: 0.08,
-                  label: "Grain",
-                  max: 0.35,
-                  min: 0,
-                  step: 0.01,
-                  target: "shader.grain",
-                  type: "slider",
-                  variant: "continuous",
-                },
-              },
-              id: "volume",
-              title: "Volume",
-            },
-          ],
-          title: "Shader",
+      base: {
+        identity: { id: "contract-fixture", title: "Contract fixture" },
+        canvas: {
+          enabled: true,
+          sizing: { mode: "editable-output" },
         },
-        timeline: undefined,
+        panels: {
+          controls: {
+            sections: [
+              {
+                controls: {
+                  grain: {
+                    applicability: { mode: "always" as const },
+                    defaultValue: 0.08,
+                    label: "Grain",
+                    max: 0.35,
+                    min: 0,
+                    step: 0.01,
+                    target: "shader.grain",
+                    type: "slider",
+                    variant: "continuous",
+                  },
+                },
+                id: "volume",
+                title: "Volume",
+              },
+            ],
+            title: "Shader",
+          },
+        },
+        toolbar: {
+          history: true,
+          radar: true,
+          zoom: true,
+        },
+        persistence: { storage: "none" },
       },
-      toolbar: {
-        history: true,
-        radar: true,
-        zoom: true,
-      },
+      modules: [],
     });
 
     expect(
@@ -70,13 +74,15 @@ describe("starter acceptance slider rule contract", () => {
         ],
         sectionInventory: createContractSectionInventoryFixture(
           schemaWithAmbiguousSlider,
-          [{
-            entity: "Volume",
-            entityId: "volume",
-            finiteSelectors: [],
-            groupingReason: "Grain controls the rendered shader volume.",
-            id: "volume",
-          }],
+          [
+            {
+              entity: "Volume",
+              entityId: "volume",
+              finiteSelectors: [],
+              groupingReason: "Grain controls the rendered shader volume.",
+              id: "volume",
+            },
+          ],
         ),
       }),
     ).toEqual([]);
@@ -84,43 +90,51 @@ describe("starter acceptance slider rule contract", () => {
 
   it("uses typed discrete intent instead of English slider wording", () => {
     const schemaWithMissingDiscreteSliders = defineContractSchemaFixture({
-      canvas: { enabled: true },
-      panels: {
-        controls: {
-          sections: [
-            {
-              controls: {
-                maskGap: {
-                  defaultValue: 5,
-                  label: "Separación",
-                  max: 12,
-                  min: 0,
-                  orderRole: "detail",
-                  step: 1,
-                  sliderValueKind: "discrete" as const,
-                  target: "ascii.maskGap",
-                  type: "slider",
-                  unit: "cols",
+      base: {
+        identity: { id: "contract-fixture", title: "Contract fixture" },
+        canvas: { enabled: true },
+        panels: {
+          controls: {
+            sections: [
+              {
+                id: "test-section-2",
+                controls: {
+                  maskGap: {
+                    applicability: { mode: "always" as const },
+                    defaultValue: 5,
+                    label: "Separación",
+                    max: 12,
+                    min: 0,
+                    orderRole: "detail",
+                    step: 1,
+                    sliderValueKind: "discrete" as const,
+                    target: "ascii.maskGap",
+                    type: "slider",
+                    unit: "cols",
+                  },
+                  verticalJitter: {
+                    applicability: { mode: "always" as const },
+                    defaultValue: 1,
+                    label: "Desplazamiento",
+                    max: 4,
+                    min: 0,
+                    orderRole: "detail",
+                    step: 1,
+                    sliderValueKind: "discrete",
+                    target: "ascii.verticalJitter",
+                    type: "slider",
+                    unit: "rows",
+                  },
                 },
-                verticalJitter: {
-                  defaultValue: 1,
-                  label: "Desplazamiento",
-                  max: 4,
-                  min: 0,
-                  orderRole: "detail",
-                  step: 1,
-                  sliderValueKind: "discrete",
-                  target: "ascii.verticalJitter",
-                  type: "slider",
-                  unit: "rows",
-                },
+                title: "Mask",
               },
-              title: "Mask",
-            },
-          ],
-          title: "ASCII",
+            ],
+            title: "ASCII",
+          },
         },
+        persistence: { storage: "none" },
       },
+      modules: [],
     });
 
     expect(
@@ -137,7 +151,8 @@ describe("starter acceptance slider rule contract", () => {
             },
             componentType: "slider",
             evidence: "rendered-pixels",
-            expectedObservable: "Changing Mask gap changes row reveal boundaries.",
+            expectedObservable:
+              "Changing Mask gap changes row reveal boundaries.",
             fixture: "ASCII fixture",
             id: "ascii.maskGap",
             kind: "control",
@@ -150,11 +165,13 @@ describe("starter acceptance slider rule contract", () => {
             browser: {
               budget: "standard",
               file: "e2e/app-controls.spec.ts",
-              testName: "browser: vertical jitter slider changes rendered output",
+              testName:
+                "browser: vertical jitter slider changes rendered output",
             },
             componentType: "slider",
             evidence: "rendered-pixels",
-            expectedObservable: "Changing Vertical jitter changes row displacement.",
+            expectedObservable:
+              "Changing Vertical jitter changes row displacement.",
             fixture: "ASCII fixture",
             id: "ascii.verticalJitter",
             kind: "control",
@@ -173,40 +190,48 @@ describe("starter acceptance slider rule contract", () => {
 
   it("requires flip-depth integer sliders to use the visual discrete variant", () => {
     const schemaWithFlipDepthSlider = defineContractSchemaFixture({
-      canvas: { enabled: true },
-      panels: {
-        controls: {
-          sections: [
-            {
-              controls: {
-                speed: {
-                  defaultValue: 1.1,
-                  label: "Speed",
-                  max: 2.5,
-                  min: 0.5,
-                  step: 0.1,
-                  target: "animation.speed",
-                  type: "slider",
-                  variant: "continuous",
+      base: {
+        identity: { id: "contract-fixture", title: "Contract fixture" },
+        canvas: { enabled: true },
+        panels: {
+          controls: {
+            sections: [
+              {
+                id: "test-section-3",
+                controls: {
+                  speed: {
+                    applicability: { mode: "always" as const },
+                    defaultValue: 1.1,
+                    label: "Speed",
+                    max: 2.5,
+                    min: 0.5,
+                    step: 0.1,
+                    target: "animation.speed",
+                    type: "slider",
+                    variant: "continuous",
+                  },
+                  depth: {
+                    applicability: { mode: "always" as const },
+                    defaultValue: 12,
+                    label: "Flip depth",
+                    max: 28,
+                    min: 4,
+                    sliderValueKind: "discrete",
+                    step: 1,
+                    target: "animation.depth",
+                    type: "slider",
+                    variant: "continuous",
+                  },
                 },
-                depth: {
-                  defaultValue: 12,
-                  label: "Flip depth",
-                  max: 28,
-                  min: 4,
-                  sliderValueKind: "discrete",
-                  step: 1,
-                  target: "animation.depth",
-                  type: "slider",
-                  variant: "continuous",
-                },
+                title: "Motion",
               },
-              title: "Motion",
-            },
-          ],
-          title: "Board",
+            ],
+            title: "Board",
+          },
         },
+        persistence: { storage: "none" },
       },
+      modules: [],
     });
 
     expect(
@@ -236,11 +261,13 @@ describe("starter acceptance slider rule contract", () => {
             browser: {
               budget: "standard",
               file: "e2e/app-controls.spec.ts",
-              testName: "browser: flip depth slider changes intermediate characters",
+              testName:
+                "browser: flip depth slider changes intermediate characters",
             },
             componentType: "slider",
             evidence: "rendered-pixels",
-            expectedObservable: "Changing Flip depth changes the number of intermediate character steps.",
+            expectedObservable:
+              "Changing Flip depth changes the number of intermediate character steps.",
             fixture: "board flip depth fixture",
             id: "animation.depth",
             kind: "control",
@@ -258,42 +285,49 @@ describe("starter acceptance slider rule contract", () => {
 
   it("accepts large or precision stepped sliders as visually continuous", () => {
     const schemaWithContinuousSteppedSliders = defineContractSchemaFixture({
-      canvas: { enabled: true },
-      panels: {
-        controls: {
-          sections: [
-            {
-              controls: {
-                revealSpeed: {
-                  defaultValue: 118,
-                  label: "Reveal speed",
-                  max: 150,
-                  min: 0,
-                  orderRole: "primary",
-                  step: 1,
-                  target: "ascii.speed",
-                  type: "slider",
-                  unit: "cols/s",
+      base: {
+        identity: { id: "contract-fixture", title: "Contract fixture" },
+        canvas: { enabled: true },
+        panels: {
+          controls: {
+            sections: [
+              {
+                id: "timing",
+                controls: {
+                  revealSpeed: {
+                    applicability: { mode: "always" as const },
+                    defaultValue: 118,
+                    label: "Reveal speed",
+                    max: 150,
+                    min: 0,
+                    orderRole: "primary",
+                    step: 1,
+                    target: "ascii.speed",
+                    type: "slider",
+                    unit: "cols/s",
+                  },
+                  flipDuration: {
+                    applicability: { mode: "always" as const },
+                    defaultValue: 0.6,
+                    label: "Flip duration",
+                    max: 5,
+                    min: 0,
+                    orderRole: "strength",
+                    step: 0.1,
+                    target: "ascii.flipDurationSec",
+                    type: "slider",
+                    unit: "s",
+                  },
                 },
-                flipDuration: {
-                  defaultValue: 0.6,
-                  label: "Flip duration",
-                  max: 5,
-                  min: 0,
-                  orderRole: "strength",
-                  step: 0.1,
-                  target: "ascii.flipDurationSec",
-                  type: "slider",
-                  unit: "s",
-                },
+                title: "Timing",
               },
-              id: "timing",
-              title: "Timing",
-            },
-          ],
-          title: "ASCII",
+            ],
+            title: "ASCII",
+          },
         },
+        persistence: { storage: "none" },
       },
+      modules: [],
     });
 
     expect(
@@ -327,7 +361,8 @@ describe("starter acceptance slider rule contract", () => {
             },
             componentType: "slider",
             evidence: "rendered-pixels",
-            expectedObservable: "Changing Flip duration changes animation timing.",
+            expectedObservable:
+              "Changing Flip duration changes animation timing.",
             fixture: "ASCII fixture",
             id: "ascii.flipDurationSec",
             kind: "control",
@@ -337,13 +372,16 @@ describe("starter acceptance slider rule contract", () => {
         ],
         sectionInventory: createContractSectionInventoryFixture(
           schemaWithContinuousSteppedSliders,
-          [{
-            entity: "Timing",
-            entityId: "timing",
-            finiteSelectors: [],
-            groupingReason: "Speed and duration control one animation timing model.",
-            id: "timing",
-          }],
+          [
+            {
+              entity: "Timing",
+              entityId: "timing",
+              finiteSelectors: [],
+              groupingReason:
+                "Speed and duration control one animation timing model.",
+              id: "timing",
+            },
+          ],
         ),
       }),
     ).toEqual([]);

@@ -8,13 +8,14 @@ if (fixtureSource && process.env.VITEST) {
 }
 
 if (!fixtureSource) {
-  const [vitest, vgpuNode, vgpuCore, storage, feedbackModule, renderModule] = await Promise.all([
+  const [vitest, vgpuNode, vgpuCore, storage, feedbackModule, renderModule, composite] = await Promise.all([
     import("vitest"),
     import("vgpu/node"),
     import("vgpu/core"),
     import("./feedback-storage"),
     import("./feedback.wgsl"),
     import("./render.wgsl"),
+    import("../../toolcraft/integrations/vgpu/rgba-composite"),
   ]);
   const { describe, expect, it } = vitest;
   const { effect, frame, init, sampler, target } = vgpuNode;
@@ -22,6 +23,7 @@ if (!fixtureSource) {
   async function renderPhysicalField(): Promise<Readonly<{
     center: readonly number[];
     corner: readonly number[];
+    pixels: readonly number[];
   }>> {
     const gpu = await init();
     try {
@@ -61,7 +63,7 @@ if (!fixtureSource) {
       simulation.dispose();
       const sample = (x: number, y: number) =>
         Array.from(pixels.slice((y * size + x) * 4, (y * size + x) * 4 + 4));
-      return Object.freeze({ center: sample(8, 8), corner: sample(0, 0) });
+      return Object.freeze({ center: sample(8, 8), corner: sample(0, 0), pixels: Array.from(pixels) });
     } finally {
       gpu.dispose();
     }
@@ -77,6 +79,24 @@ if (!fixtureSource) {
       expect(first.center[1]).toBeGreaterThan(first.corner[1]);
       expect(first.center[2]).toBeGreaterThan(first.corner[2]);
       expect(first.center[3]).toBeGreaterThan(0);
+      let translucentSamples = 0;
+      for (let offset = 0; offset < first.pixels.length; offset += 4) {
+        const pixel = first.pixels.slice(offset, offset + 4);
+        const alpha = pixel[3]! / 255;
+        if (alpha < 0.1 || alpha > 0.9) continue;
+        translucentSamples += 1;
+        const expected = [0.078, 0.12, 0.22].map((ink, channel) =>
+          (ink + ([0.20, 0.90, 1.00][channel]! - ink) * alpha) * 255,
+        );
+        const background = composite.compositeStraightAlphaSourceOver(
+          new Uint8ClampedArray([0, 0, 0, 255]), new Uint8Array(pixel),
+        );
+        for (let channel = 0; channel < 3; channel += 1) {
+          expect(Math.abs(pixel[channel]! - expected[channel]!)).toBeLessThanOrEqual(2);
+          expect(Math.abs(background[channel]! - expected[channel]! * alpha)).toBeLessThanOrEqual(2);
+        }
+      }
+      expect(translucentSamples).toBeGreaterThan(0);
     });
   });
 }

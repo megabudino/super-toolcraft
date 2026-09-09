@@ -1,4 +1,5 @@
 "use client";
+import type { ReadonlyToolcraftState } from "../../state/readonly-state";
 
 import * as React from "react";
 
@@ -6,7 +7,6 @@ import type {
   ToolcraftCommand,
   ToolcraftImageAsset,
   ToolcraftMediaAsset,
-  ToolcraftState,
 } from "../../state/types";
 import { getToolcraftSceneElementRect } from "../../scene";
 import { getCanvasMediaTransformStyle } from "./canvas-media-transform";
@@ -18,7 +18,7 @@ function cn(...classNames: Array<string | false | null | undefined>): string {
 }
 
 function isDefaultCanvasImageAsset(
-  state: ToolcraftState,
+  state: ReadonlyToolcraftState,
   mediaAsset: ToolcraftMediaAsset,
 ): mediaAsset is ToolcraftImageAsset {
   return (
@@ -29,7 +29,7 @@ function isDefaultCanvasImageAsset(
 }
 
 export function getVisibleCanvasImageAssets(
-  state: ToolcraftState,
+  state: ReadonlyToolcraftState,
 ): ToolcraftImageAsset[] {
   return state.mediaAssets.filter((mediaAsset) =>
     isDefaultCanvasImageAsset(state, mediaAsset),

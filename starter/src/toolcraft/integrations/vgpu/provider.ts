@@ -15,6 +15,7 @@ export type ToolcraftVgpuProviderState =
   | Readonly<{ status: "initializing" }>
   | Readonly<{ gpu: Gpu; status: "ready" }>
   | Readonly<{ message: string; status: "unsupported" }>
+  | Readonly<{ message: string; status: "disposed" }>
   | Readonly<{ message: string; reason: unknown; status: "device-lost" }>
   | Readonly<{ error: unknown; message: string; status: "failed" }>;
 
@@ -168,7 +169,9 @@ export function createToolcraftVgpuProvider(
         publish({ error, message: runtimeFailureMessage, status: "failed" });
       }
     });
-    void initializedGpu.gpu.lost.then(
+    // The software adapter implements Gpu without GPUDevice.lost. Browser
+    // devices still provide the native loss notification.
+    void initializedGpu.gpu.lost?.then(
       (reason) => {
         if (state.status === "ready") {
           publish({ message: deviceLostMessage, reason, status: "device-lost" });
@@ -204,6 +207,10 @@ export function createToolcraftVgpuProvider(
         return;
       }
       disposed = true;
+      state = freezeState({
+        message: "The VGPU provider has been disposed.",
+        status: "disposed",
+      });
       listeners.clear();
       const errors = surfaceOwnership.disposeAll();
       const errorRelease = releaseErrorListener;

@@ -13,13 +13,21 @@ import {
 import type { ToolcraftPerformancePathAdapter } from "./performance-path-adapter-contract";
 
 const rasterSchema = defineToolcraft({
-  canvas: { enabled: true, renderScale: true },
-  panels: { controls: { sections: [], title: "Controls" } },
+  base: {
+    identity: { id: "contract-fixture", title: "Contract fixture" },
+    canvas: { enabled: true, renderScale: true },
+    panels: { controls: { sections: [], title: "Controls" } },
+  },
+  modules: [],
 });
 
 const vectorSchema = defineToolcraft({
-  canvas: { enabled: true },
-  panels: { controls: { sections: [], title: "Controls" } },
+  base: {
+    identity: { id: "contract-fixture", title: "Contract fixture" },
+    canvas: { enabled: true },
+    panels: { controls: { sections: [], title: "Controls" } },
+  },
+  modules: [],
 });
 
 const paths = [

@@ -9,6 +9,7 @@ export type SliderProps<Value extends number | readonly number[]> =
     getAriaLabel?: (index: number) => string;
     markerCount?: number;
     markerValues?: readonly number[];
+    onPointerDraggingChange?: (isDragging: boolean) => void;
     resetValue?: Value;
     showFill?: boolean;
     snapValues?: readonly number[];

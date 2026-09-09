@@ -20,6 +20,8 @@ type SliderRuntimeOptions<Value extends number | readonly number[]> = {
   max: number;
   min: number;
   onBlurCapture?: SliderFocusEventHandler;
+  onLostPointerCapture?: SliderPointerEventHandler;
+  onPointerDraggingChange?: (isDragging: boolean) => void;
   onPointerCancelCapture?: SliderPointerEventHandler;
   onPointerDownCapture?: SliderPointerEventHandler;
   onPointerUpCapture?: SliderPointerEventHandler;
@@ -40,6 +42,8 @@ export function useSliderRuntime<Value extends number | readonly number[]>({
   max,
   min,
   onBlurCapture,
+  onLostPointerCapture,
+  onPointerDraggingChange,
   onPointerCancelCapture,
   onPointerDownCapture,
   onPointerUpCapture,
@@ -66,6 +70,8 @@ export function useSliderRuntime<Value extends number | readonly number[]>({
   const pointerDrag = useSliderPointerDragging({
     disabled,
     onBlurCapture,
+    onLostPointerCapture,
+    onPointerDraggingChange,
     onPointerCancelCapture,
     onPointerDownCapture,
     onPointerUpCapture,

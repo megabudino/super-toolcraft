@@ -482,7 +482,7 @@ test("isolates concurrent source loads from ambient proof state across success a
       ]);
       assert.equal(outcomes[0].status, "fulfilled");
       assert.equal(outcomes[1].status, "rejected");
-      assert.deepEqual(seenEnvironments, [{ SAFE: "one" }, { SAFE: "two" }]);
+      assert.deepEqual(seenEnvironments.toSorted((a, b) => a.SAFE.localeCompare(b.SAFE)), [{ SAFE: "one" }, { SAFE: "two" }]);
     });
     assert.equal(process.env.TOOLCRAFT_FEATURE_VERIFICATION_PLAN, '{"forged":true}');
     assert.equal(process.env.TOOLCRAFT_FEATURE_VERIFICATION_REQUEST, '{"forged":true}');

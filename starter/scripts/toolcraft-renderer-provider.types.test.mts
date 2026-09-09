@@ -31,11 +31,14 @@ const inspectionStatus: "absent" | "exact" | "drifted" = inspection.status;
 const commandIds: readonly ["enable", "install", "wgsl-check", "delivery"] =
   rendererProviderCompatibilityCommandIds;
 const commandId: RendererProviderCompatibilityCommandId = commandIds[0];
-const runtimeRole: "runtime" = catalog.providers.vgpu.dependencies[0].role;
+const runtimeRole: "runtime" = catalog.providers.vgpu.approvedRelease!.dependencies[0].role;
+if (!catalog.providers.vgpu.approvedRelease) {
+  throw new Error("The legacy catalog type fixture requires an approved release.");
+}
 const approvedRuntimeName: "vgpu" =
-  catalog.providers.vgpu.approvedRelease.dependencies[0].name;
+  catalog.providers.vgpu.approvedRelease!.dependencies[0].name;
 const approvedToolingName: "@vgpu/wgsl" =
-  catalog.providers.vgpu.approvedRelease.dependencies[1].name;
+  catalog.providers.vgpu.approvedRelease!.dependencies[1].name;
 
 // @ts-expect-error Parsed catalogs are immutable.
 catalog.schemaVersion = 1;

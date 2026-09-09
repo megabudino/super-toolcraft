@@ -1,9 +1,10 @@
-import type { ResolvedToolcraftAppSchema } from "../schema/types";
+import type { ResolvedToolcraftAppSchema } from "../schema/resolved-app-schema";
 import {
   createToolcraftDefaultModelPlaceholder,
   resolveToolcraftDefaultModelControl,
 } from "../model-import/default-model-source-assets";
 import { cloneToolcraftModelAssetRecord } from "../model-import/model-asset-metadata";
+import { createToolcraftDataUrlResourceRef } from "../source-assets/media-resource-ref";
 import { cloneToolcraftMediaResourceState } from "./media-resource-state";
 import type {
   ToolcraftCanvasState,
@@ -15,7 +16,6 @@ import type {
   ToolcraftLayer,
   ToolcraftMediaAsset,
   ToolcraftModelAsset,
-  ToolcraftLegacyModelAsset,
 } from "./types";
 import {
   cloneToolcraftImageAsset,
@@ -35,7 +35,9 @@ function getDefaultLayerName(fileName: string): string {
   return baseName || "Media";
 }
 
-function finalizeImageAsset(draft: ToolcraftImageAssetDraft): ToolcraftImageAsset {
+function finalizeImageAsset(
+  draft: ToolcraftImageAssetDraft,
+): ToolcraftImageAsset {
   const { layerName: _layerName, ...asset } = draft;
 
   if (asset.id === undefined || asset.layerId === undefined) {
@@ -63,7 +65,7 @@ function normalizeInitialImageIngress(
   );
 }
 
-function cloneModelAsset(asset: ToolcraftLegacyModelAsset): ToolcraftModelAsset {
+function cloneModelAsset(asset: ToolcraftModelAsset): ToolcraftModelAsset {
   const record = cloneToolcraftModelAssetRecord(asset);
   const frame = normalizeToolcraftSceneElementFrame(asset);
 
@@ -71,6 +73,7 @@ function cloneModelAsset(asset: ToolcraftLegacyModelAsset): ToolcraftModelAsset 
     ...record,
     assetKind: "model",
     fileName: asset.fileName,
+    ...(asset.sourcePaths ? { sourcePaths: [...asset.sourcePaths] } : {}),
     id: asset.id,
     layerId: asset.layerId,
     mimeType: asset.mimeType,
@@ -88,7 +91,6 @@ function cloneInitialMediaAsset(
   if ("policy" in asset) {
     return normalizeInitialImageIngress(asset, canvas, sizingMode);
   }
-
   if (asset.assetKind === "model") {
     return cloneModelAsset(asset);
   }
@@ -100,29 +102,13 @@ function cloneInitialMediaAsset(
       ...resourceState,
       assetKind: "file",
       fileName: asset.fileName,
+      ...(asset.sourcePaths ? { sourcePaths: [...asset.sourcePaths] } : {}),
       id: asset.id,
       layerId: asset.layerId,
       mimeType: asset.mimeType,
       position: { ...asset.position },
       ...(asset.sourceTarget ? { sourceTarget: asset.sourceTarget } : {}),
     };
-  }
-
-  if ("dataUrl" in asset) {
-    const { dataUrl: _dataUrl, ...metadata } = asset;
-
-    return normalizeInitialImageIngress(
-      {
-        asset: {
-          ...metadata,
-          assetKind: "image",
-          ...cloneToolcraftMediaResourceState("image", asset),
-        },
-        policy: "legacy-record",
-      },
-      canvas,
-      sizingMode,
-    );
   }
 
   return cloneToolcraftImageAsset(asset);
@@ -149,6 +135,7 @@ export function cloneToolcraftMediaAssets(
       ...resourceState,
       assetKind: "file",
       fileName: asset.fileName,
+      ...(asset.sourcePaths ? { sourcePaths: [...asset.sourcePaths] } : {}),
       id: asset.id,
       layerId: asset.layerId,
       mimeType: asset.mimeType,
@@ -170,7 +157,9 @@ export function cloneToolcraftInitialMediaAssets(
   );
 }
 
-export function cloneToolcraftLayers(layers: readonly ToolcraftLayer[]): ToolcraftLayer[] {
+export function cloneToolcraftLayers(
+  layers: readonly ToolcraftLayer[],
+): ToolcraftLayer[] {
   return layers.map(cloneLayer);
 }
 
@@ -179,7 +168,9 @@ export function createToolcraftLayersFromMediaAssets(
   defaultLayers: readonly ToolcraftLayer[] = [],
 ): ToolcraftLayer[] {
   const layers: ToolcraftLayer[] = [];
-  const defaultLayerById = new Map(defaultLayers.map((layer) => [layer.id, layer]));
+  const defaultLayerById = new Map(
+    defaultLayers.map((layer) => [layer.id, layer]),
+  );
   const seenLayerIds = new Set<string>();
 
   for (const asset of mediaAssets) {
@@ -250,7 +241,8 @@ export function createToolcraftDefaultMediaState(
         layerId,
         mimeType: asset.mimeType ?? "application/octet-stream",
         position: asset.position ?? { x: 0, y: 0 },
-        ...cloneToolcraftMediaResourceState("file", asset),
+        lifecycle: "restoring",
+        resourceRef: createToolcraftDataUrlResourceRef("file", asset.dataUrl),
         ...(asset.sourceTarget ? { sourceTarget: asset.sourceTarget } : {}),
       });
       return;
@@ -262,7 +254,8 @@ export function createToolcraftDefaultMediaState(
       id: asset.id ?? `default-media-${index + 1}`,
       layerId,
       mimeType: asset.mimeType ?? "image/*",
-      ...cloneToolcraftMediaResourceState("image", asset),
+      lifecycle: "restoring" as const,
+      resourceRef: createToolcraftDataUrlResourceRef("image", asset.dataUrl),
       ...(asset.sourceTarget ? { sourceTarget: asset.sourceTarget } : {}),
       ...(asset.transform ? { transform: asset.transform } : {}),
     };
@@ -279,25 +272,14 @@ export function createToolcraftDefaultMediaState(
       return;
     }
 
-    const ingress: ToolcraftImageAssetIngress =
-      asset.ingressPolicy === "prepared-source"
-        ? {
-            asset: {
-              ...baseAsset,
-              position: asset.position,
-              sourceSize: asset.sourceSize,
-            },
-            policy: "prepared-source",
-          }
-        : {
-            asset: {
-              ...baseAsset,
-              ...(asset.position ? { position: asset.position } : {}),
-              ...(asset.size ? { size: asset.size } : {}),
-              ...(asset.sourceSize ? { sourceSize: asset.sourceSize } : {}),
-            },
-            policy: "legacy-record",
-          };
+    const ingress: ToolcraftImageAssetIngress = {
+      asset: {
+        ...baseAsset,
+        position: asset.position,
+        sourceSize: asset.sourceSize,
+      },
+      policy: "prepared-source",
+    };
 
     mediaAssets.push(
       finalizeImageAsset(
