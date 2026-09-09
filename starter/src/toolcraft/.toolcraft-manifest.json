@@ -1817,8 +1817,8 @@
     "toolcraft/renderer-providers/vgpu/tests/public-entry.typecheck.ts": "2beacea1957bf8242f42d75d105541524c5c9e953630508f0d70cf7a6df34e22",
     "toolcraft/renderer-providers/vgpu/tsconfig.json": "eb59af103cc42d6e3816825f4f53e95e3bdddcae86969ebdc330fc9bc2d15eb3",
     "tsconfig.json": "f7c027a3da3ee6c8d06beb0b813b607c60782259f7de5b0000a0515a9eff9edd",
-    "vite.config.ts": "25fc25d94030967ef213079da1c3954997446de532d08595fdd6da8aa73b49a7"
+    "vite.config.ts": "9b477548caae0f982204ffe13729e355c24e16f83e368c62e814aaa9a65e4d40"
   },
   "version": 3,
-  "signature": "aLpTh7pEV6z6wsCkFCiWDNni+b0g4DZepfjnRaPkvdudlT99+wdUOh0//sobHp0nC6q0qRyyLvoDfGaZCkp6AA=="
+  "signature": "xqNCproZy8IyqP3FgZ2pgvcOYRB5h5ju8EK6H5PzcQPG2oqU1SDj1w51HQA0LAxYSNiLoBvbShj6+YYI0bpMCg=="
 }

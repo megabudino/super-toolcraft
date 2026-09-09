@@ -64,6 +64,9 @@ function toolcraftServerIdentityPlugin(): Plugin {
 }
 
 export default defineConfig(async () => ({
+  optimizeDeps: {
+    entries: ["index.html"],
+  },
   plugins: [
     ...(await loadToolcraftRendererVitePlugins({ appRoot: rootDir })),
     toolcraftServerIdentityPlugin(),
