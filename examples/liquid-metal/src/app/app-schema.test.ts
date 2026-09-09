@@ -14,7 +14,7 @@ describe("Liquid Metal 3D app schema", () => {
   it("publishes the complete Toolcraft product contract", () => {
     expect(appProductReadiness).toMatchObject({
       mode: "product",
-      productName: "Liquid Metal 3D",
+      productName: "Liquid Metal",
     });
     expect(appTransferMode).toMatchObject({
       animationIntent: { mode: "timeline-playback" },
@@ -30,7 +30,7 @@ describe("Liquid Metal 3D app schema", () => {
       sizing: { mode: "editable-output" },
       upload: true,
     });
-    expect(appSchema.panels.controls?.title).toBe("Liquid Metal 3D");
+    expect(appSchema.panels.controls?.title).toBe("Liquid Metal");
     expect(appSchema.panels.timeline).toMatchObject({ enabled: true, mode: "playback" });
     expect(appSchema.panels.layers).toBeUndefined();
     expect(appSchema.toolbar).toEqual({ history: true, radar: true, theme: true, zoom: true });

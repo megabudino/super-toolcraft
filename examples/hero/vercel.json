@@ -1,0 +1,15 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm run build -- --base /demos/hero/",
+  "installCommand": "npm ci",
+  "framework": "vite",
+  "outputDirectory": "dist",
+  "rewrites": [
+    { "source": "/demos/hero/assets/:path*", "destination": "/assets/:path*" },
+    { "source": "/demos/hero/images/:path*", "destination": "/images/:path*" },
+    { "source": "/demos/hero/fonts/:path*", "destination": "/fonts/:path*" },
+    { "source": "/demos/hero/logo-mark.svg", "destination": "/logo-mark.svg" },
+    { "source": "/demos/hero", "destination": "/" },
+    { "source": "/demos/hero/:path*", "destination": "/" }
+  ]
+}

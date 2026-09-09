@@ -1,0 +1,18 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm run build -- --base /demos/dot-ring-studio/",
+  "rewrites": [
+    {
+      "source": "/demos/dot-ring-studio/assets/:path*",
+      "destination": "/assets/:path*"
+    },
+    {
+      "source": "/demos/dot-ring-studio",
+      "destination": "/"
+    },
+    {
+      "source": "/demos/dot-ring-studio/:path*",
+      "destination": "/"
+    }
+  ]
+}

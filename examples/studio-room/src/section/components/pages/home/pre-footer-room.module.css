@@ -1,0 +1,109 @@
+.stage {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  background: #f1f6de;
+  isolation: isolate;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.fineGrid,
+.grid,
+.innerGrid,
+.trail,
+.tiles {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.tiles {
+  z-index: 3;
+}
+
+.tileSlot {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1000px;
+  height: 1000px;
+  transform-origin: 0 0;
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
+.tileImage {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 1000px;
+  max-width: none;
+  height: 1000px;
+  object-fit: cover;
+  transform-origin: 50% 50%;
+  backface-visibility: hidden;
+  will-change: transform, filter, opacity;
+}
+
+/* A local clip keeps touch WebKit's projective layer inside its transformed tile. */
+@supports (font: -apple-system-body) {
+  @media (hover: none) and (pointer: coarse) {
+    .tileSlot {
+      clip-path: inset(0);
+    }
+  }
+}
+
+.fineGrid {
+  z-index: 0;
+}
+
+.grid {
+  z-index: 1;
+}
+
+.innerGrid {
+  z-index: -1;
+}
+
+.gridLines {
+  fill: none;
+}
+
+.trail {
+  z-index: 2;
+}
+
+.trailLines {
+  fill: none;
+  pointer-events: none;
+}
+
+.backWall {
+  position: absolute;
+  top: var(--back-wall-top);
+  left: var(--back-wall-left);
+  z-index: 4;
+  width: var(--back-wall-width);
+  height: var(--back-wall-height);
+  overflow: hidden;
+  border-width: var(--room-border-width);
+  border-style: solid;
+  border-color: color-mix(
+    in srgb,
+    var(--room-border-color) calc(var(--room-border-opacity) * 100%),
+    transparent
+  );
+  border-radius: var(--back-wall-radius);
+  background: var(--room-wall-fill);
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .backWall {
+    transform: none !important;
+  }
+}

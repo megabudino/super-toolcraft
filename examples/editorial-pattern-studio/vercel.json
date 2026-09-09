@@ -1,0 +1,18 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm run build -- --base /demos/editorial-pattern-studio/",
+  "rewrites": [
+    {
+      "source": "/demos/editorial-pattern-studio/assets/:path*",
+      "destination": "/assets/:path*"
+    },
+    {
+      "source": "/demos/editorial-pattern-studio",
+      "destination": "/"
+    },
+    {
+      "source": "/demos/editorial-pattern-studio/:path*",
+      "destination": "/"
+    }
+  ]
+}

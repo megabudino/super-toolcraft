@@ -1,0 +1,73 @@
+{
+  "sourceRoot": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles",
+  "entry": "components/pages/home/pre-footer.tsx",
+  "files": [
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/components/pages/home/pre-footer.tsx",
+      "local": "src/section/components/pages/home/pre-footer.tsx",
+      "sha256": "8d3f73944776a6db6ad38a1ffc9f74f8cb4a6e5cc5eca56f41a7de447285083c"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/components/pages/home/pre-footer-room-responsive.tsx",
+      "local": "src/section/components/pages/home/pre-footer-room-responsive.tsx",
+      "sha256": "0e04f38296111f6a0c8ea1fa1bc6698fb453be2cb175ff8d85325c5909713efc"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/shared/config/base-path.ts",
+      "local": "src/section/shared/config/base-path.ts",
+      "sha256": "14f6016479684672409d9366c78fcb74bf92102b7c6ecf68386d97f51ce81ce0"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/components/pages/home/pre-footer-room-responsive.module.css",
+      "local": "src/section/components/pages/home/pre-footer-room-responsive.module.css",
+      "sha256": "bb2ea479247b20a9b55655afe6a1029383ecff5079af88f25e37396177b1c2e1"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/components/pages/home/studio-room-settings.ts",
+      "local": "src/section/components/pages/home/studio-room-settings.ts",
+      "sha256": "94a04cae768114d07d17aef9a6252fd122397967a36ee66e8df1228e88cdc73f"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/components/pages/home/studio-room-applied-settings.json",
+      "local": "src/section/components/pages/home/studio-room-applied-settings.json",
+      "sha256": "ec06072143ecb82d3118bb632b37826cd777481416bc24a077354cf189a10b4f"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/components/pages/home/pre-footer-room.tsx",
+      "local": "src/section/components/pages/home/pre-footer-room.tsx",
+      "sha256": "e4096448341ba089bc22878c0f866055cd6fddfd7ef6c2d2c2adfb8516826ebc"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/components/pages/home/pre-footer-room-motion.ts",
+      "local": "src/section/components/pages/home/pre-footer-room-motion.ts",
+      "sha256": "cbcc8770833ad4825f254a74de27f7f7e239cbcf6926014bc232f9f3216eaa6e"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/components/pages/home/studio-room-inner-grid.ts",
+      "local": "src/section/components/pages/home/studio-room-inner-grid.ts",
+      "sha256": "a079dd1244c78ee576c875ba1d56a9f8256a7250b57a30a5b04836b6034fbd2f"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/components/pages/home/pre-footer-room.module.css",
+      "local": "src/section/components/pages/home/pre-footer-room.module.css",
+      "sha256": "6ebfb17795c2bfc4ef4bfffa2cdd6d8ab5a457f0913829458a84c7e1ec2d7292"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/components/pages/home/studio-room-media-store.ts",
+      "local": "src/section/components/pages/home/studio-room-media-store.ts",
+      "sha256": "960b7a589a2085bdbe94c6def2e9caada5aafe19bcbac254247d4fe65da6b41b"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/components/pages/home/pre-footer.module.css",
+      "local": "src/section/components/pages/home/pre-footer.module.css",
+      "sha256": "7559224d29294416bfcd5eadc902bbe7ea01aae22fa97a8a5599598646340c7a"
+    }
+  ],
+  "externalImports": [
+    "motion/react",
+    "next/dynamic",
+    "next/image",
+    "next/link",
+    "react"
+  ]
+}

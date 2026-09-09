@@ -1,0 +1,22 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm run build -- --base /demos/donut-studio/",
+  "rewrites": [
+    {
+      "source": "/demos/donut-studio/assets/:path*",
+      "destination": "/assets/:path*"
+    },
+    {
+      "source": "/demos/donut-studio/donut-studio/:path*",
+      "destination": "/donut-studio/:path*"
+    },
+    {
+      "source": "/demos/donut-studio",
+      "destination": "/"
+    },
+    {
+      "source": "/demos/donut-studio/:path*",
+      "destination": "/"
+    }
+  ]
+}

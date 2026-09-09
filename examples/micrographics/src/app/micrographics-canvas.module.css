@@ -1,0 +1,88 @@
+.root {
+  border: 0;
+  box-shadow: none;
+  cursor: default;
+  display: block;
+  height: 100%;
+  outline: 0;
+  overflow: hidden;
+  touch-action: none;
+  width: 100%;
+}
+
+.background,
+.backgroundImage,
+.primitive {
+  pointer-events: none;
+}
+
+.editableText {
+  cursor: text;
+  pointer-events: all;
+}
+
+.textEditor {
+  background: transparent;
+  border: none;
+  border-bottom: 1px dashed color-mix(in srgb, currentColor 45%, transparent);
+  box-sizing: content-box;
+  display: block;
+  margin: 0;
+  outline: none;
+  padding: 0;
+  pointer-events: all;
+  width: 100%;
+}
+
+.placing {
+  cursor: crosshair;
+}
+
+.element {
+  cursor: move;
+  outline: none;
+}
+
+.placementBox {
+  fill: color-mix(in srgb, var(--link) 12%, transparent);
+  pointer-events: none;
+  stroke: var(--link);
+  stroke-dasharray: 12 8;
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+}
+
+.hitArea {
+  pointer-events: all;
+}
+
+.handleLayer {
+  pointer-events: none;
+}
+
+.selectionBox {
+  fill: transparent;
+  pointer-events: none;
+  stroke-dasharray: 10 7;
+  vector-effect: non-scaling-stroke;
+}
+
+.resizeHandle {
+  outline: none;
+  outline-width: 0;
+  pointer-events: all;
+  vector-effect: non-scaling-stroke;
+}
+
+.resizeHandleNwse {
+  cursor: nwse-resize;
+}
+
+.resizeHandleNesw {
+  cursor: nesw-resize;
+}
+
+.snapGuide,
+.measureLabel {
+  pointer-events: none;
+}

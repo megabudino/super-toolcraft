@@ -1,0 +1,104 @@
+.canvasRoot {
+  inset: 0;
+  overflow: visible;
+  position: absolute;
+}
+
+.canvasBackground {
+  inset: 0;
+  position: absolute;
+}
+
+.canvas {
+  display: block;
+  height: 100%;
+  inset: 0;
+  position: absolute;
+  width: 100%;
+}
+
+.canvasEditorPortal {
+  left: 0;
+  overflow: visible;
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  z-index: 20;
+}
+
+.canvasEditorSvg {
+  height: calc(100% + 2000px);
+  left: -1000px;
+  overflow: visible;
+  pointer-events: all;
+  position: absolute;
+  top: -1000px;
+  touch-action: none;
+  width: calc(100% + 2000px);
+  z-index: 10;
+}
+
+.canvasMarquee {
+  fill: rgb(255 255 255 / 10%);
+  pointer-events: none;
+  stroke: rgb(255 255 255 / 85%);
+  stroke-dasharray: 4 3;
+}
+
+.canvasGridUnderlay,
+.canvasGridOverlay {
+  fill: none;
+  pointer-events: none;
+}
+
+.canvasGridUnderlay {
+  stroke: rgb(0 0 0 / 15%);
+}
+
+.canvasGridOverlay {
+  stroke: rgb(255 255 255 / 40%);
+}
+
+.canvasGridHitArea {
+  cursor: copy;
+  fill: none;
+  pointer-events: stroke;
+  stroke: rgb(255 255 255 / 0.001);
+  touch-action: none;
+}
+
+.canvasTangentUnderlay,
+.canvasTangentLine {
+  pointer-events: none;
+}
+
+.canvasTangentUnderlay {
+  stroke: rgb(0 0 0 / 15%);
+}
+
+.canvasTangentLine {
+  stroke: rgb(255 255 255 / 50%);
+}
+
+.canvasHandle,
+.canvasTangentHandle {
+  cursor: move;
+  pointer-events: all;
+  touch-action: none;
+}
+
+.canvasHandleShadow {
+  fill: none;
+  pointer-events: none;
+  stroke: rgb(0 0 0 / 20%);
+}
+
+.canvasPointDot,
+.canvasTangentDot {
+  pointer-events: none;
+}
+
+.canvasTangentDot {
+  fill: white;
+  stroke: white;
+}

@@ -1,5 +1,7 @@
 # Implementation Worklog
 
+Active change: template-release-2026-09-09
+
 This file records product decisions and the evidence behind them. Keep it short, factual, and current. Update it after schema, renderer, timeline, layer, export, performance, or acceptance decisions.
 
 ## Status
@@ -1593,6 +1595,17 @@ Frozen is a WebGL product that applies a top-to-bottom thaw effect to one user-u
   deployment-only pass.
 - Risk: the app still requests the website-level `/favicon.ico`, which may return
   a non-blocking 404 until the website provides a shared icon.
+
+
+### Template release repair — 2026-09-09
+
+- Change ID: template-release-2026-09-09
+- Entry type: focused
+- Request: Make every gallery app cloneable through the published Toolcraft CLI and verify installation/startup.
+- Changed owner: Upstream example snapshot packaging, integrity restoration, and public distribution metadata.
+- User-visible result: The `frozen` template is admitted as a complete standalone snapshot; original framework hashes remain authoritative. Canonical identity regeneration, where needed, uses the upstream identity generator.
+- Verification: Source template admission passed. Published dependency installation and browser startup results are recorded in the upstream `docs/template-release-report.md`; these smoke checks do not claim renderer or export certification.
+- Risks: Historical templates retain their original runtime and workflow versions.
 
 ## Decisions
 

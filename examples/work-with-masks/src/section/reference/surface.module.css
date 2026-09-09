@@ -1,0 +1,9 @@
+.viewport {
+  container: percents-hero / size;
+  position: relative;
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+  font-size: 16px;
+  line-height: 1.5;
+}

@@ -1,0 +1,161 @@
+{
+  "version": 1,
+  "modules": [
+    {
+      "path": "src/app/app-acceptance-data.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/app-composition.tsx",
+      "kind": "performance",
+      "passIds": ["image-export", "preview-render"]
+    },
+    {
+      "path": "src/app/app-performance.ts",
+      "kind": "performance",
+      "passIds": ["camera-render", "image-decode", "image-export", "image-model-prepare", "model-prepare", "preview-render", "scratch-prepare"]
+    },
+    {
+      "path": "src/app/app-renderer-pipeline.ts",
+      "kind": "performance",
+      "passIds": ["camera-render", "image-decode", "image-export", "image-model-prepare", "model-prepare", "preview-render", "scratch-prepare"]
+    },
+    {
+      "path": "src/app/app-schema.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/frozen/frozen-export.ts",
+      "kind": "performance",
+      "passIds": ["image-export", "preview-render"]
+    },
+    {
+      "path": "src/app/frozen/frozen-controls.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/frozen/frozen-default-scene.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/frozen/frozen-environment.ts",
+      "kind": "performance",
+      "passIds": ["camera-render", "image-export", "preview-render"]
+    },
+    {
+      "path": "src/app/frozen/frozen-instances.ts",
+      "kind": "performance",
+      "passIds": ["camera-render", "image-export", "preview-render"]
+    },
+    {
+      "path": "src/app/frozen/frozen-image-model.ts",
+      "kind": "performance",
+      "passIds": ["image-decode", "image-model-prepare"]
+    },
+    {
+      "path": "src/app/frozen/frozen-icicle-shader.ts",
+      "kind": "performance",
+      "passIds": ["camera-render", "image-export", "preview-render"]
+    },
+    {
+      "path": "src/app/frozen/frozen-material.ts",
+      "kind": "performance",
+      "passIds": ["camera-render", "image-export", "preview-render"]
+    },
+    {
+      "path": "src/app/frozen/frozen-material-uniforms.ts",
+      "kind": "performance",
+      "passIds": ["camera-render", "image-export", "preview-render"]
+    },
+    {
+      "path": "src/app/frozen/frozen-material-melt.ts",
+      "kind": "performance",
+      "passIds": ["camera-render", "image-export", "preview-render"]
+    },
+    {
+      "path": "src/app/frozen/frozen-melt-field.ts",
+      "kind": "performance",
+      "passIds": ["image-export", "preview-render"]
+    },
+    {
+      "path": "src/app/frozen/frozen-melt-projection.ts",
+      "kind": "performance",
+      "passIds": ["preview-render"]
+    },
+    {
+      "path": "src/app/frozen/frozen-melt-shortcut.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/frozen/frozen-melt-acceptance.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/frozen/frozen-melt-action.ts",
+      "kind": "performance",
+      "passIds": ["preview-render"]
+    },
+    {
+      "path": "src/app/frozen/frozen-math.ts",
+      "kind": "performance",
+      "passIds": ["camera-render", "image-export", "preview-render"]
+    },
+    {
+      "path": "src/app/frozen/frozen-model.ts",
+      "kind": "performance",
+      "passIds": ["image-model-prepare", "model-prepare"]
+    },
+    {
+      "path": "src/app/frozen/frozen-model-import.ts",
+      "kind": "performance",
+      "passIds": ["model-prepare"]
+    },
+    {
+      "path": "src/app/frozen/frozen-model-simplify.ts",
+      "kind": "performance",
+      "passIds": ["model-prepare"]
+    },
+    {
+      "path": "src/app/frozen/frozen-source-controls.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/frozen/frozen-noise-shader.ts",
+      "kind": "performance",
+      "passIds": ["camera-render", "image-export", "preview-render"]
+    },
+    {
+      "path": "src/app/frozen/frozen-output.module.css",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/frozen/frozen-output-controls.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/frozen/frozen-output.tsx",
+      "kind": "performance",
+      "passIds": ["camera-render", "image-decode", "image-model-prepare", "model-prepare", "preview-render", "scratch-prepare"]
+    },
+    {
+      "path": "src/app/frozen/frozen-preview-size.ts",
+      "kind": "performance",
+      "passIds": ["camera-render", "preview-render"]
+    },
+    {
+      "path": "src/app/frozen/frozen-scene.ts",
+      "kind": "performance",
+      "passIds": ["camera-render", "image-export", "preview-render"]
+    },
+    {
+      "path": "src/app/frozen/frozen-texture.ts",
+      "kind": "performance",
+      "passIds": ["scratch-prepare"]
+    },
+    {
+      "path": "src/app/frozen/frozen-values.ts",
+      "kind": "performance",
+      "passIds": ["camera-render", "image-export", "image-model-prepare", "preview-render"]
+    }
+  ]
+}

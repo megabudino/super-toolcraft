@@ -325,7 +325,7 @@ export const appTransferMode: ToolcraftTransferMode = {
 
 export const appProductReadiness: ToolcraftProductReadiness = {
   mode: "product",
-  productName: "Liquid Metal 3D",
+  productName: "Liquid Metal",
   productSummary:
     "Loads and orients a 3D model, applies Paper Design Liquid Metal with UV-free scratch depth, and adds ordered draggable, scalable, rotatable PNG decals constrained to connected surface islands with shared PBR environment and PNG/video export.",
   requestedBehavior:

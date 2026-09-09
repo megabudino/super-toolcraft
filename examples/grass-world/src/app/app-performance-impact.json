@@ -1,0 +1,994 @@
+{
+  "version": 1,
+  "modules": [
+    {
+      "path": "src/app/app-acceptance-data.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/app-control-section-inventory-data.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/app-acceptance-distribution-data.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/app-acceptance-instance-color-data.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/app-acceptance-basic-control-data.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/app-acceptance-butterfly-data.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/app-acceptance-layer-data.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/app-acceptance-pbr-data.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/app-acceptance-scene-data.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/app-acceptance-scan-data.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/app-acceptance-surface-bend-data.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/app-acceptance-wind-data.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/app-composition.tsx",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/app-performance.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/app-product-readiness.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/app-renderer-interactions.ts",
+      "kind": "performance",
+      "passIds": [
+        "grass-ground-geometry-build",
+        "grass-layout-build",
+        "grass-lawn-layout-build",
+        "grass-butterfly-resource",
+        "grass-butterfly-layout-build",
+        "grass-scene-resource",
+        "grass-environment-resource",
+        "grass-scan-resource",
+        "grass-tufted-layout-build",
+        "grass-wild-layout-build",
+        "grass-white-layout-build",
+        "grass-yellow-layout-build",
+        "grass-rock-layout-build",
+        "grass-scene-render",
+        "grass-export-frame",
+        "grass-noise-preview"
+      ]
+    },
+    {
+      "path": "src/app/app-renderer-pass-definitions.ts",
+      "kind": "performance",
+      "passIds": [
+        "grass-ground-geometry-build",
+        "grass-layout-build",
+        "grass-lawn-layout-build",
+        "grass-butterfly-resource",
+        "grass-butterfly-layout-build",
+        "grass-scene-resource",
+        "grass-environment-resource",
+        "grass-scan-resource",
+        "grass-tufted-layout-build",
+        "grass-wild-layout-build",
+        "grass-white-layout-build",
+        "grass-yellow-layout-build",
+        "grass-rock-layout-build",
+        "grass-scene-render",
+        "grass-export-frame",
+        "grass-noise-preview"
+      ]
+    },
+    {
+      "path": "src/app/app-renderer-pipeline.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/app-renderer-pipeline-types.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/app-renderer-scan-pipeline.ts",
+      "kind": "performance",
+      "passIds": [
+        "grass-scan-resource",
+        "grass-tufted-layout-build",
+        "grass-wild-layout-build",
+        "grass-white-layout-build",
+        "grass-yellow-layout-build",
+        "grass-rock-layout-build"
+      ]
+    },
+    {
+      "path": "src/app/app-schema.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/grass/grass-controls.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/grass/grass-butterfly-assets.ts",
+      "kind": "performance",
+      "passIds": ["grass-butterfly-resource"]
+    },
+    {
+      "path": "src/app/grass/grass-butterfly-controls.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/grass/grass-butterfly-diagnostics.ts",
+      "kind": "performance",
+      "passIds": ["grass-scene-render"]
+    },
+    {
+      "path": "src/app/grass/grass-butterfly-layout.ts",
+      "kind": "performance",
+      "passIds": ["grass-butterfly-layout-build"]
+    },
+    {
+      "path": "src/app/grass/grass-butterfly-pass-inputs.ts",
+      "kind": "performance",
+      "passIds": ["grass-butterfly-layout-build"]
+    },
+    {
+      "path": "src/app/grass/grass-butterfly-resource.ts",
+      "kind": "performance",
+      "passIds": [
+        "grass-butterfly-resource",
+        "grass-butterfly-layout-build",
+        "grass-scene-resource",
+        "grass-scene-render",
+        "grass-export-frame"
+      ]
+    },
+    {
+      "path": "src/app/grass/grass-butterfly-settings-values.ts",
+      "kind": "performance",
+      "passIds": [
+        "grass-butterfly-layout-build",
+        "grass-scene-render",
+        "grass-export-frame"
+      ]
+    },
+    {
+      "path": "src/app/grass/grass-instance-color-controls.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/grass/grass-instance-colors.ts",
+      "kind": "performance",
+      "passIds": [
+        "grass-scene-resource",
+        "grass-scene-render",
+        "grass-export-frame"
+      ]
+    },
+    {
+      "path": "src/app/grass/grass-appearance-controls.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/grass/grass-control-builders.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/grass/grass-color-grade.ts",
+      "kind": "performance",
+      "passIds": [
+        "grass-scene-resource",
+        "grass-scan-resource",
+        "grass-scene-render",
+        "grass-export-frame"
+      ]
+    },
+    {
+      "path": "src/app/grass/grass-received-shadow-color.ts",
+      "kind": "performance",
+      "passIds": [
+        "grass-scan-resource",
+        "grass-scene-render",
+        "grass-export-frame"
+      ]
+    },
+    {
+      "path": "src/app/grass/grass-core-controls.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/grass/grass-defaults.ts",
+      "kind": "performance",
+      "passIds": [
+        "grass-ground-geometry-build",
+        "grass-layout-build",
+        "grass-lawn-layout-build",
+        "grass-butterfly-resource",
+        "grass-butterfly-layout-build",
+        "grass-scene-resource",
+        "grass-environment-resource",
+        "grass-tufted-layout-build",
+        "grass-wild-layout-build",
+        "grass-white-layout-build",
+        "grass-yellow-layout-build",
+        "grass-rock-layout-build",
+        "grass-scene-render",
+        "grass-export-frame",
+        "grass-noise-preview"
+      ]
+    },
+    {
+      "path": "src/app/grass/grass-start-state.ts",
+      "kind": "performance",
+      "passIds": [
+        "grass-ground-geometry-build",
+        "grass-layout-build",
+        "grass-lawn-layout-build",
+        "grass-butterfly-resource",
+        "grass-butterfly-layout-build",
+        "grass-scene-resource",
+        "grass-environment-resource",
+        "grass-tufted-layout-build",
+        "grass-wild-layout-build",
+        "grass-white-layout-build",
+        "grass-yellow-layout-build",
+        "grass-rock-layout-build",
+        "grass-scene-render",
+        "grass-export-frame",
+        "grass-noise-preview"
+      ]
+    },
+    {
+      "path": "src/app/grass/grass-environment-controls.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/grass/grass-environment-values.ts",
+      "kind": "performance",
+      "passIds": [
+        "grass-environment-resource",
+        "grass-scene-render",
+        "grass-export-frame"
+      ]
+    },
+    {
+      "path": "src/app/grass/grass-lawn-controls.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/grass/grass-panel-actions.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/grass/grass-performance-envelope.ts",
+      "kind": "performance",
+      "passIds": [
+        "grass-noise-preview",
+        "grass-ground-geometry-build",
+        "grass-layout-build",
+        "grass-lawn-layout-build",
+        "grass-butterfly-layout-build",
+        "grass-tufted-layout-build",
+        "grass-wild-layout-build",
+        "grass-white-layout-build",
+        "grass-yellow-layout-build",
+        "grass-rock-layout-build",
+        "grass-scene-render",
+        "grass-export-frame"
+      ]
+    },
+    {
+      "path": "src/app/grass/grass-performance-scenarios.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/grass/grass-randomizer.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/grass/grass-world-colors.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/grass/grass-world-color-transform.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/grass/grass-world-catalog.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/grass/grass-world-topologies.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/grass/grass-world-generator.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/grass/grass-world-patterns.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/grass/grass-world-scale.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/grass/grass-world-coverage.ts",
+      "kind": "performance",
+      "passIds": [
+        "grass-layout-build",
+        "grass-lawn-layout-build"
+      ]
+    },
+    {
+      "path": "src/app/grass/grass-scan-contract.ts",
+      "kind": "performance",
+      "passIds": [
+        "grass-scan-resource",
+        "grass-tufted-layout-build",
+        "grass-wild-layout-build",
+        "grass-white-layout-build",
+        "grass-yellow-layout-build",
+        "grass-rock-layout-build",
+        "grass-scene-render",
+        "grass-export-frame"
+      ]
+    },
+    {
+      "path": "src/app/grass/grass-scan-assets.ts",
+      "kind": "performance",
+      "passIds": [
+        "grass-scan-resource",
+        "grass-scene-render",
+        "grass-export-frame"
+      ]
+    },
+    {
+      "path": "src/app/grass/grass-scan-controls.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/grass/grass-scan-layout.ts",
+      "kind": "performance",
+      "passIds": [
+        "grass-tufted-layout-build",
+        "grass-wild-layout-build",
+        "grass-white-layout-build",
+        "grass-yellow-layout-build",
+        "grass-rock-layout-build"
+      ]
+    },
+    {
+      "path": "src/app/grass/grass-scan-materials.ts",
+      "kind": "performance",
+      "passIds": [
+        "grass-scan-resource",
+        "grass-scene-render",
+        "grass-export-frame"
+      ]
+    },
+    {
+      "path": "src/app/grass/grass-scan-resource.ts",
+      "kind": "performance",
+      "passIds": [
+        "grass-scan-resource",
+        "grass-tufted-layout-build",
+        "grass-wild-layout-build",
+        "grass-white-layout-build",
+        "grass-yellow-layout-build",
+        "grass-rock-layout-build",
+        "grass-scene-resource",
+        "grass-scene-render",
+        "grass-export-frame"
+      ]
+    },
+    {
+      "path": "src/app/grass/grass-scan-wind.ts",
+      "kind": "performance",
+      "passIds": [
+        "grass-scan-resource",
+        "grass-scene-render",
+        "grass-export-frame"
+      ]
+    },
+    {
+      "path": "src/app/grass/grass-render-targets.ts",
+      "kind": "performance",
+      "passIds": [
+        "grass-noise-preview",
+        "grass-ground-geometry-build",
+        "grass-layout-build",
+        "grass-lawn-layout-build",
+        "grass-butterfly-resource",
+        "grass-butterfly-layout-build",
+        "grass-scene-resource",
+        "grass-environment-resource",
+        "grass-scan-resource",
+        "grass-tufted-layout-build",
+        "grass-wild-layout-build",
+        "grass-white-layout-build",
+        "grass-yellow-layout-build",
+        "grass-rock-layout-build",
+        "grass-scene-render",
+        "grass-export-frame"
+      ]
+    },
+    {
+      "path": "src/app/grass/grass-export.ts",
+      "kind": "performance",
+      "passIds": [
+        "grass-ground-geometry-build",
+        "grass-butterfly-resource",
+        "grass-butterfly-layout-build",
+        "grass-environment-resource",
+        "grass-scan-resource",
+        "grass-tufted-layout-build",
+        "grass-wild-layout-build",
+        "grass-white-layout-build",
+        "grass-yellow-layout-build",
+        "grass-rock-layout-build",
+        "grass-export-frame"
+      ]
+    },
+    {
+      "path": "src/app/grass/grass-field-shape.ts",
+      "kind": "performance",
+      "passIds": [
+        "grass-ground-geometry-build",
+        "grass-layout-build",
+        "grass-lawn-layout-build",
+        "grass-butterfly-layout-build",
+        "grass-scene-resource",
+        "grass-tufted-layout-build",
+        "grass-wild-layout-build",
+        "grass-white-layout-build",
+        "grass-yellow-layout-build",
+        "grass-rock-layout-build",
+        "grass-scene-render",
+        "grass-export-frame"
+      ]
+    },
+    {
+      "path": "src/app/grass/grass-foliage-backlight.ts",
+      "kind": "performance",
+      "passIds": [
+        "grass-scan-resource",
+        "grass-scene-render",
+        "grass-export-frame"
+      ]
+    },
+    {
+      "path": "src/app/grass/grass-ground-resource.ts",
+      "kind": "performance",
+      "passIds": [
+        "grass-ground-geometry-build",
+        "grass-scene-render",
+        "grass-export-frame"
+      ]
+    },
+    {
+      "path": "src/app/grass/grass-hdri.ts",
+      "kind": "performance",
+      "passIds": [
+        "grass-environment-resource",
+        "grass-scene-render",
+        "grass-export-frame"
+      ]
+    },
+    {
+      "path": "src/app/grass/grass-geometry.ts",
+      "kind": "performance",
+      "passIds": [
+        "grass-ground-geometry-build",
+        "grass-layout-build",
+        "grass-lawn-layout-build",
+        "grass-export-frame"
+      ]
+    },
+    {
+      "path": "src/app/grass/grass-gradient-shader.ts",
+      "kind": "performance",
+      "passIds": [
+        "grass-scene-resource",
+        "grass-scene-render",
+        "grass-export-frame"
+      ]
+    },
+    {
+      "path": "src/app/grass/grass-hdr.ts",
+      "kind": "performance",
+      "passIds": ["grass-environment-resource"]
+    },
+    {
+      "path": "src/app/grass/grass-layout.ts",
+      "kind": "performance",
+      "passIds": ["grass-layout-build", "grass-lawn-layout-build"]
+    },
+    {
+      "path": "src/app/grass/grass-layout-pass-inputs.ts",
+      "kind": "performance",
+      "passIds": [
+        "grass-ground-geometry-build",
+        "grass-layout-build",
+        "grass-lawn-layout-build"
+      ]
+    },
+    {
+      "path": "src/app/grass/grass-coverage-policy.ts",
+      "kind": "performance",
+      "passIds": [
+        "grass-layout-build",
+        "grass-lawn-layout-build",
+        "grass-scene-render"
+      ]
+    },
+    {
+      "path": "src/app/grass/grass-distribution-noise.ts",
+      "kind": "performance",
+      "passIds": [
+        "grass-layout-build",
+        "grass-lawn-layout-build",
+        "grass-noise-preview"
+      ]
+    },
+    {
+      "path": "src/app/grass/grass-distribution-values.ts",
+      "kind": "performance",
+      "passIds": [
+        "grass-layout-build",
+        "grass-lawn-layout-build",
+        "grass-noise-preview"
+      ]
+    },
+    {
+      "path": "src/app/grass/grass-ground-blend-values.ts",
+      "kind": "performance",
+      "passIds": [
+        "grass-noise-preview",
+        "grass-scene-render",
+        "grass-export-frame"
+      ]
+    },
+    {
+      "path": "src/app/grass/grass-ground-blend-noise.ts",
+      "kind": "performance",
+      "passIds": [
+        "grass-noise-preview",
+        "grass-scene-render",
+        "grass-export-frame"
+      ]
+    },
+    {
+      "path": "src/app/grass/grass-ground-blend-material.ts",
+      "kind": "performance",
+      "passIds": [
+        "grass-scene-resource",
+        "grass-scene-render",
+        "grass-export-frame"
+      ]
+    },
+    {
+      "path": "src/app/grass/grass-ground-materials.ts",
+      "kind": "performance",
+      "passIds": [
+        "grass-scene-resource",
+        "grass-scene-render",
+        "grass-export-frame"
+      ]
+    },
+    {
+      "path": "src/app/grass/grass-ground-shadow.ts",
+      "kind": "performance",
+      "passIds": [
+        "grass-scene-resource",
+        "grass-scene-render",
+        "grass-export-frame"
+      ]
+    },
+    {
+      "path": "src/app/grass/grass-surface-edge-fade.ts",
+      "kind": "performance",
+      "passIds": [
+        "grass-scene-resource",
+        "grass-scene-render",
+        "grass-export-frame"
+      ]
+    },
+    {
+      "path": "src/app/grass/grass-placement-candidates.ts",
+      "kind": "performance",
+      "passIds": [
+        "grass-layout-build",
+        "grass-lawn-layout-build",
+        "grass-tufted-layout-build",
+        "grass-wild-layout-build",
+        "grass-white-layout-build",
+        "grass-yellow-layout-build",
+        "grass-rock-layout-build"
+      ]
+    },
+    {
+      "path": "src/app/grass/grass-reference-composition.ts",
+      "kind": "performance",
+      "passIds": [
+        "grass-ground-geometry-build",
+        "grass-layout-build",
+        "grass-lawn-layout-build",
+        "grass-butterfly-layout-build",
+        "grass-scene-resource",
+        "grass-tufted-layout-build",
+        "grass-wild-layout-build",
+        "grass-white-layout-build",
+        "grass-yellow-layout-build",
+        "grass-rock-layout-build",
+        "grass-scene-render",
+        "grass-export-frame"
+      ]
+    },
+    {
+      "path": "src/app/grass/grass-layer-resource.ts",
+      "kind": "performance",
+      "passIds": [
+        "grass-layout-build",
+        "grass-lawn-layout-build",
+        "grass-scene-resource",
+        "grass-scene-render",
+        "grass-export-frame"
+      ]
+    },
+    {
+      "path": "src/app/grass/grass-lightweight-layer-resource.ts",
+      "kind": "performance",
+      "passIds": [
+        "grass-layout-build",
+        "grass-scene-resource",
+        "grass-scene-render"
+      ]
+    },
+    {
+      "path": "src/app/grass/grass-lawn-clump-geometry.ts",
+      "kind": "performance",
+      "passIds": [
+        "grass-lawn-layout-build",
+        "grass-scene-resource",
+        "grass-scene-render"
+      ]
+    },
+    {
+      "path": "src/app/grass/grass-lawn-clump-resource.ts",
+      "kind": "performance",
+      "passIds": [
+        "grass-lawn-layout-build",
+        "grass-scene-resource",
+        "grass-scene-render"
+      ]
+    },
+    {
+      "path": "src/app/grass/grass-material.ts",
+      "kind": "performance",
+      "passIds": [
+        "grass-scene-resource",
+        "grass-scene-render",
+        "grass-export-frame"
+      ]
+    },
+    {
+      "path": "src/app/grass/grass-sun-patches.ts",
+      "kind": "performance",
+      "passIds": [
+        "grass-scene-resource",
+        "grass-scene-render",
+        "grass-export-frame"
+      ]
+    },
+    {
+      "path": "src/app/grass/grass-texture-mask-settings.ts",
+      "kind": "performance",
+      "passIds": ["grass-scene-render", "grass-export-frame"]
+    },
+    {
+      "path": "src/app/grass/grass-texture-mask.ts",
+      "kind": "performance",
+      "passIds": [
+        "grass-scene-resource",
+        "grass-scan-resource",
+        "grass-scene-render",
+        "grass-export-frame"
+      ]
+    },
+    {
+      "path": "src/app/grass/grass-timeline-values.ts",
+      "kind": "performance",
+      "passIds": ["grass-scene-render", "grass-export-frame"]
+    },
+    {
+      "path": "src/app/grass/grass-output.tsx",
+      "kind": "performance",
+      "passIds": [
+        "grass-ground-geometry-build",
+        "grass-layout-build",
+        "grass-lawn-layout-build",
+        "grass-butterfly-resource",
+        "grass-butterfly-layout-build",
+        "grass-scene-resource",
+        "grass-environment-resource",
+        "grass-scan-resource",
+        "grass-tufted-layout-build",
+        "grass-wild-layout-build",
+        "grass-white-layout-build",
+        "grass-yellow-layout-build",
+        "grass-rock-layout-build",
+        "grass-scene-render"
+      ]
+    },
+    {
+      "path": "src/app/grass/grass-render-diagnostics.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/grass/grass-pointer-direction.ts",
+      "kind": "performance",
+      "passIds": ["grass-scene-render"]
+    },
+    {
+      "path": "src/app/grass/grass-output.module.css",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/grass/grass-scene.ts",
+      "kind": "performance",
+      "passIds": [
+        "grass-ground-geometry-build",
+        "grass-layout-build",
+        "grass-lawn-layout-build",
+        "grass-butterfly-resource",
+        "grass-butterfly-layout-build",
+        "grass-scene-resource",
+        "grass-environment-resource",
+        "grass-scan-resource",
+        "grass-tufted-layout-build",
+        "grass-wild-layout-build",
+        "grass-white-layout-build",
+        "grass-yellow-layout-build",
+        "grass-rock-layout-build",
+        "grass-scene-render",
+        "grass-export-frame"
+      ]
+    },
+    {
+      "path": "src/app/grass/grass-scene-diagnostics.ts",
+      "kind": "performance",
+      "passIds": [
+        "grass-layout-build",
+        "grass-lawn-layout-build",
+        "grass-butterfly-layout-build",
+        "grass-tufted-layout-build",
+        "grass-wild-layout-build",
+        "grass-white-layout-build",
+        "grass-yellow-layout-build",
+        "grass-rock-layout-build"
+      ]
+    },
+    {
+      "path": "src/app/grass/grass-scene-lighting.ts",
+      "kind": "performance",
+      "passIds": [
+        "grass-scene-resource",
+        "grass-environment-resource",
+        "grass-scene-render",
+        "grass-export-frame"
+      ]
+    },
+    {
+      "path": "src/app/grass/grass-scene-material-settings.ts",
+      "kind": "performance",
+      "passIds": ["grass-scene-render", "grass-export-frame"]
+    },
+    {
+      "path": "src/app/grass/grass-shadow-cadence.ts",
+      "kind": "performance",
+      "passIds": ["grass-scene-render", "grass-export-frame"]
+    },
+    {
+      "path": "src/app/grass/grass-settings-signatures.ts",
+      "kind": "performance",
+      "passIds": [
+        "grass-ground-geometry-build",
+        "grass-layout-build",
+        "grass-lawn-layout-build",
+        "grass-scene-render",
+        "grass-export-frame"
+      ]
+    },
+    {
+      "path": "src/app/grass/grass-settings-types.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/grass/grass-surface-bend.ts",
+      "kind": "performance",
+      "passIds": [
+        "grass-ground-geometry-build",
+        "grass-layout-build",
+        "grass-lawn-layout-build",
+        "grass-butterfly-layout-build",
+        "grass-tufted-layout-build",
+        "grass-wild-layout-build",
+        "grass-white-layout-build",
+        "grass-yellow-layout-build",
+        "grass-rock-layout-build",
+        "grass-scene-render",
+        "grass-export-frame"
+      ]
+    },
+    {
+      "path": "src/app/grass/grass-surface-tilt.ts",
+      "kind": "performance",
+      "passIds": ["grass-scene-render"]
+    },
+    {
+      "path": "src/app/grass/terrain-noise-preview.module.css",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/grass/grass-noise-preview.tsx",
+      "kind": "performance",
+      "passIds": ["grass-noise-preview"]
+    },
+    {
+      "path": "src/app/grass/terrain-noise.ts",
+      "kind": "performance",
+      "passIds": [
+        "grass-ground-geometry-build",
+        "grass-layout-build",
+        "grass-lawn-layout-build",
+        "grass-butterfly-layout-build",
+        "grass-tufted-layout-build",
+        "grass-wild-layout-build",
+        "grass-white-layout-build",
+        "grass-yellow-layout-build",
+        "grass-rock-layout-build"
+      ]
+    },
+    {
+      "path": "src/app/grass/grass-layer-settings-values.ts",
+      "kind": "performance",
+      "passIds": [
+        "grass-layout-build",
+        "grass-lawn-layout-build",
+        "grass-scene-render",
+        "grass-export-frame"
+      ]
+    },
+    {
+      "path": "src/app/grass/grass-scan-settings-values.ts",
+      "kind": "performance",
+      "passIds": [
+        "grass-scan-resource",
+        "grass-tufted-layout-build",
+        "grass-wild-layout-build",
+        "grass-white-layout-build",
+        "grass-yellow-layout-build",
+        "grass-rock-layout-build",
+        "grass-scene-render",
+        "grass-export-frame"
+      ]
+    },
+    {
+      "path": "src/app/grass/grass-surface-settings-values.ts",
+      "kind": "performance",
+      "passIds": [
+        "grass-ground-geometry-build",
+        "grass-layout-build",
+        "grass-lawn-layout-build",
+        "grass-tufted-layout-build",
+        "grass-wild-layout-build",
+        "grass-white-layout-build",
+        "grass-yellow-layout-build",
+        "grass-rock-layout-build",
+        "grass-scene-render",
+        "grass-export-frame"
+      ]
+    },
+    {
+      "path": "src/app/grass/grass-value-readers.ts",
+      "kind": "performance",
+      "passIds": [
+        "grass-ground-geometry-build",
+        "grass-layout-build",
+        "grass-lawn-layout-build",
+        "grass-environment-resource",
+        "grass-scan-resource",
+        "grass-tufted-layout-build",
+        "grass-wild-layout-build",
+        "grass-white-layout-build",
+        "grass-yellow-layout-build",
+        "grass-rock-layout-build",
+        "grass-scene-render",
+        "grass-export-frame"
+      ]
+    },
+    {
+      "path": "src/app/grass/grass-values.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/grass/grass-wind-settings-values.ts",
+      "kind": "performance",
+      "passIds": ["grass-scene-render", "grass-export-frame"]
+    },
+    {
+      "path": "src/app/grass/grass-wind.ts",
+      "kind": "performance",
+      "passIds": ["grass-scene-render", "grass-export-frame"]
+    },
+    {
+      "path": "src/app/grass/grass-wind-material.ts",
+      "kind": "performance",
+      "passIds": [
+        "grass-scan-resource",
+        "grass-scene-render",
+        "grass-export-frame"
+      ]
+    },
+    {
+      "path": "src/app/grass/grass-wind-controls.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/grass/use-grass-autonomous-clock.ts",
+      "kind": "performance",
+      "passIds": ["grass-scene-render"]
+    },
+    {
+      "path": "src/app/grass/use-grass-butterfly-hover.ts",
+      "kind": "performance",
+      "passIds": ["grass-scene-render"]
+    },
+    {
+      "path": "src/app/grass/use-grass-pointer-direction.ts",
+      "kind": "performance",
+      "passIds": ["grass-scene-render"]
+    },
+    {
+      "path": "src/app/grass/use-grass-simulation-interactions.ts",
+      "kind": "performance",
+      "passIds": ["grass-scene-render"]
+    },
+    {
+      "path": "src/app/grass/use-grass-surface-tilt.ts",
+      "kind": "performance",
+      "passIds": ["grass-scene-render"]
+    },
+    {
+      "path": "src/app/grass/use-grass-wind-audio.ts",
+      "kind": "functional"
+    }
+  ]
+}

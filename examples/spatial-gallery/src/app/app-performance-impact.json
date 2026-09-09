@@ -1,0 +1,98 @@
+{
+  "version": 1,
+  "modules": [
+    {
+      "path": "src/app/app-acceptance-data.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/app-composition.tsx",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/app-performance.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/app-schema.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/gallery-preset-url.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/spiral-gallery/spiral-gallery-pipeline.ts",
+      "kind": "performance",
+      "passIds": [
+        "spiral.webgl-resource",
+        "spiral.preview",
+        "spiral.export"
+      ]
+    },
+    {
+      "path": "src/app/spiral-gallery/spiral-gallery-canvas.tsx",
+      "kind": "performance",
+      "passIds": [
+        "spiral.webgl-resource",
+        "spiral.preview"
+      ]
+    },
+    {
+      "path": "src/app/spiral-gallery/spiral-gallery.module.css",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/spiral-gallery/spiral-gallery-code-export.ts",
+      "kind": "performance",
+      "passIds": [
+        "spiral.export"
+      ]
+    },
+    {
+      "path": "src/app/spiral-gallery/spiral-gallery-export.ts",
+      "kind": "performance",
+      "passIds": [
+        "spiral.export"
+      ]
+    },
+    {
+      "path": "src/app/spiral-gallery/spiral-gallery-gl.ts",
+      "kind": "performance",
+      "passIds": [
+        "spiral.webgl-resource",
+        "spiral.preview",
+        "spiral.export"
+      ]
+    },
+    {
+      "path": "src/app/spiral-gallery/spiral-gallery-resource.ts",
+      "kind": "performance",
+      "passIds": [
+        "spiral.webgl-resource",
+        "spiral.preview",
+        "spiral.export"
+      ]
+    },
+    {
+      "path": "src/app/spiral-gallery/spiral-gallery-settings.ts",
+      "kind": "performance",
+      "passIds": [
+        "spiral.preview",
+        "spiral.export"
+      ]
+    },
+    {
+      "path": "src/app/spiral-gallery/spiral-gallery-stack.ts",
+      "kind": "performance",
+      "passIds": [
+        "spiral.preview",
+        "spiral.export"
+      ]
+    },
+    {
+      "path": "src/app/spiral-gallery/spiral-gallery-types.ts",
+      "kind": "functional"
+    }
+  ]
+}

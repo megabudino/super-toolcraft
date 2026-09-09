@@ -1,0 +1,185 @@
+{
+  "sourcePage": "https://www.recraft.ai/",
+  "assets": [
+    {
+      "filename": "abc-gravity-compressed.woff2",
+      "family": "ABC Gravity Compressed",
+      "sourceUrl": "https://framerusercontent.com/assets/55M08sqEDxxbHIwW6EooteJmT8.woff2",
+      "style": "normal",
+      "weight": "900",
+      "sha256": "312cc2a998c3473383c125dba4c5272d0a92926606b91d75469ee84e3487a78c"
+    },
+    {
+      "filename": "abc-gravity-compressed-italic.woff2",
+      "family": "ABC Gravity Compressed Italic",
+      "sourceUrl": "https://framerusercontent.com/assets/24p9EbVH1l7leegdsjym5gyEv3o.woff2",
+      "style": "normal",
+      "weight": "900",
+      "sha256": "1cf3362d3e041de8c8b0b4c79847806985119ce4460e31fb62b9be9dc44401a0"
+    },
+    {
+      "filename": "abc-gravity-condensed.woff2",
+      "family": "ABC Gravity Condensed",
+      "sourceUrl": "https://framerusercontent.com/assets/ImbJWWUf2IFUDz70tLmquLGilM.woff2",
+      "style": "normal",
+      "weight": "900",
+      "sha256": "90852d076645634b155d423a46e241794a5487dfd15d8fd33c52915b7df4efac"
+    },
+    {
+      "filename": "abc-gravity-condensed-italic.woff2",
+      "family": "ABC Gravity Condensed Italic",
+      "sourceUrl": "https://framerusercontent.com/assets/W4MGkN2ZL0AQppOAYqQ7TLy5msQ.woff2",
+      "style": "normal",
+      "weight": "900",
+      "sha256": "d81b15c953aa5cca89d84ece22be4ce6a76c7909858c11bdd14dc3d402145155"
+    },
+    {
+      "filename": "abc-gravity-cyrillic-variable.woff2",
+      "family": "ABC Gravity Cyrillic Variable",
+      "sourceUrl": "https://framerusercontent.com/assets/31xMCARZveKrBL4RcHhaVs3LS0w.woff2",
+      "style": "normal",
+      "weight": "400",
+      "sha256": "7b5ec26baf838ceb41f5c3e32faba2b46ebc4bdc1eeada1ba823bea75149cd50"
+    },
+    {
+      "filename": "abc-gravity-expanded.woff2",
+      "family": "ABC Gravity Expanded",
+      "sourceUrl": "https://framerusercontent.com/assets/rDH86093OPYE5KdWDFPP7CTXUxI.woff2",
+      "style": "normal",
+      "weight": "900",
+      "sha256": "32224f119b6922c5a0776f45182f3e4e306fa02abbe44dbf72b73bffc353fc3b"
+    },
+    {
+      "filename": "abc-gravity-expanded-italic.woff",
+      "family": "ABC Gravity Expanded Italic",
+      "sourceUrl": "https://framerusercontent.com/assets/FNocWYG722VrEcga2HoWsRrsNe0.woff",
+      "sha256": "efa21a232cca914224a5afb5407d8aa59e05ad7bc46276482ba8fdd8ebac17e0"
+    },
+    {
+      "filename": "abc-gravity-expanded-italic.woff2",
+      "family": "ABC Gravity Expanded Italic",
+      "sourceUrl": "https://framerusercontent.com/assets/A8NRzKaOUPzG7L6izN4I79lFjUw.woff2",
+      "style": "normal",
+      "weight": "900",
+      "sha256": "099b91ed8922ce9ab904a6ee4da3e7d889aed940a8e5989fde12a5c6e4a33fe1"
+    },
+    {
+      "filename": "abc-gravity-extended.woff2",
+      "family": "ABC Gravity Extended",
+      "sourceUrl": "https://framerusercontent.com/assets/zNCUyWDS8FaJTvb8qUzrw8QuX8.woff2",
+      "style": "normal",
+      "weight": "900",
+      "sha256": "0d7f11172eebc3176debd12afb41bbb81d3b8473424c1139b2408fb70edf1c3d"
+    },
+    {
+      "filename": "abc-gravity-extended-italic.woff2",
+      "family": "ABC Gravity Extended Italic",
+      "sourceUrl": "https://framerusercontent.com/assets/qw5efNhIH4sNiaFXUg4AC770c.woff2",
+      "style": "normal",
+      "weight": "900",
+      "sha256": "75b9027f97d6ba273e80b04bf94ff4a3215ef33f03490879acd2f947ba8ebdc8"
+    },
+    {
+      "filename": "abc-gravity-extra-condensed-italic.woff2",
+      "family": "ABC Gravity Extra Condensed Italic",
+      "sourceUrl": "https://framerusercontent.com/assets/F2dfrgBl0v0VtEeRhc264pE8mI.woff2",
+      "sha256": "e7162dedbf6937f7aeb06342e9239fb144f818080e1ece52e44de7bf04e6a1d2"
+    },
+    {
+      "filename": "abc-gravity-extra-condensed-trial-black.woff2",
+      "family": "ABC Gravity Extra Condensed Trial Black",
+      "sourceUrl": "user-supplied:ABCGravityExtraCondensedTrial-Black.otf",
+      "style": "normal",
+      "weight": "900",
+      "sha256": "0f98f4a782fe0418ca04a30f64a656d6efe1d63c2b646f188639be464e468624"
+    },
+    {
+      "filename": "abc-gravity-normal.woff2",
+      "family": "ABC Gravity Normal",
+      "sourceUrl": "https://framerusercontent.com/assets/LsdU99iPPYVbNZ2ehpBCi72Xuk.woff2",
+      "style": "normal",
+      "weight": "900",
+      "sha256": "e7597b92ab9438d4ae7af124256523b6afe010c3f2913230d1ceb2f9db769b3a"
+    },
+    {
+      "filename": "abc-gravity-normal-italic.woff2",
+      "family": "ABC Gravity Normal Italic",
+      "sourceUrl": "https://framerusercontent.com/assets/RvHG3MoAg4E1LTux5B9Y06NUF8.woff2",
+      "style": "normal",
+      "weight": "900",
+      "sha256": "03404e71ec7570bb61a680a595dd59d17618198d087d8a3a2ce3d2b66264de8b"
+    },
+    {
+      "filename": "abc-gravity-semi-condensed.woff2",
+      "family": "ABC Gravity SemiCondensed",
+      "sourceUrl": "https://framerusercontent.com/assets/BGnCuKxteiNjAQlW5xBib7pErb4.woff2",
+      "style": "normal",
+      "weight": "900",
+      "sha256": "e7e622d2ed76fb452fbda5a00a148d1e8d8fe3f2feda301628614d73f5c7b802"
+    },
+    {
+      "filename": "abc-gravity-semi-condensed-italic.woff2",
+      "family": "ABC Gravity SemiCondensed Italic",
+      "sourceUrl": "https://framerusercontent.com/assets/Cg5p2aKeBSTMU7jsavpy7nRAiE.woff2",
+      "style": "normal",
+      "weight": "900",
+      "sha256": "ebc65e60fc03016fa88bd8aa494d2f7df7a06e76dba5c2161616840ab60cb970"
+    },
+    {
+      "filename": "abc-gravity-variable.woff2",
+      "family": "ABC Gravity Variable",
+      "sourceUrl": "https://framerusercontent.com/assets/L3qAY5RSnaBVJVrSe3ZIoOQ.woff2",
+      "style": "normal",
+      "weight": "400",
+      "sha256": "8883ce9b77b7a9d6673d617ca0b8fdc1d464e92aec34db83adeeea9e4cfe2a95"
+    },
+    {
+      "filename": "abc-gravity-wide.woff2",
+      "family": "ABC Gravity Wide",
+      "sourceUrl": "https://framerusercontent.com/assets/YTdtCSZj2wfSLpzqa6EJb6pt0.woff2",
+      "style": "normal",
+      "weight": "900",
+      "sha256": "bf337d15f83b9158eb1083f83f05825a1ced11c29754054448e4e2bdc3c89ba8"
+    },
+    {
+      "filename": "abc-gravity-wide-italic.woff2",
+      "family": "ABC Gravity Wide Italic",
+      "sourceUrl": "https://framerusercontent.com/assets/Za13fkUAO1iCWFPpvpjPeZqJy8.woff2",
+      "style": "normal",
+      "weight": "900",
+      "sha256": "0d82f83409a5dc749ed97f15edb2ccfaf5cfdf1c7a6d2f5fbdab6407bff8bc92"
+    },
+    {
+      "filename": "abc-gravity-wide-trial-ultra-italic.woff2",
+      "family": "ABC Gravity Wide Trial Ultra",
+      "sourceUrl": "user-supplied:ABCGravityWideTrial-UltraItalic.otf",
+      "style": "italic",
+      "weight": "1000",
+      "sha256": "808f9cb2059e582aae091ac07ad7fdc35be4306b493f03a81696db6cb2644524"
+    },
+    {
+      "filename": "abc-gravity-x-compressed.woff2",
+      "family": "ABC Gravity X Compressed",
+      "sourceUrl": "https://framerusercontent.com/assets/hu6s9DQBE1NnTXtp9NzrpH6Co.woff2",
+      "style": "normal",
+      "weight": "900",
+      "sha256": "8b3fb81e41d0f79fa80b168380286075ad9f71da737fd7188453815b84f622a4"
+    },
+    {
+      "filename": "abc-gravity-x-compressed-italic.woff2",
+      "family": "ABC Gravity X Compressed Italic",
+      "sourceUrl": "https://framerusercontent.com/assets/4B1IWogWDaMmkGa7uxocd84Odg.woff2",
+      "style": "normal",
+      "weight": "900",
+      "sha256": "3a588a4118115554e7c104796e46565af2665b661e108b30401e811bf637c5fc"
+    },
+    {
+      "filename": "abc-gravity-xx-compressed.woff2",
+      "family": "ABC Gravity XX Compressed",
+      "sourceUrl": "https://framerusercontent.com/assets/4p5mTKQM37TbaashugoB92z5Tlw.woff2",
+      "style": "normal",
+      "weight": "900",
+      "sha256": "d1807fa9512293369d0243ae960c7953317db7bb20fe53b5ec10cc8a64f541fb"
+    }
+  ]
+}

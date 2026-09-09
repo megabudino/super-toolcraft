@@ -1,0 +1,12 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm run build -- --base /demos/mesh-gradient/",
+  "rewrites": [
+    {
+      "source": "/demos/mesh-gradient/assets/:path*",
+      "destination": "/assets/:path*"
+    },
+    { "source": "/demos/mesh-gradient", "destination": "/" },
+    { "source": "/demos/mesh-gradient/:path*", "destination": "/" }
+  ]
+}

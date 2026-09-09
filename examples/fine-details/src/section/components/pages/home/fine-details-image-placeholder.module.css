@@ -1,0 +1,36 @@
+.surface {
+  --fd-loading-color-base: #d1d1d1;
+  --fd-loading-color-highlight: #ededed;
+
+  background-color: var(--fd-loading-color-base);
+  background-image: linear-gradient(
+    180deg,
+    var(--fd-loading-color-base) 0%,
+    var(--fd-loading-color-highlight) 50%,
+    var(--fd-loading-color-base) 100%
+  );
+  background-size: 100% 200%;
+  animation: fine-details-loading-shimmer 1.6s linear infinite;
+}
+
+.settled {
+  background: var(--fd-loading-color-base);
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .surface {
+    background: var(--fd-loading-color-base);
+    animation: none;
+  }
+}
+
+@keyframes fine-details-loading-shimmer {
+  from {
+    background-position: 50% 100%;
+  }
+
+  to {
+    background-position: 50% -100%;
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "composition": {
+    "buttonGap": 8,
+    "firstRowScale": 100,
+    "lineGap": -7,
+    "secondRowScale": 105
+  },
+  "fineGrid": {
+    "color": "#6F7946",
+    "enabled": true,
+    "opacity": 12,
+    "subdivision": 6,
+    "thickness": 0.8
+  },
+  "grid": {
+    "color": "#6F7946",
+    "columns": 7,
+    "depthDivisions": 4,
+    "opacity": 34,
+    "rows": 4,
+    "thickness": 0.7
+  },
+  "height": 1080,
+  "motion": {
+    "enabled": true,
+    "parallax": 120,
+    "scrollNudge": 0,
+    "smoothness": 1
+  },
+  "room": {
+    "depth": 0.26,
+    "innerGrid": {
+      "depth": 32,
+      "enabled": true,
+      "falloff": 0.9,
+      "opacity": 71
+    },
+    "vanishing": {
+      "x": 0,
+      "y": 0
+    },
+    "wallBorder": {
+      "colorOpacity": {
+        "hex": "#6F7946",
+        "opacity": 34
+      },
+      "width": 2
+    },
+    "wallFill": "#F2F4E6"
+  },
+  "tiles": {
+    "develop": 1,
+    "fog": 0,
+    "hoverLift": 0.88,
+    "images": [],
+    "interval": 0.5,
+    "perSurface": 3,
+    "shuffleStyle": "swap"
+  },
+  "trail": {
+    "amount": 3,
+    "enabled": true,
+    "fade": 1.1,
+    "strength": 10
+  }
+}

@@ -1,0 +1,7 @@
+.viewport {
+  position: relative;
+  container: recraft-section / size;
+  overflow: hidden;
+  isolation: isolate;
+  flex: none;
+}

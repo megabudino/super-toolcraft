@@ -1,0 +1,275 @@
+{
+  "sourceRoot": "/Users/kusnizza/Projects/percents-next",
+  "referenceArchitecture": "/Users/kusnizza/Projects/recraft-apps/hero",
+  "sourceRoute": "/toolcraft/hero",
+  "files": [
+    {
+      "source": "src/components/header.tsx",
+      "local": "src/section/components/header.tsx",
+      "bytes": 944,
+      "sha256": "0da6bc62257781e90e58ee1029362c3408ceef0736acf26cbf0ffb53928c2856"
+    },
+    {
+      "source": "src/components/header-logo.tsx",
+      "local": "src/section/components/header-logo.tsx",
+      "bytes": 17714,
+      "sha256": "84b3727f817cb9f94be9452b905067e2076162a1c5733007c6d18d1c8c947d7e"
+    },
+    {
+      "source": "src/components/header-logo-path-morph.ts",
+      "local": "src/section/components/header-logo-path-morph.ts",
+      "bytes": 2072,
+      "sha256": "548217277ae69677aa57796ae93e70d34ac460ca833760fc77bf92362d1a32f9"
+    },
+    {
+      "source": "src/components/sticky-header.tsx",
+      "local": "src/section/components/sticky-header.tsx",
+      "bytes": 1090,
+      "sha256": "2c8ab42223bdd0f66ff9ac480a46d56d66c5f612024e789bc2d7270a217515e5"
+    },
+    {
+      "source": "src/components/sticky-header.module.css",
+      "local": "src/section/components/sticky-header.module.css",
+      "bytes": 707,
+      "sha256": "e4f344d99822d613704e69e58a026c8bffbfa686bf417a77f479d9c4db37e95c"
+    },
+    {
+      "source": "src/components/container.tsx",
+      "local": "src/section/components/container.tsx",
+      "bytes": 468,
+      "sha256": "0ced752606727347e396c44dc2fb045ce6250ea2bd7593aabe3a92a7de4b77af"
+    },
+    {
+      "source": "src/components/logos.tsx",
+      "local": "src/section/components/logos.tsx",
+      "bytes": 13956,
+      "sha256": "a2308883936ef876b5c3d2a012bb0330ce6dcc8d364316478874d60e006b1347"
+    },
+    {
+      "source": "src/components/pauseable-video.tsx",
+      "local": "src/section/components/pauseable-video.tsx",
+      "bytes": 2572,
+      "sha256": "fc85f049b53c7b9b4d17e02d6d95fd430995d331f1552c4b7823cf529b46669b"
+    },
+    {
+      "source": "src/components/pages/home/hero-section.tsx",
+      "local": "src/section/components/pages/home/hero-section.tsx",
+      "bytes": 6835,
+      "sha256": "2042639d5023cd13ca85fe4bf55392bf9d4caba7f5a8cd1d344eb7e6693a424a"
+    },
+    {
+      "source": "src/components/pages/home/hero-section.module.css",
+      "local": "src/section/components/pages/home/hero-section.module.css",
+      "bytes": 2185,
+      "sha256": "c20549f2c8203c6d8f58c611d0a1e76f3869c73b79a46671c6a2d80d281a1e4c"
+    },
+    {
+      "source": "src/components/pages/home/hero-video-reveal.tsx",
+      "local": "src/section/components/pages/home/hero-video-reveal.tsx",
+      "bytes": 1235,
+      "sha256": "6a8402a96fd03888435319bf70e39cc9e4d7c7aceceea5f9310c0ad3aa749bfc"
+    },
+    {
+      "source": "src/components/pages/home/hero-video-reveal.module.css",
+      "local": "src/section/components/pages/home/hero-video-reveal.module.css",
+      "bytes": 1332,
+      "sha256": "c3e5744d846d7bca87a468c70e9c44e8e008258822a06466c3cce6fc0159adf0"
+    },
+    {
+      "source": "src/components/ui/button.tsx",
+      "local": "src/section/components/ui/button.tsx",
+      "bytes": 3252,
+      "sha256": "8e4ebb97a8d4aab1e6cafb9368512d533cf7f6ad2e4a397b97fb03f8cb87146d"
+    },
+    {
+      "source": "src/lib/utils.ts",
+      "local": "src/section/lib/utils.ts",
+      "bytes": 5743,
+      "sha256": "bf8292e3e256bb6696e46bfe06be6aad3af712ffd06469af910d96cc1c111bb4"
+    },
+    {
+      "source": "src/config/website-config.ts",
+      "local": "src/section/config/website-config.ts",
+      "bytes": 421,
+      "sha256": "a97a30cc7855db539845f26825d4da1703a0993ce54c3a6e03475a410643634e"
+    },
+    {
+      "source": ".next/dev/static/media/f7aa21714c1c53f8-s.p.0-95eo-012xnf.woff2",
+      "local": "public/fonts/hero/f7aa21714c1c53f8-s.p.0-95eo-012xnf.woff2",
+      "bytes": 20184,
+      "sha256": "8330490a01c60c196eae00b823de8102275aaa5862e7b76a7af21b8745338928"
+    },
+    {
+      "source": ".next/dev/static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2",
+      "local": "public/fonts/hero/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2",
+      "bytes": 48432,
+      "sha256": "c940764593d0fe5d596be327ca7558855e018039fb78509aa21921fd3644c3e4"
+    },
+    {
+      "local": "public/images/home/hero/online-shopping.jpg",
+      "source": "https://www.pexels.com/video/a-woman-happily-shopping-online-6994923/",
+      "bytes": 410099,
+      "sha256": "f0dc9124fb46d5a447effea1244730d8a6e3e0e3d58fa0150faf14f4f52b6559"
+    },
+    {
+      "source": "public/images/home/hero/logos/adidas.svg",
+      "local": "public/images/home/hero/logos/adidas.svg",
+      "bytes": 333,
+      "sha256": "3fd1bf0505bd2c69734f9bed9d6d23089369a44605f5c951b216a418ee386f03"
+    },
+    {
+      "source": "public/images/home/hero/logos/ford.svg",
+      "local": "public/images/home/hero/logos/ford.svg",
+      "bytes": 243984,
+      "sha256": "b884edb2003adc563e987b9625f4ce4cba9815d67183828bc1062db08beed946"
+    },
+    {
+      "source": "public/images/home/hero/logos/ebay.svg",
+      "local": "public/images/home/hero/logos/ebay.svg",
+      "bytes": 2280,
+      "sha256": "bb5c21aea72380ed5dba3d318b52ef26fc3b89ac9434706aa68ff885ab2fb166"
+    },
+    {
+      "source": "public/images/home/hero/revolut.svg",
+      "local": "public/images/home/hero/revolut.svg",
+      "bytes": 3657,
+      "sha256": "9eb6d4b76b8f71d3aa4980624ad968c621249b7fc1796504b608d15251274ed7"
+    },
+    {
+      "source": "public/images/home/hero/logos/american-express.svg",
+      "local": "public/images/home/hero/logos/american-express.svg",
+      "bytes": 1412,
+      "sha256": "af4b1be5641e8ec164f71f99b6c748a4a136d112646f3d833be690eee5d78a14"
+    },
+    {
+      "source": "public/images/home/hero/logos/citi.svg",
+      "local": "public/images/home/hero/logos/citi.svg",
+      "bytes": 1647,
+      "sha256": "e0083dcfafe008a03bb101c2be76278385f8db43fdc350f0b2308233e0c2ec5c"
+    },
+    {
+      "source": "public/images/home/hero/logos/bank-of-america.svg",
+      "local": "public/images/home/hero/logos/bank-of-america.svg",
+      "bytes": 4430,
+      "sha256": "4dda9e282e1bedf49b1b6dba1302f69087eddd60873374d3a88290cb60db4da4"
+    },
+    {
+      "source": "public/images/home/hero/logos/capital-one.svg",
+      "local": "public/images/home/hero/logos/capital-one.svg",
+      "bytes": 7800,
+      "sha256": "dc56b4472dc787a2200a29ec81ef99cf6bb6ba9cade1f496a38230949685222e"
+    },
+    {
+      "source": "public/images/home/hero/logos/cvs.svg",
+      "local": "public/images/home/hero/logos/cvs.svg",
+      "bytes": 1795,
+      "sha256": "7993995851aaef32dbc6b7e13972b7ed29793285ade7ed92f36b87b01d546434"
+    },
+    {
+      "source": "public/images/home/hero/logos/walgreens.svg",
+      "local": "public/images/home/hero/logos/walgreens.svg",
+      "bytes": 6631,
+      "sha256": "c7c90de44d284559ff3898a35f45855275e6759ff9b2276518bb30e0fb1bb5f9"
+    },
+    {
+      "source": "public/images/home/hero/logos/tripadvisor.svg",
+      "local": "public/images/home/hero/logos/tripadvisor.svg",
+      "bytes": 6857,
+      "sha256": "600b6b46abb15f90924829cbc081b4d75867c68ff19ba55d65633fac424a79d3"
+    },
+    {
+      "source": "public/images/home/hero/logos/crocs.svg",
+      "local": "public/images/home/hero/logos/crocs.svg",
+      "bytes": 3859,
+      "sha256": "584ff944bd9b26d925bd5fdc6b94f593797655fa59e07bd9415633a682a3387c"
+    },
+    {
+      "source": "public/images/home/hero/logos/stubhub.svg",
+      "local": "public/images/home/hero/logos/stubhub.svg",
+      "bytes": 10004,
+      "sha256": "ec48435c9840950724691ea711ecf8293b34f3642041dc7eeaf89ae1612bb428"
+    },
+    {
+      "source": "public/images/home/hero/logos/shiseido.svg",
+      "local": "public/images/home/hero/logos/shiseido.svg",
+      "bytes": 3254,
+      "sha256": "daffe6619c3a350970cd950449a632a6630fb6769eb1af64b5c68f29bd27a3a6"
+    },
+    {
+      "source": "public/images/home/hero/logos/gnc.svg",
+      "local": "public/images/home/hero/logos/gnc.svg",
+      "bytes": 2058,
+      "sha256": "ed52e26f31be4dec35124b51a6c27cf27cc5e9a93bb540b4f48678a6a5186b3f"
+    },
+    {
+      "source": "public/images/home/hero/logos/pnc.svg",
+      "local": "public/images/home/hero/logos/pnc.svg",
+      "bytes": 3788,
+      "sha256": "8e2a8d407196b84ae3e3cbefde4bd62e3d76e57bd875e825c3e37feccd449ffd"
+    },
+    {
+      "source": "public/images/home/hero/logos/iherb.svg",
+      "local": "public/images/home/hero/logos/iherb.svg",
+      "bytes": 4268,
+      "sha256": "da05524becd9ef4a97ff70d0f28d43eb68d3cd844630ba2a6a458587c50c9bf6"
+    },
+    {
+      "source": "public/images/home/hero/logos/fis.svg",
+      "local": "public/images/home/hero/logos/fis.svg",
+      "bytes": 3200,
+      "sha256": "a316fdfff0f9710e80d8a54fb571bf32d07d32addb1489409b861775229a62f4"
+    },
+    {
+      "source": "public/images/home/hero/logos/faire.svg",
+      "local": "public/images/home/hero/logos/faire.svg",
+      "bytes": 12380,
+      "sha256": "b6b219c60dab694bc6f987eef23a2f2050c8426098509477d2fcc1402a7afc93"
+    },
+    {
+      "source": "public/images/home/hero/logos/codecademy.svg",
+      "local": "public/images/home/hero/logos/codecademy.svg",
+      "bytes": 9481,
+      "sha256": "03e9b1decfeca1fe9bbc079f9824acaf88762cdc58067cd511de7149078029ce"
+    },
+    {
+      "source": "public/images/home/hero/logos/rag-and-bone.svg",
+      "local": "public/images/home/hero/logos/rag-and-bone.svg",
+      "bytes": 55300,
+      "sha256": "e1ab8a94c49a8a4c021a7238a5ba83ef5111adf1f390ff5e98b195f54fc7706d"
+    },
+    {
+      "source": "public/images/home/hero/logos/zenni.svg",
+      "local": "public/images/home/hero/logos/zenni.svg",
+      "bytes": 1980,
+      "sha256": "31165d3462e5077edb1f813110c914752a0b14a3f9d9bf4e2d762b5ff42deae3"
+    },
+    {
+      "source": "public/images/home/hero/logos/baublebar.svg",
+      "local": "public/images/home/hero/logos/baublebar.svg",
+      "bytes": 20294,
+      "sha256": "bfcc0db5a31eb6ce1ec536d551ef143564a12c88b621616ba779fd8f47a97c18"
+    },
+    {
+      "source": "public/images/home/hero/logos/dxl.svg",
+      "local": "public/images/home/hero/logos/dxl.svg",
+      "bytes": 2403,
+      "sha256": "e1d0abd599b48a80ff484e99aa0383cfc6d3cc2fd472b91f25a1d75b21e60d59"
+    }
+  ],
+  "assetPolicy": "24 original real-brand SVGs in their source colors, one local H.264 video, two local Latin fonts. No unused concept logos or retired video files.",
+  "contentRevision": {
+    "date": "2026-09-09",
+    "brand": "Looplane (fictional demo)",
+    "backup": "/Users/kusnizza/.Trash/percent-hero-content.2fOJAz",
+    "videoAuthor": "Kindel Media",
+    "videoLicense": "https://www.pexels.com/license/",
+    "videoEncoding": "First 10 seconds, 1920x1080, 30fps, H.264 CRF24, no audio, faststart"
+  },
+  "realBrandRevision": {
+    "date": "2026-09-09",
+    "sourceBackup": "/Users/kusnizza/.Trash/percent-hero-content.2fOJAz",
+    "retiredBackup": "/Users/kusnizza/.Trash/percent-hero-concept-logos.QxjsHz",
+    "request": "логотипы сделай реальных брендов и цветные как были примерно",
+    "usage": "Reference/demo marks only; no endorsement or commercial relationship claimed."
+  }
+}

@@ -1,0 +1,32 @@
+.root {
+  --image-gallery-background: #d8d5cb;
+  cursor: grab;
+  height: 100%;
+  inset: 0;
+  overflow: hidden;
+  position: absolute;
+  touch-action: none;
+  user-select: none;
+  width: 100%;
+}
+
+.root[data-dragging="true"] {
+  cursor: grabbing;
+}
+
+.background {
+  background: var(--image-gallery-background);
+  inset: 0;
+  position: absolute;
+  z-index: 0;
+}
+
+.canvas {
+  display: block;
+  height: 100%;
+  inset: 0;
+  outline: none;
+  position: absolute;
+  width: 100%;
+  z-index: 1;
+}

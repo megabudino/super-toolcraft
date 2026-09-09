@@ -1,0 +1,190 @@
+import {
+  HERO_HEADING_CTA_DEFAULTS,
+  heroHeadingCtaTargets,
+} from "./hero-heading-cta-values";
+
+const shadowEnabled = {
+  all: [{ equals: true, target: heroHeadingCtaTargets.shadowEnabled }],
+  mode: "conditional",
+} as const;
+
+export const heroHeadingCtaControlSections = [
+  {
+    controls: {
+      text: {
+        applicability: { mode: "always" },
+        commitMode: "content",
+        defaultValue: HERO_HEADING_CTA_DEFAULTS.text,
+        label: "Text",
+        performanceReason:
+          "CTA copy must update while typing in the embedded website preview.",
+        performanceRole: "responsiveness",
+        target: heroHeadingCtaTargets.text,
+        textValueKind: "single-line",
+        type: "text",
+      },
+      fontSize: {
+        applicability: { mode: "always" },
+        defaultValue: HERO_HEADING_CTA_DEFAULTS.fontSize,
+        label: "Font size",
+        max: 64,
+        min: 10,
+        performanceReason:
+          "CTA typography must resize live in the embedded website preview.",
+        performanceRole: "responsiveness",
+        sliderValueKind: "continuous",
+        step: 1,
+        target: heroHeadingCtaTargets.fontSize,
+        type: "slider",
+        unit: "px",
+        variant: "continuous",
+      },
+      horizontalPadding: {
+        applicability: { mode: "always" },
+        defaultValue: HERO_HEADING_CTA_DEFAULTS.horizontalPadding,
+        description: "Changes the shared left and right button padding.",
+        label: "Side padding",
+        max: 120,
+        min: 0,
+        performanceReason:
+          "CTA width must respond immediately while side padding is edited.",
+        performanceRole: "responsiveness",
+        sliderValueKind: "continuous",
+        step: 1,
+        target: heroHeadingCtaTargets.horizontalPadding,
+        type: "slider",
+        unit: "px",
+        variant: "continuous",
+      },
+      verticalPadding: {
+        applicability: { mode: "always" },
+        defaultValue: HERO_HEADING_CTA_DEFAULTS.verticalPadding,
+        description: "Changes the shared top and bottom button padding.",
+        label: "Vertical padding",
+        max: 80,
+        min: 0,
+        performanceReason:
+          "CTA height must respond immediately while vertical padding is edited.",
+        performanceRole: "responsiveness",
+        sliderValueKind: "continuous",
+        step: 1,
+        target: heroHeadingCtaTargets.verticalPadding,
+        type: "slider",
+        unit: "px",
+        variant: "continuous",
+      },
+      textColor: {
+        applicability: { mode: "always" },
+        defaultValue: HERO_HEADING_CTA_DEFAULTS.textColor,
+        label: "Text color",
+        performanceReason:
+          "CTA text color must update immediately in the website preview.",
+        performanceRole: "responsiveness",
+        semanticGroup: "cta-colors",
+        target: heroHeadingCtaTargets.textColor,
+        type: "color",
+      },
+      backgroundColor: {
+        applicability: { mode: "always" },
+        defaultValue: HERO_HEADING_CTA_DEFAULTS.backgroundColor,
+        label: "Button color",
+        performanceReason:
+          "CTA fill color must update immediately in the website preview.",
+        performanceRole: "responsiveness",
+        semanticGroup: "cta-colors",
+        target: heroHeadingCtaTargets.backgroundColor,
+        type: "color",
+      },
+      gap: {
+        applicability: { mode: "always" },
+        defaultValue: HERO_HEADING_CTA_DEFAULTS.gap,
+        description:
+          "Sets the vertical distance from the subtitle to the CTA.",
+        label: "Text gap",
+        max: 160,
+        min: 0,
+        performanceReason:
+          "CTA placement must remain live while its heading gap is edited.",
+        performanceRole: "responsiveness",
+        sliderValueKind: "continuous",
+        step: 1,
+        target: heroHeadingCtaTargets.gap,
+        type: "slider",
+        unit: "px",
+        variant: "continuous",
+      },
+    },
+    id: "heading-cta",
+    title: "CTA Button",
+  },
+  {
+    controls: {
+      shadowEnabled: {
+        applicability: { mode: "always" },
+        defaultValue: HERO_HEADING_CTA_DEFAULTS.shadow.enabled,
+        label: "Shadow",
+        performanceReason:
+          "CTA shadow visibility must update immediately in the website preview.",
+        performanceRole: "responsiveness",
+        target: heroHeadingCtaTargets.shadowEnabled,
+        type: "switch",
+      },
+      shadowOffset: {
+        applicability: shadowEnabled,
+        coordinateMode: "screen",
+        defaultValue: HERO_HEADING_CTA_DEFAULTS.shadow.offset,
+        description: "Moves only the CTA shadow horizontally and vertically.",
+        label: "Shadow offset",
+        performanceReason:
+          "CTA shadow position must remain live throughout pad gestures.",
+        performanceRole: "responsiveness",
+        target: heroHeadingCtaTargets.shadowOffset,
+        type: "vector",
+      },
+      shadowBlur: {
+        applicability: shadowEnabled,
+        defaultValue: HERO_HEADING_CTA_DEFAULTS.shadow.blur,
+        label: "Shadow blur",
+        max: 100,
+        min: 0,
+        performanceReason:
+          "CTA shadow blur must remain live throughout slider gestures.",
+        performanceRole: "responsiveness",
+        sliderValueKind: "continuous",
+        step: 1,
+        target: heroHeadingCtaTargets.shadowBlur,
+        type: "slider",
+        unit: "px",
+        variant: "continuous",
+      },
+      shadowSpread: {
+        applicability: shadowEnabled,
+        defaultValue: HERO_HEADING_CTA_DEFAULTS.shadow.spread,
+        label: "Shadow spread",
+        max: 32,
+        min: -32,
+        performanceReason:
+          "CTA shadow spread must remain live throughout slider gestures.",
+        performanceRole: "responsiveness",
+        sliderValueKind: "continuous",
+        step: 1,
+        target: heroHeadingCtaTargets.shadowSpread,
+        type: "slider",
+        unit: "px",
+        variant: "continuous",
+      },
+      shadowColorOpacity: {
+        applicability: shadowEnabled,
+        defaultValue: HERO_HEADING_CTA_DEFAULTS.shadow.colorOpacity,
+        label: "Shadow color",
+        performanceReason:
+          "CTA shadow color and opacity must update immediately in the website preview.",
+        performanceRole: "responsiveness",
+        target: heroHeadingCtaTargets.shadowColorOpacity,
+        type: "colorOpacity",
+      },
+    },
+    id: "heading-cta-shadow",
+    title: "CTA Shadow",
+  },
+] as const;

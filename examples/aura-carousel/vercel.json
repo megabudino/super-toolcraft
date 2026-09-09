@@ -1,0 +1,9 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm run build -- --base /demos/aura-carousel/",
+  "rewrites": [
+    { "source": "/demos/aura-carousel/assets/:path*", "destination": "/assets/:path*" },
+    { "source": "/demos/aura-carousel", "destination": "/" },
+    { "source": "/demos/aura-carousel/:path*", "destination": "/" }
+  ]
+}

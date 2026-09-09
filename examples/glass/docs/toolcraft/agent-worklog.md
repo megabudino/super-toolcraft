@@ -1,5 +1,7 @@
 # Implementation Worklog
 
+Active change: template-release-2026-09-09
+
 ## Status
 
 Mode: product
@@ -745,6 +747,17 @@ Verification: `pnpm exec tsc -p tsconfig.json --noEmit` passed; `pnpm exec vites
 Skipped checks: Full `pnpm verify:perf` skipped because this is a default color change and does not alter renderer workload. `pnpm verify:quick` was attempted and stopped at the existing Toolcraft integrity mismatch in `src/toolcraft/runtime/contracts/component-contracts.ts` and `src/toolcraft/ui/components/controls/file-drop/file-drop-control.tsx`; those files were not changed in this pass.
 
 Risks: Existing browser localStorage state can keep a user-edited old shadow color until Reset controls are used; schema reset now returns to the requested value.
+
+
+### Template release repair — 2026-09-09
+
+- Change ID: template-release-2026-09-09
+- Entry type: focused
+- Request: Make every gallery app cloneable through the published Toolcraft CLI and verify installation/startup.
+- Changed owner: Upstream example snapshot packaging, integrity restoration, and public distribution metadata.
+- User-visible result: The `glass` template is admitted as a complete standalone snapshot; original framework hashes remain authoritative. Canonical identity regeneration, where needed, uses the upstream identity generator.
+- Verification: Source template admission passed. Published dependency installation and browser startup results are recorded in the upstream `docs/template-release-report.md`; these smoke checks do not claim renderer or export certification.
+- Risks: Historical templates retain their original runtime and workflow versions.
 
 ## Decisions
 

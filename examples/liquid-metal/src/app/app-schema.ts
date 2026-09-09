@@ -642,7 +642,7 @@ export const appSchema = defineToolcraft({
           title: "Export",
         },
       ],
-      title: "Liquid Metal 3D",
+      title: "Liquid Metal",
     },
     timeline: {
       defaultDurationSeconds: 10 / 3,

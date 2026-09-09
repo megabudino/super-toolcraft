@@ -1,0 +1,331 @@
+{
+  "version": 2,
+  "owners": [
+    {
+      "acceptanceIds": [
+        "product.default-settings",
+        "runtime.persistence.reload",
+        "runtime.settingsTransfer"
+      ],
+      "kind": "functional",
+      "path": "src/app/app-acceptance-data.ts"
+    },
+    {
+      "acceptanceIds": [
+        "actions.output",
+        "canvas.infinity.image-export",
+        "canvas.infinity.mode",
+        "canvas.infinity.video-export"
+      ],
+      "kind": "functional",
+      "path": "src/app/app-composition.tsx"
+    },
+    {
+      "acceptanceIds": ["particles.count", "product.default-settings"],
+      "kind": "performance",
+      "passIds": [
+        "dots.image-export",
+        "dots.preview-frame",
+        "dots.shape-sample",
+        "dots.video-frame"
+      ],
+      "path": "src/app/app-performance.ts"
+    },
+    {
+      "acceptanceIds": [
+        "actions.colorTheme",
+        "actions.output",
+        "appearance.background",
+        "appearance.glow",
+        "appearance.palette",
+        "appearance.sizeMotion",
+        "appearance.trails",
+        "canvas.aspectRatio",
+        "canvas.infinity.mode",
+        "canvas.renderScale",
+        "canvas.size.height",
+        "canvas.size.width",
+        "export.image.format",
+        "export.image.resolution",
+        "export.includeBackground",
+        "export.video.format",
+        "export.video.resolution",
+        "motion.activeDuration",
+        "motion.calmDuration",
+        "panels.timeline.extended",
+        "particles.count",
+        "particles.distribution",
+        "particles.edgeSpill",
+        "particles.launch",
+        "particles.size",
+        "physics.attraction",
+        "physics.damping",
+        "physics.mass",
+        "physics.turbulence",
+        "product.default-settings",
+        "text.content",
+        "text.typography"
+      ],
+      "kind": "functional",
+      "path": "src/app/app-schema.ts"
+    },
+    {
+      "acceptanceIds": [
+        "reference.canvas-sizing",
+        "reference.control-mapping",
+        "reference.renderer-state",
+        "product.default-settings",
+        "runtime.canvas.viewport",
+        "runtime.persistence.reload",
+        "runtime.settingsTransfer",
+        "runtime.timeline.playback"
+      ],
+      "kind": "functional",
+      "path": "src/app/dots/dots-acceptance.ts"
+    },
+    {
+      "acceptanceIds": ["appearance.palette"],
+      "kind": "performance",
+      "passIds": [
+        "dots.image-export",
+        "dots.preview-frame",
+        "dots.video-frame"
+      ],
+      "path": "src/app/dots/dots-color.ts"
+    },
+    {
+      "acceptanceIds": [
+        "actions.output",
+        "appearance.background",
+        "canvas.infinity.image-export",
+        "canvas.infinity.video-export",
+        "export.image.format",
+        "export.image.resolution",
+        "export.includeBackground",
+        "export.video.format",
+        "export.video.resolution"
+      ],
+      "kind": "performance",
+      "passIds": ["dots.image-export", "dots.video-frame"],
+      "path": "src/app/dots/dots-export.ts"
+    },
+    {
+      "acceptanceIds": [
+        "motion.activeDuration",
+        "motion.calmDuration",
+        "particles.launch",
+        "physics.attraction",
+        "physics.damping",
+        "physics.mass",
+        "physics.turbulence",
+        "reference.renderer-state",
+        "runtime.timeline.playback"
+      ],
+      "kind": "performance",
+      "passIds": [
+        "dots.image-export",
+        "dots.preview-frame",
+        "dots.video-frame"
+      ],
+      "path": "src/app/dots/dots-motion.ts"
+    },
+    {
+      "acceptanceIds": [
+        "actions.output",
+        "reference.renderer-state",
+        "runtime.timeline.playback"
+      ],
+      "kind": "performance",
+      "passIds": [
+        "dots.image-export",
+        "dots.preview-frame",
+        "dots.shape-sample",
+        "dots.video-frame"
+      ],
+      "path": "src/app/dots/dots-pipeline.ts"
+    },
+    {
+      "acceptanceIds": [
+        "actions.output",
+        "export.image.format",
+        "export.image.resolution"
+      ],
+      "kind": "performance",
+      "passIds": ["dots.image-export"],
+      "path": "src/app/dots/dots-png-worker.ts"
+    },
+    {
+      "acceptanceIds": [
+        "actions.output",
+        "canvas.infinity.video-export",
+        "export.video.format",
+        "export.video.resolution"
+      ],
+      "kind": "performance",
+      "passIds": ["dots.video-frame"],
+      "path": "src/app/dots/dots-video-frame-worker-client.ts"
+    },
+    {
+      "acceptanceIds": [
+        "actions.output",
+        "appearance.background",
+        "canvas.infinity.video-export",
+        "reference.renderer-state"
+      ],
+      "kind": "performance",
+      "passIds": ["dots.video-frame"],
+      "path": "src/app/dots/dots-video-frame-worker.ts"
+    },
+    {
+      "acceptanceIds": [
+        "actions.output",
+        "appearance.glow",
+        "appearance.palette",
+        "appearance.sizeMotion",
+        "appearance.trails",
+        "particles.size",
+        "reference.renderer-state"
+      ],
+      "kind": "performance",
+      "passIds": [
+        "dots.image-export",
+        "dots.preview-frame",
+        "dots.video-frame"
+      ],
+      "path": "src/app/dots/dots-render-frame.ts"
+    },
+    {
+      "acceptanceIds": [
+        "canvas.infinity.mode",
+        "canvas.renderScale",
+        "reference.canvas-sizing",
+        "reference.renderer-state",
+        "runtime.canvas.viewport",
+        "runtime.timeline.playback"
+      ],
+      "kind": "performance",
+      "passIds": ["dots.preview-frame", "dots.shape-sample"],
+      "path": "src/app/dots/dots-renderer.tsx"
+    },
+    {
+      "acceptanceIds": [
+        "canvas.infinity.image-export",
+        "canvas.infinity.mode",
+        "canvas.infinity.video-export",
+        "reference.renderer-state"
+      ],
+      "kind": "performance",
+      "passIds": [
+        "dots.image-export",
+        "dots.preview-frame",
+        "dots.video-frame"
+      ],
+      "path": "src/app/dots/dots-scene-bounds.ts"
+    },
+    {
+      "acceptanceIds": [
+        "particles.count",
+        "particles.distribution",
+        "particles.edgeSpill",
+        "particles.launch",
+        "reference.control-mapping",
+        "reference.renderer-state",
+        "text.content",
+        "text.typography"
+      ],
+      "kind": "performance",
+      "passIds": [
+        "dots.image-export",
+        "dots.preview-frame",
+        "dots.shape-sample",
+        "dots.video-frame"
+      ],
+      "path": "src/app/dots/dots-shape.ts"
+    },
+    {
+      "acceptanceIds": [
+        "actions.colorTheme",
+        "appearance.background",
+        "appearance.palette",
+        "product.default-settings"
+      ],
+      "kind": "functional",
+      "path": "src/app/dots/dots-theme.ts"
+    },
+    {
+      "acceptanceIds": [
+        "motion.activeDuration",
+        "motion.calmDuration",
+        "product.default-settings",
+        "runtime.timeline.playback"
+      ],
+      "kind": "performance",
+      "passIds": [
+        "dots.image-export",
+        "dots.preview-frame",
+        "dots.video-frame"
+      ],
+      "path": "src/app/dots/dots-timing.ts"
+    },
+    {
+      "acceptanceIds": [
+        "reference.control-mapping",
+        "reference.renderer-state"
+      ],
+      "kind": "functional",
+      "path": "src/app/dots/dots-types.ts"
+    },
+    {
+      "acceptanceIds": [
+        "appearance.background",
+        "appearance.glow",
+        "appearance.palette",
+        "appearance.sizeMotion",
+        "appearance.trails",
+        "canvas.renderScale",
+        "motion.activeDuration",
+        "motion.calmDuration",
+        "particles.count",
+        "particles.distribution",
+        "particles.edgeSpill",
+        "particles.launch",
+        "particles.size",
+        "physics.attraction",
+        "physics.damping",
+        "physics.mass",
+        "physics.turbulence",
+        "product.default-settings",
+        "reference.control-mapping",
+        "text.content",
+        "text.typography"
+      ],
+      "kind": "performance",
+      "passIds": [
+        "dots.image-export",
+        "dots.preview-frame",
+        "dots.shape-sample",
+        "dots.video-frame"
+      ],
+      "path": "src/app/dots/dots-values.ts"
+    },
+    {
+      "acceptanceIds": [
+        "reference.canvas-sizing",
+        "reference.control-mapping",
+        "reference.renderer-state",
+        "runtime.timeline.playback"
+      ],
+      "kind": "functional",
+      "path": "src/app/dots/dots-video-reference-study.ts"
+    },
+    {
+      "acceptanceIds": [
+        "canvas.infinity.mode",
+        "reference.canvas-sizing",
+        "reference.renderer-state"
+      ],
+      "kind": "presentation",
+      "path": "src/app/dots/dots-renderer.module.css"
+    }
+  ]
+}

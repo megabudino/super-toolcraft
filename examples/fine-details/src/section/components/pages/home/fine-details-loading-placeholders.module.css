@@ -1,0 +1,98 @@
+.root {
+  position: absolute;
+  z-index: 5;
+  right: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.overflowing {
+  justify-content: flex-start;
+}
+
+.cards {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--fd-loading-gap);
+}
+
+.card {
+  flex: none;
+  border: 0;
+  border-radius: var(--fd-loading-radius);
+  box-shadow: none;
+}
+
+.wave {
+  --fd-wave-base: color-mix(in srgb, #d1d1d1, #ffffff var(--fd-wave-base-tone, 0%));
+  --fd-wave-tone: color-mix(in srgb, var(--fd-wave-base), #000000 var(--fd-wave-contrast, 14%));
+  --fd-wave-flip-a: color-mix(in srgb, var(--fd-wave-tone), #ffffff var(--fd-wave-glare, 0%));
+  --fd-wave-flip-b: color-mix(in srgb, var(--fd-wave-base), #ffffff var(--fd-wave-glare, 0%));
+
+  position: relative;
+  overflow: hidden;
+  background-color: var(--fd-wave-base);
+  background-image: repeating-conic-gradient(
+    var(--fd-wave-base) 0% 25%,
+    var(--fd-wave-tone) 25% 50%
+  );
+  background-size: var(--fd-wave-cell, 40px) var(--fd-wave-cell, 40px);
+}
+
+.wave::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-conic-gradient(
+    var(--fd-wave-flip-a) 0% 25%,
+    var(--fd-wave-flip-b) 25% 50%
+  );
+  background-size: var(--fd-wave-cell, 40px) var(--fd-wave-cell, 40px);
+  background-position: var(--fd-wave-shift, 0px 0px);
+  mask-image: var(--fd-wave-mask);
+  mask-repeat: no-repeat;
+  mask-size: var(--fd-wave-mask-size);
+  -webkit-mask-image: var(--fd-wave-mask);
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: var(--fd-wave-mask-size);
+  animation: fine-details-loading-wave var(--fd-wave-duration, 1900ms) linear infinite;
+  animation-delay: var(--fd-wave-delay, 0ms);
+}
+
+@container recraft-section (max-width: 47.9375rem) {
+  .root {
+    box-sizing: border-box;
+    padding-inline: 1.25rem;
+  }
+}
+
+@container recraft-section (min-width: 48rem) and (max-width: 79.9375rem) {
+  .root {
+    box-sizing: border-box;
+    padding-inline: 1.5rem;
+  }
+}
+
+@keyframes fine-details-loading-wave {
+  from {
+    mask-position: var(--fd-wave-from);
+    -webkit-mask-position: var(--fd-wave-from);
+  }
+
+  to {
+    mask-position: var(--fd-wave-to);
+    -webkit-mask-position: var(--fd-wave-to);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wave::after {
+    animation: none;
+    opacity: 0;
+  }
+}

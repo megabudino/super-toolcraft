@@ -1,0 +1,238 @@
+@font-face {
+  font-family: "Dispersion Figtree";
+  font-style: normal;
+  font-weight: 300 900;
+  font-display: swap;
+  src: url("/assets/dispersion-carousel/figtree-latin-wght-normal.woff2") format("woff2-variations");
+}
+
+.surface {
+  box-sizing: border-box;
+  contain: layout paint style;
+  isolation: isolate;
+  overflow: hidden;
+  position: relative;
+}
+
+.header {
+  align-items: flex-end;
+  background-color: inherit;
+  box-sizing: border-box;
+  display: flex;
+  height: 106px;
+  justify-content: space-between;
+  left: 50%;
+  max-width: 1472px;
+  position: absolute;
+  top: 160px;
+  transform: translateX(-50%);
+  width: min(1472px, 100%);
+  z-index: 4;
+}
+
+.title {
+  color: #000;
+  font-family: "Dispersion Figtree", sans-serif;
+  font-feature-settings: "liga" 0;
+  font-size: 48px;
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: -0.96px;
+  line-height: 1.1;
+  margin: 0;
+  overflow: hidden;
+  width: 607.43px;
+}
+
+.navigation {
+  align-items: center;
+  background: rgb(0 0 0 / 3%);
+  border: 1px solid rgb(0 0 0 / 5%);
+  border-radius: 99px;
+  box-sizing: border-box;
+  display: flex;
+  flex: 0 0 auto;
+  gap: 8px;
+  height: 54px;
+  padding: 4px;
+  width: 108px;
+}
+
+.navigationButton {
+  align-items: center;
+  appearance: none;
+  background: #fefefe;
+  border: 1px solid rgb(0 0 0 / 10%);
+  border-radius: 99px;
+  color: #000;
+  cursor: pointer;
+  display: inline-flex;
+  height: 46px;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  transition: opacity 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+  width: 46px;
+}
+
+.surface .navigationButton:hover:not(:disabled) {
+  box-shadow: 0 2px 5px rgb(0 0 0 / 8%);
+  cursor: pointer !important;
+  transform: scale(1.04);
+}
+
+.surface .navigationButton:hover:not(:disabled) .chevron {
+  cursor: pointer !important;
+}
+
+.navigationButton:focus-visible {
+  outline: 2px solid #111;
+  outline-offset: 2px;
+}
+
+.navigationButton:disabled {
+  background: transparent;
+  cursor: default;
+  opacity: 0.28;
+}
+
+.chevron {
+  border-right: 1.8px solid currentColor;
+  border-top: 1.8px solid currentColor;
+  display: block;
+  height: 8px;
+  transform: rotate(45deg);
+  width: 8px;
+}
+
+.chevronPrevious {
+  transform: rotate(-135deg);
+}
+
+.railViewport {
+  height: 560px;
+  left: 0;
+  outline: none;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  position: absolute;
+  scrollbar-width: none;
+  top: 314px;
+  touch-action: pan-x;
+  user-select: none;
+  width: 100%;
+  z-index: 1;
+}
+
+/* The editor resets descendant cursors; override only this product gesture. */
+.surface .railViewport[data-carousel-base] {
+  cursor: grab !important;
+}
+
+.surface .railViewport[data-carousel-dragging="true"] {
+  cursor: grabbing !important;
+}
+
+.surface .railViewport[data-carousel-base] * {
+  cursor: inherit !important;
+}
+
+.railViewport::-webkit-scrollbar {
+  display: none;
+}
+
+.railTrack {
+  display: flex;
+  gap: 16px;
+  height: 560px;
+}
+
+.card {
+  border-radius: 12px;
+  display: block;
+  flex: 0 0 448px;
+  height: 560px;
+  margin: 0;
+  overflow: hidden;
+  position: relative;
+  user-select: none;
+  width: 448px;
+}
+
+.cardImage {
+  border-radius: inherit;
+  display: block;
+  height: 100%;
+  inset: 0;
+  object-fit: cover;
+  position: absolute;
+  width: 100%;
+}
+
+.testimonial {
+  bottom: 24px;
+  color: #fff;
+  font-family: "Dispersion Figtree", sans-serif;
+  font-feature-settings: normal;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  left: 24px;
+  letter-spacing: 0;
+  line-height: 1.3;
+  margin: 0;
+  position: absolute;
+  right: 24px;
+}
+
+/*
+ * While the WebGL rail is live it owns every visible card pixel. Empty sized
+ * cards keep the native hit/scroll geometry without compositing 15 source
+ * images underneath the shader.
+ */
+.railViewport[data-rail-visual="hidden"] .cardImage,
+.railViewport[data-rail-visual="hidden"] .testimonial {
+  display: none;
+}
+
+.dispersionRail {
+  height: 688px;
+  left: 0;
+  pointer-events: none;
+  position: absolute;
+  top: 250px;
+  width: 100%;
+  z-index: 2;
+}
+
+.dispersionRailCanvas {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+.cleanTextViewport {
+  height: 560px;
+  left: 0;
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  top: 314px;
+  width: 100%;
+  z-index: 3;
+}
+
+.cleanTextTrack {
+  display: flex;
+  gap: 16px;
+  height: 560px;
+  will-change: transform;
+}
+
+.cleanTextCard {
+  flex: 0 0 448px;
+  height: 560px;
+  position: relative;
+  width: 448px;
+}

@@ -1,0 +1,18 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm run build -- --base /demos/dither-lab/",
+  "rewrites": [
+    {
+      "source": "/demos/dither-lab/assets/:path*",
+      "destination": "/assets/:path*"
+    },
+    {
+      "source": "/demos/dither-lab",
+      "destination": "/"
+    },
+    {
+      "source": "/demos/dither-lab/:path*",
+      "destination": "/"
+    }
+  ]
+}

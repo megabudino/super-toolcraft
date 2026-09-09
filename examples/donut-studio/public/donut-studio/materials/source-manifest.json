@@ -1,0 +1,36 @@
+{
+  "assetId": "vcbjfbu",
+  "averageColor": "#9C6235",
+  "category": "3D asset / food / baked goods",
+  "preparedResolution": "2048x2048",
+  "projection": "object-space triplanar atlas regions",
+  "source": "/Users/kusnizza/Desktop/Donut/",
+  "sourceFiles": {
+    "baseColor": {
+      "file": "Donut_vcbjfbu_High_4K_BaseColor.jpg",
+      "sha256": "9b47f9b8f987814789a9bd75daa27b3b8263832ee1b1a5a4dc361455f4e2d275"
+    },
+    "normal": {
+      "file": "Donut_vcbjfbu_High_4K_Normal.jpg",
+      "sha256": "89479b3e00c2777577af3d8529a2df99426adc542bdf67fd84fa0c742f63a9f5"
+    },
+    "roughness": {
+      "file": "Donut_vcbjfbu_High_4K_Roughness.jpg",
+      "sha256": "d3231ef8be842959d9812e04c85827e41aeabef413766750ea3f8ae7981996ab"
+    }
+  },
+  "preparedFiles": {
+    "baseColor": {
+      "file": "megascans-donut-basecolor-2k.jpg",
+      "sha256": "b5953da6f1b9b0d95b97c8048b3b2b7294c97fab86b32b22818870992a58c8c9"
+    },
+    "normal": {
+      "file": "megascans-donut-normal-2k.jpg",
+      "sha256": "9ab939377aae4dfc8e03c2f1c4798979e650a40237bd410dd733c9c61bce0dd3"
+    },
+    "roughness": {
+      "file": "megascans-donut-roughness-2k.jpg",
+      "sha256": "c0ef9a31a0ba604a6d8e0e671e80b16392f1119487c9096158151626dc19a8b9"
+    }
+  }
+}

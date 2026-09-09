@@ -1,0 +1,224 @@
+{
+  "version": 1,
+  "modules": [
+    {
+      "path": "src/app/app-acceptance-data.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/app-composition.module.css",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/app-composition.tsx",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/default-settings.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/element-svg.tsx",
+      "kind": "performance",
+      "passIds": [
+        "poster-scene"
+      ]
+    },
+    {
+      "path": "src/app/micrographics-canvas.tsx",
+      "kind": "performance",
+      "passIds": [
+        "poster-scene"
+      ]
+    },
+    {
+      "path": "src/app/micrographics-canvas.module.css",
+      "kind": "performance",
+      "passIds": [
+        "poster-scene"
+      ]
+    },
+    {
+      "path": "src/app/micrographics-canvas-utils.ts",
+      "kind": "performance",
+      "passIds": [
+        "poster-scene"
+      ]
+    },
+    {
+      "path": "src/app/app-performance.ts",
+      "kind": "performance",
+      "passIds": [
+        "poster-scene",
+        "export-png"
+      ]
+    },
+    {
+      "path": "src/app/app-schema.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/poster-export.ts",
+      "kind": "performance",
+      "passIds": [
+        "export-png"
+      ]
+    },
+    {
+      "path": "src/app/poster-model.ts",
+      "kind": "performance",
+      "passIds": [
+        "poster-scene",
+        "export-png"
+      ]
+    },
+    {
+      "path": "src/app/poster-types.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/template-catalog.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/template-library-control.module.css",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/template-library-control.tsx",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/template-placement.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/template-renderers.ts",
+      "kind": "performance",
+      "passIds": [
+        "poster-scene",
+        "export-png"
+      ]
+    },
+    {
+      "path": "src/app/template-thumbnails.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/template-primitives.ts",
+      "kind": "performance",
+      "passIds": [
+        "poster-scene",
+        "export-png"
+      ]
+    },
+    {
+      "path": "src/app/template-renderers-extra.ts",
+      "kind": "performance",
+      "passIds": [
+        "poster-scene",
+        "export-png"
+      ]
+    },
+    {
+      "path": "src/app/selection-guides.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/selection-overlay.tsx",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/template-renderers-composite.ts",
+      "kind": "performance",
+      "passIds": [
+        "poster-scene",
+        "export-png"
+      ]
+    },
+    {
+      "path": "src/app/template-renderers-set4.ts",
+      "kind": "performance",
+      "passIds": [
+        "poster-scene",
+        "export-png"
+      ]
+    },
+    {
+      "path": "src/app/template-renderers-set5.ts",
+      "kind": "performance",
+      "passIds": [
+        "poster-scene",
+        "export-png"
+      ]
+    },
+    {
+      "path": "src/app/template-renderers-set6.ts",
+      "kind": "performance",
+      "passIds": [
+        "poster-scene",
+        "export-png"
+      ]
+    },
+    {
+      "path": "src/app/template-renderers-plates.ts",
+      "kind": "performance",
+      "passIds": [
+        "poster-scene",
+        "export-png"
+      ]
+    },
+    {
+      "path": "src/app/template-content.ts",
+      "kind": "performance",
+      "passIds": [
+        "poster-scene",
+        "export-png"
+      ]
+    },
+    {
+      "path": "src/app/template-covers.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/template-glyph-data.ts",
+      "kind": "performance",
+      "passIds": [
+        "poster-scene",
+        "export-png"
+      ]
+    },
+    {
+      "path": "src/app/template-glyphs.ts",
+      "kind": "performance",
+      "passIds": [
+        "poster-scene",
+        "export-png"
+      ]
+    },
+    {
+      "path": "src/app/template-renderers-mega-factory.ts",
+      "kind": "performance",
+      "passIds": [
+        "poster-scene",
+        "export-png"
+      ]
+    },
+    {
+      "path": "src/app/template-renderers-plate-factory.ts",
+      "kind": "performance",
+      "passIds": [
+        "poster-scene",
+        "export-png"
+      ]
+    },
+    {
+      "path": "src/app/renderer-pipeline.ts",
+      "kind": "performance",
+      "passIds": [
+        "poster-scene",
+        "export-png"
+      ]
+    }
+  ]
+}

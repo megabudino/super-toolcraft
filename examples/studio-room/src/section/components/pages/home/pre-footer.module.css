@@ -1,0 +1,129 @@
+.section {
+  height: var(--studio-room-desktop-height);
+  min-height: 36rem;
+}
+
+.centerComposition {
+  container-type: inline-size;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem 1.25rem;
+  color: #000;
+  text-align: center;
+}
+
+.compositionTitle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.desktopTitle {
+  display: contents;
+}
+
+.firstRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: calc(min(var(--first-row-gap), calc(2.55 * var(--reference-vw))) + 10px);
+  font-size: min(var(--first-row-size), calc(14.3 * var(--reference-vw)));
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.firstRowAccent {
+  font-family: var(--font-abc-gravity-condensed-bold-italic);
+  font-weight: 700;
+  font-style: italic;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.firstRowBrand {
+  margin-inline-start: 4px;
+}
+
+.secondRow {
+  display: block;
+  margin-top: var(--line-gap);
+  font-size: min(var(--second-row-size), calc(19.1 * var(--reference-vw)));
+  white-space: nowrap;
+}
+
+.compositionButton {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: var(--button-gap);
+  padding: 1.25rem 1.625rem;
+  border-radius: 0.75rem;
+  background: #d5f940;
+  color: #000;
+  font-size: 1.375rem;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+
+.compositionButton::before {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: rgb(0 0 0 / 15%);
+  content: '';
+  opacity: 0;
+  transition: opacity 150ms ease-in-out;
+}
+
+.compositionButton:hover::before {
+  opacity: 1;
+}
+
+.compositionButton:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
+}
+
+@container recraft-section (min-width: 48rem) and (max-width: 63.9375rem) {
+  .firstRow {
+    font-size: min(var(--first-row-size), calc(7.13 * var(--reference-vw)));
+  }
+
+  .secondRow {
+    font-size: min(var(--second-row-size), calc(9.87 * var(--reference-vw)));
+  }
+
+  .compositionButton {
+    margin-top: calc(var(--button-gap) + 8px);
+    padding: 1.0417rem 1.3542rem;
+    border-radius: 0.625rem;
+    font-size: 1.1458rem;
+  }
+}
+
+@container recraft-section (min-width: 64rem) and (max-width: 79.9375rem) {
+  .firstRow {
+    font-size: min(calc(var(--first-row-size) / 1.5), calc(9.5333 * var(--reference-vw)));
+  }
+
+  .secondRow {
+    font-size: min(calc(var(--second-row-size) / 1.5), calc(12.7333 * var(--reference-vw)));
+  }
+
+  .compositionButton {
+    margin-top: calc(var(--button-gap) + 8px);
+    padding: 1.25rem 1.625rem;
+    border-radius: 0.75rem;
+    font-size: 1.375rem;
+  }
+}

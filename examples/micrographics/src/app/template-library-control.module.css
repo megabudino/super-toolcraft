@@ -1,0 +1,36 @@
+.root {
+  min-width: 0;
+}
+
+.scrollContainer,
+.scroller {
+  min-width: 0;
+}
+
+.grid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  min-width: 0;
+}
+
+.tile {
+  aspect-ratio: 4 / 3;
+  height: auto;
+  min-width: 0;
+  overflow: hidden;
+  padding: 0;
+  width: 100%;
+}
+
+.thumbnail {
+  display: block;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  width: 100%;
+}
+
+.tabs {
+  margin-bottom: 8px;
+}

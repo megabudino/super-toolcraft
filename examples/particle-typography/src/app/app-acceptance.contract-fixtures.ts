@@ -1,0 +1,81 @@
+import {
+  defineToolcraft,
+  type ToolcraftAppSchema,
+} from "@/toolcraft/runtime";
+
+import type {
+  ToolcraftComponentAcceptance,
+  ToolcraftControlSectionInventoryEntry,
+  ToolcraftProductReadiness,
+  ToolcraftTransferMode,
+} from "./acceptance/types";
+import {
+  validateToolcraftAcceptanceDiagnostics,
+  validateToolcraftAcceptanceCoverage,
+  type ToolcraftAcceptanceValidationInput,
+} from "./acceptance/validate-coverage";
+
+export function defineContractSchemaFixture(schema: ToolcraftAppSchema) {
+  return defineToolcraft({
+    ...schema,
+    persistence: { storage: "none" },
+  });
+}
+
+export const contractSchemaFixture = defineContractSchemaFixture({
+  canvas: {
+    enabled: true,
+    upload: true,
+  },
+  panels: {
+    controls: {
+      sections: [],
+      title: "Controls",
+    },
+  },
+  toolbar: {
+    history: true,
+    radar: true,
+    zoom: true,
+  },
+});
+
+export const contractAcceptanceFixture: readonly ToolcraftComponentAcceptance[] = [];
+
+export const contractSectionInventoryFixture: readonly ToolcraftControlSectionInventoryEntry[] = [];
+
+export const contractTransferModeFixture: ToolcraftTransferMode = {
+  animationIntent: { mode: "none" },
+  mode: "new-toolcraft-app",
+};
+
+export const contractProductReadinessFixture: ToolcraftProductReadiness = {
+  mode: "starter",
+  reason: "Neutral contract fixture without a product-owned spatial scene.",
+};
+
+export function validateContractAcceptance(
+  overrides: Partial<ToolcraftAcceptanceValidationInput> = {},
+): string[] {
+  return validateToolcraftAcceptanceCoverage({
+    acceptance: contractAcceptanceFixture,
+    productReadiness: contractProductReadinessFixture,
+    schema: contractSchemaFixture,
+    sectionInventory: contractSectionInventoryFixture,
+    transferMode: contractTransferModeFixture,
+    ...overrides,
+  });
+}
+
+export function validateContractAcceptanceDiagnostics(
+  overrides: Partial<ToolcraftAcceptanceValidationInput> = {},
+) {
+  return validateToolcraftAcceptanceDiagnostics({
+    acceptance: contractAcceptanceFixture,
+    productReadiness: contractProductReadinessFixture,
+    schema: contractSchemaFixture,
+    sectionInventory: contractSectionInventoryFixture,
+    transferMode: contractTransferModeFixture,
+    ...overrides,
+  });
+}

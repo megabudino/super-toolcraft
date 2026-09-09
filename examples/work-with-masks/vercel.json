@@ -1,0 +1,14 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "vite",
+  "installCommand": "pnpm install --ignore-workspace --frozen-lockfile",
+  "buildCommand": "pnpm build --base /demos/work-with-masks/",
+  "outputDirectory": "dist",
+  "rewrites": [
+    { "source": "/demos/work-with-masks/assets/:path*", "destination": "/assets/:path*" },
+    { "source": "/demos/work-with-masks/images/:path*", "destination": "/images/:path*" },
+    { "source": "/demos/work-with-masks/fonts/:path*", "destination": "/fonts/:path*" },
+    { "source": "/demos/work-with-masks", "destination": "/" },
+    { "source": "/demos/work-with-masks/:path*", "destination": "/" }
+  ]
+}

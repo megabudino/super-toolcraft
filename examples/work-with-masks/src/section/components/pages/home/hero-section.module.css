@@ -1,0 +1,51 @@
+@container percents-hero (width >= 1280px) {
+  .section {
+    padding-top: calc(var(--hero-header-overlap, 0px) + var(--toolcraft-hero-top-inset, 220px));
+  }
+
+  .heading {
+    color: var(--toolcraft-hero-heading-color, var(--grey-2));
+    font-family: var(--toolcraft-hero-heading-font-family, var(--font-heading));
+    font-size: var(--toolcraft-hero-heading-font-size, 102px);
+    font-weight: var(--toolcraft-hero-heading-font-weight, 500);
+    line-height: var(--toolcraft-hero-heading-line-height, 1);
+    letter-spacing: var(--toolcraft-hero-heading-letter-spacing, -0.025em);
+    text-transform: var(--toolcraft-hero-heading-text-transform, none);
+    opacity: var(--toolcraft-hero-heading-opacity, 1);
+  }
+
+  .rightCopy {
+    row-gap: var(--toolcraft-hero-right-paragraph-gap, 36px);
+    padding-top: var(--toolcraft-hero-right-offset-y, 19.5px);
+  }
+
+  .rightLead {
+    color: var(--toolcraft-hero-right-lead-color, var(--grey-2));
+    font-family: var(--toolcraft-hero-right-lead-font-family, var(--font-sans));
+    font-size: var(--toolcraft-hero-right-lead-font-size, 30px);
+    font-weight: var(--toolcraft-hero-right-lead-font-weight, 500);
+    line-height: var(--toolcraft-hero-right-lead-line-height, 1.25);
+    letter-spacing: var(--toolcraft-hero-right-lead-letter-spacing, -0.025em);
+    text-transform: var(--toolcraft-hero-right-lead-text-transform, none);
+    opacity: var(--toolcraft-hero-right-lead-opacity, 1);
+  }
+
+  .rightBody {
+    color: var(--toolcraft-hero-right-body-color, var(--grey-30));
+    font-family: var(--toolcraft-hero-right-body-font-family, var(--font-sans));
+    font-size: var(--toolcraft-hero-right-body-font-size, 26px);
+    font-weight: var(--toolcraft-hero-right-body-font-weight, 400);
+    line-height: var(--toolcraft-hero-right-body-line-height, 1.25);
+    letter-spacing: var(--toolcraft-hero-right-body-letter-spacing, -0.025em);
+    text-transform: var(--toolcraft-hero-right-body-text-transform, none);
+    opacity: var(--toolcraft-hero-right-body-opacity, 1);
+  }
+
+  .logos {
+    margin-top: var(--toolcraft-hero-copy-to-logos, 180px);
+  }
+
+  .video {
+    margin-top: var(--toolcraft-hero-logos-to-media, 52px);
+  }
+}

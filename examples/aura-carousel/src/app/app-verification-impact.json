@@ -1,0 +1,431 @@
+{
+  "version": 3,
+  "owners": [
+    {
+      "acceptanceIds": ["carousel.scroll"],
+      "kind": "performance",
+      "passIds": ["dispersion-carousel.preview"],
+      "path": "src/app/dispersion-carousel/dispersion-carousel-navigation.ts"
+    },
+    {
+      "acceptanceIds": [
+        "auraGate.glow",
+        "auraGate.offset",
+        "auraGate.refraction",
+        "auraGate.width",
+        "canvas.renderScale",
+        "carousel.scroll",
+        "dispersion.amount",
+        "dispersion.aura",
+        "dispersion.blur",
+        "dispersion.count",
+        "dispersion.hue",
+        "dispersion.includeText",
+        "dispersion.spectrum",
+        "dispersion.velocity",
+        "edgeZone.curve",
+        "edgeZone.fade",
+        "edgeZone.turbulence",
+        "edgeZone.turbulenceScale",
+        "edgeZone.warp",
+        "edgeZone.warpFace",
+        "edgeZone.warpOffset",
+        "edgeZone.warpSharpness",
+        "edgeZone.warpStyle",
+        "edgeZone.warpWave",
+        "edgeZone.warpWaveBlur",
+        "edgeZone.warpWaveEnabled",
+        "edgeZone.warpWaveKind",
+        "edgeZone.warpWaveLength",
+        "edgeZone.width",
+        "export.actions"
+      ],
+      "kind": "performance",
+      "passIds": [
+        "dispersion-carousel.preview",
+        "dispersion-carousel.image-export"
+      ],
+      "path": "src/app/dispersion-carousel/dispersion-carousel-shaders.ts"
+    },
+    {
+      "acceptanceIds": [
+        "carousel.scroll",
+        "dispersion.includeText",
+        "export.actions"
+      ],
+      "kind": "performance",
+      "passIds": [
+        "dispersion-carousel.preview",
+        "dispersion-carousel.image-export"
+      ],
+      "path": "public/assets/dispersion-carousel/card-anthropic-portrait@2x.png"
+    },
+    {
+      "acceptanceIds": [
+        "carousel.scroll",
+        "export.actions"
+      ],
+      "kind": "performance",
+      "passIds": [
+        "dispersion-carousel.preview",
+        "dispersion-carousel.image-export"
+      ],
+      "path": "public/assets/dispersion-carousel/card-anthropic-studio@2x.png"
+    },
+    {
+      "acceptanceIds": [
+        "carousel.scroll",
+        "export.actions"
+      ],
+      "kind": "performance",
+      "passIds": [
+        "dispersion-carousel.preview",
+        "dispersion-carousel.image-export"
+      ],
+      "path": "public/assets/dispersion-carousel/card-google@2x.png"
+    },
+    {
+      "acceptanceIds": [
+        "carousel.scroll",
+        "export.actions"
+      ],
+      "kind": "performance",
+      "passIds": [
+        "dispersion-carousel.preview",
+        "dispersion-carousel.image-export"
+      ],
+      "path": "public/assets/dispersion-carousel/card-shopify@2x.png"
+    },
+    {
+      "acceptanceIds": [
+        "carousel.scroll",
+        "export.actions"
+      ],
+      "kind": "performance",
+      "passIds": [
+        "dispersion-carousel.preview",
+        "dispersion-carousel.image-export"
+      ],
+      "path": "public/assets/dispersion-carousel/card-walmart@2x.png"
+    },
+    {
+      "acceptanceIds": [
+        "auraGate.glow",
+        "auraGate.offset",
+        "auraGate.refraction",
+        "auraGate.width",
+        "dispersion.amount",
+        "dispersion.aura",
+        "dispersion.blur",
+        "edgeZone.turbulence",
+        "edgeZone.turbulenceScale",
+        "edgeZone.warp",
+        "edgeZone.warpFace",
+        "edgeZone.warpOffset",
+        "edgeZone.warpSharpness",
+        "edgeZone.warpStyle",
+        "edgeZone.warpWave",
+        "edgeZone.warpWaveBlur",
+        "edgeZone.warpWaveEnabled",
+        "edgeZone.warpWaveKind",
+        "edgeZone.warpWaveLength",
+        "edgeZone.width",
+        "export.actions"
+      ],
+      "kind": "performance",
+      "passIds": [
+        "dispersion-carousel.preview",
+        "dispersion-carousel.image-export"
+      ],
+      "path": "public/assets/dispersion-carousel/carousel-strip@2x.png"
+    },
+    {
+      "acceptanceIds": [
+        "carousel.scroll",
+        "export.actions"
+      ],
+      "kind": "presentation",
+      "path": "public/assets/dispersion-carousel/figtree-latin-wght-normal.woff2"
+    },
+    {
+      "acceptanceIds": [
+        "canvas.infinity.mode-and-restoration",
+        "canvas.infinity.scene-bounds-image-export",
+        "carousel.scroll",
+        "edgeZone.width",
+        "export.actions"
+      ],
+      "kind": "performance",
+      "passIds": [
+        "dispersion-carousel.preview",
+        "dispersion-carousel.image-export"
+      ],
+      "path": "src/app/app-composition.tsx"
+    },
+    {
+      "acceptanceIds": [
+        "canvas.infinity.mode-and-restoration",
+        "canvas.infinity.scene-bounds-image-export",
+        "canvas.renderScale",
+        "canvas.size.height",
+        "canvas.size.width",
+        "dispersion.includeText",
+        "runtime.persistence.reload"
+      ],
+      "kind": "functional",
+      "path": "src/app/app-schema.ts"
+    },
+    {
+      "acceptanceIds": [
+        "appearance.background",
+        "canvas.infinity.scene-bounds-image-export",
+        "carousel.scroll",
+        "dispersion.blur",
+        "dispersion.includeText",
+        "export.actions",
+        "export.image.format",
+        "export.image.resolution",
+        "export.includeBackground"
+      ],
+      "kind": "performance",
+      "passIds": [
+        "dispersion-carousel.image-export"
+      ],
+      "path": "src/app/dispersion-carousel/dispersion-carousel-export.ts"
+    },
+    {
+      "acceptanceIds": [
+        "appearance.background",
+        "auraGate.glow",
+        "auraGate.offset",
+        "auraGate.refraction",
+        "auraGate.width",
+        "canvas.infinity.mode-and-restoration",
+        "canvas.infinity.scene-bounds-image-export",
+        "canvas.renderScale",
+        "canvas.size.height",
+        "canvas.size.width",
+        "carousel.scroll",
+        "dispersion.amount",
+        "dispersion.aura",
+        "dispersion.blur",
+        "dispersion.count",
+        "dispersion.hue",
+        "dispersion.includeText",
+        "dispersion.spectrum",
+        "dispersion.velocity",
+        "edgeZone.curve",
+        "edgeZone.fade",
+        "edgeZone.turbulence",
+        "edgeZone.turbulenceScale",
+        "edgeZone.warp",
+        "edgeZone.warpFace",
+        "edgeZone.warpOffset",
+        "edgeZone.warpSharpness",
+        "edgeZone.warpStyle",
+        "edgeZone.warpWave",
+        "edgeZone.warpWaveBlur",
+        "edgeZone.warpWaveEnabled",
+        "edgeZone.warpWaveKind",
+        "edgeZone.warpWaveLength",
+        "edgeZone.width",
+        "export.actions",
+        "export.image.format",
+        "export.image.resolution",
+        "export.includeBackground"
+      ],
+      "kind": "performance",
+      "passIds": [
+        "dispersion-carousel.preview",
+        "dispersion-carousel.image-export"
+      ],
+      "path": "src/app/dispersion-carousel/dispersion-carousel-pipeline.ts"
+    },
+    {
+      "acceptanceIds": [
+        "appearance.background",
+        "auraGate.glow",
+        "auraGate.offset",
+        "auraGate.refraction",
+        "auraGate.width",
+        "canvas.infinity.mode-and-restoration",
+        "canvas.infinity.scene-bounds-image-export",
+        "canvas.renderScale",
+        "canvas.size.height",
+        "canvas.size.width",
+        "carousel.scroll",
+        "dispersion.amount",
+        "dispersion.aura",
+        "dispersion.blur",
+        "dispersion.count",
+        "dispersion.hue",
+        "dispersion.includeText",
+        "dispersion.spectrum",
+        "dispersion.velocity",
+        "edgeZone.curve",
+        "edgeZone.fade",
+        "edgeZone.turbulence",
+        "edgeZone.turbulenceScale",
+        "edgeZone.warp",
+        "edgeZone.warpFace",
+        "edgeZone.warpOffset",
+        "edgeZone.warpSharpness",
+        "edgeZone.warpStyle",
+        "edgeZone.warpWave",
+        "edgeZone.warpWaveBlur",
+        "edgeZone.warpWaveEnabled",
+        "edgeZone.warpWaveKind",
+        "edgeZone.warpWaveLength",
+        "edgeZone.width",
+        "export.actions",
+        "export.includeBackground",
+        "runtime.persistence.reload"
+      ],
+      "kind": "performance",
+      "passIds": [
+        "dispersion-carousel.preview",
+        "dispersion-carousel.image-export"
+      ],
+      "path": "src/app/dispersion-carousel/dispersion-carousel-renderer.tsx"
+    },
+    {
+      "acceptanceIds": [
+        "auraGate.glow",
+        "auraGate.offset",
+        "auraGate.refraction",
+        "auraGate.width",
+        "canvas.renderScale",
+        "carousel.scroll",
+        "dispersion.amount",
+        "dispersion.aura",
+        "dispersion.blur",
+        "dispersion.count",
+        "dispersion.hue",
+        "dispersion.includeText",
+        "dispersion.spectrum",
+        "dispersion.velocity",
+        "edgeZone.curve",
+        "edgeZone.fade",
+        "edgeZone.turbulence",
+        "edgeZone.turbulenceScale",
+        "edgeZone.warp",
+        "edgeZone.warpFace",
+        "edgeZone.warpOffset",
+        "edgeZone.warpSharpness",
+        "edgeZone.warpStyle",
+        "edgeZone.warpWave",
+        "edgeZone.warpWaveBlur",
+        "edgeZone.warpWaveEnabled",
+        "edgeZone.warpWaveKind",
+        "edgeZone.warpWaveLength",
+        "edgeZone.width",
+        "export.actions"
+      ],
+      "kind": "performance",
+      "passIds": [
+        "dispersion-carousel.preview",
+        "dispersion-carousel.image-export"
+      ],
+      "path": "src/app/dispersion-carousel/dispersion-carousel-webgl.ts"
+    },
+    {
+      "acceptanceIds": [
+        "canvas.infinity.mode-and-restoration",
+        "carousel.scroll",
+        "dispersion.blur",
+        "dispersion.includeText",
+        "edgeZone.width"
+      ],
+      "kind": "presentation",
+      "path": "src/app/dispersion-carousel/dispersion-carousel-renderer.module.css"
+    },
+    {
+      "acceptanceIds": [
+        "appearance.background",
+        "auraGate.glow",
+        "auraGate.offset",
+        "auraGate.refraction",
+        "auraGate.width",
+        "dispersion.amount",
+        "dispersion.aura",
+        "dispersion.blur",
+        "dispersion.count",
+        "dispersion.hue",
+        "dispersion.includeText",
+        "dispersion.spectrum",
+        "dispersion.velocity",
+        "edgeZone.curve",
+        "edgeZone.fade",
+        "edgeZone.turbulence",
+        "edgeZone.turbulenceScale",
+        "edgeZone.warp",
+        "edgeZone.warpFace",
+        "edgeZone.warpOffset",
+        "edgeZone.warpSharpness",
+        "edgeZone.warpStyle",
+        "edgeZone.warpWave",
+        "edgeZone.warpWaveBlur",
+        "edgeZone.warpWaveEnabled",
+        "edgeZone.warpWaveKind",
+        "edgeZone.warpWaveLength",
+        "edgeZone.width",
+        "export.image.format",
+        "export.image.resolution",
+        "export.includeBackground"
+      ],
+      "kind": "functional",
+      "path": "src/app/dispersion-carousel/dispersion-carousel-schema-sections.ts"
+    },
+    {
+      "acceptanceIds": [
+        "appearance.background",
+        "auraGate.glow",
+        "auraGate.offset",
+        "auraGate.refraction",
+        "auraGate.width",
+        "carousel.scroll",
+        "dispersion.amount",
+        "dispersion.aura",
+        "dispersion.blur",
+        "dispersion.count",
+        "dispersion.hue",
+        "dispersion.includeText",
+        "dispersion.spectrum",
+        "dispersion.velocity",
+        "edgeZone.curve",
+        "edgeZone.fade",
+        "edgeZone.turbulence",
+        "edgeZone.turbulenceScale",
+        "edgeZone.warp",
+        "edgeZone.warpFace",
+        "edgeZone.warpOffset",
+        "edgeZone.warpSharpness",
+        "edgeZone.warpStyle",
+        "edgeZone.warpWave",
+        "edgeZone.warpWaveBlur",
+        "edgeZone.warpWaveEnabled",
+        "edgeZone.warpWaveKind",
+        "edgeZone.warpWaveLength",
+        "edgeZone.width",
+        "export.image.format",
+        "export.image.resolution",
+        "export.includeBackground"
+      ],
+      "kind": "functional",
+      "path": "src/app/dispersion-carousel/dispersion-carousel-values.ts"
+    },
+    {
+      "acceptanceIds": [
+        "carousel.scroll",
+        "dispersion.includeText",
+        "export.actions"
+      ],
+      "kind": "performance",
+      "passIds": [
+        "dispersion-carousel.preview",
+        "dispersion-carousel.image-export"
+      ],
+      "path": "src/app/dispersion-carousel/dispersion-carousel-textures.ts"
+    }
+  ]
+}

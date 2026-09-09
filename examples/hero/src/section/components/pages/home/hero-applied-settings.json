@@ -1,0 +1,209 @@
+{
+  "background": "#030303",
+  "backgroundEnabled": true,
+  "dispersion": {
+    "amount": 200,
+    "aura": 0.8,
+    "blur": 22,
+    "count": 6,
+    "curve": 1.4,
+    "edgeFade": 0,
+    "edgeWidth": 25,
+    "gateGlow": 0.6,
+    "gateOffset": 35,
+    "gateRefraction": 10,
+    "gateWidth": 116,
+    "hue": 0,
+    "spectrum": 0.82,
+    "turbulence": 0.7,
+    "turbulenceScale": 130,
+    "velocity": 0.8,
+    "warp": 4,
+    "warpFace": 47,
+    "warpOffset": 5,
+    "warpSharpness": 2,
+    "warpStyle": "prism",
+    "warpWave": 18,
+    "warpWaveBlur": 0,
+    "warpWaveEnabled": false,
+    "warpWaveKind": "glass",
+    "warpWaveLength": 140
+  },
+  "edgeBlur": {
+    "enabled": true,
+    "width": 220,
+    "strength": 18
+  },
+  "effects": {
+    "crt": {
+      "chroma": 5.5,
+      "enabled": true,
+      "fade": 0.6,
+      "flicker": 0.43,
+      "pitch": 5,
+      "scanlines": 0.15
+    },
+    "grain": {
+      "amount": 0.09,
+      "enabled": true,
+      "size": 2.5
+    }
+  },
+  "gallery": {
+    "cardGap": 24,
+    "cardHeight": 610,
+    "cardRadius": 45,
+    "images": [],
+    "position": {
+      "x": 0,
+      "y": 0.02
+    },
+    "rows": {
+      "roll": 42,
+      "safetyWidth": 694
+    },
+    "sphere": {
+      "autoScroll": {
+        "duration": 0.3,
+        "enabled": true,
+        "interval": 4
+      },
+      "bendX": 0.5,
+      "bendY": 0.99,
+      "depth": 1270,
+      "height": 520,
+      "pan": {
+        "x": 0.8821207137451461,
+        "y": -0.13462165235322487,
+        "turns": 0
+      },
+      "rowGap": 17,
+      "rows": [
+        {
+          "images": [],
+          "offset": -101,
+          "speed": -4
+        },
+        {
+          "images": [],
+          "offset": -9,
+          "speed": 4
+        },
+        {
+          "images": [],
+          "offset": -8,
+          "speed": -4
+        },
+        {
+          "images": [],
+          "offset": 0,
+          "speed": 4
+        },
+        {
+          "images": [],
+          "offset": 0,
+          "speed": -4
+        },
+        {
+          "images": [],
+          "offset": 0,
+          "speed": 4
+        }
+      ],
+      "width": 510
+    },
+    "type": "sphere"
+  },
+  "heading": {
+    "badgeColor": "#E6E6E6",
+    "badgeGap": 28,
+    "badgeScale": 131,
+    "badgeShadow": {
+      "blur": 32,
+      "colorOpacity": {
+        "hex": "#000000",
+        "opacity": 25
+      },
+      "enabled": true,
+      "offset": {
+        "x": 0,
+        "y": 0.125
+      },
+      "spread": 4
+    },
+    "badgeVisible": true,
+    "color": "#D2FC31",
+    "cta": {
+      "backgroundColor": "#E6E6E6",
+      "fontSize": 22,
+      "gap": 39,
+      "horizontalPadding": 32,
+      "shadow": {
+        "blur": 16,
+        "colorOpacity": {
+          "hex": "#000000",
+          "opacity": 20
+        },
+        "enabled": true,
+        "offset": {
+          "x": 0,
+          "y": 0.2
+        },
+        "spread": 8
+      },
+      "text": "See How it Works",
+      "textColor": "#000000",
+      "verticalPadding": 20
+    },
+    "lineGap": -24,
+    "position": {
+      "x": 0,
+      "y": -0.16
+    },
+    "recraftSize": 137,
+    "shadow": {
+      "blur": 51,
+      "colorOpacity": {
+        "hex": "#000000",
+        "opacity": 35
+      },
+      "enabled": true,
+      "offset": {
+        "x": 0,
+        "y": 0.125
+      },
+      "spread": 12
+    },
+    "stylesSize": 149,
+    "subtitle": {
+      "fontSize": 28,
+      "gap": 0,
+      "shadow": {
+        "blur": 12,
+        "colorOpacity": {
+          "hex": "#000000",
+          "opacity": 40
+        },
+        "enabled": true,
+        "offset": {
+          "x": 0,
+          "y": 0.125
+        },
+        "spread": 1
+      }
+    }
+  },
+  "pattern": {
+    "colorOpacity": {
+      "hex": "#FFFFFF",
+      "opacity": 5
+    },
+    "enabled": true,
+    "squareSize": 11
+  },
+  "perspective": 1660,
+  "vanishingPoint": {
+    "x": 50,
+    "y": 44
+  }
+}

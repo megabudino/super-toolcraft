@@ -1,0 +1,42 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "pnpm build --base /demos/liquid-glass/",
+  "rewrites": [
+    {
+      "source": "/demos/liquid-glass/assets/:path*",
+      "destination": "/assets/:path*"
+    },
+    {
+      "source": "/demos/liquid-glass/liquid-glass-default-background.webp",
+      "destination": "/liquid-glass-default-background.webp"
+    },
+    {
+      "source": "/demos/liquid-glass/liquid-glass-default-button-image.webp",
+      "destination": "/liquid-glass-default-button-image.webp"
+    },
+    {
+      "source": "/demos/liquid-glass/liquid-glass-default-texture.webp",
+      "destination": "/liquid-glass-default-texture.webp"
+    },
+    {
+      "source": "/demos/liquid-glass/liquid-glass-default-background.png",
+      "destination": "/liquid-glass-default-background.webp"
+    },
+    {
+      "source": "/demos/liquid-glass/liquid-glass-default-button-image.png",
+      "destination": "/liquid-glass-default-button-image.webp"
+    },
+    {
+      "source": "/demos/liquid-glass/liquid-glass-default-texture.jpg",
+      "destination": "/liquid-glass-default-texture.webp"
+    },
+    {
+      "source": "/demos/liquid-glass",
+      "destination": "/"
+    },
+    {
+      "source": "/demos/liquid-glass/:path*",
+      "destination": "/"
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+.preview {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: transparent;
+}
+
+.preview[data-hero-viewport-moving="true"] [data-hero-ticker-track] {
+  animation-play-state: paused;
+}
+
+.panHandle {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  cursor: grab;
+  touch-action: none;
+  pointer-events: auto;
+}
+
+.panHandle[data-hero-gallery-pan-handle-state="dragging"] {
+  cursor: grabbing;
+}
+
+.frame {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: transparent;
+  pointer-events: none;
+}

@@ -1,0 +1,98 @@
+.headingGroup {
+  color: var(--hero-heading-color);
+  max-width: calc(100cqw - 2.5rem);
+  top: var(--hero-heading-position-y);
+  transform: translate3d(
+    calc(-50% + var(--hero-heading-offset-x)),
+    calc(var(--hero-heading-anchor-y) + 0.125rem),
+    0
+  );
+  will-change: transform;
+}
+
+.badgeFrame {
+  --hero-badge-base-size: 2.75rem;
+
+  flex: none;
+  position: relative;
+  width: calc(var(--hero-badge-base-size) * var(--hero-badge-scale));
+  height: calc(var(--hero-badge-base-size) * var(--hero-badge-scale));
+}
+
+.badgeArtwork {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--hero-badge-base-size);
+  height: var(--hero-badge-base-size);
+  transform: translate(-50%, -50%) scale(var(--hero-badge-scale));
+  transform-origin: center;
+}
+
+.pattern {
+  --hero-pattern-tile-size: calc(var(--hero-pattern-square-size) + var(--hero-pattern-square-size));
+
+  background-image: conic-gradient(
+    transparent 0 25%,
+    var(--hero-pattern-color) 0 50%,
+    transparent 0 75%,
+    var(--hero-pattern-color) 0
+  );
+  background-size: var(--hero-pattern-tile-size) var(--hero-pattern-tile-size);
+  opacity: var(--hero-pattern-opacity);
+}
+
+.headingLine {
+  display: block;
+  line-height: 0.96;
+}
+
+.recraftLine {
+  font-size: min(var(--hero-heading-recraft-xl), 13.5cqw);
+}
+
+.stylesLine {
+  margin-top: max(var(--hero-heading-line-gap), -2cqw);
+  font-size: min(var(--hero-heading-styles-xl), 15cqw);
+}
+
+@container recraft-section (min-width: 48rem) {
+  .badgeFrame {
+    --hero-badge-base-size: 3.5rem;
+  }
+}
+
+@container recraft-section (min-width: 48rem) and (max-width: 63.9375rem) {
+  .recraftLine {
+    font-size: min(calc(var(--hero-heading-recraft-xl) / 1.1), 12.2727cqw);
+  }
+
+  .stylesLine {
+    font-size: min(calc(var(--hero-heading-styles-xl) / 1.1), 13.6364cqw);
+  }
+}
+
+@container recraft-section (min-width: 64rem) and (max-width: 79.9375rem) {
+  .recraftLine {
+    font-size: min(calc(var(--hero-heading-recraft-xl) / 1.25), 10.8cqw);
+  }
+
+  .stylesLine {
+    font-size: min(calc(var(--hero-heading-styles-xl) / 1.25), 12cqw);
+  }
+}
+
+@container recraft-section (min-width: 80rem) {
+  .headingGroup {
+    max-width: none;
+  }
+
+  .recraftLine {
+    font-size: var(--hero-heading-recraft-xl);
+  }
+
+  .stylesLine {
+    margin-top: var(--hero-heading-line-gap);
+    font-size: var(--hero-heading-styles-xl);
+  }
+}

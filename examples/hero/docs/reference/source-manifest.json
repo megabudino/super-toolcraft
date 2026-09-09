@@ -1,0 +1,521 @@
+{
+  "sourceRoot": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles",
+  "entry": "components/pages/home/hero-v4-styles.tsx",
+  "files": [
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/components/pages/home/hero-v4-styles.tsx",
+      "local": "src/section/components/pages/home/hero-v4-styles.tsx",
+      "sha256": "328539660f0fdd69a3b0f06cc36c8c757734d6963b2bcdf54310aec22fd60e27"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/shared/config/base-path.ts",
+      "local": "src/section/shared/config/base-path.ts",
+      "sha256": "14f6016479684672409d9366c78fcb74bf92102b7c6ecf68386d97f51ce81ce0"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/components/pages/home/hero-dispersion-card.tsx",
+      "local": "src/section/components/pages/home/hero-dispersion-card.tsx",
+      "sha256": "ed7906838b7b30cd22b3793e7c51b336351da8cd080fa45bd2ce5a9bd76b8f63"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/components/pages/home/hero-card-dispersion-webgl.ts",
+      "local": "src/section/components/pages/home/hero-card-dispersion-webgl.ts",
+      "sha256": "f00f8b6d94675ed76dff23e186621c078561cf189daa88704ce9f1dd43868e19"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/components/pages/home/hero-scene-settings.ts",
+      "local": "src/section/components/pages/home/hero-scene-settings.ts",
+      "sha256": "647a914e56ea4538d3319034647ed5865ebf4767498cd2c74a7f12ddfc2e0642"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/components/pages/home/hero-applied-settings.json",
+      "local": "src/section/components/pages/home/hero-applied-settings.json",
+      "sha256": "9d162d2e0ff274d4601e61f332b23315f3093389f9376a2155bc883dea0abf07"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/components/pages/home/hero-dispersion-shader.ts",
+      "local": "src/section/components/pages/home/hero-dispersion-shader.ts",
+      "sha256": "6e5989ce1f0ee40131b5a74819bee158e6d3dd1ddbb398d4bf7fdfc3c7b84d37"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/components/pages/home/hero-responsive-settings.ts",
+      "local": "src/section/components/pages/home/hero-responsive-settings.ts",
+      "sha256": "48ce1e1c4c3be901e5e8af784061554ff62d4d2998950dece73840e2a835096d"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/components/pages/home/hero-gallery-sources.ts",
+      "local": "src/section/components/pages/home/hero-gallery-sources.ts",
+      "sha256": "c6ff44d12dd3cffbbc9a83b89539793317b64998741d29a127f17942fdb962db"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/components/pages/home/hero-default-images.ts",
+      "local": "src/section/components/pages/home/hero-default-images.ts",
+      "sha256": "18ca1555224439d7c67f2852ce7bf700443f4f9f277808c12cc10dc986ef006a"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults-compact/hero-row-1-image-1.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults-compact/hero-row-1-image-1.jpg",
+      "sha256": "b87d07057325ed583b50bbd187ce31128f6c2573bb99f02beb031a655bef6b6e"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults-compact/hero-row-1-image-2.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults-compact/hero-row-1-image-2.jpg",
+      "sha256": "88e8c5dadfa44b71a9eda7d5f220b6af1ccb6fcf8ad27544100cd7bd66c1c728"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults-compact/hero-row-1-image-3.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults-compact/hero-row-1-image-3.jpg",
+      "sha256": "1e81e586fb5633de2e9e15be8ef3b86bd635d3d512cd2bef6e0577f7dac5991e"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults-compact/hero-row-1-image-4.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults-compact/hero-row-1-image-4.jpg",
+      "sha256": "192108ee7fa113fd58656a5d0550f936afdbf6820dc140dcd019458b80e5ea62"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults-compact/hero-row-1-image-5.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults-compact/hero-row-1-image-5.jpg",
+      "sha256": "f4f9357dab887695ab93d6103bc85e8d145b5e86191bc5c73dc66efb41e27f64"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults-compact/hero-row-1-image-6.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults-compact/hero-row-1-image-6.jpg",
+      "sha256": "28bacbba8c2df713a32a9d2d748bf900ca6b787543f800176d0823b7821cb788"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults-compact/hero-row-2-image-1.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults-compact/hero-row-2-image-1.jpg",
+      "sha256": "eeabc1a694eefd198321a947f25469f42ea612c9afca04db44c26b5624a63030"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults-compact/hero-row-2-image-2.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults-compact/hero-row-2-image-2.jpg",
+      "sha256": "8c43a3c923beedfd42ffaff2e6dca334d0eaf7f9e6c80810f116d6b8d49f6330"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults-compact/hero-row-2-image-3.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults-compact/hero-row-2-image-3.jpg",
+      "sha256": "7d6543b7f8b93ff69869c17816ce0f427b253b9b51f5e0c16a7591f51400e379"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults-compact/hero-row-2-image-4.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults-compact/hero-row-2-image-4.jpg",
+      "sha256": "d282073f40f1135b71df7e1708231450b7794b15b95911ead7c3bdab4cea0c61"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults-compact/hero-row-2-image-5.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults-compact/hero-row-2-image-5.jpg",
+      "sha256": "ae2c7d06d05d9287c0e2166dfa86325fba6baa2677b66435bd182d2672daaacf"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults-compact/hero-row-2-image-6.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults-compact/hero-row-2-image-6.jpg",
+      "sha256": "eb3a69a31667c5aa5a18bf2ad227b358cc84b88d44f19244f794da2c18a34780"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults-compact/hero-row-3-image-1.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults-compact/hero-row-3-image-1.jpg",
+      "sha256": "28dcc22c45ef4a04023453d200fc7bbaaa6d599c8be429fc0de7ae07da5cd0ef"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults-compact/hero-row-3-image-2.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults-compact/hero-row-3-image-2.jpg",
+      "sha256": "9163247c6460b35fb2319cb1ec337aa6dffb3dca59e17fae0cb5640769889d1d"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults-compact/hero-row-3-image-3.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults-compact/hero-row-3-image-3.jpg",
+      "sha256": "1fe9438f2ebc364f9325fd08e3001de7e3b823eb69fe5097edadbac4981aef4f"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults-compact/hero-row-3-image-4.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults-compact/hero-row-3-image-4.jpg",
+      "sha256": "7f61ec6124ac9516c8c607bda11bc49dad5bd48555c865dc488dc9f65cfbb048"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults-compact/hero-row-3-image-5.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults-compact/hero-row-3-image-5.jpg",
+      "sha256": "5f1f38f503166ebab8a49f9cc15aafec508d8b5668387249bc8c155568b78724"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults-compact/hero-row-3-image-6.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults-compact/hero-row-3-image-6.jpg",
+      "sha256": "faf3728c3dfa65de66952023a4447101899775897a5d83e66d7fa98884755b43"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults-compact/hero-row-4-image-1.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults-compact/hero-row-4-image-1.jpg",
+      "sha256": "dd377c6d25c49781ae8a2f67eea2e1af790d74f2f76178b790d1622a6e82a02e"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults-compact/hero-row-4-image-2.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults-compact/hero-row-4-image-2.jpg",
+      "sha256": "a056d3c0b30743d722be78374d62b9c2a34708a061358c9c4088382924c7d5ac"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults-compact/hero-row-4-image-3.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults-compact/hero-row-4-image-3.jpg",
+      "sha256": "a7f2a35b3f188ad99d1003a5e36a901efeb45291c3f9705bace4d0c0341e7233"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults-compact/hero-row-4-image-4.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults-compact/hero-row-4-image-4.jpg",
+      "sha256": "c27c8ad27cb2b513946b66981288ab0e2fa28e5178ff89f3d44d6a16ba3ed507"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults-compact/hero-row-4-image-5.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults-compact/hero-row-4-image-5.jpg",
+      "sha256": "f6ae6eab759e145e6a57469cd829a72775f4d672df0f01faf864fa279b1f7d85"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults-compact/hero-row-4-image-6.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults-compact/hero-row-4-image-6.jpg",
+      "sha256": "ff091afcf13c89ffdc6cc904089d7f011606d53349bb806adf7fa396eb751969"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults-compact/hero-row-5-image-1.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults-compact/hero-row-5-image-1.jpg",
+      "sha256": "60d8fe227a5dd725f45c0d101f907a2525c65ee9fb90eda361b71ef7c7ef1df1"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults-compact/hero-row-5-image-2.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults-compact/hero-row-5-image-2.jpg",
+      "sha256": "bf132ffff195271d500fe712736805afb73584f59a28ffe8c850ba0c3e2af0be"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults-compact/hero-row-5-image-3.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults-compact/hero-row-5-image-3.jpg",
+      "sha256": "d6776b454a10af7227de08d88b3128983e6c8d940c63f3dd3ba968870f317c20"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults-compact/hero-row-5-image-4.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults-compact/hero-row-5-image-4.jpg",
+      "sha256": "f4bacaac8247e1d5916b76b76a922b127b6eacafba25a96ba6fe2709e03b83f0"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults-compact/hero-row-5-image-5.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults-compact/hero-row-5-image-5.jpg",
+      "sha256": "026950a98cebd677445253dae9ba0acfa2e05125f27cd02505914c1c35f5d9a1"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults-compact/hero-row-5-image-6.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults-compact/hero-row-5-image-6.jpg",
+      "sha256": "81f74a4ac3f330f2fea30d02b64d856bd11cd7c17a21e400bd8b0d556d4362a9"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults-compact/hero-row-6-image-1.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults-compact/hero-row-6-image-1.jpg",
+      "sha256": "596f80a7e3c3024c3a964d1b0b9807cc3180bf1a75d55e168c6b74d4bdfba34a"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults-compact/hero-row-6-image-2.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults-compact/hero-row-6-image-2.jpg",
+      "sha256": "8fb8996337fbc7ae3ce66a7167c8184d8fe81d1ccaf0c4a436933a6fd5bbb8d4"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults-compact/hero-row-6-image-3.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults-compact/hero-row-6-image-3.jpg",
+      "sha256": "c380080a0abfcda6259400324e7df8ee2abfa14ad51f984b271e5533007fa8f0"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults-compact/hero-row-6-image-4.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults-compact/hero-row-6-image-4.jpg",
+      "sha256": "98af9d3b9619fbe75da4168b321638cdd09211049d6053f77565c8c6cb06aaba"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults-compact/hero-row-6-image-5.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults-compact/hero-row-6-image-5.jpg",
+      "sha256": "07c456120a230bc2c34f796172f57844d102f678fb7aa54df422eb37869bdf4d"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults-compact/hero-row-6-image-6.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults-compact/hero-row-6-image-6.jpg",
+      "sha256": "8250fd359804e3b908aedc36248c9a0b622cf6fae29db8c6036ec1b2c653828f"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults/hero-row-1-image-1.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults/hero-row-1-image-1.jpg",
+      "sha256": "48fa87ca79473a30a14c32ab885cdccdb16f568369258234183935675cd46ad5"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults/hero-row-1-image-2.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults/hero-row-1-image-2.jpg",
+      "sha256": "b347126dd40e85e717e74bcf88b6ba3bbf2ab34d866fd92e78de235f0e5b861d"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults/hero-row-1-image-3.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults/hero-row-1-image-3.jpg",
+      "sha256": "b87a4d90927f4adc66217930aaaea065fd205f4daaba9297d37239a8cb91890d"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults/hero-row-1-image-4.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults/hero-row-1-image-4.jpg",
+      "sha256": "c1a28c5e1adbfe48bd4c5507c9c88d69849294acd2456cd7faba2303f5bd0ac1"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults/hero-row-1-image-5.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults/hero-row-1-image-5.jpg",
+      "sha256": "e51329c5983e7365529579a617837ba14a6ff44fad338feb5f95904d964062fb"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults/hero-row-1-image-6.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults/hero-row-1-image-6.jpg",
+      "sha256": "fcdee6e66a663dab3f2f274cca286c7973e5593c78624d7c60a213cd9b57a593"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults/hero-row-2-image-1.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults/hero-row-2-image-1.jpg",
+      "sha256": "38f77c9e947182c62ecd974ddffe1e217624e6dfdcf1e7b81d7f6aa868ddb7f3"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults/hero-row-2-image-2.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults/hero-row-2-image-2.jpg",
+      "sha256": "395b00844dd212dc2a51a782e6bc1aab86e41cdad6a26eeb9c9527953d41f080"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults/hero-row-2-image-3.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults/hero-row-2-image-3.jpg",
+      "sha256": "798609ab4672cc26f3489b650912a1ccba063de88b3d07e1b06871daab3df2f5"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults/hero-row-2-image-4.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults/hero-row-2-image-4.jpg",
+      "sha256": "9e197b153fdf3f328a157d7a664a0a498098af9d5f381a017cfd1a9bf213ce5f"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults/hero-row-2-image-5.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults/hero-row-2-image-5.jpg",
+      "sha256": "c9b0b20bb1a0d95f26d53cf0d1cfe0fe260201ee9e9ea07ee1ab42c8059d1808"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults/hero-row-2-image-6.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults/hero-row-2-image-6.jpg",
+      "sha256": "f8eb096e512aaeda435fe01c1a47d6933ce7fbaddbb9679c7f0875307b17e7b0"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults/hero-row-3-image-1.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults/hero-row-3-image-1.jpg",
+      "sha256": "13761ee2510d3c9bbc00f298463d99963ae19d2d6a3dd967f552406d4b24397b"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults/hero-row-3-image-2.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults/hero-row-3-image-2.jpg",
+      "sha256": "290c021dc5189ffcf494fac9af5166156ad87ce795dc3dfc98cff74647be14b7"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults/hero-row-3-image-3.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults/hero-row-3-image-3.jpg",
+      "sha256": "48d524d9b6601a0c1049531d68865b6e973b60576f98b34b43900a5b310b9044"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults/hero-row-3-image-4.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults/hero-row-3-image-4.jpg",
+      "sha256": "86e7bf855caf4b6174e534d61123293d028c35729d4ab40b4abf0d83b2e33967"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults/hero-row-3-image-5.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults/hero-row-3-image-5.jpg",
+      "sha256": "dbb4308fb47ac47a8a31af53fa52f4f3ca2afb830417475bc6ebf07ab8063dbc"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults/hero-row-3-image-6.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults/hero-row-3-image-6.jpg",
+      "sha256": "ff98f481ea870aaf8edae2e7083accba94438755cb202685b598796c02f730f8"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults/hero-row-4-image-1.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults/hero-row-4-image-1.jpg",
+      "sha256": "1adb0d4d2083357509618af1ee6ee55c3d394a7de424ad6559587a309d4f5be7"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults/hero-row-4-image-2.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults/hero-row-4-image-2.jpg",
+      "sha256": "2860d44cee7e1223474ae5744c63957f7b56c6b7f4b468cd9a0227af60b0fc6b"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults/hero-row-4-image-3.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults/hero-row-4-image-3.jpg",
+      "sha256": "85067ef49c641c390c5ddcbb0c8518a29d91adbfe84540111469dc2b5b61c54f"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults/hero-row-4-image-4.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults/hero-row-4-image-4.jpg",
+      "sha256": "bb4cac40d9f609c173178b1b6b9d8838511e2437640621d5929cbd737ca8869c"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults/hero-row-4-image-5.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults/hero-row-4-image-5.jpg",
+      "sha256": "efe181f97f448172c158f8d5ca5018a0c4b5ae564ac887d3b1f41b2b41fa9d77"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults/hero-row-4-image-6.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults/hero-row-4-image-6.jpg",
+      "sha256": "f616d4b849030096b626a5f6a45cd0f8445392c4b76b86324513bb0ad5354582"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults/hero-row-5-image-1.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults/hero-row-5-image-1.jpg",
+      "sha256": "58f8d139177afb26bd324bf2ceb736c4e36b60a411d5ab7db228e4cf4aa04f43"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults/hero-row-5-image-2.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults/hero-row-5-image-2.jpg",
+      "sha256": "7fc071de263dcabf0849b4a3643b05e7f0a59beb660b3a08b00391ce081ad4af"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults/hero-row-5-image-3.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults/hero-row-5-image-3.jpg",
+      "sha256": "b1e68c2a0dace9e8abc95c69ddd17ff933f88135d08b4cb307f1df7859ba3bcd"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults/hero-row-5-image-4.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults/hero-row-5-image-4.jpg",
+      "sha256": "ca82853d25d87b23c86e837f85ed1f166b675e589143cde9943ed05ee3b0d86d"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults/hero-row-5-image-5.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults/hero-row-5-image-5.jpg",
+      "sha256": "d1204b686eb88043295e324c2dcf76a3d69dcd5847c08b0078c9dadb54c52418"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults/hero-row-5-image-6.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults/hero-row-5-image-6.jpg",
+      "sha256": "e6e8100587a87f683c3ebb04811286b1e475cb8bca3e5aedfd8b54d7a2395fe2"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults/hero-row-6-image-1.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults/hero-row-6-image-1.jpg",
+      "sha256": "3150ad68b0c6d3c51a529af33574a882fe0a176b9dc072fd10958d9d45793515"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults/hero-row-6-image-2.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults/hero-row-6-image-2.jpg",
+      "sha256": "8c1b55d5a43e968fcb8e95a1821d4d75b185a0c8b5918c720ede54a31c28f63d"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults/hero-row-6-image-3.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults/hero-row-6-image-3.jpg",
+      "sha256": "8ffccfb8dc96a5c4ef6e014295b2b189639adc6f450571dbac1912e2b871cf13"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults/hero-row-6-image-4.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults/hero-row-6-image-4.jpg",
+      "sha256": "9dccb8b30f8c39b5e7f04ca1f93e6caa6551420473e87a26f66e9041783a8d03"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults/hero-row-6-image-5.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults/hero-row-6-image-5.jpg",
+      "sha256": "cbdc9dd72086a30d63b2d81a95e8435d3722e6e03c9276f2db39c3965589744a"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/assets/images/recraft-hero/defaults/hero-row-6-image-6.jpg",
+      "local": "src/section/assets/images/recraft-hero/defaults/hero-row-6-image-6.jpg",
+      "sha256": "fe843e2146e87f9c53602b82aa4efcb9a5c9c5b600abd75b10e38aadf24556d7"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/components/pages/home/hero-gallery-media-store.ts",
+      "local": "src/section/components/pages/home/hero-gallery-media-store.ts",
+      "sha256": "9afc1907430a16a99981cf8323846b07f1cdbbf6b64ec3500b79521b31b0f391"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/components/pages/home/hero-heading-cta.tsx",
+      "local": "src/section/components/pages/home/hero-heading-cta.tsx",
+      "sha256": "7c80281805a8761e0457364d3bb0b351af6d7103ac588b89a31521857dc0faf0"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/components/ui/button.tsx",
+      "local": "src/section/components/ui/button.tsx",
+      "sha256": "8c96c2f864b36285344484fd931d763fdb921e3e8fb99199481a5a753cdc5d2a"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/lib/utils.ts",
+      "local": "src/section/lib/utils.ts",
+      "sha256": "bf8292e3e256bb6696e46bfe06be6aad3af712ffd06469af910d96cc1c111bb4"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/components/pages/home/hero-heading-subtitle.tsx",
+      "local": "src/section/components/pages/home/hero-heading-subtitle.tsx",
+      "sha256": "fc5385bb8f6ecfbca438179c7a94b99155d8fd94b64e75d422d74e8d4cdad9f5"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/components/pages/home/hero-v4-styles.module.css",
+      "local": "src/section/components/pages/home/hero-v4-styles.module.css",
+      "sha256": "de92b00ba17ff47e5fcdbf37d44b8f4321c7d51fa10f3d94199256f7704ec077"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/components/pages/home/hero-sphere-gallery.tsx",
+      "local": "src/section/components/pages/home/hero-sphere-gallery.tsx",
+      "sha256": "94d00879083d93316a536ea61db5b79e4e443254c48326de2989c0d5e31ca8b2"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/shared/hooks/use-prefers-reduced-motion.ts",
+      "local": "src/section/shared/hooks/use-prefers-reduced-motion.ts",
+      "sha256": "3951392eee5140f6cfb7ad5f315ee3b63d688c190abe159dff1ca4247833cc6e"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/components/pages/home/hero-gallery-drag.ts",
+      "local": "src/section/components/pages/home/hero-gallery-drag.ts",
+      "sha256": "ea8d96962a723ddaa4adb759f84fa2a3bb95ed001df1bc1036475000c1abba9f"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/components/pages/home/hero-gallery-snapshot.ts",
+      "local": "src/section/components/pages/home/hero-gallery-snapshot.ts",
+      "sha256": "467c7aa22dcb79a1e07fe87133630ef991b185bab253880d9e0e903253d15c28"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/components/pages/home/home-hero-media-readiness.ts",
+      "local": "src/section/components/pages/home/home-hero-media-readiness.ts",
+      "sha256": "410a9bb4499b3a9e6645da59ae496febe5ce5da821fb78bbb22165a761a336dc"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/components/pages/home/hero-dispersion-post-shader.ts",
+      "local": "src/section/components/pages/home/hero-dispersion-post-shader.ts",
+      "sha256": "418cf129b1834fa7f20aff15fb11e7a465b1d00210cbf86be55e3244edb488fb"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/components/pages/home/hero-sphere-layout.ts",
+      "local": "src/section/components/pages/home/hero-sphere-layout.ts",
+      "sha256": "9c81996b1d1b5fdceefbabb6d886103cfab0d9c117bbd3448296f2f6201e388f"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/components/pages/home/hero-sphere-gallery-webgl.ts",
+      "local": "src/section/components/pages/home/hero-sphere-gallery-webgl.ts",
+      "sha256": "6304bb655c48244f61a5426bb5a3b21d57d694c0fff2f9eadd0be5925b1f574e"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/components/pages/home/hero-motion-effects-envelope.ts",
+      "local": "src/section/components/pages/home/hero-motion-effects-envelope.ts",
+      "sha256": "491b4c2bece1f1c2218348542bc0007a1808b53fb6d5851c1fc7073b14f2793c"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/components/pages/home/hero-sphere-gallery-motion.ts",
+      "local": "src/section/components/pages/home/hero-sphere-gallery-motion.ts",
+      "sha256": "10710b558754293ef49c063700307fcf8f276864ebaae5d17c90e3a44ca7a6e5"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/components/pages/home/hero-sphere-gallery-passes.ts",
+      "local": "src/section/components/pages/home/hero-sphere-gallery-passes.ts",
+      "sha256": "40527b7026bf6003b45f095e2ab92d29b8bf8f58effaab07c437ade8d73b37d8"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/components/pages/home/hero-sphere-gallery-textures.ts",
+      "local": "src/section/components/pages/home/hero-sphere-gallery-textures.ts",
+      "sha256": "5cfa7109b820ecdcd7eba2a93fd6bb692772efae06ca30c232febb6b2625e749"
+    },
+    {
+      "source": "/Users/kusnizza/Projects/recraft/recraft-landing/recraft-v4-styles/src/components/pages/home/hero-sphere-gallery-reveal.ts",
+      "local": "src/section/components/pages/home/hero-sphere-gallery-reveal.ts",
+      "sha256": "9a63f72406f545007b3adf208657735f1706b1b706791dcf0119d8f653b2b3bc"
+    }
+  ],
+  "externalImports": [
+    "class-variance-authority",
+    "clsx",
+    "next/dynamic",
+    "next/image",
+    "next/link",
+    "react",
+    "slugify",
+    "tailwind-merge"
+  ]
+}

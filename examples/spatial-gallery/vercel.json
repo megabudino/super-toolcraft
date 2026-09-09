@@ -1,0 +1,22 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm run build -- --base /demos/spatial-gallery/",
+  "rewrites": [
+    {
+      "source": "/demos/spatial-gallery/assets/:path*",
+      "destination": "/assets/:path*"
+    },
+    {
+      "source": "/demos/spatial-gallery/gallery-presets/:path*",
+      "destination": "/gallery-presets/:path*"
+    },
+    {
+      "source": "/demos/spatial-gallery",
+      "destination": "/"
+    },
+    {
+      "source": "/demos/spatial-gallery/:path*",
+      "destination": "/"
+    }
+  ]
+}

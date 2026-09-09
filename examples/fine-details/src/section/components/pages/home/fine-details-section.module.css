@@ -1,0 +1,165 @@
+.section {
+  height: 32rem;
+  transition: height 250ms ease-out;
+}
+
+.imageLayer {
+  display: contents;
+}
+
+@container recraft-section (max-width: 79.9375rem) {
+  .section {
+    display: flex;
+    height: auto;
+    min-height: 32rem;
+    flex-direction: column;
+    padding-bottom: 2rem;
+    transition: min-height 250ms ease-out;
+  }
+
+  .section[data-fine-details-image-state='loading'],
+  .section[data-fine-details-image-state='carousel'] {
+    min-height: 56rem;
+  }
+
+  .imageLayer[data-initial-trail='true'] {
+    display: none;
+  }
+
+  .section [data-fine-details-typography-container] {
+    position: static !important;
+    inset: auto !important;
+    left: auto !important;
+    width: 100%;
+    max-width: none !important;
+    flex: none;
+    transform: none !important;
+  }
+
+  .section [data-fine-details-upper-row] {
+    position: static !important;
+    padding: 2rem 1.5rem 0 !important;
+  }
+
+  .section [data-fine-details-upper-left-typography] {
+    font-size: clamp(3.5rem, calc(16 * var(--reference-vw)), 7.5rem) !important;
+  }
+
+  .section [data-fine-details-history-link] {
+    display: none;
+  }
+
+  .section [data-fine-details-lower-right-typography] {
+    position: static !important;
+    inset: auto !important;
+    width: 100% !important;
+    gap: 0.5rem !important;
+    margin-top: clamp(0.25rem, calc(1 * var(--reference-vw)), 0.75rem);
+    padding: 0 1.5rem;
+  }
+
+  .section [data-fine-details-lower-heading] {
+    font-size: clamp(2.2rem, calc(11 * var(--reference-vw)), 5.5rem) !important;
+  }
+
+  .section [data-fine-details-lower-body] {
+    width: min(100%, 28rem) !important;
+    font-size: 1.125rem !important;
+  }
+
+  .section [data-fine-details-prompt] {
+    position: static !important;
+    top: auto !important;
+    left: auto !important;
+    flex: none;
+    align-self: center;
+    margin-top: 2rem;
+    transform: none !important;
+  }
+}
+
+@container recraft-section (max-width: 47.9375rem) {
+  .section [data-fine-details-upper-row] {
+    padding-top: calc(2rem + 28px) !important;
+  }
+
+  .section [data-fine-details-lower-right-typography] {
+    margin-top: calc(clamp(0.25rem, calc(1 * var(--reference-vw)), 0.75rem) - 20px);
+  }
+
+  .section [data-fine-details-prompt] {
+    margin-top: calc(2rem + 12px);
+  }
+}
+
+@container recraft-section (min-width: 48rem) and (max-width: 79.9375rem) {
+  .section {
+    min-height: 36rem;
+  }
+
+  .section[data-fine-details-image-state='loading'],
+  .section[data-fine-details-image-state='carousel'] {
+    min-height: 60rem;
+  }
+}
+
+@container recraft-section (min-width: 48rem) and (max-width: 63.9375rem) {
+  .section [data-fine-details-upper-row] {
+    padding-top: calc(2rem + 40px) !important;
+  }
+
+  .section [data-fine-details-lower-right-typography] {
+    margin-top: calc(clamp(0.25rem, calc(1 * var(--reference-vw)), 0.75rem) - 20px);
+  }
+
+  .section [data-fine-details-lower-body] {
+    width: max-content !important;
+    max-width: none !important;
+    white-space: nowrap;
+  }
+
+  .section [data-fine-details-prompt] {
+    margin-top: calc(2rem + 20px);
+  }
+}
+
+@container recraft-section (min-width: 64rem) and (max-width: 79.9375rem) {
+  .section [data-fine-details-upper-row] {
+    padding-top: 4.5rem !important;
+  }
+
+  .section [data-fine-details-upper-left-typography] {
+    font-size: 7.2rem !important;
+  }
+
+  .section [data-fine-details-lower-right-typography] {
+    margin-top: clamp(0.1667rem, calc(0.6667 * var(--reference-vw)), 0.5rem);
+  }
+
+  .section [data-fine-details-lower-heading] {
+    font-size: 5.28rem !important;
+  }
+
+  .section [data-fine-details-lower-body] {
+    width: max-content !important;
+    max-width: none !important;
+    white-space: nowrap;
+  }
+
+  .section [data-fine-details-prompt] {
+    margin-top: 3.25rem;
+  }
+}
+
+@container recraft-section (min-width: 80rem) {
+  .section {
+    height: min(var(--fine-details-desktop-height), var(--fine-details-desktop-aspect-height));
+    transition: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section {
+    transition: none;
+  }
+}

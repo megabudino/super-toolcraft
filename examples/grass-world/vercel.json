@@ -1,0 +1,12 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm run build -- --base /demos/grass-world/",
+  "rewrites": [
+    {
+      "source": "/demos/grass-world/assets/:path*",
+      "destination": "/assets/:path*"
+    },
+    { "source": "/demos/grass-world", "destination": "/" },
+    { "source": "/demos/grass-world/:path*", "destination": "/" }
+  ]
+}

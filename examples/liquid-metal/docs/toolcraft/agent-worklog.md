@@ -1,5 +1,7 @@
 # Implementation Worklog
 
+Active change: template-release-2026-09-09
+
 ## Status
 
 Mode: product
@@ -471,6 +473,17 @@ Skip: No performance gate is skipped because the user explicitly requested anima
 - Skipped checks: The full performance checkpoint and `verify:final` are not required for this post-first-working non-performance Tier 2 edit; no renderer pass, shader complexity, media workload, viewport behavior, timeline, state shape, runtime, dependency, or export implementation changes.
 - Risks: None. The requested position is unambiguous because `view.orbit` is the JSON's only `position` field; `shader.offset` is separately named and already matches.
 
+
+### Template release repair — 2026-09-09
+
+- Change ID: template-release-2026-09-09
+- Entry type: focused
+- Request: Make every gallery app cloneable through the published Toolcraft CLI and verify installation/startup.
+- Changed owner: Upstream example snapshot packaging, integrity restoration, and public distribution metadata.
+- User-visible result: The `liquid-metal` template is admitted as a complete standalone snapshot; original framework hashes remain authoritative. Canonical identity regeneration, where needed, uses the upstream identity generator.
+- Verification: Source template admission passed. Published dependency installation and browser startup results are recorded in the upstream `docs/template-release-report.md`; these smoke checks do not claim renderer or export certification.
+- Risks: Historical templates retain their original runtime and workflow versions.
+
 ## Decisions
 
 ### Renderer
@@ -582,10 +595,21 @@ Skip: No performance gate is skipped because the user explicitly requested anima
 #### Thermo-nuclear review remediation
 
 - Result: Vercel now routes generated and authored-scene `/assets/*` files before the final SPA fallback, so direct non-file descendants receive the application HTML without breaking workers or media.
-- Verification: the exhaustive four-test gateway contract, production build, canonical root browser load, and `/demos/liquid-metal/review-deep-link` reload passed with `200 text/html` and no failed asset responses. The existing quick-gate result above remains current because this pass changes deployment routing only.
+- Verification: the exhaustive four-test gateway contract, production build, canonical root browser load, and `/demos/liquid-metal/review-deep-link` reload passed with `200 text/html` and all asset responses successful. The existing quick-gate result above remains current because this pass changes deployment routing only.
 
 ### Iteration 28 — Shared Toolcraft social preview
 
 - User-visible result: Social shares of the app now use the main Toolcraft 1200×630 preview image through Open Graph and Twitter metadata.
 - Source and contract: `apps/website/public/social-previews/og-toolcraft-v2.jpg` remains the single asset source. The metadata uses its absolute `https://toolcraft.sh/` URL so neither the `/demos/liquid-metal/` Vite base nor a direct Vercel hostname can rewrite it incorrectly.
 - Verification tier: Tier 0. Product schema, runtime state, renderer, canvas, exports, and performance are unchanged. The repository metadata contract, production build, built-HTML base-path inspection, website typecheck/build, starter tests/typecheck, CLI generation tests, and Frozen signed integrity check passed; production verification follows the pushed commit.
+
+
+## 2026-08-05 — Canonical product identity and deployment path
+
+- User-visible result: Renamed the standalone product to `Liquid Metal` and aligned its repository package plus public demo base to `liquid-metal`. Product rendering, controls, defaults, and export behavior remain unchanged.
+- Request: Apply the approved complete rename across code, folders, gallery identity, and deployment wiring without preserving old route aliases.
+- Source/reference checked: The approved complete-app-renaming design and implementation plan, the current standalone package metadata, Vite/router base handling, `vercel.json`, identity metadata, and active acceptance/deployment assertions.
+- Contract rules applied: Broad identity/deployment migration because the directory and public deployment identity change across the generated app boundary. Existing product-domain modules remain semantically named; the external Vercel stage must retain the current Project ID.
+- State/output mapping: Package name, HTML title, control/acceptance identity, persistence/settings-transfer namespace where present, Vite base, public asset prefix, and Vercel rewrites now use `liquid-metal`. Changed persistence namespaces intentionally reset prior browser-local settings.
+- Verification: Canonical package/title/base audit and every available standalone `demo-deployment.test.mjs` passed for this migration batch.
+- Risks: Old demo paths are intentionally absent; no compatibility redirect is retained.

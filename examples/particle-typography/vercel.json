@@ -1,0 +1,18 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm run build -- --base /demos/particle-typography/",
+  "rewrites": [
+    {
+      "source": "/demos/particle-typography/assets/:path*",
+      "destination": "/assets/:path*"
+    },
+    {
+      "source": "/demos/particle-typography",
+      "destination": "/"
+    },
+    {
+      "source": "/demos/particle-typography/:path*",
+      "destination": "/"
+    }
+  ]
+}

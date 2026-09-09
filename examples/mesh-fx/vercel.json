@@ -1,0 +1,9 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm run build -- --base /demos/mesh-fx/",
+  "rewrites": [
+    { "source": "/demos/mesh-fx/assets/:path*", "destination": "/assets/:path*" },
+    { "source": "/demos/mesh-fx", "destination": "/" },
+    { "source": "/demos/mesh-fx/:path*", "destination": "/" }
+  ]
+}

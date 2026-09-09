@@ -1,0 +1,102 @@
+import { waveDefaultValues } from "./wave-default-values";
+
+export type HeroVector = Readonly<{ x: number; y: number }>;
+
+export const cameraDefaults = {
+  fov: waveDefaultValues["camera.fov"],
+  height: waveDefaultValues["camera.height"],
+  pitch: waveDefaultValues["camera.pitch"],
+  position: { ...waveDefaultValues["camera.position"] } as HeroVector,
+  roll: waveDefaultValues["camera.roll"],
+  yaw: waveDefaultValues["camera.yaw"],
+} as const;
+
+const cameraReason =
+  "Camera edits update the retained perspective camera and shadows without rebuilding geometry.";
+
+export const cameraSection = {
+  controls: {
+    position: {
+      applicability: { mode: "always" },
+      defaultValue: cameraDefaults.position,
+      description: "Places the camera across and along the vault on a normalized pad.",
+      label: "Position",
+      max: 1,
+      min: -1,
+      performanceReason: cameraReason,
+      performanceRole: "responsiveness",
+      target: "camera.position",
+      type: "vector",
+      xLabel: "X",
+      yLabel: "Z",
+    },
+    height: {
+      applicability: { mode: "always" },
+      defaultValue: cameraDefaults.height,
+      label: "Height",
+      max: 40,
+      min: -40,
+      performanceReason: cameraReason,
+      performanceRole: "responsiveness",
+      sliderValueKind: "continuous",
+      step: 0.1,
+      target: "camera.height",
+      type: "slider",
+    },
+    yaw: {
+      applicability: { mode: "always" },
+      defaultValue: cameraDefaults.yaw,
+      label: "Yaw",
+      max: 180,
+      min: -180,
+      performanceReason: cameraReason,
+      performanceRole: "responsiveness",
+      sliderValueKind: "continuous",
+      target: "camera.yaw",
+      type: "slider",
+      unit: "°",
+    },
+    pitch: {
+      applicability: { mode: "always" },
+      defaultValue: cameraDefaults.pitch,
+      label: "Pitch",
+      max: 89,
+      min: -30,
+      performanceReason: cameraReason,
+      performanceRole: "responsiveness",
+      sliderValueKind: "continuous",
+      target: "camera.pitch",
+      type: "slider",
+      unit: "°",
+    },
+    roll: {
+      applicability: { mode: "always" },
+      defaultValue: cameraDefaults.roll,
+      label: "Roll",
+      max: 90,
+      min: -90,
+      performanceReason: cameraReason,
+      performanceRole: "responsiveness",
+      sliderValueKind: "continuous",
+      target: "camera.roll",
+      type: "slider",
+      unit: "°",
+    },
+    fov: {
+      applicability: { mode: "always" },
+      defaultValue: cameraDefaults.fov,
+      label: "Field of view",
+      max: 110,
+      min: 20,
+      performanceReason: cameraReason,
+      performanceRole: "responsiveness",
+      sliderValueKind: "continuous",
+      target: "camera.fov",
+      type: "slider",
+      unit: "°",
+    },
+  },
+  id: "camera",
+  layout: "standalone",
+  title: "Camera",
+} as const;

@@ -1,5 +1,7 @@
 # Implementation Worklog
 
+Active change: template-release-2026-09-09
+
 ## Status
 
 Mode: product
@@ -296,6 +298,17 @@ Skip: full `pnpm verify:perf` because a constant default-value change adds no re
 - Verification: `pnpm verify:quick` passed `ai:check` and the local docs check, then stopped only at the pre-existing generated-runtime integrity drift in four `src/toolcraft` files. Direct continuation passed `node --test scripts/*.test.mjs` (2 tests), `./node_modules/.bin/tsc -p tsconfig.json --noEmit`, and `./node_modules/.bin/vitest run src --passWithNoTests` (184 tests). Focused browser proof on `http://localhost:3004/` selected Blue 900, clicked the real `Reset Ink section` action, then confirmed `Primary family Amber` and `Primary shade 500` both had `aria-pressed="true"`, the prior tokens were false, and the console had no errors.
 - Skipped checks: Full `pnpm verify:perf` because this changes no renderer code or workload. The copied-runtime integrity failure was not fixed because its four `src/toolcraft` files pre-date and are outside this app-default change; the systematic-debugging classification is copied runtime source, which the generated-app contract prohibits patching locally for this task.
 - Risks: Existing persisted user choices intentionally continue to override schema defaults until the user invokes Reset; this preserves the current persistence contract.
+
+
+### Template release repair — 2026-09-09
+
+- Change ID: template-release-2026-09-09
+- Entry type: focused
+- Request: Make every gallery app cloneable through the published Toolcraft CLI and verify installation/startup.
+- Changed owner: Upstream example snapshot packaging, integrity restoration, and public distribution metadata.
+- User-visible result: The `draw-tool` template is admitted as a complete standalone snapshot; original framework hashes remain authoritative. Canonical identity regeneration, where needed, uses the upstream identity generator.
+- Verification: Source template admission passed. Published dependency installation and browser startup results are recorded in the upstream `docs/template-release-report.md`; these smoke checks do not claim renderer or export certification.
+- Risks: Historical templates retain their original runtime and workflow versions.
 
 ## Renderer Technique Decision Matrix
 

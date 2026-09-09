@@ -1,0 +1,342 @@
+{
+  "asset": {
+    "byteLength": 1405508,
+    "fileName": "donut-reference.glb",
+    "sha256": "2e02be281a4ec7872eab657da299d322498cb4770481301fe1af95bd24e0a392"
+  },
+  "environmentPreview": {
+    "byteLength": 772242,
+    "fileName": "brown_photostudio_02_1k.png",
+    "sha256": "8854f4ad240256ec279d9888671fc539d55b9734b6418103f1b76b92c3ff9d38",
+    "sourceFileName": "brown_photostudio_02_1k.hdr",
+    "sourceSha256": "469abc5e6035b6c450bae8adbb448f8d1fa7c51d9e384e501516c28352c91b58"
+  },
+  "geometryNodes": {
+    "groups": {
+      "Main group": {
+        "linkCount": 391,
+        "nodeCount": 314
+      },
+      "Sprinkle": {
+        "linkCount": 29,
+        "nodeCount": 26
+      },
+      "Subtractive mix": {
+        "linkCount": 14,
+        "nodeCount": 10
+      },
+      "icing": {
+        "linkCount": 24,
+        "nodeCount": 21
+      },
+      "sprinkle instance": {
+        "linkCount": 74,
+        "nodeCount": 59
+      }
+    },
+    "icing": {
+      "clearBase": false,
+      "clearDetail": false,
+      "colourLinear": [
+        0.86699069,
+        0.62104517,
+        0.0,
+        1.0
+      ],
+      "enable": true
+    },
+    "sprinkle": {
+      "clear": false,
+      "colourType": 4,
+      "flow": 1.0,
+      "metallic": 0.0,
+      "scale": 0.5,
+      "shapeType": 3,
+      "solidColourLinear": [
+        0.02099699,
+        0.87032992,
+        0.41709954,
+        1.0
+      ]
+    }
+  },
+  "lights": [
+    {
+      "color": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "energy": 3926.99072266,
+      "location": [
+        -11.04914665,
+        5.82351398,
+        12.17998028
+      ],
+      "name": "Area",
+      "rotationEuler": [
+        -0.06315893,
+        -0.73266619,
+        -0.22124048
+      ],
+      "scale": [
+        9.38864994,
+        9.38864994,
+        9.38864899
+      ],
+      "shape": "SQUARE",
+      "size": 0.44,
+      "type": "AREA"
+    },
+    {
+      "color": [
+        1.0,
+        0.83975703,
+        0.67872483
+      ],
+      "energy": 785.39819336,
+      "location": [
+        -4.8432622,
+        2.09873343,
+        6.86286879
+      ],
+      "name": "Area.001",
+      "rotationEuler": [
+        -0.51845843,
+        -0.43123901,
+        0.50585479
+      ],
+      "scale": [
+        6.08736277,
+        6.08736181,
+        6.08736229
+      ],
+      "shape": "SQUARE",
+      "size": 1.0,
+      "type": "AREA"
+    },
+    {
+      "color": [
+        0.49695161,
+        0.63886738,
+        0.89000595
+      ],
+      "energy": 392.69909668,
+      "location": [
+        4.14147997,
+        4.83855629,
+        3.91531706
+      ],
+      "name": "Area.002",
+      "rotationEuler": [
+        -0.79736966,
+        -0.55674714,
+        -1.13362074
+      ],
+      "scale": [
+        4.70046997,
+        4.70046949,
+        4.70047045
+      ],
+      "shape": "SQUARE",
+      "size": 1.0,
+      "type": "AREA"
+    }
+  ],
+  "materials": {
+    "donut": {
+      "baseColorLinear": [
+        0.73714453,
+        0.30707353,
+        0.14665124,
+        1.0
+      ],
+      "coatWeight": 0.25,
+      "ior": 1.45000005,
+      "roughness": 0.53999996,
+      "sheenWeight": 0.2,
+      "source": "Material",
+      "subsurfaceScale": 0.11272728,
+      "subsurfaceWeight": 1.0
+    },
+    "icing": {
+      "baseColorLinear": [
+        0.16440767,
+        0.00246962,
+        0.02919582,
+        1.0
+      ],
+      "coatWeight": 0.18636364,
+      "ior": 1.45000005,
+      "roughness": 0.47090909,
+      "sheenWeight": 0.06109091,
+      "source": "icing",
+      "subsurfaceScale": 0.09890913,
+      "subsurfaceWeight": 1.0
+    },
+    "plate": {
+      "baseColorLinear": [
+        0.80000001,
+        0.80000001,
+        0.80000001,
+        1.0
+      ],
+      "ior": 1.45000005,
+      "roughness": 0.19454545,
+      "source": "Material.002"
+    },
+    "sprinkle": {
+      "baseColorLinear": [
+        0.80000001,
+        0.80000001,
+        0.80000001,
+        1.0
+      ],
+      "colourDriver": "Sprinkle.GeometryNodes.Colour Type",
+      "ior": 1.45000005,
+      "metallicDriver": "Sprinkle.GeometryNodes.Metallic",
+      "roughness": 0.28545454,
+      "source": "sprinkle"
+    }
+  },
+  "meshes": [
+    {
+      "bounds": {
+        "max": [
+          1.56169856,
+          1.50817323,
+          0.65062463
+        ],
+        "min": [
+          -1.52801144,
+          -1.53413343,
+          -0.63190407
+        ]
+      },
+      "matrixWorld": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "name": "Base",
+      "polygons": 21504,
+      "triangles": 43008,
+      "vertices": 21504
+    },
+    {
+      "bounds": {
+        "max": [
+          2.31709313,
+          2.31709313,
+          -0.05038659
+        ],
+        "min": [
+          -2.31709313,
+          -2.31709313,
+          -0.76286042
+        ]
+      },
+      "matrixWorld": [
+        [
+          3.4167788,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          3.4167788,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          3.4167788,
+          -0.17036119
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "name": "Plate",
+      "polygons": 3840,
+      "triangles": 7680,
+      "vertices": 3842
+    }
+  ],
+  "referenceTimeline": "none",
+  "runtimeGeometry": {
+    "byteLength": 1216604,
+    "fileName": "donut-reference.bin",
+    "sha256": "b14b08ca4b8c617236029ed6fe8b2026e77c0fbbb371c950f4c27c3e078b185c"
+  },
+  "scene": {
+    "camera": null,
+    "colorManagement": {
+      "displayDevice": "sRGB",
+      "exposure": 0.0,
+      "gamma": 1.0,
+      "look": "Medium High Contrast",
+      "viewTransform": "Filmic"
+    },
+    "engine": "BLENDER_EEVEE_NEXT",
+    "fps": 30,
+    "frameRange": [
+      1,
+      10000
+    ],
+    "resolution": [
+      1920,
+      1080
+    ]
+  },
+  "schemaVersion": 1,
+  "source": {
+    "blenderFileVersion": [
+      4,
+      0,
+      2
+    ],
+    "byteLength": 4342411,
+    "exportBlenderVersion": "4.5.2 LTS",
+    "fileName": "Donut Simulation Blender Geometry Nodes.blend",
+    "sha256": "12067058bddd5277d2bdaa92aad8e75e383bc503f16237f0e249f60d320df7dc"
+  },
+  "world": {
+    "cameraRayColorLinear": [
+      0.17694668,
+      0.48189244,
+      0.909513,
+      1.0
+    ],
+    "cameraRayStrength": 1.92,
+    "environment": "brown_photostudio_02",
+    "environmentRotationRadians": 1.57079633,
+    "environmentStrength": 0.25
+  }
+}

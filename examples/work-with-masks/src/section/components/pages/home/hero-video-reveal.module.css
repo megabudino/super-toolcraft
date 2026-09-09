@@ -1,0 +1,57 @@
+.edge {
+  --radius: 30px;
+  --corner-side: right;
+  --solid-side: left;
+
+  position: absolute;
+  z-index: 1;
+  /* Overlap the video edge to hide seams from subpixel compositing at canvas zoom. */
+  inset-block: -2px;
+  width: calc((calc(100 * var(--hero-vw)) - 100%) / 2 + var(--radius));
+  pointer-events: none;
+  /* Overlap the corner tiles with the solid mask to avoid seams at fractional scroll positions. */
+  background:
+    radial-gradient(
+        circle at bottom var(--corner-side),
+        transparent var(--radius),
+        var(--background) calc(var(--radius) + 1px)
+      )
+      top var(--corner-side) / calc(var(--radius) + 1px) var(--radius) no-repeat,
+    radial-gradient(
+        circle at top var(--corner-side),
+        transparent var(--radius),
+        var(--background) calc(var(--radius) + 1px)
+      )
+      bottom var(--corner-side) / calc(var(--radius) + 1px) var(--radius) no-repeat,
+    linear-gradient(var(--background), var(--background)) var(--solid-side) center /
+      calc(100% - var(--radius)) 100% no-repeat;
+}
+
+.leftEdge {
+  left: calc((100% - calc(100 * var(--hero-vw))) / 2);
+}
+
+.rightEdge {
+  --corner-side: left;
+  --solid-side: right;
+
+  right: calc((100% - calc(100 * var(--hero-vw))) / 2);
+}
+
+@container percents-hero (width < 1536px) {
+  .edge {
+    width: calc((calc(100 * var(--hero-vw)) - min(100%, 1280px)) / 2 + var(--radius));
+  }
+}
+
+@container percents-hero (width < 768px) {
+  .edge {
+    --radius: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .edge {
+    display: none;
+  }
+}

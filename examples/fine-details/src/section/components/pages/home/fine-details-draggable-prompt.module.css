@@ -1,0 +1,78 @@
+.root {
+  pointer-events: none;
+}
+
+.flightLayer {
+  --fine-details-prompt-fly-x: 0px;
+  --fine-details-prompt-fly-y: 0px;
+
+  width: 100%;
+  transform: translate3d(
+    var(--fine-details-prompt-fly-x, 0px),
+    var(--fine-details-prompt-fly-y, 0px),
+    0
+  );
+}
+
+.resetCompensationLayer {
+  --fine-details-prompt-reset-compensation-x: 0px;
+  --fine-details-prompt-reset-compensation-y: 0px;
+
+  pointer-events: auto;
+  width: 100%;
+  transform: translate3d(
+    var(--fine-details-prompt-reset-compensation-x, 0px),
+    var(--fine-details-prompt-reset-compensation-y, 0px),
+    0
+  );
+}
+
+.root[data-fine-details-prompt-drag-enabled='true'] {
+  touch-action: pan-y;
+}
+
+@container recraft-section (min-width: 80rem) {
+  .root[data-fine-details-prompt-drag-enabled='true'] {
+    touch-action: none;
+    cursor: grab;
+  }
+
+  .root[data-fine-details-prompt-drag-enabled='true'][data-fine-details-prompt-dragging='true'] {
+    cursor: grabbing;
+  }
+}
+
+.root[data-fine-details-prompt-drag-enabled='true']
+  :is(
+    a,
+    button,
+    input,
+    label,
+    option,
+    select,
+    summary,
+    textarea,
+    [aria-haspopup],
+    [aria-pressed],
+    [contenteditable]:not([contenteditable='false']),
+    [data-fine-details-prompt-no-drag],
+    [draggable='true'],
+    [href],
+    [onclick],
+    [role='button'],
+    [role='checkbox'],
+    [role='combobox'],
+    [role='link'],
+    [role='listbox'],
+    [role='menuitem'],
+    [role='option'],
+    [role='radio'],
+    [role='slider'],
+    [role='spinbutton'],
+    [role='switch'],
+    [role='tab'],
+    [role='textbox'],
+    [tabindex]:not([tabindex='-1'])
+  ) {
+  cursor: revert;
+}

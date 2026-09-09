@@ -1,0 +1,9 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm run build -- --base /demos/logo-sphere/",
+  "rewrites": [
+    { "source": "/demos/logo-sphere/assets/:path*", "destination": "/assets/:path*" },
+    { "source": "/demos/logo-sphere", "destination": "/" },
+    { "source": "/demos/logo-sphere/:path*", "destination": "/" }
+  ]
+}

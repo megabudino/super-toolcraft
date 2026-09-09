@@ -1,0 +1,9 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "pnpm build --base /demos/suminagashi-studio/",
+  "rewrites": [
+    { "source": "/demos/suminagashi-studio/assets/:path*", "destination": "/assets/:path*" },
+    { "source": "/demos/suminagashi-studio", "destination": "/" },
+    { "source": "/demos/suminagashi-studio/:path*", "destination": "/" }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm run build -- --base /demos/micrographics/",
+  "rewrites": [
+    {
+      "source": "/demos/micrographics/assets/:path*",
+      "destination": "/assets/:path*"
+    },
+    {
+      "source": "/demos/micrographics/covers/:path*",
+      "destination": "/covers/:path*"
+    },
+    {
+      "source": "/demos/micrographics",
+      "destination": "/"
+    },
+    {
+      "source": "/demos/micrographics/:path*",
+      "destination": "/"
+    }
+  ]
+}

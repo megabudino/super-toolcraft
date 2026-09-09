@@ -1,0 +1,394 @@
+{
+  "appId": "grass-studio",
+  "canvas": {
+    "size": {
+      "height": 1080,
+      "unit": "px",
+      "width": 1920
+    }
+  },
+  "exportedAt": "2026-07-21T21:50:19.457Z",
+  "source": "toolcraft-settings",
+  "timeline": {
+    "currentTimeSeconds": 0,
+    "durationSeconds": 6,
+    "expanded": false,
+    "isLooping": true,
+    "isPlaying": false
+  },
+  "values": {
+    "canvas.aspectRatio": {
+      "height": 9,
+      "mode": "preset",
+      "value": "16:9",
+      "width": 16
+    },
+    "canvas.size.width": 1920,
+    "canvas.size.height": 1080,
+    "canvas.renderScale": 2,
+    "field.width": 9,
+    "field.depth": 6,
+    "solo.terrain": false,
+    "terrain.noiseOffset": [
+      2,
+      0
+    ],
+    "terrain.noiseScale": 0.58,
+    "terrain.detail": 4,
+    "terrain.roughness": 56,
+    "terrain.seed": 4,
+    "terrain.heightRange": [
+      -0.08,
+      1.58
+    ],
+    "preview.bladeCount": 6000,
+    "preview.lawnBladeCount": 12000,
+    "view.orientation": {
+      "position": [
+        0.055,
+        0.405,
+        0.913
+      ],
+      "up": [
+        0,
+        1,
+        0
+      ]
+    },
+    "environment.preset": "sunrise",
+    "environment.hdriFile": null,
+    "environment.intensity": 250,
+    "environment.rotationX": 0,
+    "environment.rotation": 0,
+    "environment.rotationZ": 0,
+    "environment.visible": false,
+    "environment.backgroundBlur": 30,
+    "environment.keyColor": {
+      "hex": "#FFF1AD"
+    },
+    "environment.keyStrength": 200,
+    "environment.fillColor": {
+      "hex": "#0A3327"
+    },
+    "environment.fillStrength": 28,
+    "environment.rimColor": {
+      "hex": "#C9E887"
+    },
+    "environment.rimStrength": 25,
+    "environment.exposure": 220,
+    "environment.sceneContrast": 170,
+    "environment.sceneSaturation": 88,
+    "environment.highlightWarmth": 60,
+    "environment.shadowCoolness": 55,
+    "environment.sunPatchEnabled": true,
+    "environment.sunPatchScale": 5,
+    "environment.sunPatchCoverage": 40,
+    "environment.sunPatchSoftness": 72,
+    "environment.sunPatchStrength": 90,
+    "environment.sunPatchOffset": {
+      "x": "-0.12",
+      "y": "-0.18"
+    },
+    "environment.sunPatchSeed": 37,
+    "solo.lawn": false,
+    "lawn.enabled": true,
+    "lawn.densityMax": 30000,
+    "lawn.distanceMin": 0.015,
+    "lawn.depthOffset": -0.02,
+    "lawn.seed": 31,
+    "lawn.curveResolution": 4,
+    "lawn.thickness": 0.01,
+    "lawn.heightRange": [
+      0.04,
+      0.08
+    ],
+    "lawn.taperEnd": 90,
+    "lawn.tilt2d": 5,
+    "lawn.use3d": true,
+    "lawn.pbrRoughness": 84,
+    "lawn.pbrSheen": 48,
+    "lawn.colorVariation": 34,
+    "lawn.colorContrast": 130,
+    "lawn.colorSaturation": 92,
+    "lawn.textureMaskLevels": [
+      99,
+      100
+    ],
+    "lawn.textureMaskScale": 3.5,
+    "lawn.textureMaskSeed": 76,
+    "lawn.bladeGradient": {
+      "angle": 90,
+      "gradientType": "linear",
+      "stops": [
+        {
+          "color": "#1B4024",
+          "opacity": 100,
+          "position": "14%"
+        },
+        {
+          "color": "#3D6C35",
+          "opacity": 100,
+          "position": "67%"
+        },
+        {
+          "color": "#7F9E4B",
+          "opacity": 100,
+          "position": "94%"
+        }
+      ]
+    },
+    "lawn.instanceColor1": {
+      "hex": "#1E4525"
+    },
+    "lawn.instanceColorWeight1": 50,
+    "lawn.instanceColor2": {
+      "hex": "#3A6A32"
+    },
+    "lawn.instanceColorWeight2": 34,
+    "lawn.instanceColor3": {
+      "hex": "#789548"
+    },
+    "lawn.instanceColorWeight3": 16,
+    "solo.tall": false,
+    "grass.enabled": true,
+    "field.densityMax": 20000,
+    "field.distanceMin": 0.04,
+    "grass.depthOffset": -0.02,
+    "field.seed": 20,
+    "field.alignToNormals": 100,
+    "field.randomRotation": 64,
+    "field.topFacingOnly": false,
+    "field.topFacingCoverage": 42,
+    "field.topFacingFade": 65,
+    "blade.curveResolution": 8,
+    "blade.thickness": 0.02,
+    "blade.heightRange": [
+      0.25,
+      0.8
+    ],
+    "blade.taperEnd": 92,
+    "blade.tilt2d": 45,
+    "blade.use3d": true,
+    "wind.profile": "off",
+    "wind.directionAngle": 0,
+    "wind.strength": 62,
+    "wind.flow": 55,
+    "wind.noiseStrength": 52,
+    "wind.noiseScale": 1.7,
+    "wind.noiseDetail": 58,
+    "wind.seed": 17,
+    "appearance.pbrRoughness": 76,
+    "appearance.pbrSheen": 58,
+    "appearance.colorVariation": 38,
+    "appearance.colorContrast": 124,
+    "appearance.colorSaturation": 94,
+    "appearance.textureMaskLevels": [
+      99,
+      100
+    ],
+    "appearance.textureMaskScale": 1.2,
+    "appearance.textureMaskSeed": 17,
+    "appearance.bladeGradient": {
+      "angle": 90,
+      "gradientType": "linear",
+      "stops": [
+        {
+          "color": "#19411F",
+          "opacity": 100,
+          "position": "12%"
+        },
+        {
+          "color": "#789E38",
+          "opacity": 100,
+          "position": "66%"
+        },
+        {
+          "color": "#F4F0A4",
+          "opacity": 100,
+          "position": "96%"
+        }
+      ]
+    },
+    "appearance.instanceColor1": {
+      "hex": "#244F27"
+    },
+    "appearance.instanceColorWeight1": 48,
+    "appearance.instanceColor2": {
+      "hex": "#658C36"
+    },
+    "appearance.instanceColorWeight2": 34,
+    "appearance.instanceColor3": {
+      "hex": "#B8CC5A"
+    },
+    "appearance.instanceColorWeight3": 18,
+    "field.showGround": true,
+    "appearance.groundColor": {
+      "hex": "#25482B"
+    },
+    "surface.textureScale": 2.4,
+    "surface.normalStrength": 80,
+    "surface.roughness": 92,
+    "surface.colorContrast": 110,
+    "surface.colorSaturation": 108,
+    "surface.textureMaskLevels": [
+      8,
+      28
+    ],
+    "surface.textureMaskScale": 5.9,
+    "surface.textureMaskSeed": 35,
+    "solo.tufted": false,
+    "scan.tufted.enabled": true,
+    "scan.tufted.count": 1000,
+    "scan.tufted.sizeRange": [
+      0.55,
+      0.9
+    ],
+    "scan.tufted.clumping": 48,
+    "scan.tufted.seed": 41,
+    "scan.tufted.surfaceOffset": -0.05,
+    "scan.tufted.pbrTint": {
+      "hex": "#789F4A"
+    },
+    "scan.tufted.pbrBrightness": 74,
+    "scan.tufted.colorContrast": 108,
+    "scan.tufted.colorSaturation": 80,
+    "scan.tufted.pbrRoughness": 62,
+    "scan.tufted.pbrNormalStrength": 78,
+    "scan.tufted.pbrAoStrength": 79,
+    "scan.tufted.textureMaskLevels": [
+      99,
+      100
+    ],
+    "scan.tufted.textureMaskScale": 3.3,
+    "scan.tufted.textureMaskSeed": 84,
+    "scan.tufted.pbrSheen": 15,
+    "scan.tufted.pbrBacklight": 42,
+    "solo.wild": false,
+    "scan.wild.enabled": true,
+    "scan.wild.count": 420,
+    "scan.wild.sizeRange": [
+      0.5,
+      0.9
+    ],
+    "scan.wild.clumping": 60,
+    "scan.wild.seed": 48,
+    "scan.wild.surfaceOffset": 0.005,
+    "scan.wild.pbrTint": {
+      "hex": "#6B8C42"
+    },
+    "scan.wild.pbrBrightness": 76,
+    "scan.wild.colorContrast": 98,
+    "scan.wild.colorSaturation": 82,
+    "scan.wild.pbrRoughness": 88,
+    "scan.wild.pbrNormalStrength": 48,
+    "scan.wild.pbrAoStrength": 78,
+    "scan.wild.textureMaskLevels": [
+      99,
+      100
+    ],
+    "scan.wild.textureMaskScale": 0.9,
+    "scan.wild.textureMaskSeed": 53,
+    "scan.wild.pbrSheen": 12,
+    "scan.wild.pbrBacklight": 36,
+    "solo.white": false,
+    "scan.white.enabled": true,
+    "scan.white.count": 0,
+    "scan.white.sizeRange": [
+      0.7,
+      1
+    ],
+    "scan.white.clumping": 11,
+    "scan.white.seed": 48,
+    "scan.white.surfaceOffset": 0.015,
+    "scan.white.pbrTint": "#ffffff",
+    "scan.white.pbrBrightness": 102,
+    "scan.white.colorContrast": 98,
+    "scan.white.colorSaturation": 90,
+    "scan.white.pbrRoughness": 88,
+    "scan.white.pbrNormalStrength": 48,
+    "scan.white.pbrAoStrength": 90,
+    "scan.white.textureMaskLevels": [
+      99,
+      100
+    ],
+    "scan.white.textureMaskScale": 0.8,
+    "scan.white.textureMaskSeed": 48,
+    "scan.white.pbrSheen": 10,
+    "scan.white.pbrBacklight": 25,
+    "solo.yellow": false,
+    "scan.yellow.enabled": true,
+    "scan.yellow.count": 0,
+    "scan.yellow.sizeRange": [
+      0.6,
+      0.85
+    ],
+    "scan.yellow.clumping": 0,
+    "scan.yellow.seed": 79,
+    "scan.yellow.surfaceOffset": 0.015,
+    "scan.yellow.pbrTint": "#ffffff",
+    "scan.yellow.pbrBrightness": 105,
+    "scan.yellow.colorContrast": 98,
+    "scan.yellow.colorSaturation": 88,
+    "scan.yellow.pbrRoughness": 88,
+    "scan.yellow.pbrNormalStrength": 48,
+    "scan.yellow.pbrAoStrength": 90,
+    "scan.yellow.textureMaskLevels": [
+      99,
+      100
+    ],
+    "scan.yellow.textureMaskScale": 0.8,
+    "scan.yellow.textureMaskSeed": 79,
+    "scan.yellow.pbrSheen": 10,
+    "scan.yellow.pbrBacklight": 25,
+    "solo.rocks": false,
+    "scan.rocks.enabled": true,
+    "scan.rocks.count": 5,
+    "scan.rocks.sizeRange": [
+      0.75,
+      1.15
+    ],
+    "scan.rocks.clumping": 33,
+    "scan.rocks.seed": 57,
+    "scan.rocks.surfaceOffset": -0.015,
+    "scan.rocks.pbrTint": {
+      "hex": "#8F9F99"
+    },
+    "scan.rocks.pbrBrightness": 65,
+    "scan.rocks.colorContrast": 96,
+    "scan.rocks.colorSaturation": 55,
+    "scan.rocks.pbrRoughness": 100,
+    "scan.rocks.pbrNormalStrength": 90,
+    "scan.rocks.pbrAoStrength": 100,
+    "scan.rocks.textureMaskLevels": [
+      99,
+      100
+    ],
+    "scan.rocks.textureMaskScale": 0.75,
+    "scan.rocks.textureMaskSeed": 57,
+    "solo.boulder": false,
+    "scan.boulder.enabled": false,
+    "scan.boulder.size": 1.65,
+    "scan.boulder.seed": 23,
+    "scan.boulder.surfaceOffset": -0.12,
+    "scan.boulder.pbrTint": "#c5c9bd",
+    "scan.boulder.pbrBrightness": 72,
+    "scan.boulder.colorContrast": 94,
+    "scan.boulder.colorSaturation": 65,
+    "scan.boulder.pbrRoughness": 100,
+    "scan.boulder.pbrNormalStrength": 85,
+    "scan.boulder.pbrAoStrength": 100,
+    "scan.boulder.textureMaskLevels": [
+      99,
+      100
+    ],
+    "scan.boulder.textureMaskScale": 1.2,
+    "scan.boulder.textureMaskSeed": 23,
+    "export.includeBackground": true,
+    "scene.background": "#000000",
+    "export.image.format": "png",
+    "export.image.resolution": "4k",
+    "export.video.format": "mp4",
+    "export.video.resolution": "current"
+  },
+  "version": 1
+}

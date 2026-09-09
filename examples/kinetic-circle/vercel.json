@@ -1,0 +1,18 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm run build -- --base /demos/kinetic-circle/",
+  "rewrites": [
+    {
+      "source": "/demos/kinetic-circle/assets/:path*",
+      "destination": "/assets/:path*"
+    },
+    {
+      "source": "/demos/kinetic-circle",
+      "destination": "/"
+    },
+    {
+      "source": "/demos/kinetic-circle/:path*",
+      "destination": "/"
+    }
+  ]
+}

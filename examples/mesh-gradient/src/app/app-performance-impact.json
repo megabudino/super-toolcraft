@@ -1,0 +1,104 @@
+{
+  "version": 1,
+  "modules": [
+    {
+      "path": "src/app/app-acceptance-data.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/app-composition.tsx",
+      "kind": "performance",
+      "passIds": ["mesh-export"]
+    },
+    {
+      "path": "src/app/app-performance.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/app-schema.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/mesh-gradient/mesh-model.ts",
+      "kind": "performance",
+      "passIds": ["mesh-handles", "mesh-preview", "mesh-export"]
+    },
+    {
+      "path": "src/app/mesh-gradient/mesh-collection-topology.ts",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/mesh-gradient/mesh-cell-triangulation.ts",
+      "kind": "performance",
+      "passIds": ["mesh-preview", "mesh-handles", "mesh-export"]
+    },
+    {
+      "path": "src/app/mesh-gradient/mesh-color-points-control.module.css",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/mesh-gradient/mesh-color-points-control.tsx",
+      "kind": "functional"
+    },
+    {
+      "path": "src/app/mesh-gradient/renderer-pipeline.ts",
+      "kind": "performance",
+      "passIds": [
+        "mesh-webgl-resource",
+        "mesh-preview",
+        "mesh-handles",
+        "mesh-export"
+      ]
+    },
+    {
+      "path": "src/app/mesh-gradient/mesh-webgl.ts",
+      "kind": "performance",
+      "passIds": ["mesh-webgl-resource", "mesh-preview", "mesh-export"]
+    },
+    {
+      "path": "src/app/mesh-gradient/mesh-webgl-geometry.ts",
+      "kind": "performance",
+      "passIds": ["mesh-preview", "mesh-export"]
+    },
+    {
+      "path": "src/app/mesh-gradient/mesh-canvas.tsx",
+      "kind": "performance",
+      "passIds": ["mesh-webgl-resource", "mesh-preview", "mesh-handles"]
+    },
+    {
+      "path": "src/app/mesh-gradient/mesh-editor-overlay.tsx",
+      "kind": "performance",
+      "passIds": ["mesh-handles"]
+    },
+    {
+      "path": "src/app/mesh-gradient/mesh-export.ts",
+      "kind": "performance",
+      "passIds": ["mesh-export"]
+    },
+    {
+      "path": "src/app/mesh-gradient/mesh-gradient.module.css",
+      "kind": "performance",
+      "passIds": ["mesh-preview", "mesh-handles"]
+    },
+    {
+      "path": "src/app/mesh-gradient/mesh-point-interaction.ts",
+      "kind": "performance",
+      "passIds": ["mesh-handles", "mesh-preview"]
+    },
+    {
+      "path": "src/app/mesh-gradient/mesh-presets.ts",
+      "kind": "performance",
+      "passIds": ["mesh-handles", "mesh-preview", "mesh-export"]
+    },
+    {
+      "path": "src/app/mesh-gradient/use-mesh-preset-selection.ts",
+      "kind": "performance",
+      "passIds": ["mesh-handles", "mesh-preview", "mesh-export"]
+    },
+    {
+      "path": "src/app/mesh-gradient/use-mesh-point-drag.ts",
+      "kind": "performance",
+      "passIds": ["mesh-handles", "mesh-preview"]
+    }
+  ]
+}

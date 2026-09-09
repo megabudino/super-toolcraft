@@ -1,0 +1,134 @@
+{
+  "background": "#F2F2F2",
+  "carousel": {
+    "border": {
+      "colorOpacity": {
+        "hex": "#000000",
+        "opacity": 20
+      },
+      "enabled": false,
+      "width": 1
+    },
+    "count": 4,
+    "gap": 20,
+    "radius": 12,
+    "shadow": {
+      "blur": 15,
+      "colorOpacity": {
+        "hex": "#000000",
+        "opacity": 35
+      },
+      "enabled": true,
+      "offset": {
+        "x": 0,
+        "y": 0.13
+      },
+      "spread": -8
+    },
+    "speed": 40,
+    "textGap": 24
+  },
+  "gridOpacity": 80,
+  "gridSize": 50,
+  "height": 1080,
+  "imagesMode": "trail",
+  "prompt": {
+    "flight": {
+      "bounce": 1,
+      "enabled": true,
+      "flightTime": 680,
+      "ghostFalloff": 5,
+      "ghostOpacity": 100,
+      "ghostSpacing": 28,
+      "ghosts": true,
+      "offset": {
+        "x": 0,
+        "y": 0
+      },
+      "startDelay": 140,
+      "vanishStagger": 40,
+      "vanishTime": 140
+    },
+    "position": {
+      "x": 0,
+      "y": -0.06
+    },
+    "shadow": {
+      "blur": 33,
+      "colorOpacity": {
+        "hex": "#000000",
+        "opacity": 35
+      },
+      "enabled": true,
+      "offset": {
+        "x": 0,
+        "y": 0.48
+      },
+      "spread": 5
+    },
+    "typing": {
+      "deleteSpeed": 30,
+      "deleteStyle": "instant",
+      "enabled": true,
+      "gap": 0.6,
+      "hold": 2,
+      "humanize": 0.8,
+      "phrases": [
+        "Create a surreal fashion campaign set in a blooming desert.",
+        "Design a playful 3D mascot for a futuristic coffee brand.",
+        "Generate a cinematic portrait lit by neon signs at night.",
+        "Illustrate a cozy glass house hidden deep in the forest.",
+        "Create a bold poster for an experimental music festival.",
+        "Design a minimal perfume bottle inspired by ocean waves."
+      ],
+      "typeSpeed": 18
+    }
+  },
+  "trail": {
+    "border": {
+      "color": "#FFFFFF",
+      "enabled": true,
+      "width": 2
+    },
+    "cardRadius": 14,
+    "cardSize": 180,
+    "enabled": true,
+    "fadeIn": 150,
+    "fadeOut": 200,
+    "length": 8,
+    "lifetime": 600,
+    "resumeDelay": 300,
+    "resumeRamp": 500,
+    "shadow": {
+      "blur": 40,
+      "colorOpacity": {
+        "hex": "#000000",
+        "opacity": 35
+      },
+      "enabled": true,
+      "offset": {
+        "x": 0,
+        "y": 0.125
+      },
+      "spread": 0
+    },
+    "sizeFalloff": 8,
+    "smoothness": 200,
+    "spacing": 64,
+    "tilt": 8
+  },
+  "typography": {
+    "lowerRight": {
+      "bodyFontSize": 24,
+      "bottom": 96,
+      "gap": 8,
+      "headingFontSize": 88,
+      "right": 96
+    },
+    "upperLeft": {
+      "fontSize": 120,
+      "left": 96,
+      "top": 96
+    }
+  }
+}

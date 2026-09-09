@@ -1,0 +1,474 @@
+{
+  "version": 3,
+  "owners": [
+    {
+      "acceptanceIds": [
+        "canvas.infinity.export",
+        "canvas.infinity.mode",
+        "card.corner-radius",
+        "card.shadow-blur",
+        "card.shadow-color",
+        "card.shadow-offset",
+        "card.shadow-opacity",
+        "card.stroke-color",
+        "card.stroke-width",
+        "export.image"
+      ],
+      "kind": "functional",
+      "path": "src/app/app-composition.tsx"
+    },
+    {
+      "acceptanceIds": [
+        "background.color",
+        "background.output",
+        "canvas.infinity.mode",
+        "canvas.render-scale",
+        "card.corner-radius",
+        "card.shadow-blur",
+        "card.shadow-color",
+        "card.shadow-offset",
+        "card.shadow-opacity",
+        "card.stroke-color",
+        "card.stroke-width",
+        "export.image",
+        "export.image-format",
+        "export.image-resolution",
+        "fade.feather",
+        "fade.mask-size",
+        "fade.rear-opacity",
+        "logos.default-set",
+        "logos.media",
+        "persistence.reload",
+        "sphere.depth",
+        "sphere.distribution",
+        "sphere.fisheye",
+        "sphere.logo-size",
+        "sphere.orbit",
+        "sphere.perspective",
+        "sphere.radius",
+        "sphere.visible-count",
+        "timeline.playback"
+      ],
+      "kind": "functional",
+      "path": "src/app/app-schema.ts"
+    },
+    {
+      "acceptanceIds": [
+        "logos.default-set",
+        "logos.media"
+      ],
+      "kind": "functional",
+      "path": "src/app/assets/logo-svg-sources.json"
+    },
+    {
+      "acceptanceIds": [
+        "logos.default-set",
+        "logos.media"
+      ],
+      "kind": "functional",
+      "path": "src/app/logo-sphere-assets.ts"
+    },
+    {
+      "acceptanceIds": [
+        "canvas.render-scale",
+        "sphere.orbit",
+        "timeline.playback"
+      ],
+      "kind": "presentation",
+      "path": "src/app/logo-sphere-canvas.module.css"
+    },
+    {
+      "acceptanceIds": [
+        "background.color",
+        "background.output",
+        "canvas.render-scale",
+        "card.corner-radius",
+        "card.shadow-blur",
+        "card.shadow-color",
+        "card.shadow-offset",
+        "card.shadow-opacity",
+        "card.stroke-color",
+        "card.stroke-width",
+        "fade.feather",
+        "fade.mask-size",
+        "fade.rear-opacity",
+        "logos.default-set",
+        "logos.media",
+        "motion.inertia",
+        "motion.spin-axis",
+        "motion.spin-turns",
+        "sphere.depth",
+        "sphere.distribution",
+        "sphere.fisheye",
+        "sphere.logo-size",
+        "sphere.orbit",
+        "sphere.perspective",
+        "sphere.radius",
+        "sphere.visible-count",
+        "timeline.playback"
+      ],
+      "kind": "performance",
+      "passIds": [
+        "sphere-composite",
+        "sphere-layout"
+      ],
+      "path": "src/app/logo-sphere-canvas.tsx"
+    },
+    {
+      "acceptanceIds": [
+        "export.image",
+        "logos.default-set",
+        "logos.media"
+      ],
+      "kind": "performance",
+      "passIds": [
+        "sphere-composite",
+        "sphere-export"
+      ],
+      "path": "src/app/logo-sphere-image-registry.ts"
+    },
+    {
+      "acceptanceIds": [
+        "canvas.infinity.export",
+        "fade.feather",
+        "fade.mask-size",
+        "fade.rear-opacity",
+        "motion.spin-axis",
+        "motion.spin-turns",
+        "sphere.depth",
+        "sphere.distribution",
+        "sphere.fisheye",
+        "sphere.logo-size",
+        "sphere.orbit",
+        "sphere.perspective",
+        "sphere.radius",
+        "sphere.visible-count",
+        "timeline.playback"
+      ],
+      "kind": "performance",
+      "passIds": [
+        "sphere-composite",
+        "sphere-export",
+        "sphere-layout"
+      ],
+      "path": "src/app/logo-sphere-model.ts"
+    },
+    {
+      "acceptanceIds": [
+        "background.color",
+        "background.output",
+        "canvas.render-scale",
+        "card.corner-radius",
+        "card.shadow-blur",
+        "card.shadow-color",
+        "card.shadow-offset",
+        "card.shadow-opacity",
+        "card.stroke-color",
+        "card.stroke-width",
+        "export.image",
+        "logos.default-set",
+        "sphere.distribution",
+        "sphere.visible-count"
+      ],
+      "kind": "performance",
+      "passIds": [
+        "sphere-composite",
+        "sphere-export",
+        "sphere-layout"
+      ],
+      "path": "src/app/logo-sphere-pipeline.ts"
+    },
+    {
+      "acceptanceIds": [
+        "canvas.render-scale",
+        "card.corner-radius",
+        "card.shadow-blur",
+        "card.shadow-color",
+        "card.shadow-offset",
+        "card.shadow-opacity",
+        "card.stroke-color",
+        "card.stroke-width",
+        "export.image"
+      ],
+      "kind": "performance",
+      "passIds": [
+        "sphere-composite",
+        "sphere-export"
+      ],
+      "path": "src/app/logo-sphere-card-raster.ts"
+    },
+    {
+      "acceptanceIds": [
+        "card.corner-radius",
+        "card.shadow-blur",
+        "card.shadow-color",
+        "card.shadow-offset",
+        "card.shadow-opacity",
+        "card.stroke-color",
+        "card.stroke-width",
+        "export.image",
+        "logos.default-set",
+        "logos.media",
+        "sphere.depth",
+        "sphere.distribution",
+        "sphere.orbit",
+        "sphere.visible-count"
+      ],
+      "kind": "performance",
+      "passIds": [
+        "sphere-composite",
+        "sphere-export"
+      ],
+      "path": "src/app/logo-sphere-grid-renderer.ts"
+    },
+    {
+      "acceptanceIds": [
+        "card.corner-radius",
+        "card.stroke-color",
+        "card.stroke-width",
+        "export.image",
+        "logos.default-set",
+        "logos.media",
+        "sphere.distribution",
+        "sphere.orbit"
+      ],
+      "kind": "performance",
+      "passIds": [
+        "sphere-composite",
+        "sphere-export"
+      ],
+      "path": "src/app/logo-sphere-grid-warp.ts"
+    },
+    {
+      "acceptanceIds": [
+        "card.corner-radius",
+        "card.shadow-blur",
+        "card.shadow-color",
+        "card.shadow-offset",
+        "card.shadow-opacity",
+        "card.stroke-color",
+        "card.stroke-width",
+        "export.image",
+        "fade.feather",
+        "fade.mask-size",
+        "fade.rear-opacity",
+        "motion.spin-axis",
+        "motion.spin-turns",
+        "sphere.depth",
+        "sphere.distribution",
+        "sphere.fisheye",
+        "sphere.logo-size",
+        "sphere.orbit",
+        "sphere.perspective",
+        "sphere.radius",
+        "sphere.visible-count",
+        "timeline.playback"
+      ],
+      "kind": "performance",
+      "passIds": [
+        "sphere-composite",
+        "sphere-export"
+      ],
+      "path": "src/app/logo-sphere-renderer.ts"
+    },
+    {
+      "acceptanceIds": [
+        "card.corner-radius",
+        "card.shadow-blur",
+        "card.shadow-color",
+        "card.shadow-offset",
+        "card.shadow-opacity",
+        "card.stroke-color",
+        "card.stroke-width",
+        "export.image",
+        "sphere.visible-count"
+      ],
+      "kind": "performance",
+      "passIds": [
+        "sphere-composite",
+        "sphere-export"
+      ],
+      "path": "src/app/logo-sphere-renderer-types.ts"
+    },
+    {
+      "acceptanceIds": [
+        "canvas.infinity.export",
+        "card.corner-radius",
+        "card.shadow-blur",
+        "card.shadow-color",
+        "card.shadow-offset",
+        "card.shadow-opacity",
+        "card.stroke-color",
+        "card.stroke-width",
+        "fade.feather",
+        "fade.mask-size",
+        "fade.rear-opacity",
+        "logos.default-set",
+        "motion.inertia",
+        "motion.spin-axis",
+        "motion.spin-turns",
+        "sphere.depth",
+        "sphere.distribution",
+        "sphere.fisheye",
+        "sphere.logo-size",
+        "sphere.orbit",
+        "sphere.perspective",
+        "sphere.radius",
+        "sphere.visible-count",
+        "timeline.playback"
+      ],
+      "kind": "performance",
+      "passIds": [
+        "sphere-composite",
+        "sphere-export",
+        "sphere-layout"
+      ],
+      "path": "src/app/logo-sphere-state.ts"
+    },
+    {
+      "acceptanceIds": [
+        "canvas.infinity.export",
+        "canvas.render-scale",
+        "card.corner-radius",
+        "card.shadow-blur",
+        "card.shadow-color",
+        "card.shadow-offset",
+        "card.shadow-opacity",
+        "export.image",
+        "fade.rear-opacity",
+        "motion.spin-axis",
+        "motion.spin-turns",
+        "sphere.depth",
+        "sphere.distribution",
+        "sphere.fisheye",
+        "sphere.logo-size",
+        "sphere.orbit",
+        "sphere.perspective",
+        "sphere.radius",
+        "sphere.visible-count",
+        "timeline.playback"
+      ],
+      "kind": "performance",
+      "passIds": [
+        "sphere-composite",
+        "sphere-export"
+      ],
+      "path": "src/app/logo-sphere-gl-geometry.ts"
+    },
+    {
+      "acceptanceIds": [
+        "canvas.render-scale",
+        "export.image",
+        "logos.default-set",
+        "logos.media"
+      ],
+      "kind": "performance",
+      "passIds": [
+        "sphere-composite",
+        "sphere-export"
+      ],
+      "path": "src/app/logo-sphere-gl-atlas.ts"
+    },
+    {
+      "acceptanceIds": [
+        "background.color",
+        "background.output",
+        "canvas.infinity.export",
+        "canvas.render-scale",
+        "card.corner-radius",
+        "card.shadow-blur",
+        "card.shadow-color",
+        "card.shadow-offset",
+        "card.shadow-opacity",
+        "card.stroke-color",
+        "card.stroke-width",
+        "export.image",
+        "fade.feather",
+        "fade.mask-size",
+        "fade.rear-opacity"
+      ],
+      "kind": "performance",
+      "passIds": [
+        "sphere-composite",
+        "sphere-export"
+      ],
+      "path": "src/app/logo-sphere-gl-shaders.ts"
+    },
+    {
+      "acceptanceIds": [
+        "background.color",
+        "background.output",
+        "canvas.infinity.export",
+        "canvas.render-scale",
+        "card.corner-radius",
+        "card.shadow-blur",
+        "card.shadow-color",
+        "card.shadow-offset",
+        "card.shadow-opacity",
+        "card.stroke-color",
+        "card.stroke-width",
+        "export.image",
+        "fade.feather",
+        "fade.mask-size",
+        "fade.rear-opacity",
+        "logos.default-set",
+        "logos.media",
+        "motion.spin-axis",
+        "motion.spin-turns",
+        "sphere.depth",
+        "sphere.distribution",
+        "sphere.fisheye",
+        "sphere.logo-size",
+        "sphere.orbit",
+        "sphere.perspective",
+        "sphere.radius",
+        "sphere.visible-count",
+        "timeline.playback"
+      ],
+      "kind": "performance",
+      "passIds": [
+        "sphere-composite",
+        "sphere-export"
+      ],
+      "path": "src/app/logo-sphere-gl-renderer.ts"
+    },
+    {
+      "acceptanceIds": [
+        "background.color",
+        "background.output",
+        "canvas.infinity.export",
+        "canvas.render-scale",
+        "card.corner-radius",
+        "card.shadow-blur",
+        "card.shadow-color",
+        "card.shadow-offset",
+        "card.shadow-opacity",
+        "card.stroke-color",
+        "card.stroke-width",
+        "export.image",
+        "fade.feather",
+        "fade.mask-size",
+        "fade.rear-opacity",
+        "logos.default-set",
+        "logos.media",
+        "motion.spin-axis",
+        "motion.spin-turns",
+        "sphere.depth",
+        "sphere.distribution",
+        "sphere.fisheye",
+        "sphere.logo-size",
+        "sphere.orbit",
+        "sphere.perspective",
+        "sphere.radius",
+        "sphere.visible-count",
+        "timeline.playback"
+      ],
+      "kind": "performance",
+      "passIds": [
+        "sphere-composite",
+        "sphere-export"
+      ],
+      "path": "src/app/logo-sphere-surface-renderer.ts"
+    }
+  ]
+}

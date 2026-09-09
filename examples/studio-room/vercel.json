@@ -1,0 +1,14 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm run build -- --base /demos/studio-room/",
+  "installCommand": "npm ci",
+  "framework": "vite",
+  "outputDirectory": "dist",
+  "rewrites": [
+    { "source": "/demos/studio-room/assets/:path*", "destination": "/assets/:path*" },
+    { "source": "/demos/studio-room/images/:path*", "destination": "/images/:path*" },
+    { "source": "/demos/studio-room/fonts/:path*", "destination": "/fonts/:path*" },
+    { "source": "/demos/studio-room", "destination": "/" },
+    { "source": "/demos/studio-room/:path*", "destination": "/" }
+  ]
+}

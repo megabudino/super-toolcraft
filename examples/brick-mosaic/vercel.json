@@ -1,0 +1,10 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "pnpm build --base /demos/brick-mosaic/",
+  "rewrites": [
+    { "source": "/demos/brick-mosaic/assets/:path*", "destination": "/assets/:path*" },
+    { "source": "/demos/brick-mosaic/startup/:path*", "destination": "/startup/:path*" },
+    { "source": "/demos/brick-mosaic", "destination": "/" },
+    { "source": "/demos/brick-mosaic/:path*", "destination": "/" }
+  ]
+}

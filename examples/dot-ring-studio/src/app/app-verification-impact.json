@@ -1,0 +1,290 @@
+{
+  "version": 2,
+  "owners": [
+    {
+      "acceptanceIds": [
+        "runtime.persistence.reload",
+        "runtime.settingsTransfer"
+      ],
+      "kind": "functional",
+      "path": "src/app/app-acceptance-data.ts"
+    },
+    {
+      "acceptanceIds": [
+        "actions.output",
+        "audio.source",
+        "canvas.infinity.image-export",
+        "canvas.infinity.mode",
+        "canvas.infinity.video-export"
+      ],
+      "kind": "functional",
+      "path": "src/app/app-composition.tsx"
+    },
+    {
+      "acceptanceIds": [
+        "export.image.resolution",
+        "export.video.resolution",
+        "ring.density",
+        "ring.rows"
+      ],
+      "kind": "performance",
+      "passIds": [
+        "dot-ring.audio-analysis",
+        "dot-ring.image-export",
+        "dot-ring.preview-frame",
+        "dot-ring.video-frame"
+      ],
+      "path": "src/app/app-performance.ts"
+    },
+    {
+      "acceptanceIds": [
+        "actions.output",
+        "appearance.background",
+        "audio.source",
+        "canvas.aspectRatio",
+        "canvas.renderScale",
+        "canvas.size.height",
+        "canvas.size.width",
+        "export.image.format",
+        "export.image.resolution",
+        "export.includeBackground",
+        "export.video.format",
+        "export.video.resolution",
+        "panels.timeline.extended",
+        "ring.color1",
+        "ring.color2",
+        "ring.color3",
+        "ring.color4",
+        "ring.color5",
+        "ring.colorMode",
+        "ring.colorSpread",
+        "ring.density",
+        "ring.dotSize",
+        "ring.glow",
+        "ring.radius",
+        "ring.rows",
+        "ring.sizeResponse",
+        "wave.affectedAmplitude",
+        "wave.calmAmplitude",
+        "wave.formula",
+        "wave.globalRotationSpeed",
+        "wave.rotationSpeed",
+        "wave.rowEcho",
+        "wave.sectorAngle",
+        "wave.speed"
+      ],
+      "kind": "functional",
+      "path": "src/app/app-schema.ts"
+    },
+    {
+      "acceptanceIds": [
+        "audio.source",
+        "canvas.infinity.image-export",
+        "canvas.infinity.video-export"
+      ],
+      "kind": "performance",
+      "passIds": [
+        "dot-ring.audio-analysis",
+        "dot-ring.image-export",
+        "dot-ring.preview-frame",
+        "dot-ring.video-frame"
+      ],
+      "path": "src/app/default-audio-profile.ts"
+    },
+    {
+      "acceptanceIds": [
+        "audio.source",
+        "runtime.persistence.reload"
+      ],
+      "kind": "performance",
+      "passIds": [
+        "dot-ring.audio-analysis",
+        "dot-ring.image-export",
+        "dot-ring.preview-frame",
+        "dot-ring.video-frame"
+      ],
+      "path": "src/app/dot-ring-audio.ts"
+    },
+    {
+      "acceptanceIds": [
+        "actions.output",
+        "ring.colorMode",
+        "ring.density",
+        "ring.dotSize",
+        "ring.glow",
+        "ring.radius",
+        "ring.rows",
+        "ring.sizeResponse",
+        "runtime.timeline.playback",
+        "wave.rowEcho"
+      ],
+      "kind": "performance",
+      "passIds": [
+        "dot-ring.audio-analysis",
+        "dot-ring.image-export",
+        "dot-ring.preview-frame",
+        "dot-ring.video-frame"
+      ],
+      "path": "src/app/dot-ring-drawing.ts"
+    },
+    {
+      "acceptanceIds": [
+        "audio.source",
+        "canvas.infinity.mode",
+        "ring.density",
+        "ring.dotSize",
+        "ring.glow",
+        "ring.radius",
+        "ring.rows",
+        "ring.sizeResponse",
+        "runtime.timeline.playback",
+        "wave.affectedAmplitude",
+        "wave.calmAmplitude",
+        "wave.formula",
+        "wave.globalRotationSpeed",
+        "wave.rotationSpeed",
+        "wave.rowEcho",
+        "wave.sectorAngle",
+        "wave.speed"
+      ],
+      "kind": "performance",
+      "passIds": [
+        "dot-ring.preview-frame"
+      ],
+      "path": "src/app/dot-ring-infinity-bounds.ts"
+    },
+    {
+      "acceptanceIds": [
+        "actions.output",
+        "audio.source",
+        "runtime.canvas.viewport",
+        "runtime.timeline.playback"
+      ],
+      "kind": "performance",
+      "passIds": [
+        "dot-ring.audio-analysis",
+        "dot-ring.image-export",
+        "dot-ring.preview-frame",
+        "dot-ring.video-frame"
+      ],
+      "path": "src/app/dot-ring-pipeline.ts"
+    },
+    {
+      "acceptanceIds": [
+        "actions.output",
+        "canvas.infinity.image-export",
+        "canvas.infinity.mode",
+        "canvas.infinity.video-export",
+        "canvas.renderScale",
+        "runtime.canvas.viewport",
+        "runtime.timeline.playback"
+      ],
+      "kind": "performance",
+      "passIds": [
+        "dot-ring.audio-analysis",
+        "dot-ring.image-export",
+        "dot-ring.preview-frame",
+        "dot-ring.video-frame"
+      ],
+      "path": "src/app/dot-ring-renderer.tsx"
+    },
+    {
+      "acceptanceIds": [
+        "audio.source",
+        "canvas.infinity.mode",
+        "ring.density",
+        "ring.dotSize",
+        "ring.glow",
+        "ring.radius",
+        "ring.rows",
+        "ring.sizeResponse",
+        "runtime.timeline.playback",
+        "wave.affectedAmplitude",
+        "wave.calmAmplitude",
+        "wave.formula",
+        "wave.globalRotationSpeed",
+        "wave.rotationSpeed",
+        "wave.rowEcho",
+        "wave.sectorAngle",
+        "wave.speed"
+      ],
+      "kind": "performance",
+      "passIds": [
+        "dot-ring.preview-frame"
+      ],
+      "path": "src/app/dot-ring-scene-bounds.worker.ts"
+    },
+    {
+      "acceptanceIds": [
+        "canvas.infinity.image-export",
+        "canvas.infinity.mode",
+        "canvas.infinity.video-export"
+      ],
+      "kind": "performance",
+      "passIds": [
+        "dot-ring.audio-analysis",
+        "dot-ring.image-export",
+        "dot-ring.preview-frame",
+        "dot-ring.video-frame"
+      ],
+      "path": "src/app/dot-ring-scene-bounds.ts"
+    },
+    {
+      "acceptanceIds": [
+        "appearance.background",
+        "export.video.format",
+        "export.video.resolution",
+        "ring.colorMode",
+        "ring.colorSpread",
+        "ring.density",
+        "ring.dotSize",
+        "ring.glow",
+        "ring.radius",
+        "ring.rows",
+        "ring.sizeResponse",
+        "wave.rowEcho"
+      ],
+      "kind": "functional",
+      "path": "src/app/dot-ring-settings.ts"
+    },
+    {
+      "acceptanceIds": [
+        "actions.output",
+        "audio.source",
+        "canvas.infinity.image-export",
+        "canvas.infinity.video-export"
+      ],
+      "kind": "performance",
+      "passIds": [
+        "dot-ring.audio-analysis",
+        "dot-ring.image-export",
+        "dot-ring.preview-frame",
+        "dot-ring.video-frame"
+      ],
+      "path": "src/app/dot-ring-types.ts"
+    },
+    {
+      "acceptanceIds": [
+        "audio.source",
+        "ring.density",
+        "ring.rows",
+        "runtime.timeline.playback",
+        "wave.affectedAmplitude",
+        "wave.calmAmplitude",
+        "wave.formula",
+        "wave.globalRotationSpeed",
+        "wave.rotationSpeed",
+        "wave.sectorAngle",
+        "wave.speed"
+      ],
+      "kind": "performance",
+      "passIds": [
+        "dot-ring.audio-analysis",
+        "dot-ring.image-export",
+        "dot-ring.preview-frame",
+        "dot-ring.video-frame"
+      ],
+      "path": "src/app/dot-ring-wave.ts"
+    }
+  ]
+}

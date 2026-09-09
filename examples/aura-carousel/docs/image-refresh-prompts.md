@@ -1,0 +1,55 @@
+# Carousel image refresh prompts
+
+Generated using the built-in imagegen tool on 2026-09-08. Each original card served only as an art-direction reference. The five new photographs depict different fictional people and scenes. The live testimonial strings remain separate app text.
+
+Delivered PNGs are normalized to the original 896×1120 backing dimensions and inherit each original card's rounded-corner alpha mask. The photograph content comes entirely from imagegen. The overview is rebuilt from these assets with the production testimonial drawing helper.
+
+## card-anthropic-portrait@2x.png
+
+Final asset: `public/assets/dispersion-carousel/card-anthropic-portrait@2x.png`
+
+Generation source: `/Users/kusnizza/.codex/generated_images/01a07e47-0147-79b1-9b8d-0975f5408164/exec-c262f8dc-1463-444f-9beb-9bc6b203080e.png`
+
+Prompt:
+
+Use case: photorealistic-natural. Asset type: replacement customer-story carousel card. Use the supplied image ONLY as a reference for overall art direction, color grading, logo typography and framing conventions. Generate an entirely new photograph with a different fictional person, setting, objects, pose and composition; it must not look like a recolor or small edit of the original. Match the refined understated editorial office photography: realistic natural skin and hands, subtle film grain, warm desaturated colors, soft directional natural light, calm candid mood. Output one portrait PNG, exactly 896 x 1120 pixels (4:5). Full-bleed photographic card with 24px rounded corners and transparent pixels only outside rounded corners. Match the original dark overall exposure and smooth black lower gradient, becoming dark enough across the bottom 30 percent for white testimonial text that will be added separately in the app; keep recognizable face and detail in the middle. Only the specified existing top-left brand logo is text. Do not add testimonial copy, captions, border, extra logos, watermark, collage or UI. Subject and background must be substantially different from the reference. A new fictional woman around 40 with a wavy dark bob, wearing a muted olive overshirt over an ivory top. Seated sideways at a walnut worktable, thoughtfully studying an open notebook, one hand resting naturally on the page. A sculptural arched amber-plaster alcove and soft shadow of a window in the background. Three-quarter view, face near horizontal center at 44 percent height, wider environmental portrait with ample wall above. No desktop computer or phone in foreground. Preserve the crisp white ANTHROPIC wordmark at the exact same top-left position, approximate size and treatment as the reference.
+
+## card-shopify@2x.png
+
+Final asset: `public/assets/dispersion-carousel/card-shopify@2x.png`
+
+Generation source: `/Users/kusnizza/.codex/generated_images/01a07e47-0147-79b1-9b8d-0975f5408164/exec-b35cd0a8-f20e-42df-af80-28091ed5c5e1.png`
+
+Prompt:
+
+Use case: photorealistic-natural. Asset type: replacement customer-story carousel card. Use the supplied image ONLY as a reference for overall art direction, color grading, logo typography and framing conventions. Generate an entirely new photograph with a different fictional person, setting, objects, pose and composition; it must not look like a recolor or small edit of the original. Match the refined understated editorial office photography: realistic natural skin and hands, subtle film grain, warm desaturated colors, soft directional natural light, calm candid mood. Output one portrait PNG, exactly 896 x 1120 pixels (4:5). Full-bleed photographic card with 24px rounded corners and transparent pixels only outside rounded corners. Match the original dark overall exposure and smooth black lower gradient, becoming dark enough across the bottom 30 percent for white testimonial text that will be added separately in the app; keep recognizable face and detail in the middle. Only the specified existing top-left brand logo is text. Do not add testimonial copy, captions, border, extra logos, watermark, collage or UI. Subject and background must be substantially different from the reference. A new fictional Black male creative entrepreneur around 30 with short loose curls, in a camel knit polo, standing behind a light oak studio workbench arranging two handmade ceramic bowls and a small kraft mailer. Muted taupe studio shelving with sparse ceramics, a tall linen-curtained window and subtle diagonal morning light. Environmental portrait, body mid-right, head around 43 percent height; open quiet wall at top. No computer desk or seated woman. Preserve the green shopping-bag S symbol and white italic shopify wordmark at the exact same top-left position and approximate size as the reference.
+
+## card-anthropic-studio@2x.png
+
+Final asset: `public/assets/dispersion-carousel/card-anthropic-studio@2x.png`
+
+Generation source: `/Users/kusnizza/.codex/generated_images/01a07e47-0147-79b1-9b8d-0975f5408164/exec-656caef7-9c14-4f19-93f1-5c3f9b324b8c.png`
+
+Prompt:
+
+Use case: photorealistic-natural. Asset type: replacement customer-story carousel card. Use the supplied image ONLY as a reference for overall art direction, color grading, logo typography and framing conventions. Generate an entirely new photograph with a different fictional person, setting, objects, pose and composition; it must not look like a recolor or small edit of the original. Match the refined understated editorial office photography: realistic natural skin and hands, subtle film grain, warm desaturated colors, soft directional natural light, calm candid mood. Output one portrait PNG, exactly 896 x 1120 pixels (4:5). Full-bleed photographic card with 24px rounded corners and transparent pixels only outside rounded corners. Match the original dark overall exposure and smooth black lower gradient, becoming dark enough across the bottom 30 percent for white testimonial text that will be added separately in the app; keep recognizable face and detail in the middle. Only the specified existing top-left brand logo is text. Do not add testimonial copy, captions, border, extra logos, watermark, collage or UI. Subject and background must be substantially different from the reference. A new fictional East Asian woman around 30 with shoulder-length straight dark hair and thin round glasses, in a textured charcoal cardigan and off-white trousers, seated in a low warm-wood chair angled toward an open sketchbook on a round worktable. Airy creative research studio with pale beige plaster, a low oak bookcase and large leafy plant in terracotta pot, soft afternoon daylight. Environmental full seated portrait, face around 33 percent height, natural thoughtful expression facing slightly away from lens. Distinct from a man on a red chair; no cork pinboard. Preserve the crisp white ANTHROPIC wordmark at the exact same top-left position and approximate size as the reference.
+
+## card-walmart@2x.png
+
+Final asset: `public/assets/dispersion-carousel/card-walmart@2x.png`
+
+Generation source: `/Users/kusnizza/.codex/generated_images/01a07e47-0147-79b1-9b8d-0975f5408164/exec-172ded44-8abb-4d65-aea6-b3fe6edb03f7.png`
+
+Prompt:
+
+Use case: photorealistic-natural. Asset type: replacement customer-story carousel card. Use the supplied image ONLY as a reference for overall art direction, color grading, logo typography and framing conventions. Generate an entirely new photograph with a different fictional person, setting, objects, pose and composition; it must not look like a recolor or small edit of the original. Match the refined understated editorial office photography: realistic natural skin and hands, subtle film grain, warm desaturated colors, soft directional natural light, calm candid mood. Output one portrait PNG, exactly 896 x 1120 pixels (4:5). Full-bleed photographic card with 24px rounded corners and transparent pixels only outside rounded corners. Match the original dark overall exposure and smooth black lower gradient, becoming dark enough across the bottom 30 percent for white testimonial text that will be added separately in the app; keep recognizable face and detail in the middle. Only the specified existing top-left brand logo is text. Do not add testimonial copy, captions, border, extra logos, watermark, collage or UI. Subject and background must be substantially different from the reference. A new fictional male designer around 55 with salt-and-pepper hair and a short grey beard, wearing a dark navy overshirt, seated at the far end of a charcoal communal table, thoughtfully sketching on a large ivory pad. High-ceiling modern office with pale limestone walls, softly blurred glass partition and oak furniture, broad overcast daylight; a ceramic mug on table. Wide environmental portrait with head around 48 percent height and lots of architectural space above. No other people, no long hanging brass pendant, no glass water jug. Preserve the white Walmart wordmark and six-ray spark at the exact same top-left position and approximate size as the reference.
+
+## card-google@2x.png
+
+Final asset: `public/assets/dispersion-carousel/card-google@2x.png`
+
+Generation source: `/Users/kusnizza/.codex/generated_images/01a07e47-0147-79b1-9b8d-0975f5408164/exec-b988cb67-9d6b-43a1-b8ee-6b03f751b758.png`
+
+Prompt:
+
+Use case: photorealistic-natural. Asset type: replacement customer-story carousel card. Use the supplied image ONLY as a reference for overall art direction, color grading, logo typography and framing conventions. Generate an entirely new photograph with a different fictional person, setting, objects, pose and composition; it must not look like a recolor or small edit of the original. Match the refined understated editorial office photography: realistic natural skin and hands, subtle film grain, warm desaturated colors, soft directional natural light, calm candid mood. Output one portrait PNG, exactly 896 x 1120 pixels (4:5). Full-bleed photographic card with 24px rounded corners and transparent pixels only outside rounded corners. Match the original dark overall exposure and smooth black lower gradient, becoming dark enough across the bottom 30 percent for white testimonial text that will be added separately in the app; keep recognizable face and detail in the middle. Only the specified existing top-left brand logo is text. Do not add testimonial copy, captions, border, extra logos, watermark, collage or UI. Subject and background must be substantially different from the reference. A new fictional woman around 30 with dark copper curly hair tied loosely back, wearing an unbranded muted cream shirt, sitting in a deep burgundy cafe booth, leaning slightly forward with a relaxed smile toward someone outside frame while holding an espresso cup above a closed notebook. Dusty terracotta wall, soft arched niche, side window casts a warm geometric light patch. Medium environmental portrait, subject slightly left of center with face around 36 percent height. No baseball cap, hoodie or open laptop. Preserve the crisp white Google wordmark at the exact same top-left position and approximate size as the reference.

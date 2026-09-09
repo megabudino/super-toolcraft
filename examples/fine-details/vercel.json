@@ -1,0 +1,15 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm run build -- --base /demos/fine-details/",
+  "installCommand": "npm ci",
+  "framework": "vite",
+  "outputDirectory": "dist",
+  "rewrites": [
+    { "source": "/demos/fine-details/assets/:path*", "destination": "/assets/:path*" },
+    { "source": "/demos/fine-details/images/:path*", "destination": "/images/:path*" },
+    { "source": "/demos/fine-details/fonts/:path*", "destination": "/fonts/:path*" },
+    { "source": "/demos/fine-details/logo-mark.svg", "destination": "/logo-mark.svg" },
+    { "source": "/demos/fine-details", "destination": "/" },
+    { "source": "/demos/fine-details/:path*", "destination": "/" }
+  ]
+}

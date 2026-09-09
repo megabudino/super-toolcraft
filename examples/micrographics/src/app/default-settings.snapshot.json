@@ -1,0 +1,51 @@
+{
+  "canvas": {
+    "size": {
+      "height": 1350,
+      "unit": "px",
+      "width": 1080
+    }
+  },
+  "values": {
+    "composition.layout": "[{\"color\":\"#0F0F0F\",\"content\":\"©3.11LABS | NORDMARK\\nTXT2IMG\\nWe are architects of | the unseen.\\nMIDJOURNEY | 6.1\\nSTABLE DIFFUSION | 1.6\\nRUNWAYML | 2.6\\n79\\nTW-559\",\"height\":401,\"id\":\"gen-447-12\",\"opacity\":100,\"removed\":true,\"seed\":452464,\"template\":\"mega-02\",\"typeScale\":100,\"width\":484,\"x\":193,\"y\":322},{\"color\":\"#FFFFFF\",\"content\":\"35\",\"height\":407,\"id\":\"gen-447-3\",\"opacity\":100,\"seed\":451285,\"template\":\"big-number\",\"typeScale\":100,\"width\":519,\"x\":21,\"y\":887},{\"content\":\"©3.11LABS | ATLAS\\nTXT2IMG\\nWe are architects of | the unseen.\\nMIDJOURNEY | 6.8\\nSTABLE DIFFUSION | 1.1\\nRUNWAYML | 2.7\\n69\\nBC-182\",\"height\":187,\"id\":\"gen-447-1\",\"opacity\":100,\"removed\":true,\"seed\":451023,\"template\":\"mega-27\",\"typeScale\":100,\"width\":355,\"x\":587,\"y\":179},{\"color\":\"#FFFFFF\",\"content\":\"TEN FORTY TWO | STUDIO | ZURICH\",\"height\":60,\"id\":\"gen-447-2\",\"opacity\":100,\"seed\":451154,\"template\":\"footer-line\",\"typeScale\":100,\"width\":456,\"x\":44,\"y\":1246},{\"content\":\"3.11LABS | NYC\\nALGORITHMICALLY GENERATED\\nWE ARE | ARCHITECTS OF THE UNSEEN\\nDIMENSIONS: | 1.4\\\" X 10.2\\\" X 18.7\\\"\\nFor Vektor, Inc\\nMIDJOURNEY\\nSTABLE DIFFUSION\\nRUNWAYML\\nSD 1.1\",\"height\":187,\"id\":\"element-lab-plate-9oct-3\",\"opacity\":100,\"removed\":true,\"seed\":451469,\"template\":\"lab-plate\",\"typeScale\":100,\"width\":346,\"x\":230,\"y\":546},{\"color\":\"#FFFFFF\",\"content\":\"POWER | 31%\\nWEIGHT | 3.28 KG\\nWIDTH | 810 MM\\nHEIGHT | 948 MM\\nUNITS | 97\",\"height\":196,\"id\":\"element-data-table-9oct-3\",\"opacity\":100,\"seed\":451469,\"template\":\"data-table\",\"typeScale\":100,\"width\":285,\"x\":754,\"y\":230},{\"content\":\"RENDERING\",\"height\":115,\"id\":\"element-pill-badge-9ogg-4\",\"opacity\":100,\"removed\":true,\"seed\":451600,\"template\":\"pill-badge\",\"typeScale\":100,\"width\":346,\"x\":659,\"y\":588},{\"color\":\"#0F0F0F\",\"content\":\"©3.11LABS | KOSMOS\\nTXT2IMG\\nWe are architects of | the unseen.\\nMIDJOURNEY | 6.4\\nSTABLE DIFFUSION | 1.4\\nRUNWAYML | 2.4\\n72\\nMC-577\",\"height\":562,\"id\":\"element-mega-32-9ogg-4\",\"opacity\":100,\"removed\":true,\"seed\":451600,\"template\":\"mega-32\",\"typeScale\":100,\"width\":352,\"x\":353,\"y\":303},{\"color\":\"#0F0F0F\",\"content\":\"©3.11LABS | KOSMOS\\nTXT2IMG\\nWe are architects of | the unseen.\\nMIDJOURNEY | 6.4\\nSTABLE DIFFUSION | 1.4\\nRUNWAYML | 2.4\\n72\\nMC-577\",\"height\":182,\"id\":\"element-mega-21-9ogg-4\",\"opacity\":100,\"removed\":true,\"seed\":451600,\"template\":\"mega-21\",\"typeScale\":100,\"width\":346,\"x\":684,\"y\":352},{\"color\":\"#0F0F0F\",\"content\":\"72% ENG\",\"height\":632,\"id\":\"element-mega-15-9ogg-4\",\"opacity\":100,\"removed\":true,\"seed\":451600,\"template\":\"mega-15\",\"typeScale\":100,\"width\":346,\"x\":693,\"y\":343},{\"color\":\"#FFFFFF\",\"content\":\"CONTROL SAMPLE\\nLENGTH | 523 MM\\nCLOCK | 18 HZ\\nMASS | 1.24 KG\\n---\\nCALIBRATION\\nOFFSET | 17 MK\\nPHASE | 3\",\"height\":325,\"id\":\"element-spec-sheet-9ok3-5\",\"opacity\":100,\"seed\":451731,\"template\":\"spec-sheet\",\"typeScale\":100,\"width\":285,\"x\":754,\"y\":476},{\"color\":\"#E6FF4A\",\"content\":\"523 M\",\"height\":506,\"id\":\"element-contour-9ok3-5\",\"opacity\":100,\"seed\":451731,\"template\":\"contour\",\"typeScale\":100,\"width\":537,\"x\":355,\"y\":710},{\"color\":\"#0F0F0F\",\"content\":\"ORIGIN | 63%\",\"height\":151,\"id\":\"element-waveform-9onq-6\",\"opacity\":100,\"removed\":true,\"seed\":451862,\"template\":\"waveform\",\"typeScale\":100,\"width\":631,\"x\":29,\"y\":54},{\"color\":\"#FFFFFF\",\"content\":\"LAB-P3-ER29-2025\",\"height\":90,\"id\":\"element-barcode-9onq-6\",\"opacity\":100,\"seed\":451862,\"template\":\"barcode\",\"typeScale\":100,\"width\":244,\"x\":795,\"y\":1186},{\"content\":\"©3.11LABS | ATLAS\\nIMG2IMG\\nWe are architects of | the unseen.\\nMIDJOURNEY | 6.0\\nSTABLE DIFFUSION | 1.2\\nRUNWAYML | 2.5\\n68\\nJX-816\",\"height\":230,\"id\":\"element-mega-16-9ord-7\",\"opacity\":100,\"removed\":true,\"seed\":451993,\"template\":\"mega-16\",\"typeScale\":100,\"width\":346,\"x\":63,\"y\":287},{\"color\":\"#FFFFFF\",\"content\":\"TXT2IMG\\n©3.11LABS\\nATLAS\\nMIDJOURNEY\\nSTABLE DIFFUSION\\nRUNWAYML\\nSD 1.4\",\"height\":395,\"id\":\"element-brand-lockup-9ord-7\",\"opacity\":100,\"removed\":true,\"seed\":451993,\"template\":\"brand-lockup\",\"typeScale\":100,\"width\":331,\"x\":44,\"y\":54},{\"content\":\"ORIGIN | 85%\",\"height\":61,\"id\":\"element-waveform-9ov0-8\",\"opacity\":100,\"removed\":true,\"seed\":452124,\"template\":\"waveform\",\"typeScale\":100,\"width\":625,\"x\":431,\"y\":22},{\"content\":\"©2025 V2.7 SD1.4\\nTXT2IMG\\nATLAS\\nWe are architects of | the unseen.\\n/ 2025\\n©3.11LABS\\nMIDJOURNEY | 6.8\\nSTABLE DIFFUSION | 1.8\\nRUNWAYML | 2.2\",\"height\":187,\"id\":\"element-axis-lockup-9ov0-8\",\"opacity\":100,\"removed\":true,\"seed\":452124,\"template\":\"axis-lockup\",\"typeScale\":100,\"width\":346,\"x\":67,\"y\":43},{\"content\":\"©3.11LABS | NORDMARK\\nIMG2IMG\\nWe are architects of | the unseen.\\nMIDJOURNEY | 6.7\\nSTABLE DIFFUSION | 1.8\\nRUNWAYML | 2.8\\n41\\nAM-696\",\"height\":230,\"id\":\"element-mega-40-9ov0-8\",\"opacity\":100,\"removed\":true,\"seed\":452124,\"template\":\"mega-40\",\"typeScale\":100,\"width\":346,\"x\":132,\"y\":254},{\"content\":\"©3.11LABS | NORDMARK\\nIMG2IMG\\nWe are architects of | the unseen.\\nMIDJOURNEY | 6.7\\nSTABLE DIFFUSION | 1.8\\nRUNWAYML | 2.8\\n41\\nAM-696\",\"height\":439,\"id\":\"element-mega-01-9ov0-8\",\"opacity\":100,\"removed\":true,\"seed\":452124,\"template\":\"mega-01\",\"typeScale\":100,\"width\":620,\"x\":76,\"y\":279},{\"content\":\"TXT2IMG\\n©3.11LABS\\nNORDMARK\\nMIDJOURNEY\\nSTABLE DIFFUSION\\nRUNWAYML\\nSD 1.5\",\"height\":275,\"id\":\"element-brand-lockup-9ov0-8\",\"opacity\":100,\"seed\":452124,\"template\":\"brand-lockup\",\"typeScale\":100,\"width\":425,\"x\":31,\"y\":53},{\"content\":\"\\n\\n \",\"height\":171,\"id\":\"element-globe-9ov0-8\",\"opacity\":100,\"seed\":452124,\"template\":\"globe\",\"typeScale\":100,\"width\":171,\"x\":754,\"y\":59}]",
+    "canvas.aspectRatio": {
+      "height": 5,
+      "mode": "custom",
+      "value": "4:5",
+      "width": 4
+    },
+    "canvas.size.width": 1080,
+    "canvas.size.height": 1350,
+    "composition.seed": 447,
+    "composition.count": 3,
+    "composition.kit": "minimal",
+    "composition.templateTier": "both",
+    "library.template": "",
+    "elements.scale": 71,
+    "elements.opacity": 100,
+    "ink.color": {
+      "hex": "#FFFFFF"
+    },
+    "ink.glow": 0,
+    "palette.colors": [
+      {
+        "hex": "#FFFFFF"
+      },
+      {
+        "hex": "#0F0F0F"
+      },
+      {
+        "hex": "#E6FF4A"
+      },
+      {
+        "hex": "#FF5C38"
+      }
+    ],
+    "source.preset": "fitness",
+    "source.image": null,
+    "export.includeBackground": true,
+    "appearance.background": "#141414",
+    "export.image.format": "png",
+    "export.image.resolution": "4k"
+  }
+}
