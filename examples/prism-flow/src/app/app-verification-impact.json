@@ -56,14 +56,15 @@
     {
       "acceptanceIds": [
         "dispersion.canvas.aspectRatio",
+        "dispersion.canvas.infinity.mode-and-restoration",
         "dispersion.canvas.renderScale",
         "dispersion.canvas.size.height",
         "dispersion.canvas.size.width",
         "dispersion.colorBalance",
         "dispersion.effect.area",
         "dispersion.effect.grain.amount",
-        "dispersion.effect.grain.distribution",
         "dispersion.effect.grain.distortion",
+        "dispersion.effect.grain.distribution",
         "dispersion.effect.grain.drift",
         "dispersion.effect.grain.scale",
         "dispersion.effect.grain.softness",
@@ -76,7 +77,8 @@
         "dispersion.masks.items.properties",
         "dispersion.masks.preview",
         "dispersion.runtime.canvas.viewport",
-        "dispersion.runtime.timeline.playback"
+        "dispersion.runtime.timeline.playback",
+        "dispersion.canvas.infinity.mode-and-restoration"
       ],
       "kind": "performance",
       "passIds": [
@@ -113,6 +115,7 @@
     {
       "acceptanceIds": [
         "dispersion.appearance.background",
+        "dispersion.canvas.infinity.mode-and-restoration",
         "dispersion.export.includeBackground",
         "dispersion.frame.cornerRadius",
         "dispersion.frame.shape"
@@ -340,7 +343,8 @@
         "dispersion.softness",
         "dispersion.sparkle",
         "dispersion.spectrum",
-        "dispersion.spread"
+        "dispersion.spread",
+        "dispersion.canvas.infinity.mode-and-restoration"
       ],
       "kind": "performance",
       "passIds": [
@@ -396,7 +400,8 @@
         "dispersion.softness",
         "dispersion.sparkle",
         "dispersion.spectrum",
-        "dispersion.spread"
+        "dispersion.spread",
+        "dispersion.canvas.infinity.mode-and-restoration"
       ],
       "kind": "performance",
       "passIds": [
@@ -451,7 +456,8 @@
         "dispersion.softness",
         "dispersion.sparkle",
         "dispersion.spectrum",
-        "dispersion.spread"
+        "dispersion.spread",
+        "dispersion.canvas.infinity.mode-and-restoration"
       ],
       "kind": "performance",
       "passIds": [
@@ -510,7 +516,8 @@
         "dispersion.lens.noiseOffset",
         "dispersion.lens.perspective",
         "dispersion.lens.spread",
-        "dispersion.lens.swirl"
+        "dispersion.lens.swirl",
+        "dispersion.canvas.infinity.mode-and-restoration"
       ],
       "kind": "performance",
       "passIds": [
@@ -571,6 +578,45 @@
         "dispersion.image-export"
       ],
       "path": "src/app/dispersion/dispersion-webgl-target.ts"
+    },
+    {
+      "acceptanceIds": [
+        "dispersion.appearance.background",
+        "dispersion.canvas.infinity.mode-and-restoration",
+        "dispersion.export.includeBackground",
+        "dispersion.lens.enabled"
+      ],
+      "kind": "performance",
+      "passIds": [
+        "dispersion.shader-resource",
+        "dispersion.preview-frame",
+        "dispersion.image-export"
+      ],
+      "path": "src/app/dispersion/dispersion-backdrop.ts"
+    },
+    {
+      "acceptanceIds": [
+        "dispersion.canvas.infinity.mode-and-restoration",
+        "dispersion.runtime.canvas.viewport",
+        "dispersion.canvas.renderScale"
+      ],
+      "kind": "performance",
+      "passIds": [
+        "dispersion.preview-frame"
+      ],
+      "path": "src/app/dispersion/dispersion-view-window.ts"
+    },
+    {
+      "acceptanceIds": [
+        "dispersion.canvas.infinity.mode-and-restoration",
+        "dispersion.runtime.canvas.viewport",
+        "dispersion.canvas.renderScale"
+      ],
+      "kind": "performance",
+      "passIds": [
+        "dispersion.preview-frame"
+      ],
+      "path": "src/app/dispersion/dispersion-infinite-viewport.tsx"
     }
   ]
 }

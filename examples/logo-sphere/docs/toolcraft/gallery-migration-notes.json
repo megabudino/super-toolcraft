@@ -1,0 +1,9 @@
+{
+  "kind": "migration-diagnostics-not-test-proof",
+  "unmapped": [],
+  "inheritedIntegrityMismatches": [
+    "index.html",
+    "src/app/app-identity.ts"
+  ],
+  "inventoryErrors": []
+}

@@ -1,4 +1,5 @@
 import * as React from "react";
+import { createPortal } from "react-dom";
 
 import {
   getToolcraftTimelineLoopProgress,
@@ -13,6 +14,8 @@ import {
 import { registerDispersionExportProvider } from "./dispersion-export";
 import { dispersionPipelinePasses } from "./dispersion-pipeline";
 import { readDispersionSettings } from "./dispersion-values";
+import { useDispersionInfiniteViewport } from "./dispersion-infinite-viewport";
+import { getDispersionViewWindow } from "./dispersion-view-window";
 import {
   createDispersionGlResource,
   disposeDispersionGlResource,
@@ -32,11 +35,15 @@ export function DispersionRenderer(): React.JSX.Element {
   const { state } = useToolcraft();
   const pipeline = useToolcraftPipeline();
   const productSceneFrame = useToolcraftProductSceneFrame();
+  const infiniteViewport = useDispersionInfiniteViewport();
+  const viewportRef = React.useRef(infiniteViewport);
+  viewportRef.current = infiniteViewport;
   const previewSettings = readDispersionSettings(state);
   const previewBackgroundIncluded = shouldIncludeToolcraftPreviewBackground({
     state,
   });
   const canvasRef = React.useRef<HTMLCanvasElement | null>(null);
+  const [canvas, setCanvas] = React.useState<HTMLCanvasElement | null>(null);
   const [glResource, setGlResource] =
     React.useState<DispersionGlResource | null>(null);
   const [initializationFailed, setInitializationFailed] = React.useState(false);
@@ -51,6 +58,11 @@ export function DispersionRenderer(): React.JSX.Element {
   const lastExactRenderAtRef = React.useRef(0);
   const renderSettingsKeyRef = React.useRef("");
   const viewportInteractionUntilRef = React.useRef(0);
+  const lastProgressRef = React.useRef<number | null>(null);
+  const attachCanvas = React.useCallback((output: HTMLCanvasElement | null) => {
+    canvasRef.current = output;
+    setCanvas(output);
+  }, []);
 
   const renderSettingsKey = JSON.stringify(previewSettings);
   if (renderSettingsKey !== renderSettingsKeyRef.current) {
@@ -75,7 +87,6 @@ export function DispersionRenderer(): React.JSX.Element {
   renderVersionRef.current += 1;
 
   React.useEffect(() => {
-    const canvas = canvasRef.current;
     if (!canvas) return;
     let active = true;
 
@@ -126,7 +137,7 @@ export function DispersionRenderer(): React.JSX.Element {
     return () => {
       active = false;
     };
-  }, [pipeline]);
+  }, [canvas, pipeline]);
 
   React.useEffect(() => {
     if (!glResource) return;
@@ -153,14 +164,15 @@ export function DispersionRenderer(): React.JSX.Element {
       if (disposed) return;
       const currentState = stateRef.current;
       const currentFrame = frameRef.current;
+      const viewport = currentState.canvas.mode === "infinite" ? viewportRef.current : null;
       const interactionActive =
         now < viewportInteractionUntilRef.current;
       const shouldRender =
-        !interactionActive &&
+        (!interactionActive || viewport !== null) &&
         !renderPendingRef.current &&
         now >= controlSettleUntilRef.current &&
         now - lastRenderAt >= 1000 / 60 &&
-        (currentState.timeline.isPlaying || needsRenderRef.current);
+        ((!interactionActive && currentState.timeline.isPlaying) || needsRenderRef.current);
 
       if (shouldRender && currentFrame.rect) {
         const canvas = canvasRef.current;
@@ -174,16 +186,17 @@ export function DispersionRenderer(): React.JSX.Element {
             0.01,
             currentState.canvas.zoom / 100,
           );
-          const backingScale = dpr * renderScale * viewportScale;
-          const width = Math.max(1, Math.round(frame.width * backingScale));
-          const height = Math.max(1, Math.round(frame.height * backingScale));
+          const backingScale = dpr * renderScale * (viewport ? 1 : viewportScale);
+          const outputSize = viewport ?? frame;
+          const width = Math.max(1, Math.round(outputSize.width * backingScale));
+          const height = Math.max(1, Math.round(outputSize.height * backingScale));
 
-          canvas.style.width = `${frame.width}px`;
-          canvas.style.height = `${frame.height}px`;
+          canvas.style.width = `${outputSize.width}px`;
+          canvas.style.height = `${outputSize.height}px`;
 
-          const progress = getToolcraftTimelineLoopProgress(
-            currentState.timeline,
-          );
+          const progress = interactionActive && lastProgressRef.current !== null
+            ? lastProgressRef.current
+            : getToolcraftTimelineLoopProgress(currentState.timeline);
           const settings = readDispersionSettings(currentState);
           const shouldYieldLensActivation =
             settings.lens.enabled &&
@@ -207,6 +220,10 @@ export function DispersionRenderer(): React.JSX.Element {
               includeBackground: shouldIncludeToolcraftPreviewBackground({
                 state: currentState,
               }),
+              previewOnBackground: currentState.canvas.mode === "infinite",
+              viewWindow: viewport
+                ? getDispersionViewWindow(viewport, currentState.canvas, backingScale)
+                : undefined,
               internalScale: 1 / dpr,
               loopSeconds: currentState.timeline.durationSeconds,
               maskPreview: settings.masks.preview,
@@ -216,6 +233,7 @@ export function DispersionRenderer(): React.JSX.Element {
               width,
             });
             lastExactRenderAtRef.current = performance.now();
+            lastProgressRef.current = progress;
             renderedLensEnabledRef.current = settings.lens.enabled;
             yieldedLensActivationRef.current = false;
             canvas.dataset.dispersionEngine = "webgl2";
@@ -273,14 +291,25 @@ export function DispersionRenderer(): React.JSX.Element {
       ? previewSettings.background
       : "transparent",
     borderRadius:
-      previewSettings.shape === "rounded" ? `${radius}px` : 0,
+      state.canvas.mode === "finite" && previewSettings.shape === "rounded" ? `${radius}px` : 0,
     clipPath:
-      previewSettings.shape === "circle" && sceneRect
+      state.canvas.mode === "finite" && previewSettings.shape === "circle" && sceneRect
         ? `circle(${Math.min(sceneRect.width, sceneRect.height) / 2}px at 50% 50%)`
         : undefined,
     height: sceneRect ? `${sceneRect.height}px` : "100%",
     width: sceneRect ? `${sceneRect.width}px` : "100%",
   };
+
+  const output = (
+    <canvas
+      className={styles.canvas}
+      data-dispersion-canvas="true"
+      data-dispersion-engine={glResource ? "webgl2" : initializationFailed ? "unavailable" : "initializing"}
+      data-dispersion-requested-shape={previewSettings.shape}
+      data-lens-requested-count={previewSettings.lens.count}
+      ref={attachCanvas}
+    />
+  );
 
   return (
     <div
@@ -290,20 +319,9 @@ export function DispersionRenderer(): React.JSX.Element {
       data-toolcraft-product-output="true"
       style={surfaceStyle}
     >
-      <canvas
-        className={styles.canvas}
-        data-dispersion-canvas="true"
-        data-dispersion-engine={
-          glResource ? "webgl2" : initializationFailed ? "unavailable" : "initializing"
-        }
-        data-dispersion-requested-shape={previewSettings.shape}
-        data-lens-distortion={previewSettings.lens.enabled ? "on" : "off"}
-        data-lens-requested-count={previewSettings.lens.count}
-        data-mask-count={previewSettings.masks.items.length}
-        data-mask-enabled={previewSettings.masks.enabled ? "on" : "off"}
-        data-mask-preview={previewSettings.masks.preview ? "on" : "off"}
-        ref={canvasRef}
-      />
+      {state.canvas.mode === "infinite"
+        ? infiniteViewport && createPortal(output, infiniteViewport.element)
+        : output}
     </div>
   );
 }

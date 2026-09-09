@@ -342,6 +342,9 @@ vec4 composeDispersionSheet(
     rgb = mix(rgb, vec3(0.92, 0.12, 0.12), maskOverlayAlpha);
     alpha = max(alpha, maskOverlayAlpha);
   }
-  return vec4(rgb, alpha);
+  vec4 composite = vec4(rgb, alpha);
+  return uRemoveBackdrop > 0.5
+    ? dispersionRemoveBackdrop(composite, uBg)
+    : composite;
 }
 `;

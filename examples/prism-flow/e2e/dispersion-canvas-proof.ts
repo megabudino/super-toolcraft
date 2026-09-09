@@ -119,7 +119,7 @@ export async function proveInfinityMode(
     { afterPan, afterReload, before, enabled, redone, restored, undone },
     {
       expectedFiniteSize: { height: 1080, width: 1920 },
-      expectedSceneRect: { height: 1080, width: 1920, x: 0, y: 0 },
+      expectedSceneRect: { height: 1080, width: 1920, x: -960, y: -540 },
       requirementId: getDispersionAcceptanceId(
         "canvas.infinity.mode-and-restoration",
       ),

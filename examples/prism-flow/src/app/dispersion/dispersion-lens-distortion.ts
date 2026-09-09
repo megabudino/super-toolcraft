@@ -6,6 +6,7 @@ import type { LensDistortionProps } from "@paper-design/shaders-react";
 import * as THREE from "three";
 
 import type { LensDistortionSettings } from "./dispersion-lens-distortion-values";
+import { DISPERSION_REMOVE_BACKDROP_GLSL } from "./dispersion-backdrop";
 
 const PAPER_FRAGMENT_VERSION = /^#version 300 es\s*/u;
 
@@ -15,15 +16,45 @@ export const PAPER_LENS_DISTORTION_FRAGMENT_SHADER = (() => {
       "The pinned Paper Lens Distortion shader no longer exposes its GLSL 300 source.",
     );
   }
-  // Three inserts the same GLSL3 directive before ShaderMaterial source.
-  return lensDistortionFragmentShader.replace(PAPER_FRAGMENT_VERSION, "");
+  const source = lensDistortionFragmentShader.replace(PAPER_FRAGMENT_VERSION, "");
+  if (!source.includes("void main() {")) {
+    throw new Error("The pinned Paper Lens Distortion shader entry point changed.");
+  }
+  const viewportMarkers = [
+    "uniform sampler2D u_image;",
+    "texture(u_image, uv)",
+    "img.a * getUvFrame(uv)",
+  ];
+  if (viewportMarkers.some((marker) => !source.includes(marker))) {
+    throw new Error("The pinned Paper Lens Distortion image sampling changed.");
+  }
+  // Keep Paper's optical recipe intact. Infinity removes the selected backdrop
+  // only after lens sampling, which requires the same opaque input as finite mode.
+  const viewportSource = source
+    .replace("uniform sampler2D u_image;", `uniform sampler2D u_image;
+uniform highp vec4 uViewWindow;
+uniform float uInfinite;`)
+    .replace("texture(u_image, uv)", "texture(u_image, (uv - uViewWindow.xy) / uViewWindow.zw)")
+    .replace("img.a * getUvFrame(uv)", "img.a * (uInfinite > 0.5 ? 1.0 : getUvFrame(uv))");
+  return `${viewportSource.replace("void main() {", "void paperLensMain() {")}
+uniform float uRemoveBackdrop;
+uniform vec3 uBg;
+${DISPERSION_REMOVE_BACKDROP_GLSL}
+void main() {
+  paperLensMain();
+  if (uRemoveBackdrop > 0.5) {
+    fragColor = dispersionRemoveBackdrop(fragColor, uBg);
+  }
+}
+`;
 })();
 
 const PAPER_LENS_VERTEX_SHADER = `
 varying vec2 v_imageUV;
+uniform highp vec4 uViewWindow;
 
 void main() {
-  v_imageUV = uv;
+  v_imageUV = uv * uViewWindow.zw + uViewWindow.xy;
   gl_Position = vec4(position, 1.0);
 }
 `;
@@ -105,6 +136,10 @@ export function toPaperLensParameters(
 }
 
 type LensUniforms = Readonly<{
+  uViewWindow: THREE.Uniform<THREE.Vector4>;
+  uInfinite: THREE.Uniform<number>;
+  uRemoveBackdrop: THREE.Uniform<number>;
+  uBg: THREE.Uniform<THREE.Vector3>;
   u_angle: THREE.Uniform<number>;
   u_bias: THREE.Uniform<number>;
   u_count: THREE.Uniform<number>;
@@ -131,6 +166,10 @@ type LensUniforms = Readonly<{
 
 function createUniforms(): LensUniforms {
   return {
+    uViewWindow: new THREE.Uniform(new THREE.Vector4(0, 0, 1, 1)),
+    uInfinite: new THREE.Uniform(0),
+    uRemoveBackdrop: new THREE.Uniform(0),
+    uBg: new THREE.Uniform(new THREE.Vector3()),
     u_angle: new THREE.Uniform(0),
     u_bias: new THREE.Uniform(1),
     u_count: new THREE.Uniform(35),
@@ -208,13 +247,20 @@ export class PaperLensDistortionPass {
     settings: LensDistortionSettings,
     width: number,
     height: number,
+    previewBackground?: THREE.Vector3,
+    viewWindow?: readonly [number, number, number, number],
   ): void {
     const uniforms = this.uniforms;
+    uniforms.uInfinite.value = viewWindow ? 1 : 0;
+    uniforms.uViewWindow.value.set(...(viewWindow ?? [0, 0, 1, 1] as const));
+    uniforms.uRemoveBackdrop.value = previewBackground ? 1 : 0;
+    if (previewBackground) uniforms.uBg.value.copy(previewBackground);
     if (source !== this.previousSource) {
       uniforms.u_image.value = source;
       this.previousSource = source;
     }
-    const aspect = width / Math.max(1, height);
+    const aspect = (width / uniforms.uViewWindow.value.z) /
+      Math.max(1, height / uniforms.uViewWindow.value.w);
     if (aspect !== this.previousAspect) {
       uniforms.u_imageAspectRatio.value = aspect;
       this.previousAspect = aspect;

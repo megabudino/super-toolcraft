@@ -1,3 +1,4 @@
+import { DISPERSION_REMOVE_BACKDROP_GLSL } from "./dispersion-backdrop";
 import {
   PAPER_GRAIN_COMPOSITE_GLSL,
   PAPER_GRAIN_NOISE_GLSL,
@@ -63,6 +64,7 @@ export const DISPERSION_FIELD_FRAGMENT_SHADER = String.raw`
 precision highp float;
 
 uniform vec3 iResolution;
+uniform vec2 uViewOffset;
 uniform float uZoom;
 uniform float iTime;
 
@@ -84,7 +86,10 @@ uniform float uStepBase;
 uniform float uGlowIntensity;
 uniform float uGlowSpread;
 uniform float uOpaque;
+uniform float uRemoveBackdrop;
 uniform vec3 uBg;
+
+${DISPERSION_REMOVE_BACKDROP_GLSL}
 
 // --- Dispersion Studio control extensions ---
 uniform float uYShift;
@@ -157,7 +162,7 @@ ${DISPERSION_LIGHT_SHEET_CORE_GLSL}
 ${DISPERSION_LIGHT_SHEET_COMPOSITE_GLSL}
 
 void main() {
-  vec2 fragCoord = gl_FragCoord.xy;
+  vec2 fragCoord = gl_FragCoord.xy + uViewOffset;
   vec2 uv = (2.0 * fragCoord - iResolution.xy) / iResolution.y * uZoom;
   uv.y += uYShift;
   uv.y += uTiltX * uv.x;

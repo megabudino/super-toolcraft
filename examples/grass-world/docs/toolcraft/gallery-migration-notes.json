@@ -1,0 +1,14 @@
+{
+  "kind": "migration-diagnostics-not-test-proof",
+  "unmapped": [
+    {
+      "id": "grass.persistence",
+      "reason": "Missing/invalid functional descriptor for grass.persistence: grass field state restores after reload. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    }
+  ],
+  "inheritedIntegrityMismatches": [],
+  "inventoryErrors": [
+    "TypeError: test.skip is not a function",
+    "Inventory excluded broken registration files: grass-timeline-persistence.spec.ts"
+  ]
+}

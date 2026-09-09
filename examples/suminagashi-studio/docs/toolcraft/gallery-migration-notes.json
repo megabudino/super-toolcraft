@@ -1,0 +1,11 @@
+{
+  "kind": "migration-diagnostics-not-test-proof",
+  "unmapped": [],
+  "inheritedIntegrityMismatches": [
+    "src/toolcraft/runtime/contracts/component-contracts.ts",
+    "src/toolcraft/runtime/schema/define-toolcraft.ts",
+    "src/toolcraft/ui/components/controls/vector/index.ts",
+    "src/toolcraft/ui/components/controls/vector/vector-control.tsx"
+  ],
+  "inventoryErrors": []
+}

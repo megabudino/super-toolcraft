@@ -1,0 +1,170 @@
+{
+  "kind": "migration-diagnostics-not-test-proof",
+  "unmapped": [
+    {
+      "id": "background.pattern.enabled",
+      "reason": "Missing/invalid functional descriptor for background.pattern.enabled: browser: background.pattern.enabled changes the embedded hero output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "background.pattern.colorOpacity",
+      "reason": "Missing/invalid functional descriptor for background.pattern.colorOpacity: browser: background.pattern.colorOpacity changes the embedded hero output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "background.pattern.squareSize",
+      "reason": "Missing/invalid functional descriptor for background.pattern.squareSize: browser: background.pattern.squareSize changes the embedded hero output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "heading.recraftSize",
+      "reason": "Missing/invalid functional descriptor for heading.recraftSize: browser: heading.recraftSize changes the embedded hero output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "heading.stylesSize",
+      "reason": "Missing/invalid functional descriptor for heading.stylesSize: browser: heading.stylesSize changes the embedded hero output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "heading.color",
+      "reason": "Missing/invalid functional descriptor for heading.color: browser: heading.color changes the embedded hero output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "heading.lineGap",
+      "reason": "Missing/invalid functional descriptor for heading.lineGap: browser: heading.lineGap changes the embedded hero output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "heading.badgeVisible",
+      "reason": "Missing/invalid functional descriptor for heading.badgeVisible: browser: heading.badgeVisible changes the embedded hero output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "heading.badgeScale",
+      "reason": "Missing/invalid functional descriptor for heading.badgeScale: browser: heading.badgeScale changes the embedded hero output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "heading.badgeGap",
+      "reason": "Missing/invalid functional descriptor for heading.badgeGap: browser: heading.badgeGap changes the embedded hero output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "heading.badgeShadow.enabled",
+      "reason": "Missing/invalid functional descriptor for heading.badgeShadow.enabled: browser: heading.badgeShadow.enabled changes the embedded hero output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "heading.badgeShadow.offset",
+      "reason": "Missing/invalid functional descriptor for heading.badgeShadow.offset: browser: heading.badgeShadow.offset changes the embedded hero output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "heading.badgeShadow.blur",
+      "reason": "Missing/invalid functional descriptor for heading.badgeShadow.blur: browser: heading.badgeShadow.blur changes the embedded hero output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "heading.badgeShadow.spread",
+      "reason": "Missing/invalid functional descriptor for heading.badgeShadow.spread: browser: heading.badgeShadow.spread changes the embedded hero output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "heading.badgeShadow.colorOpacity",
+      "reason": "Missing/invalid functional descriptor for heading.badgeShadow.colorOpacity: browser: heading.badgeShadow.colorOpacity changes the embedded hero output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "heading.position",
+      "reason": "Missing/invalid functional descriptor for heading.position: browser: heading.position changes the embedded hero output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "heading.subtitle.fontSize",
+      "reason": "Missing/invalid functional descriptor for heading.subtitle.fontSize: browser: heading.subtitle.fontSize changes the embedded hero output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "heading.subtitle.gap",
+      "reason": "Missing/invalid functional descriptor for heading.subtitle.gap: browser: heading.subtitle.gap changes the embedded hero output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "heading.subtitle.shadow.enabled",
+      "reason": "Missing/invalid functional descriptor for heading.subtitle.shadow.enabled: browser: heading.subtitle.shadow.enabled changes the embedded hero output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "heading.subtitle.shadow.offset",
+      "reason": "Missing/invalid functional descriptor for heading.subtitle.shadow.offset: browser: heading.subtitle.shadow.offset changes the embedded hero output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "heading.subtitle.shadow.blur",
+      "reason": "Missing/invalid functional descriptor for heading.subtitle.shadow.blur: browser: heading.subtitle.shadow.blur changes the embedded hero output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "heading.subtitle.shadow.spread",
+      "reason": "Missing/invalid functional descriptor for heading.subtitle.shadow.spread: browser: heading.subtitle.shadow.spread changes the embedded hero output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "heading.subtitle.shadow.colorOpacity",
+      "reason": "Missing/invalid functional descriptor for heading.subtitle.shadow.colorOpacity: browser: heading.subtitle.shadow.colorOpacity changes the embedded hero output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "gallery.images",
+      "reason": "Missing/invalid functional descriptor for gallery.images: browser: gallery images preserve upload order, aspect and transforms. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "sphere.rowImages.0",
+      "reason": "Missing/invalid functional descriptor for sphere.rowImages.0: browser: Row 1 images preserve upload order, aspect and transforms. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "sphere.rowImages.1",
+      "reason": "Missing/invalid functional descriptor for sphere.rowImages.1: browser: Row 2 images preserve upload order, aspect and transforms. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "sphere.rowImages.2",
+      "reason": "Missing/invalid functional descriptor for sphere.rowImages.2: browser: Row 3 images preserve upload order, aspect and transforms. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "sphere.rowImages.3",
+      "reason": "Missing/invalid functional descriptor for sphere.rowImages.3: browser: Row 4 images preserve upload order, aspect and transforms. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "sphere.rowImages.4",
+      "reason": "Missing/invalid functional descriptor for sphere.rowImages.4: browser: Row 5 images preserve upload order, aspect and transforms. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "sphere.rowImages.5",
+      "reason": "Missing/invalid functional descriptor for sphere.rowImages.5: browser: Row 6 images preserve upload order, aspect and transforms. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "gallery.type",
+      "reason": "Missing/invalid functional descriptor for gallery.type: browser: gallery.type changes the embedded hero output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "sphere.rows",
+      "reason": "Missing/invalid functional descriptor for sphere.rows: browser: sphere.rows changes the embedded hero output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "gallery.position.v2",
+      "reason": "Missing/invalid functional descriptor for gallery.position.v2: browser: gallery.position.v2 changes the embedded hero output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "effects.crt.enabled",
+      "reason": "Missing/invalid functional descriptor for effects.crt.enabled: browser: effects.crt.enabled changes the embedded hero output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "effects.crt.scanlines",
+      "reason": "Missing/invalid functional descriptor for effects.crt.scanlines: browser: effects.crt.scanlines changes the embedded hero output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "effects.crt.pitch",
+      "reason": "Missing/invalid functional descriptor for effects.crt.pitch: browser: effects.crt.pitch changes the embedded hero output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "effects.crt.chroma",
+      "reason": "Missing/invalid functional descriptor for effects.crt.chroma: browser: effects.crt.chroma changes the embedded hero output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "effects.crt.flicker",
+      "reason": "Missing/invalid functional descriptor for effects.crt.flicker: browser: effects.crt.flicker changes the embedded hero output. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    }
+  ],
+  "inheritedIntegrityMismatches": [
+    "src/toolcraft/runtime/source-assets/source-asset-binary-media-hydrator.ts",
+    "e2e/app-persistence.spec.ts",
+    "e2e/browser-control-target-helpers.ts",
+    "index.html",
+    "src/app/acceptance/control-layout-section-rules.ts",
+    "src/app/acceptance/control-layout.ts",
+    "src/app/acceptance/control-section-inventory.ts",
+    "src/app/acceptance/types.ts",
+    "src/app/app-acceptance.control-naming-rules.test.ts",
+    "src/app/app-identity.ts"
+  ],
+  "inventoryErrors": []
+}

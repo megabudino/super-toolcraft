@@ -1,0 +1,164 @@
+{
+  "kind": "migration-diagnostics-not-test-proof",
+  "unmapped": [
+    {
+      "id": "composition.firstRowScale",
+      "reason": "Missing/invalid functional descriptor for composition.firstRowScale: browser: composition.firstRowScale updates the real Studio Room preview. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "composition.secondRowScale",
+      "reason": "Missing/invalid functional descriptor for composition.secondRowScale: browser: composition.secondRowScale updates the real Studio Room preview. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "composition.lineGap",
+      "reason": "Missing/invalid functional descriptor for composition.lineGap: browser: composition.lineGap updates the real Studio Room preview. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "composition.buttonGap",
+      "reason": "Missing/invalid functional descriptor for composition.buttonGap: browser: composition.buttonGap updates the real Studio Room preview. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "room.depth",
+      "reason": "Missing/invalid functional descriptor for room.depth: browser: room.depth updates the real Studio Room preview. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "room.vanishing",
+      "reason": "Missing/invalid functional descriptor for room.vanishing: browser: room.vanishing updates the real Studio Room preview. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "room.wallBorder.width",
+      "reason": "Missing/invalid functional descriptor for room.wallBorder.width: browser: room.wallBorder.width updates the real Studio Room preview. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "room.wallBorder.colorOpacity",
+      "reason": "Missing/invalid functional descriptor for room.wallBorder.colorOpacity: browser: room.wallBorder.colorOpacity updates the real Studio Room preview. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "room.innerGrid.enabled",
+      "reason": "Missing/invalid functional descriptor for room.innerGrid.enabled: browser: room.innerGrid.enabled updates the real Studio Room preview. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "room.innerGrid.depth",
+      "reason": "Missing/invalid functional descriptor for room.innerGrid.depth: browser: room.innerGrid.depth updates the real Studio Room preview. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "room.innerGrid.falloff",
+      "reason": "Missing/invalid functional descriptor for room.innerGrid.falloff: browser: room.innerGrid.falloff updates the real Studio Room preview. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "room.innerGrid.opacity",
+      "reason": "Missing/invalid functional descriptor for room.innerGrid.opacity: browser: room.innerGrid.opacity updates the real Studio Room preview. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "grid.columns",
+      "reason": "Missing/invalid functional descriptor for grid.columns: browser: grid.columns updates the real Studio Room preview. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "grid.rows",
+      "reason": "Missing/invalid functional descriptor for grid.rows: browser: grid.rows updates the real Studio Room preview. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "grid.depthDivisions",
+      "reason": "Missing/invalid functional descriptor for grid.depthDivisions: browser: grid.depthDivisions updates the real Studio Room preview. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "grid.color",
+      "reason": "Missing/invalid functional descriptor for grid.color: browser: grid.color updates the real Studio Room preview. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "grid.opacity",
+      "reason": "Missing/invalid functional descriptor for grid.opacity: browser: grid.opacity updates the real Studio Room preview. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "grid.thickness",
+      "reason": "Missing/invalid functional descriptor for grid.thickness: browser: grid.thickness updates the real Studio Room preview. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "fineGrid.enabled",
+      "reason": "Missing/invalid functional descriptor for fineGrid.enabled: browser: fineGrid.enabled updates the real Studio Room preview. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "fineGrid.subdivision",
+      "reason": "Missing/invalid functional descriptor for fineGrid.subdivision: browser: fineGrid.subdivision updates the real Studio Room preview. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "fineGrid.color",
+      "reason": "Missing/invalid functional descriptor for fineGrid.color: browser: fineGrid.color updates the real Studio Room preview. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "fineGrid.opacity",
+      "reason": "Missing/invalid functional descriptor for fineGrid.opacity: browser: fineGrid.opacity updates the real Studio Room preview. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "fineGrid.thickness",
+      "reason": "Missing/invalid functional descriptor for fineGrid.thickness: browser: fineGrid.thickness updates the real Studio Room preview. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "tiles.perSurface",
+      "reason": "Missing/invalid functional descriptor for tiles.perSurface: browser: tiles.perSurface updates the real Studio Room preview. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "tiles.interval",
+      "reason": "Missing/invalid functional descriptor for tiles.interval: browser: tiles.interval updates the real Studio Room preview. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "tiles.shuffleStyle",
+      "reason": "Missing/invalid functional descriptor for tiles.shuffleStyle: browser: tiles.shuffleStyle updates the real Studio Room preview. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "tiles.develop",
+      "reason": "Missing/invalid functional descriptor for tiles.develop: browser: tiles.develop updates the real Studio Room preview. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "tiles.hoverLift",
+      "reason": "Missing/invalid functional descriptor for tiles.hoverLift: browser: tiles.hoverLift updates the real Studio Room preview. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "tiles.fog",
+      "reason": "Missing/invalid functional descriptor for tiles.fog: browser: tiles.fog updates the real Studio Room preview. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "motion.enabled",
+      "reason": "Missing/invalid functional descriptor for motion.enabled: browser: motion.enabled updates the real Studio Room preview. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "motion.parallax",
+      "reason": "Missing/invalid functional descriptor for motion.parallax: browser: motion.parallax updates the real Studio Room preview. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "motion.smoothness",
+      "reason": "Missing/invalid functional descriptor for motion.smoothness: browser: motion.smoothness updates the real Studio Room preview. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "motion.scrollNudge",
+      "reason": "Missing/invalid functional descriptor for motion.scrollNudge: browser: motion.scrollNudge updates the real Studio Room preview. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "trail.enabled",
+      "reason": "Missing/invalid functional descriptor for trail.enabled: browser: trail.enabled updates the real Studio Room preview. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "trail.amount",
+      "reason": "Missing/invalid functional descriptor for trail.amount: browser: trail.amount updates the real Studio Room preview. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "trail.strength",
+      "reason": "Missing/invalid functional descriptor for trail.strength: browser: trail.strength updates the real Studio Room preview. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    },
+    {
+      "id": "trail.fade",
+      "reason": "Missing/invalid functional descriptor for trail.fade: browser: trail.fade updates the real Studio Room preview. Update scripts/gallery-feature-catalog.json or declare browser: { file, testName, budget }."
+    }
+  ],
+  "inheritedIntegrityMismatches": [
+    "src/toolcraft/runtime/model-import/canonical/model-document-digest.ts",
+    "src/toolcraft/runtime/model-import/canonical/model-document-validation-helpers.ts",
+    "src/toolcraft/runtime/model-import/canonical/model-document-validation-hierarchy.ts",
+    "src/toolcraft/runtime/model-import/canonical/sha256.ts",
+    "src/toolcraft/runtime/model-import/worker/model-import.worker.bundle.js",
+    "index.html",
+    "scripts/toolcraft-port.mjs",
+    "src/app/app-identity.ts"
+  ],
+  "inventoryErrors": []
+}

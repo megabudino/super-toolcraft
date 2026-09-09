@@ -1,0 +1,9 @@
+{
+  "kind": "migration-diagnostics-not-test-proof",
+  "unmapped": [],
+  "inheritedIntegrityMismatches": [
+    "src/toolcraft/runtime/contracts/component-contracts.ts",
+    "src/toolcraft/ui/components/controls/file-drop/file-drop-control.tsx"
+  ],
+  "inventoryErrors": []
+}

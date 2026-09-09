@@ -1,3 +1,45 @@
+# Accepted Toolcraft gallery application
+
+This is an existing finished product, not a neutral starter. Read
+`docs/toolcraft/gallery-workflow.md` first. Its release/development policy takes
+precedence over older full-delivery requirements anywhere in this copied app.
+
+`toolcraft-release.json` records owner-approved initial product acceptance. It is
+portable across clone/copy/install and later edits. It is not fabricated test
+evidence. Do not delete it or synthesize verification receipts.
+
+For ordinary changes: inspect the relevant implementation and pinned runtime docs,
+make the scoped edit, run the smallest relevant unit/component test and
+`pnpm test:feature -- <acceptance-id>`. Use `--list` to find IDs. Never automatically
+run aggregate delivery, build, all tests, framework checks or performance. Bare
+`verify:delivery` is a release-state no-op, not verification of the latest edit.
+Explicit `--all` is reserved for genuinely cross-cutting functional edits.
+
+Preserve the existing Toolcraft runtime shell and schema-controlled UI. Runtime
+owns panel, toolbar, canvas, timeline/layers, controls, persistence and export
+mechanics; product code owns its renderer and schema behavior. Use the APIs present
+in this pinned copy, not newer incompatible modular APIs. Consult local
+`docs/toolcraft/README.md` or legacy `docs/creative-apps-kit` for runtime details;
+their historical lifecycle/full-gate instructions are superseded by this policy.
+
+Do not patch copied framework internals to bypass checks. Fix shared behavior in
+the source Toolcraft repository and regenerate the affected files. Product code,
+acceptance scenarios and `scripts/gallery-feature-catalog.json` remain editable.
+Use systematic debugging for actual failures. Record decisions, real check results
+and inherited risks in the existing agent worklog. Do not call unrun checks passed.
+Install dependencies once in a fresh folder; never reinstall after every edit.
+
+Performance complaints require targeted diagnosis of the affected operation, not
+a full certification run. Run full performance only when explicitly requested.
+
+---
+
+## Pinned framework rules
+
+The historical runtime/API rules below remain applicable. Their initial-delivery,
+full-final-gate and performance scheduling instructions are superseded by the
+accepted-gallery workflow above.
+
 # Toolcraft App Template Assembly Guide
 
 <!-- toolcraft-performance-lifecycle: first-delivery=functional; later-delivery=functional-targeted; complaint=one-authority-targeted-performance-iteration; full-audit=explicit-only -->

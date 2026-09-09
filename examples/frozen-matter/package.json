@@ -23,7 +23,9 @@
     "verify:perf:record-iteration": "node scripts/run-performance-iteration.mjs",
     "verify:kernel": "node scripts/run-kernel-benchmarks.mjs",
     "verify:receipt": "node scripts/toolcraft-verification-receipt.mjs validate",
-    "verify:final": "npm run ai:check && npm run test && npm run build && npm run test:browser && npm run verify:receipt"
+    "verify:final": "node scripts/gallery-workflow/delivery.mjs",
+    "verify:delivery": "node scripts/gallery-workflow/delivery.mjs",
+    "test:feature": "node scripts/gallery-workflow/feature.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.1",

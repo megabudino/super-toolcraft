@@ -4,6 +4,7 @@ import { appSchema } from "./app-schema";
 import { dispersionExportRenderer } from "./dispersion/dispersion-export";
 import { dispersionRendererPipelineRegistration } from "./dispersion/dispersion-pipeline";
 import { DispersionRenderer } from "./dispersion/dispersion-renderer";
+import { DispersionInfiniteViewport } from "./dispersion/dispersion-infinite-viewport";
 import {
   dispersionTargets,
   readDispersionSettings,
@@ -11,6 +12,7 @@ import {
 
 export const appComposition: ToolcraftAppComposition = {
   canvasContent: <DispersionRenderer />,
+  infiniteCanvasContent: <DispersionInfiniteViewport />,
   exportRenderer: dispersionExportRenderer,
   modelPresentation: { mode: "runtime" },
   renderDefaultCanvasMedia: false,
@@ -24,8 +26,8 @@ export const appComposition: ToolcraftAppComposition = {
       {
         height: 1080,
         width: isCircle ? 1080 : 1920,
-        x: 0,
-        y: 0,
+        x: isCircle ? -540 : -960,
+        y: -540,
       },
     ];
   },

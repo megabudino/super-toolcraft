@@ -18,6 +18,7 @@ import {
   type ProofSession,
 } from "./dispersion-browser-helpers";
 import { proveBorderModeAbsent } from "./dispersion-border-proof";
+import { proveInfinityAppearance } from "./dispersion-infinity-appearance-proof";
 import { proveColorBalancePad } from "./dispersion-color-balance-proof";
 import {
   proveMaskApplication,
@@ -109,6 +110,7 @@ test(
   getDispersionBrowserTestName("canvas.infinity.mode-and-restoration"),
   async ({ page }) => {
     const session = await openProof(page);
+    await proveInfinityAppearance(page);
     await proveInfinityMode(page, session);
   },
 );
