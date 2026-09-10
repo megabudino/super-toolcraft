@@ -8,6 +8,20 @@ It works with any AI agent (Codex, Claude, Cursor).
 
 Built by [Pixel Point](https://pixelpoint.io/).
 
+## Table of contents
+
+- [Getting started](#getting-started)
+- [What Toolcraft includes](#what-toolcraft-includes)
+- [What to build](#what-to-build)
+- [FAQ](#faq)
+- [Repository structure](#repository-structure)
+- [Commands](#commands)
+- [License](#license)
+
+### Resources
+
+[Website](https://toolcraft.sh) · [Examples](https://toolcraft.sh/gallery) · [YouTube video](https://youtu.be/-QlmkGZLzFo) · [Blog post](https://pixelpoint.io/blog/how-to-craft-personal-design-tools-with-toolcraft/)
+
 ## Getting started
 
 Your AI agent can handle setup for you. Start with a prompt,
@@ -225,11 +239,6 @@ npm run verify:quick # Run the normal development checks
 npm run verify:final # Run the complete functional gate
 npm run build        # Create a production build
 ```
-
-## Learn more
-
-Read [Build personal design tools with AI using Toolcraft](https://pixelpoint.io/blog/how-to-craft-personal-design-tools-with-toolcraft/)
-for the background, workflow, and example projects.
 
 ## License
 
