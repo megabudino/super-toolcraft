@@ -322,4 +322,36 @@ Vestaboard is a playback-timeline Creative Apps Kit app that renders a full-canv
 - Changed owner: Upstream example snapshot packaging, integrity restoration, and public distribution metadata.
 - User-visible result: The `vesta-split-flap` template is admitted as a complete standalone snapshot; original framework hashes remain authoritative. Canonical identity regeneration, where needed, uses the upstream identity generator.
 - Verification: Source template admission passed. Published dependency installation and browser startup results are recorded in the upstream `docs/template-release-report.md`; these smoke checks do not claim renderer or export certification.
+
+## 2026-09-10 — Bounded legacy launcher environment check
+
+- Request: Finish known gallery launcher checks without editing shared/protected scripts, config, runtime, dependencies or acceptance records.
+- Task type: Environment diagnosis and exact existing feature verification; no product implementation change.
+- User-visible result: The existing `board.tile.gap` scenario passes on a free legacy-compatible test port; its real slider changes visible cell spacing.
+- Source/reference checked: Original failed and successful audit logs in `gallery-all-cli-check-jQeXGb`; local `playwright.config.ts`, `creative-apps-kit-port.mjs`, gallery feature/process runner, acceptance row and tile-gap browser assertions.
+- Reference inputs: Existing local app/audit only.
+- Docs/contracts read: Root/local AGENTS.md, gallery-workflow.md and legacy acceptance-testing.md; systematic-debugging skill.
+- Contract rules applied: Keep pinned launcher/runtime intact; verify exact functional scenario only; never attach to an unrelated listener or treat owner acceptance as current test evidence.
+- Decision: The protected gallery runner exports `TOOLCRAFT_TEST_PORT`, but the legacy config reads `CREATIVE_APPS_KIT_TEST_PORT`. Its IPv4-only free-port probe can miss a localhost/IPv6 listener such as the original Docker collision at 3003. Read-only socket checks verified port 53202 was free on both 127.0.0.1 and ::1; provide both existing environment variable names with that same value for this run. `pnpm` is installed on this host, as required by the unchanged legacy web-server command.
+- Alternatives rejected: Edit/re-sign the protected compatibility runner or Playwright config; enable `reuseExistingServer`; kill Docker or unrelated servers; bypass the selected feature route.
+- State/output mapping: The unchanged browser scenario drags the real Gap slider and compares actual neighboring cell bounds/spacing.
+- Files changed: This worklog only.
+- Verification: `CREATIVE_APPS_KIT_TEST_PORT=53202 TOOLCRAFT_TEST_PORT=53202 TOOLCRAFT_TEST_DEPENDENCY_ROOT=/Users/kusnizza/Projects/toolcraft-website/primeui-v2/examples/vesta-split-flap/node_modules npm run test:feature -- board.tile.gap` passed: one selected scenario, 4.8s test / 6.6s total. Test-owned server processes exited normally. No new unit code was changed.
+- Skipped checks: No global test/typecheck, build, delivery, performance, dependency installation or other browser scenarios.
+- Risks: Permanent default-port/host compatibility and the inherited `pnpm` launcher dependency remain in excluded protected source owners. This environment-only pass does not claim those defaults are repaired. Reusing external node_modules produced an Inter font request outside Vite's serving allow-list; the selected spacing assertions passed, but typography/startup-with-zero-resource-errors was not certified.
 - Risks: Historical templates retain their original runtime and workflow versions.
+
+## 2026-09-10 — Authorized focused-launcher compatibility repair
+
+- Request: User approved the narrow shared gallery-workflow fix plus regeneration into Vesta and requested an independent functionality agent for all repaired applications.
+- Task type: Later-edit launcher compatibility, not new product delivery. No product renderer, defaults, UI, assets, dependencies or legacy framework configuration changed.
+- Source/reference checked: `gallery-installers/workflow/feature.mjs` and `process.mjs`, Vesta's legacy Playwright port reader, signed gallery release and exact native Gap scenario. Reference inputs are existing local code and reproduced launch logs; no new visual/motion reference.
+- Contracts applied: Root/local AGENTS.md and accepted-gallery workflow; systematic-debugging, bounded source-owner regeneration, proportional focused verification and independent review. The previous worklog's excluded shared-owner blocker is superseded only by this explicit narrow authorization.
+- Decision/state mapping: Resolve one free port in the existing focused runner, pass it through `browserEnvironment`, and mirror it to the legacy port variable. Both Playwright's URL and Vite's command now use the same selected port. Legacy-only environment callers and performance-variable filtering remain unchanged.
+- Alternatives rejected: Hand-edit the pinned Playwright config, introduce a second resolver, reuse or kill unrelated servers, require permanent manual port overrides, or update unrelated applications/framework copies.
+- Files changed: Two shared source-owner files and two targeted regression cases; bounded `scripts/gallery-migration/vesta-launcher-patch.mjs`; Vesta's two regenerated workflow files and only their two hashes plus signature in `toolcraft-release.json`; this worklog and upstream planning/progress documentation. Original acceptance/provenance, baseline, package scripts and legacy framework manifest are preserved.
+- Verification: The alias regression first failed (`3003` instead of selected `42817`). After the fix, four exact environment/port/portable-acceptance unit cases passed in 128ms. Source/copy/regeneration specification and quality review approved with no findings. Repeating the bounded regeneration emitter is a no-op.
+- Verification: `env -u TOOLCRAFT_TEST_PORT -u CREATIVE_APPS_KIT_TEST_PORT TOOLCRAFT_TEST_DEPENDENCY_ROOT=/Users/kusnizza/Projects/toolcraft-website/primeui-v2/examples/vesta-split-flap/node_modules DEBUG=pw:webserver npm run test:feature -- board.tile.gap` passed: native Gap slider/neighboring-cell bounds, 4.8s test / 6.3s total, automatically selected port 56554 used by both Vite and Playwright. A separate agent independently repeated it: 4.8s / 6.2s total on automatically selected port 56588. Both test-owned servers exited normally.
+- Verification: Read-only validation passed all 24 existing signed gallery records; the other 23 record files remain byte-identical to HEAD. Vesta's original acceptance/evidence is unchanged; no new delivery/performance receipt was fabricated or generated.
+- Limits: The inherited test starts a fresh browser context and clears localStorage before first navigation; this confirms clean-session Gap behavior, not persistence/reload. Reused external node_modules still produces the existing Inter-font Vite allow-list warning, so zero-resource-error typography is not certified. Historical runtime versions and the existing `pnpm` launcher dependency remain pinned.
+- Skipped: Full delivery, build, global tests/typecheck, measured performance, dependency installation, CLI release, commit, push and deployment. See upstream `examples/gallery-independent-functionality-check.md` for the separate nine-app report.

@@ -21,6 +21,8 @@ export async function focusedBrowserPort(env = process.env) {
 
 export function browserEnvironment(projectDir, env = process.env) {
   const clean = focusedEnvironment(env);
+  // Both generations must launch and probe the same selected test server.
+  if (clean.TOOLCRAFT_TEST_PORT) clean.CREATIVE_APPS_KIT_TEST_PORT = clean.TOOLCRAFT_TEST_PORT;
   const loader = pathToFileURL(path.join(projectDir, "scripts/gallery-workflow/register-assets.mjs"));
   return { ...clean, NODE_OPTIONS: `${clean.NODE_OPTIONS ?? ""} --import=${loader.href}`.trim() };
 }

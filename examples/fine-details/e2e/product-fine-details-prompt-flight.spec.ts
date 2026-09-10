@@ -18,6 +18,7 @@ import {
   provePromptFlightControlCase,
   provePromptFlightTransition,
   readGhostOpacities,
+  readPromptFlightControlSnapshot,
   resetAndWaitForPreview,
   waitForGhostsToClear,
 } from "./fine-details-prompt-flight-evidence";
@@ -111,14 +112,12 @@ test(FINE_DETAILS_PROMPT_FLIGHT_COMMAND_BROWSER_TEST_NAME, async ({ page }) => {
     offset: { x: 0, y: 0 },
   });
 
-  const frame = page.frameLocator('iframe[title="Recraft Fine Details website preview"]');
+  const frame = page.locator(previewSelector);
   const prompt = frame.locator("[data-fine-details-prompt-drag-root]");
   const layer = frame.locator("[data-fine-details-prompt-flight-layer]");
   const ghosts = frame.locator("[data-fine-details-prompt-ghost]");
   const baseRect = await getPromptFlightBaseRect(page);
-  const settingsBefore = await page
-    .locator(previewSelector)
-    .getAttribute("data-fine-details-settings");
+  const settingsBefore = await readPromptFlightControlSnapshot(page);
   const persistenceBefore = await readPromptFlightPersistenceSnapshot(page);
   const playback = await getToolcraftControlFieldByTarget(
     page,
@@ -135,7 +134,7 @@ test(FINE_DETAILS_PROMPT_FLIGHT_COMMAND_BROWSER_TEST_NAME, async ({ page }) => {
     { stabilityIntervalMs: 50, stabilitySamples: 2, timeoutMs: 5_000 },
   );
   expect(runOutcome).toBe("landed");
-  expect(await page.locator(previewSelector).getAttribute("data-fine-details-settings")).toBe(
+  expect(await readPromptFlightControlSnapshot(page)).toEqual(
     settingsBefore,
   );
   expect(await readPromptFlightPersistenceSnapshot(page)).toEqual(persistenceBefore);
@@ -150,7 +149,7 @@ test(FINE_DETAILS_PROMPT_FLIGHT_COMMAND_BROWSER_TEST_NAME, async ({ page }) => {
   await expect(prompt).toHaveAttribute("data-fine-details-prompt-flight", "idle");
   await waitForGhostsToClear(ghosts);
   expect(getDistance(await getPromptRect(layer), baseRect)).toBeLessThanOrEqual(1);
-  expect(await page.locator(previewSelector).getAttribute("data-fine-details-settings")).toBe(
+  expect(await readPromptFlightControlSnapshot(page)).toEqual(
     settingsBefore,
   );
   expect(await readPromptFlightPersistenceSnapshot(page)).toEqual(persistenceBefore);

@@ -757,14 +757,14 @@ export const appAcceptance: readonly ToolcraftComponentAcceptance[] = [
   fineDetailsControlAcceptance({
     componentType: "slider",
     expectedObservable:
-      "Trail spawning waits for the selected duration after the pointer leaves the prompt.",
+      "Trail spawning waits for the selected duration after focus leaves the prompt.",
     target: fineDetailsTrailTargets.resumeDelay,
     userAction: "Drag Trail Resume delay.",
   }),
   fineDetailsControlAcceptance({
     componentType: "slider",
     expectedObservable:
-      "Trail spacing eases back to its configured value over the selected resume ramp.",
+      "New cards progressively recover full opacity and scale over the selected resume ramp after prompt focus leaves; configured spacing stays unchanged.",
     target: fineDetailsTrailTargets.resumeRamp,
     userAction: "Drag Trail Resume ramp.",
   }),

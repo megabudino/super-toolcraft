@@ -13,8 +13,7 @@ import { expectToolcraftPersistentOutcomeAfterAction } from "./stable-outcome-he
 import { getTypographyCornerOffset, orderGhostSnapshotsAlongPath } from '../src/app/fine-details-evidence-geometry';
 export { getTypographyCornerOffset, orderGhostSnapshotsAlongPath } from '../src/app/fine-details-evidence-geometry';
 
-export const previewSelector = '[data-toolcraft-product-output="fine-details-external-preview"]';
-const frameSelector = 'iframe[title="Recraft Fine Details website preview"]';
+export const previewSelector = '[data-recraft-native-section]';
 const sectionSelector = "[data-fine-details-section]";
 const promptSelector = "[data-fine-details-prompt-drag-root]";
 const promptFlightLayerSelector = "[data-fine-details-prompt-flight-layer]";
@@ -93,11 +92,11 @@ export async function expectPromptFlightCommandOutcome<T>(
 }
 
 export async function resetAndWaitForPreview(page: Page) {
+  // Playwright supplies a fresh context for each product test. Reloading here
+  // needlessly aborts native media initialization and repeats startup work.
   await page.goto("/");
-  await page.evaluate(() => localStorage.clear());
-  await page.reload();
-  await expect(page.locator(frameSelector)).toBeVisible();
-  await expect(page.frameLocator(frameSelector).locator(promptSelector)).toBeVisible();
+  await expect(page.locator(previewSelector)).toBeVisible();
+  await expect(page.locator(previewSelector).locator(promptSelector)).toBeVisible();
 }
 
 export async function editNumericControl(control: Locator, label: string, value: number) {
@@ -117,8 +116,8 @@ export async function setImagesMode(page: Page, mode: "Carousel" | "Trail") {
     fineDetailsCarouselTargets.imagesMode,
   );
   await control.getByRole("button", { name: mode }).click();
-  await expect(page.locator(previewSelector)).toHaveAttribute(
-    "data-fine-details-images-mode",
+  await expect(page.locator(previewSelector).locator(sectionSelector)).toHaveAttribute(
+    "data-fine-details-image-state",
     mode.toLowerCase(),
   );
 }
@@ -127,15 +126,37 @@ export async function expectPromptFlightSettings(
   page: Page,
   expected: Readonly<Record<string, unknown>>,
 ) {
-  await expect
-    .poll(async () => {
-      const rawSettings = await page
-        .locator(previewSelector)
-        .getAttribute("data-fine-details-settings");
-      if (!rawSettings) return null;
-      return (JSON.parse(rawSettings) as { prompt: { flight: unknown } }).prompt.flight;
-    })
-    .toMatchObject(expected);
+  // The native scene has no iframe settings transport. Assert the authored UI
+  // values here; each evidence case separately proves their rendered effect.
+  for (const [key, value] of Object.entries(expected)) {
+    const entries = key === "offset"
+      ? Object.entries(value as Record<string, number>).map(([axis, coordinate]) =>
+          [`prompt.flight.offset.${axis}`, coordinate] as const)
+      : [[`prompt.flight.${key}`, value] as const];
+    for (const [target, expectedValue] of entries) {
+      const control = await getToolcraftControlFieldByTarget(page, target);
+      if (typeof expectedValue === "boolean") {
+        await expect(control.getByRole("switch")).toBeChecked({ checked: expectedValue });
+      } else {
+        await expect(control.getByRole("slider")).toHaveAttribute("aria-valuenow", String(expectedValue));
+      }
+    }
+  }
+}
+
+export async function readPromptFlightControlSnapshot(page: Page) {
+  const snapshot = await page
+    .locator('[data-slot="toolcraft-runtime-app"] [data-toolcraft-control-target^="prompt.flight."]')
+    .evaluateAll((controls) => controls.map((control) => {
+      const target = control.getAttribute("data-toolcraft-control-target")!;
+      const input = control.querySelector('[role="switch"], [role="slider"], input[type="range"]');
+      const value = input?.getAttribute(input.getAttribute("role") === "switch" ? "aria-checked" : "aria-valuenow");
+      if (value == null) throw new Error(`Missing rendered Prompt Flight value: ${target}`);
+      return [target, value] as const;
+    }));
+  // One DOM read, but still require every authored setting exactly once.
+  expect(snapshot.map(([target]) => target).sort()).toEqual(Object.values(fineDetailsPromptFlightTargets).sort());
+  return snapshot.sort(([first], [second]) => first.localeCompare(second));
 }
 
 export async function getPromptRect(prompt: Locator): Promise<PromptRect> {
@@ -196,7 +217,7 @@ export async function waitForGhostsToClear(ghosts: Locator) {
 }
 
 function getPromptLocators(page: Page) {
-  const frame = page.frameLocator(frameSelector);
+  const frame = page.locator(previewSelector);
   return {
     ghosts: frame.locator(ghostSelector),
     layer: frame.locator(promptFlightLayerSelector),

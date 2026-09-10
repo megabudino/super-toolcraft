@@ -437,3 +437,21 @@ Mesh FX Lab is a working Toolcraft product that applies a complete GPU effects s
 - State/output mapping: Package name, HTML title, control/acceptance identity, persistence/settings-transfer namespace where present, Vite base, public asset prefix, and Vercel rewrites now use `mesh-fx`. Changed persistence namespaces intentionally reset prior browser-local settings.
 - Verification: Canonical package/title/base audit and every available standalone `demo-deployment.test.mjs` passed for this migration batch.
 - Risks: Old demo paths are intentionally absent; no compatibility redirect is retained.
+
+
+## 2026-09-10 — Focused accepted-gallery repair
+
+- Request: Continue app-only repairs and check for lost functionality, using necessary checks only.
+- Task type: Product acceptance/test repair after owner-accepted initial delivery.
+- User-visible result: adjustments.exposure selects a genuine Exposure-only test without unrelated effect/performance checks.
+- Source/reference checked: The prior routing mismatch, acceptanceForControl, real Exposure control and preserveDrawingBuffer output.
+- Reference inputs: No new external reference assets; existing product and audit evidence.
+- Docs/contracts read: Local AGENTS.md, gallery-workflow.md, workflow.md and acceptance-testing.md.
+- Contract rules applied: Focused-only development; real UI/output proof; copied framework, delivery record, defaults and runtime remain unchanged.
+- Decision: Pause dynamic noise via UI, change Exposure through its real slider, and require both actual pixel change and higher mean canvas luminance. Preserve camera pose.
+- Alternatives rejected: Larger timeouts, fabricated evidence, weakening the output checks, changing defaults or patching signed helpers.
+- State/output mapping: adjustments.exposure brightens the same retained 3D scene; data-view-orbit remains unchanged.
+- Files changed: src/app/acceptance/defaults.ts, scripts/gallery-feature-catalog.json, e2e/product-exposure.spec.ts.
+- Verification: npm run test:feature -- adjustments.exposure passed (9.5s).
+- Skipped checks: No aggregate build, typecheck, delivery, performance, or unrelated browser matrix; product implementation is unchanged.
+- Risks: Other legacy controls keep their original routes; this repair does not claim all grouped routes are now independent. Shared dependency font 403 is an environment limitation.

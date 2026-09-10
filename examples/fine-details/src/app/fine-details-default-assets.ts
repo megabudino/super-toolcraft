@@ -5,6 +5,20 @@ import { fineDetailsTrailTargets } from './fine-details-trail-values';
 
 const defaultTrailImageCount = 50;
 
+// Dimensions of the existing embedded preview WebPs, not the full-resolution
+// reference artwork used by the native trail. The focused metadata test reads
+// every WebP header so these cannot silently drift from the unchanged bytes.
+const defaultTrailPreviewSize = { height: 320, width: 249 };
+const differentTrailPreviewSizes: Readonly<Record<number, { height: number; width: number }>> = {
+  33: { height: 183, width: 320 },
+  34: { height: 320, width: 208 },
+  35: { height: 320, width: 320 },
+  36: { height: 183, width: 320 },
+  38: { height: 320, width: 183 },
+  39: { height: 320, width: 236 },
+  40: { height: 236, width: 320 },
+};
+
 if (defaultTrailImageDataUrls.length !== defaultTrailImageCount) {
   throw new Error(`Expected ${defaultTrailImageCount} Fine Details default images.`);
 }
@@ -30,6 +44,7 @@ export const FINE_DETAILS_DEFAULT_TRAIL_ASSETS = Array.from(
       fileName,
       id: `fine-details-default-${suffix}`,
       mimeType: 'image/webp',
+      size: { ...(differentTrailPreviewSizes[index + 1] ?? defaultTrailPreviewSize), unit: 'px' },
       sourceTarget: fineDetailsTrailTargets.images,
     };
   },

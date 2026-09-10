@@ -362,7 +362,7 @@
     "runtime/source-assets/repository/unavailable-binary-asset-repository.ts": "49babc857c64271fcffb67a1a22696d00938d5d0f502fe052513c2236ba123c1",
     "runtime/source-assets/source-asset-admission.ts": "24822da8d1782629c83c4973581dd1deae6e561d441a9b8aa989df80da027e72",
     "runtime/source-assets/source-asset-batch-preparation.ts": "bd839fdc68599e4774e32c38db22db8457dcdab21d89b0a5fe1059015a071bbe",
-    "runtime/source-assets/source-asset-binary-media-hydrator.ts": "73bce032d69ca31e6a2ab57166dfdaeb9d2c88e901bb72f034a99f139d70fffe",
+    "runtime/source-assets/source-asset-binary-media-hydrator.ts": "2d9ac440952b6fce342b4727cbcbe944268c8f567fa0d8e476e3fdd48cca4480",
     "runtime/source-assets/source-asset-cleanup-manager.ts": "ca8a958e9b3dac1b4d3f60cd25de3992e88c11800b6d8505071403f6b9cbdf63",
     "runtime/source-assets/source-asset-coordinator.ts": "b224bbdfcd0d1d202c5058509f4c42a420dd40da11e4ddeacf54f3be9809b349",
     "runtime/source-assets/source-asset-feedback.ts": "7a745a01c4681cfa1a9b603d4bc2ed3abbd0c9ad5d9f323815d6a4d5199c63ab",
@@ -1288,5 +1288,5 @@
     "docs/toolcraft/gallery-workflow.md": "70a0d4fce0aa82ec7799d23e7103a81dd808f5639896dd1b6fe88f6192a04394"
   },
   "version": 3,
-  "signature": "huveG0DC8PDyBDQGGROXwx2M2LR8kI3855MzIxA25DhXVXpVjqjHKNxdSjf1abeYR8r6fMhzMpMhPQ03ZED7Bw=="
+  "signature": "eYmr5galjg0TrHc6pdYJx97DieyIhHu7cFezyYhSYq/FcoOmgUbaNkMq/JG+wiZ8OXYS2fxN0e100IUPP1v7Aw=="
 }

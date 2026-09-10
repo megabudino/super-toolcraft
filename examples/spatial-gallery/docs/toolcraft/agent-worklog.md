@@ -499,3 +499,21 @@ Mode: product
 - State/output mapping: Package name, HTML title, control/acceptance identity, persistence/settings-transfer namespace where present, Vite base, public asset prefix, and Vercel rewrites now use `spatial-gallery`. Changed persistence namespaces intentionally reset prior browser-local settings.
 - Verification: Canonical package/title/base audit and every available standalone `demo-deployment.test.mjs` passed for this migration batch.
 - Risks: Old demo paths are intentionally absent; no compatibility redirect is retained.
+
+
+## 2026-09-10 — Focused accepted-gallery repair
+
+- Request: Continue app-only repairs and check for lost functionality, using necessary checks only.
+- Task type: Product acceptance/test repair after owner-accepted initial delivery.
+- User-visible result: Corner radius and Vertical gap have independent real-card browser scenarios instead of selecting the whole legacy control matrix.
+- Source/reference checked: The original spiral slider loop, schema bounds, uploaded SVG fixtures, and failed Vertical gap trace.
+- Reference inputs: No new external reference assets; existing product and audit evidence.
+- Docs/contracts read: Local AGENTS.md, gallery-workflow.md, workflow.md and acceptance-testing.md.
+- Contract rules applied: Focused-only development; real UI/output proof; copied framework, delivery record, defaults and runtime remain unchanged.
+- Decision: Choose the far endpoint from the pre-drag baseline; read native min/max when ARIA bounds are absent. Keep live UI interaction and settled real-output checks.
+- Alternatives rejected: Larger timeouts, fabricated evidence, weakening the output checks, changing defaults or patching signed helpers.
+- State/output mapping: card.cornerRadius changes rendered card corners; spiral.verticalGap changes card spacing.
+- Files changed: e2e/spiral-gallery.spec.ts, e2e/spiral-slider-endpoint.ts, e2e/product-card-geometry.spec.ts, src/app/spiral-slider-endpoint.test.ts, acceptance metadata and feature catalog.
+- Verification: Three endpoint unit cases passed. Focused card-cornerRadius passed (8.4s); spiral-verticalGap passed after fixing absent ARIA bounds (8.9s). Final Corner radius rerun after the fallback change passed (6.9s).
+- Skipped checks: No aggregate build, typecheck, delivery, performance, or unrelated browser matrix; product implementation is unchanged.
+- Risks: Other controls retain their inherited grouped scenarios; these results are not complete gallery certification.

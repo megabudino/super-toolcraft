@@ -165,3 +165,41 @@ Active change: template-release-2026-09-09
 - Saved-state behavior: Keep the same persistence key/version and every capability-derived slice. The supported additionalValueTargets allowlist persists one revision marker. A runtime-command hook replaces only the previous default #F1F6DE once, with skipped history; custom colors and future deliberate reuse of #F1F6DE remain valid. No direct product storage access or framework change.
 - Verification: Later Tier 2 focused work. Existing values/schema tests updated, 10 passed. The room.wallFill browser regression failed with the old color before implementation, then passed: old-session upgrade, unchanged Depth, real rendered CSS color, custom edit/reload, deliberate old-color edit/reload and Reset to the new default. TypeScript and production build pass. No aggregate gate or performance run.
 - Publication: Commit and push only this product change and its evidence through the existing docs-new production integration. Main checkout receives the same product files.
+
+## 2026-09-10 — Independent native feature scenarios
+
+- Request: Continue app-only gallery fixes and verify no functionality was lost.
+- Task type: Focused acceptance coverage for 25 previously unmapped settings.
+- User-visible result: These settings can now be checked independently, usually in 3–4 seconds, without a full delivery.
+- Source/reference checked: Native PreFooter/PreFooterRoom, applied defaults, grid mask functions, panel schema and prior missing-route audit.
+- Reference inputs: Existing native product only; no new external assets.
+- Docs/contracts read: Local AGENTS.md, gallery-workflow.md, workflow.md and acceptance-testing.md.
+- Contract rules applied: Real UI actions, live slider output before pointer release, protected raster/session proof, per-part compound outcomes, no copied-framework edits.
+- Decision: Separate static geometry/style, color/visibility and compound controls. Reduced motion is a deterministic test preference; shipped settings and animation implementation remain unchanged.
+- Alternatives rejected: Mapping absent tests to a generic smoke, state injection, asserting only panel values or attributes, larger timeouts.
+- State/output mapping: Actual text size/spacing, wall geometry/border, SVG line/frame counts, mask reach/falloff, layer visibility, tile count/fog, both vanishing axes, and both border-color parts are observed alongside pixel changes.
+- Files changed: Three product spec files, the static-case table and product-owned feature catalog.
+- Verification: All 25 selected scenarios passed; 23 took 3.2–3.8s, vanishing 6.7s and colorOpacity 5.3s. Five studio-room-values unit tests passed (290ms). During authoring corrected Frame selection from path to rect and normalized binary floating-point noise in layout percentages; pixel and semantic assertions retained.
+- Skipped checks: No aggregate build/typecheck/delivery/performance. Motion, trail and tile-transition cases are not claimed by these checks.
+- Risks: Twelve motion/transition/trail IDs still require real focused tests. Native product implementation, defaults, media and persisted data are untouched. Nothing published.
+
+## 2026-09-10 — Pointer motion and hover preservation
+
+- Request: Continue focused repairs and verify existing interactive functionality.
+- Source/reference checked: Native pointer-to-spring mapping, back-wall transform, RoomTile scale/shadow, current schema and actual failed hover screenshot. No new external reference.
+- Contract rules applied: The accepted-gallery focused workflow, target-bound UI actions plus actual output, unchanged shared helpers/product implementation, no full delivery/performance.
+- Decision: Add separate tests for motion.enabled, motion.parallax and tiles.hoverLift with normal motion enabled. Isolate the operation through visible controls (long tile interval, zero scroll nudge, trail off); never inject runtime state.
+- State/output mapping: Parallax 0 keeps wall translation zero; 150 changes actual wall translation and raster. Motion off hides dependent controls and resets translation; on restores pointer response. Hover lift 0 keeps the tile scale at 1; 1 visibly scales the image and adds its shadow; returning to 0 restores scale 1.
+- Debugging: Initial hover setup found no visible image center. The trace screenshot showed the 1920px scene clipped to its back wall by the 1280px browser. Resized the real artboard to 1024x576 using UI inputs and waited for a decoded visible tile. Tile count/detail and shipped defaults unchanged.
+- Verification: motion.parallax passed 3.9s, motion.enabled 6.2s, tiles.hoverLift 5.0s. No unrelated scenarios or heavy checks were run.
+- Risks: Nine temporal/trail IDs still lack routes. This is not a timing/performance certification. Files changed: product-studio-room-pointer-motion.spec.ts, catalog and worklog only; no publication.
+
+## 2026-09-10 — Native trail, spring and shuffle feature routes
+
+- Request: Finish app-owned focused checks without changing existing functionality.
+- Source/reference checked: PreFooterRoom pointer spring, trail SVG opacity/line generation, actual tile layout reset, randomized shuffle timer, Swap/Slide fallback and developing-image filter.
+- Scope/decision: Nine exact acceptance routes in six product-owned test/helper files and the catalog. Use real UI settings and read-only animation-frame observations of actual CSS/SVG/image output; preserve native clocks, randomness, assets, settings and renderer code.
+- State/output mapping: Trail enabled/amount/strength/fade checks rendered groups, line counts and actual opacity decay; scroll nudge checks signed wall displacement; smoothness checks the authored spring's phase-independent settling rate. Interval observes actual image changes at both slow and fast settings. Develop observes sharp versus blurred new tiles. Slide must exhibit real intermediate positions, while allowing the native cross-surface Swap fallback.
+- Debugging/review: Added an observer-ready handshake before the real spring pointer event. Compared exponential spring tails instead of fitting frame-phase-sensitive full curves. Used a 1.3s UI shuffle interval so a 600ms Slide can finish. Independent specification and quality review approved the code after interval coverage was strengthened with a second fresh fast shuffle to exclude a one-off settings reset. No synthetic evidence or modified framework helpers.
+- Verification: All nine exact scenarios passed. Trail enabled/amount/strength/fade: 5.1/5.0/5.1/6.9s; scroll nudge: 4.6s; smoothness: 7.4s; develop: 15.0s; shuffle style: 11.2s. Final interval rerun with the second fresh change assertion passed 12.7s after quality review.
+- Risks: Slide selection is genuinely randomized; the bounded test rejects a run with no observable slide rather than forcing RNG. These are functional timing checks, not renderer benchmarks or exhaustive motion certification. No delivery, build, global typecheck, performance, deployment or product implementation change.

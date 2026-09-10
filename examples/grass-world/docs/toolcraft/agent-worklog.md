@@ -376,3 +376,44 @@ Verification tier: Tier 3 — Hidden Timeline with autonomous preview and PNG-on
 - State/output mapping: Package name, HTML title, control/acceptance identity, persistence/settings-transfer namespace where present, Vite base, public asset prefix, and Vercel rewrites now use `grass-world`. Changed persistence namespaces intentionally reset prior browser-local settings.
 - Verification: Canonical package/title/base audit and every available standalone `demo-deployment.test.mjs` passed for this migration batch.
 - Risks: Old demo paths are intentionally absent; no compatibility redirect is retained.
+
+## 2026-09-10 — Exposure route diagnosis (not passed)
+
+- Request: Continue app-only focused repairs without heavy checks or loss of functions.
+- Task type: Separate Exposure from the inherited 600s HDRI/PBR matrix and restore the missing persistence route.
+- User-visible result: Exposure selects only its own test; persistence resolves its existing exact test name. Neither browser result is declared passed here.
+- Source/reference checked: Original HDRI spec/trace, native grass renderer, exposure schema and start state, proof-session startup trace.
+- Reference inputs: Existing app/audit only.
+- Docs/contracts read: Local AGENTS.md, gallery-workflow.md, workflow.md and acceptance-testing.md.
+- Contract rules applied: UI-only configuration, real luminance/output assertions, 30s standard bound, immutable shared helpers and unchanged shipped quality/defaults.
+- Decision: New exact scenario retains the scene geometry/materials and intends to use a 640x360 artboard through UI. In this run it never reached those actions: default startup blocked proof-session validation until timeout.
+- Alternatives rejected: Increasing timeout to minutes, reducing shipped density/render scale, bypassing session proof or editing signed launcher/framework.
+- State/output mapping: environment.exposure maps to retained ACES exposure. The browser test requires more actual canvas luminance, not just a setting attribute.
+- Files changed: e2e/product-exposure.spec.ts, app-acceptance-pbr-data.ts and feature catalog.
+- Verification: Exact unit "grass HDRI settings map to the entire scene output" passed (one selected test). Browser grass.scene-exposure failed at 30s in initial proof-session validation, before Exposure. Trace has a long main-thread gap during initial default scene startup. Its own test server exited; an unrelated existing Grass server on 3113 was left alone.
+- Skipped checks: No heavy HDRI matrix, aggregate delivery/build/typecheck/performance, or persistence browser rerun.
+- Risks: Startup cost/root cause is not fully localized; no passing browser Exposure claim. Shared process-cleanup/launcher work remains outside the user's app-only scope.
+
+### Follow-up: actual browser functionality, not an automated pass
+
+- Started this checkout's source server on isolated port 54031 and verified its server identity/root. Opened it in the embedded browser with the unchanged authored scene and render scale 2.
+- Through the real Exposure slider, changed 151 → 50 → 250. Screenshots showed a visibly darker field/rocks at 50 and brighter field/rocks at 250; flowers, terrain, butterflies and the controls remained present. Restored 151 through the same slider.
+- This confirms the visible Exposure function in that browser; it does not resolve the separate headless 30s startup deadline or prove all controls/export/performance. No browser-engine equivalence claim.
+- Closed the owned tab and stopped the owned temporary server. Existing user servers were not touched. Product source/defaults unchanged.
+
+### Follow-up: native-GPU Exposure scenario passed
+
+- Request: Finish the known app-owned repairs with only bounded checks; preserve protected launchers, budgets, runtime, defaults and output quality.
+- Task type: Focused browser-environment and obsolete scenario-fixture repair. No production code change.
+- User-visible result: `grass.scene-exposure` now passes its exact protected 30-second route with real Exposure 50 → 250 and increased rendered field luminance.
+- Source/reference checked: Previous startup trace; Playwright browser documentation; native WebGL capabilities; autonomous progress, Static wind and terrain-hover butterfly landing implementations; protected product snapshot behavior.
+- Reference inputs: Existing local app and failed trace; no new design or motion reference.
+- Docs/contracts read: Root/local AGENTS.md, gallery-workflow.md, workflow.md, decision-contract.md, runtime-boundary.md, component-rules.md, renderer-technique.md, acceptance-testing.md, core/performance.md and performance.md; systematic-debugging skill.
+- Contract rules applied: Accepted-gallery focused checks; real UI actions; stable real canvas output; immutable session/proof helpers and standard budget; no browser state, DOM, CSS, RNG or clock injection.
+- Decision: The read-only capability probe found Chromium 149.0.7827.55 headless-shell using ANGLE SwiftShader, while the same-version full Chromium headless channel used ANGLE Metal / Apple M4 Pro. Select the supported full Chromium channel only in the app-owned Exposure spec. The first native-GPU run reached the assertion in 8.0s, exposing that `pauseGrassPlayback` did nothing in the current autonomous app. Use actual Static wind and terrain hover until all 18 loaded butterflies finish landing. Observe the existing product-slot ancestor so the protected snapshot still samples the full canvas area without mistaking child clock diagnostics for a visual change.
+- Alternatives rejected: Longer timeout; reduced scene density/materials/render scale; hidden/removed butterflies; artificial time freezing; changing protected helpers or config; accepting diagnostic attribute changes as output proof.
+- State/output mapping: Real UI sets the 640×360 test artboard, Static wind and landed butterfly pose; all resources/layers remain present. Exposure uses the real slider and must increase alpha-visible canvas luminance by more than 2 while protected stable-baseline/change evidence samples the full rendered canvas area at the helper's existing bounded resolution.
+- Files changed in this follow-up: `e2e/product-exposure.spec.ts` and this worklog. Existing acceptance/catalog edits were preserved.
+- Verification: `TOOLCRAFT_TEST_DEPENDENCY_ROOT=/Users/kusnizza/Projects/toolcraft-website/primeui-v2/examples/grass-world/node_modules npm run test:feature -- grass.scene-exposure` passed: one selected scenario, 18.7s test / 21.0s total. The earlier exact HDRI-value unit pass remains historical; no new unit implementation was changed. Test-owned server processes exited normally.
+- Skipped checks: No broad HDRI/PBR matrix, persistence rerun, build, global test/typecheck, aggregate delivery or performance.
+- Risks: This proves the selected Exposure scenario, not all Grass controls or cross-platform GPU startup performance. Full Chromium must already be installed; no dependency/browser installation was performed. Protected default headless-shell behavior and other legacy scenario assumptions are unchanged.

@@ -3,11 +3,7 @@ import { registerHeroPreviewControlTests } from "./hero-preview-browser-helpers"
 registerHeroPreviewControlTests([
   { acceptanceId: "cards.gap", action: "slider" },
   { acceptanceId: "cards.height", action: "slider" },
-  {
-    acceptanceId: "cards.radius",
-    action: "slider",
-    observableSelector: 'iframe[title="Recraft hero website preview"]',
-  },
+  { acceptanceId: "cards.radius", action: "slider" },
   { acceptanceId: "cards.roll", action: "slider" },
   { acceptanceId: "sphere.rowGap", action: "slider" },
   { acceptanceId: "sphere.width", action: "slider" },

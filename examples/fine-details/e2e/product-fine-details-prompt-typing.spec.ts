@@ -1,223 +1,142 @@
-import type { Page } from '@playwright/test';
+import { expectToolcraftCompoundControlPartOutcome } from "./browser-state-evidence-helpers";
+import { expectToolcraftProductObservableToChange } from "./product-observable-helpers";
+import { expect, test } from "./toolcraft-product-test";
+import {
+  ghostSelector, prepareTyping, readGhost, sampleTyping,
+  setTypingSlider, typingField, typingProof, typingTitle,
+} from "./fine-details-typing-test-helpers";
 
-import { fineDetailsCarouselTargets } from '../src/app/fine-details-carousel-values';
-import { fineDetailsPromptTargets } from '../src/app/fine-details-prompt-values';
-import { getToolcraftControlFieldByTarget } from './browser-control-target-helpers';
-import { expect, test } from './toolcraft-product-test';
-
-const previewSelector = '[data-toolcraft-product-output="fine-details-external-preview"]';
-const frameSelector = 'iframe[title="Recraft Fine Details website preview"]';
-const sectionSelector = '[data-fine-details-section]';
-const ghostSelector = '[data-fine-details-prompt-ghost]';
-const promptPhrases = ['Amber', 'Cobalt'] as const;
-
-async function waitForPreview(page: Page) {
-  await expect(page.locator(frameSelector)).toBeVisible();
-  await expect(page.frameLocator(frameSelector).locator(sectionSelector)).toBeVisible();
-}
-
-async function resetAndWaitForPreview(page: Page) {
-  await page.goto('/');
-  await page.evaluate(() => localStorage.clear());
-  await page.reload();
-  await waitForPreview(page);
-}
-
-async function setFineDetailsImagesMode(page: Page, mode: 'Carousel' | 'Trail') {
-  const control = await getToolcraftControlFieldByTarget(
-    page,
-    fineDetailsCarouselTargets.imagesMode,
-  );
-  await control.getByRole('button', { name: mode }).click();
-  await expect(page.locator(previewSelector)).toHaveAttribute(
-    'data-fine-details-images-mode',
-    mode.toLowerCase(),
-  );
-}
-
-async function setFineDetailsSlider(
-  page: Page,
-  target: string,
-  label: string,
-  value: number,
-) {
-  const control = await getToolcraftControlFieldByTarget(page, target);
-  await control.getByRole('button', { name: `Edit ${label} value` }).click();
-  const editor = control.getByRole('textbox');
-  await editor.fill(String(value));
-  await editor.press('Enter');
-  await expect(control.getByRole('slider')).toHaveAttribute('aria-valuenow', String(value));
-}
-
-async function readGhostText(page: Page) {
-  const ghost = page.frameLocator(frameSelector).locator(ghostSelector);
-  if ((await ghost.count()) === 0) return '';
-  return ghost.evaluate((element) => element.firstChild?.textContent ?? '');
-}
-
-test('browser: prompt typing animates phrases until focus', async ({ page }) => {
-  await page.emulateMedia({ reducedMotion: 'no-preference' });
-  await resetAndWaitForPreview(page);
-  await setFineDetailsImagesMode(page, 'Trail');
-
-  const typingControl = await getToolcraftControlFieldByTarget(
-    page,
-    fineDetailsPromptTargets.typingEnabled,
-  );
-  const typingSwitch = typingControl.getByRole('switch');
-  await typingSwitch.click();
-  await expect(typingSwitch).toBeChecked();
-
-  const phrasesField = await getToolcraftControlFieldByTarget(
-    page,
-    fineDetailsPromptTargets.typingPhrases,
-  );
-  const phrasesControl = phrasesField.locator(
-    'xpath=ancestor-or-self::*[@data-toolcraft-control-target="prompt.typing.phrases"][1]',
-  );
-  await expect(phrasesControl).toBeVisible();
-  const phraseInputs = phrasesControl.getByRole('textbox');
-  await expect(phraseInputs).toHaveCount(1);
-  await phraseInputs.first().fill(promptPhrases[0]);
-  await phrasesControl.getByRole('button', { name: 'Add Phrase' }).click();
-  await expect(phraseInputs).toHaveCount(2);
-  await phraseInputs.nth(1).fill(promptPhrases[1]);
-  await expect(phraseInputs.first()).toHaveValue(promptPhrases[0]);
-  await expect(phraseInputs.nth(1)).toHaveValue(promptPhrases[1]);
-
-  await setFineDetailsSlider(
-    page,
-    fineDetailsPromptTargets.typingTypeSpeed,
-    'Type speed',
-    30,
-  );
-  await setFineDetailsSlider(
-    page,
-    fineDetailsPromptTargets.typingDeleteSpeed,
-    'Delete speed',
-    60,
-  );
-  await setFineDetailsSlider(page, fineDetailsPromptTargets.typingHold, 'Hold', 0.2);
-  await setFineDetailsSlider(page, fineDetailsPromptTargets.typingGap, 'Gap', 0.3);
-  await setFineDetailsSlider(page, fineDetailsPromptTargets.typingHumanize, 'Humanize', 0);
-
-  const frame = page.frameLocator(frameSelector);
-  const ghost = frame.locator(ghostSelector);
-  const textarea = frame.getByRole('textbox', {
-    name: 'Describe what you want to generate',
+test(typingTitle("enabled"), async ({ page }) => {
+  const session = await prepareTyping(page);
+  const toggle = typingField(page, "enabled").getByRole("switch");
+  await toggle.click();
+  await expect(toggle).not.toBeChecked();
+  await expect(page.locator(ghostSelector)).toHaveCount(0);
+  await expectToolcraftProductObservableToChange(session, session.targetAction("prompt.typing.enabled", async () => {
+    await toggle.click();
+    await expect(toggle).toBeChecked();
+    const samples = await sampleTyping(page, "Amber", 1);
+    expect(samples.some(sample => sample.text.length > 0 && sample.text.length < 5)).toBe(true);
+    expect(samples.at(-1)?.text).toBe("Amber");
+  }), typingProof("enabled"));
+  const input = page.locator("[data-fine-details-prompt-input]");
+  await input.focus();
+  await expect(page.locator(ghostSelector)).toHaveCount(0);
+  await input.fill("Visitor authored prompt");
+  await input.press("Tab");
+  await expect(page.locator(ghostSelector)).toHaveCount(0);
+  await input.fill("");
+  await input.press("Tab");
+  await expect(page.locator(ghostSelector)).toBeVisible();
+  for (const mode of ["Carousel", "Loading"]) {
+    await page.locator('[data-toolcraft-control-target="images.mode"]').getByRole("button", { name: mode, exact: true }).click();
+    await expect(page.locator(ghostSelector)).toHaveCount(0);
+    await expect(typingField(page, "enabled")).toHaveCount(0);
+  }
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.locator('[data-toolcraft-control-target="images.mode"]').getByRole("button", { name: "Trail", exact: true }).click();
+  await expect.poll(() => readGhost(page)).toBe("Amber");
+  await expect(page.locator(`${ghostSelector} span`)).toHaveCount(0);
+  const stable = await page.locator(ghostSelector).evaluate(async ghost => {
+    const start = performance.now();
+    const texts: string[] = [];
+    while (performance.now() - start < 450) {
+      await new Promise(resolve => requestAnimationFrame(resolve));
+      texts.push(ghost.textContent ?? "");
+    }
+    return [...new Set(texts)];
   });
-  await expect(ghost).toBeVisible();
-  await expect(textarea).toHaveValue('');
+  expect(stable).toEqual(["Amber"]);
+  await toggle.click();
+  await expect(page.locator(ghostSelector)).toHaveCount(0);
+});
 
-  const animatedObservations = new Set<string>();
-  await expect
-    .poll(
-      async () => {
-        const text = await readGhostText(page);
-        animatedObservations.add(text);
-        return promptPhrases.filter((phrase) => animatedObservations.has(phrase)).length;
-      },
-      { intervals: [25, 50, 75], timeout: 2_500 },
-    )
-    .toBe(promptPhrases.length);
-  expect(animatedObservations.size).toBeGreaterThan(promptPhrases.length);
-
-  // Trail intentionally keeps the host iframe pointer-transparent. Focusing the real
-  // iframe textarea proves the focus gate without changing runtime settings or values.
-  await textarea.focus();
-  await expect(textarea).toBeFocused();
-  await expect(ghost).toHaveCount(0, { timeout: 300 });
-
-  const blurStartedAt = Date.now();
-  await textarea.press('Tab');
-  await expect(textarea).not.toBeFocused();
-  await expect(ghost).toBeVisible();
-  let firstPostBlurTextAt = 0;
-  await expect
-    .poll(
-      async () => {
-        const text = await readGhostText(page);
-        if (text.length > 0 && firstPostBlurTextAt === 0) firstPostBlurTextAt = Date.now();
-        return text.length > 0;
-      },
-      { intervals: [25, 50], timeout: 1_500 },
-    )
-    .toBe(true);
-  expect(firstPostBlurTextAt - blurStartedAt).toBeGreaterThanOrEqual(200);
-
-  await setFineDetailsSlider(
-    page,
-    fineDetailsPromptTargets.typingDeleteSpeed,
-    'Delete speed',
-    5,
-  );
-  const deleteStyleControl = await getToolcraftControlFieldByTarget(
-    page,
-    fineDetailsPromptTargets.typingDeleteStyle,
-  );
-  const instantButton = deleteStyleControl.getByRole('button', { name: 'Instant' });
-  await instantButton.click();
-  const selectedDeleteStyleControl = await getToolcraftControlFieldByTarget(
-    page,
-    fineDetailsPromptTargets.typingDeleteStyle,
-  );
-  await expect(
-    selectedDeleteStyleControl.getByRole('button', { name: 'Instant' }),
-  ).toHaveAttribute('aria-pressed', 'true');
-
-  let completedPhrase: string | null = null;
-  const instantTransition: string[] = [];
-  await expect
-    .poll(
-      async () => {
-        const text = await readGhostText(page);
-        if (completedPhrase === null) {
-          if (promptPhrases.some((phrase) => phrase === text)) {
-            completedPhrase = text;
-            instantTransition.push(text);
-          }
-          return false;
+test(typingTitle("phrases"), async ({ page }) => {
+  const session = await prepareTyping(page, "A");
+  const target = "prompt.typing.phrases";
+  const collection = typingField(page, "phrases");
+  const inputs = collection.getByRole("textbox");
+  const add = collection.getByRole("button", { name: "Add Phrase", exact: true });
+  const remove = collection.getByRole("button", { name: "Remove Phrase", exact: true });
+  await expect(remove).toBeDisabled();
+  await setTypingSlider(page, "gap", "Gap", 0.1);
+  await setTypingSlider(page, "hold", "Hold", 0.5);
+  await typingField(page, "deleteStyle").getByRole("button", { name: "Instant", exact: true }).click();
+  const cycle = session.observe(async root => {
+    const first = root.querySelector<HTMLInputElement>('[data-toolcraft-control-target="prompt.typing.phrases"] input')!.value;
+    const seen: string[] = [];
+    const start = performance.now();
+    let previous = "";
+    while (performance.now() - start < 5000) {
+      await new Promise(resolve => requestAnimationFrame(resolve));
+      const ghost = root.querySelector("span[data-fine-details-prompt-ghost]");
+      const text = ghost?.firstChild?.nodeType === Node.TEXT_NODE ? ghost.firstChild.textContent ?? "" : "";
+      if (text !== previous && (seen.length > 0 || text === first)) {
+        seen.push(text);
+        // A complete unfiltered output cycle includes the empty gaps and its
+        // wrap. In particular C, empty, B, empty, C cannot pass removal of B.
+        if (seen.length > 1 && text === first) return seen;
+      }
+      previous = text;
+    }
+    throw new Error(`Native phrase cycle incomplete: ${JSON.stringify(seen)}`);
+  });
+  // Every part consumes real ordered ghost output. Pixel baselines begin at a
+  // just-observed full phrase, never an arbitrary autonomous animation frame.
+  for (const part of ["collectionActions.add", "collectionActions.items", "collectionActions.remove"] as const) {
+    const baseline = part === "collectionActions.add" ? "A" : "B";
+    await sampleTyping(page, baseline, 1, true);
+    await expectToolcraftProductObservableToChange(session, session.targetAction(target, async () => {
+      const expected = part === "collectionActions.add" ? ["A", "", "B", "", "A"] : part === "collectionActions.items" ? ["C", "", "B", "", "C"] : ["C", "", "C"];
+      await expectToolcraftCompoundControlPartOutcome(cycle, session.targetAction(target, async () => {
+        if (part === "collectionActions.add") {
+          await add.click();
+          await expect(inputs).toHaveCount(2);
+          await expect(inputs.nth(1)).toHaveValue("");
+          await inputs.nth(1).fill("B");
+          await expect(inputs.first()).toHaveValue("A");
+        } else if (part === "collectionActions.items") {
+          await inputs.first().fill("C");
+          await expect(inputs.nth(1)).toHaveValue("B");
+        } else {
+          await remove.click();
+          await expect(inputs).toHaveCount(1);
+          await expect(inputs.first()).toHaveValue("C");
         }
-
-        if (instantTransition.at(-1) !== text) instantTransition.push(text);
-        return text === '';
-      },
-      { intervals: [15, 20, 25], timeout: 2_500 },
-    )
-    .toBe(true);
-  expect(instantTransition).toEqual([completedPhrase, '']);
-
-  await setFineDetailsImagesMode(page, 'Carousel');
-  await expect(ghost).toHaveCount(0);
-
-  await page.emulateMedia({ reducedMotion: 'reduce' });
-  await setFineDetailsImagesMode(page, 'Trail');
-  await expect(ghost).toBeVisible();
-  await expect.poll(() => readGhostText(page)).toBe(promptPhrases[0]);
-  await expect(ghost.locator('span')).toHaveCount(0);
-
-  const reducedMotionText = await readGhostText(page);
-  const reducedMotionStartedAt = Date.now();
-  let reducedMotionChanged = false;
-  await expect
-    .poll(
-      async () => {
-        if ((await readGhostText(page)) !== reducedMotionText) reducedMotionChanged = true;
-        return {
-          changed: reducedMotionChanged,
-          observedInterval: Date.now() - reducedMotionStartedAt >= 450,
-        };
-      },
-      { intervals: [75, 100], timeout: 900 },
-    )
-    .toEqual({ changed: false, observedInterval: true });
-
-  const reducedTypingControl = await getToolcraftControlFieldByTarget(
-    page,
-    fineDetailsPromptTargets.typingEnabled,
-  );
-  const reducedTypingSwitch = reducedTypingControl.getByRole('switch');
-  await reducedTypingSwitch.click();
-  await expect(reducedTypingSwitch).not.toBeChecked();
-  await expect(ghost).toHaveCount(0);
+      }), expected, { requirementId: target, part, stabilityIntervalMs: 50, stabilitySamples: 2 });
+      // The full-cycle observation ends freshly at C for edit/remove. Add
+      // must instead reach B to differ from its pre-action A pixel baseline.
+      if (part === "collectionActions.add") await sampleTyping(page, "B", 1, true);
+    }), typingProof("phrases"));
+    // Only after the edit alone has passed the complete reactive cycle AND
+    // raster proof, independently check its first-start order. A focus restart
+    // must never refresh stale settings on behalf of the collection mutation.
+    const promptInput = page.locator("[data-fine-details-prompt-input]");
+    await promptInput.focus();
+    await expect(page.locator(ghostSelector)).toHaveCount(0);
+    const firstOutput = page.locator("[data-fine-details-prompt]").evaluate(async root => {
+      const started = performance.now();
+      while (performance.now() - started < 2000) {
+        await new Promise(resolve => requestAnimationFrame(resolve));
+        const ghost = root.querySelector("span[data-fine-details-prompt-ghost]");
+        const text = ghost?.firstChild?.nodeType === Node.TEXT_NODE ? ghost.firstChild.textContent ?? "" : "";
+        if (text) return text;
+      }
+      throw new Error("Typing did not resume after native focus/blur");
+    });
+    await promptInput.press("Tab");
+    expect(await firstOutput).toBe(part === "collectionActions.add" ? "A" : "C");
+  }
+  await expect(remove).toBeDisabled();
+  for (let index = 1; index < 8; index += 1) {
+    await add.click();
+    await expect(inputs.nth(index)).toHaveValue("");
+    await inputs.nth(index).fill(String.fromCharCode(67 + index));
+  }
+  await expect(inputs).toHaveCount(8);
+  await expect(add).toBeDisabled();
+  await expect(inputs.first()).toHaveValue("C");
+  await remove.click();
+  await expect(inputs).toHaveCount(7);
+  await expect(add).toBeEnabled();
 });

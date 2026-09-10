@@ -348,3 +348,21 @@ Kinetic Circle is a procedural animated product app built around one centered 3D
 - State/output mapping: Package name, HTML title, control/acceptance identity, persistence/settings-transfer namespace where present, Vite base, public asset prefix, and Vercel rewrites now use `kinetic-circle`. Changed persistence namespaces intentionally reset prior browser-local settings.
 - Verification: Canonical package/title/base audit and every available standalone `demo-deployment.test.mjs` passed for this migration batch.
 - Risks: Old demo paths are intentionally absent; no compatibility redirect is retained.
+
+
+## 2026-09-10 — Focused accepted-gallery repair
+
+- Request: Continue app-only repairs and check for lost functionality, using necessary checks only.
+- Task type: Product acceptance/test repair after owner-accepted initial delivery.
+- User-visible result: shape-orientation resolves both required top-level browser scenarios and passes.
+- Source/reference checked: Acceptance canvasHandle.exportCleanTestName referenced only a nested test.step, which the focused runner cannot select.
+- Reference inputs: No new external reference assets; existing product and audit evidence.
+- Docs/contracts read: Local AGENTS.md, gallery-workflow.md, workflow.md and acceptance-testing.md.
+- Contract rules applied: Focused-only development; real UI/output proof; copied framework, delivery record, defaults and runtime remain unchanged.
+- Decision: Promote the existing export step to a standalone real test with its own page setup and orientation interaction; preserve the separate gizmo/direct-drag/pan checks.
+- Alternatives rejected: Larger timeouts, fabricated evidence, weakening the output checks, changing defaults or patching signed helpers.
+- State/output mapping: The gizmo and direct object drag rotate the rendered relief without taking background pan ownership; the separate existing export path runs after a visual orientation change.
+- Files changed: e2e/app-controls.spec.ts and scripts/gallery-feature-catalog.json.
+- Verification: npm run test:feature -- shape-orientation passed both scenarios (6.0s orientation, 3.9s export).
+- Skipped checks: No aggregate build, typecheck, delivery, performance, or unrelated browser matrix; product implementation is unchanged.
+- Risks: The inherited export helper proves download and editor-overlay structure, not a new exhaustive pixel-clean certification. Shared dependency font 403 remains environmental.

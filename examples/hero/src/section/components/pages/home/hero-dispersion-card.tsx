@@ -33,9 +33,8 @@ interface HeroDispersionCardProps {
 
 function createTransformedCardImage(
   image: HTMLImageElement,
-  source: HeroGalleryImageSource,
+  transform: HeroGalleryImageSource['transform'],
 ): HTMLImageElement | HTMLCanvasElement {
-  const transform = source.transform;
   if (transform.rotationDeg === 0 && !transform.flipHorizontal && !transform.flipVertical) {
     return image;
   }
@@ -127,6 +126,7 @@ export function HeroDispersionCard({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
   const rendererRef = useRef<HeroCardDispersionRenderer | null>(null);
+  const contextLostRef = useRef(false);
   const settingsRef = useRef(dispersion);
   const layoutRef = useRef({ cornerRadius, perspective, roll });
   const motionRef = useRef({
@@ -138,6 +138,7 @@ export function HeroDispersionCard({
   const [imageRevision, setImageRevision] = useState(0);
   const [isInViewport, setIsInViewport] = useState(false);
   const [isReady, setIsReady] = useState(false);
+  const { rotationDeg, flipHorizontal, flipVertical } = source.transform;
 
   settingsRef.current = dispersion;
   layoutRef.current = { cornerRadius, perspective, roll };
@@ -158,54 +159,32 @@ export function HeroDispersionCard({
   useEffect(() => {
     const card = cardRef.current;
     const canvas = canvasRef.current;
-    const image = imageRef.current;
-    if (!card || !canvas || !image) return;
+    if (!card || !canvas) return;
     if (!isInViewport) {
       card.dataset.dispersionLifecycle = 'outside-viewport';
       setIsReady(false);
       return;
     }
-    if (!image.complete || image.naturalWidth === 0) {
-      card.dataset.dispersionLifecycle = 'waiting-for-image';
-      return;
-    }
-    card.dataset.dispersionLifecycle = 'initializing';
-
-    let renderer: HeroCardDispersionRenderer;
-    try {
-      renderer = createHeroCardDispersionRenderer(
-        canvas,
-        createTransformedCardImage(image, source),
-        side,
-      );
-    } catch (error) {
-      card.dataset.dispersionError =
-        error instanceof Error ? error.message : 'Unknown WebGL renderer error';
-      setIsReady(false);
-      return;
-    }
-
-    delete card.dataset.dispersionError;
-    card.dataset.dispersionLifecycle = 'active';
-    rendererRef.current = renderer;
-    renderer.setUniforms(settingsRef.current);
-    motionRef.current.position = card.getBoundingClientRect().left;
-    motionRef.current.lastPosition = motionRef.current.position;
-    motionRef.current.velocity = 0;
-
     const resize = () => {
+      const renderer = rendererRef.current;
+      if (!renderer) return;
       syncRendererLayout(renderer, card, canvas, layoutRef.current, side);
       renderer.render(0);
-      setIsReady(true);
     };
     const resizeObserver = new ResizeObserver(resize);
     resizeObserver.observe(card);
     const viewport = card.closest<HTMLElement>('[data-hero-scene]');
     if (viewport) resizeObserver.observe(viewport);
-    resize();
-
-    const handleContextLost = () => setIsReady(false);
-    const handleContextRestored = () => setImageRevision((revision) => revision + 1);
+    const handleContextLost = () => {
+      contextLostRef.current = true;
+      setIsReady(false);
+    };
+    const handleContextRestored = () => {
+      contextLostRef.current = false;
+      rendererRef.current?.dispose();
+      rendererRef.current = null;
+      setImageRevision((revision) => revision + 1);
+    };
     canvas.addEventListener('webglcontextlost', handleContextLost);
     canvas.addEventListener('webglcontextrestored', handleContextRestored);
 
@@ -216,12 +195,48 @@ export function HeroDispersionCard({
       const animation = motionRef.current;
       if (animation.frame !== null) cancelAnimationFrame(animation.frame);
       animation.frame = null;
-      renderer.dispose();
-      if (rendererRef.current === renderer) rendererRef.current = null;
+      rendererRef.current?.dispose();
+      rendererRef.current = null;
       card.dataset.dispersionLifecycle = 'disposed';
+      contextLostRef.current = false;
       setIsReady(false);
     };
-  }, [imageRevision, isInViewport, side, source]);
+  }, [isInViewport, side]);
+
+  useEffect(() => {
+    const card = cardRef.current;
+    const canvas = canvasRef.current;
+    const image = imageRef.current;
+    if (!isInViewport || contextLostRef.current || !card || !canvas || !image) return;
+    if (!image.complete || image.naturalWidth === 0) {
+      card.dataset.dispersionLifecycle = 'waiting-for-image';
+      setIsReady(false);
+      return;
+    }
+    card.dataset.dispersionLifecycle = 'initializing';
+    try {
+      const pixels = createTransformedCardImage(image, { rotationDeg, flipHorizontal, flipVertical });
+      let renderer = rendererRef.current;
+      if (renderer) {
+        renderer.setImage(pixels);
+      } else {
+        renderer = createHeroCardDispersionRenderer(canvas, pixels, side);
+        rendererRef.current = renderer;
+        renderer.setUniforms(settingsRef.current);
+        motionRef.current.position = card.getBoundingClientRect().left;
+        motionRef.current.lastPosition = motionRef.current.position;
+        motionRef.current.velocity = 0;
+      }
+      syncRendererLayout(renderer, card, canvas, layoutRef.current, side);
+      renderer.render(motionRef.current.velocity);
+      delete card.dataset.dispersionError;
+      card.dataset.dispersionLifecycle = 'active';
+      setIsReady(true);
+    } catch (error) {
+      card.dataset.dispersionError = error instanceof Error ? error.message : 'Unknown WebGL renderer error';
+      setIsReady(false);
+    }
+  }, [imageRevision, isInViewport, side, source.url, rotationDeg, flipHorizontal, flipVertical]);
 
   useEffect(() => {
     rendererRef.current?.setUniforms(dispersion);
@@ -294,7 +309,7 @@ export function HeroDispersionCard({
             className={referenceClasses("absolute inset-0 h-full w-full object-cover")}
             onLoad={() => setImageRevision((revision) => revision + 1)}
             ref={imageRef}
-            src={source.url}
+            src={source.url || undefined}
           />
         )}
       </div>
@@ -306,6 +321,7 @@ export function HeroDispersionCard({
         style={{
           height: `calc(100% + ${VERTICAL_BLEED * 2}px)`,
           left: side === 'left' ? -HORIZONTAL_BLEED : 0,
+          opacity: isReady ? 1 : 0,
           top: -VERTICAL_BLEED,
           width: `calc(100% + ${HORIZONTAL_BLEED}px)`,
         }}

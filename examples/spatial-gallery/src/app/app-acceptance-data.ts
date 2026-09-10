@@ -200,6 +200,7 @@ export const appAcceptance: readonly ToolcraftComponentAcceptance[] = [
   }),
   ...flowSliderTargets.map((target) =>
     controlRow({
+      ...(target === "spiral.verticalGap" ? { browserTestName: "browser: Spatial Gallery vertical gap changes rendered cards" } : {}),
       componentType: "slider",
       expectedObservable: `${target} changes the curved Flow geometry or visible card count.`,
       id: target.replaceAll(".", "-"),
@@ -223,6 +224,7 @@ export const appAcceptance: readonly ToolcraftComponentAcceptance[] = [
   ),
   ...sharedSliderTargets.map((target) =>
     controlRow({
+      ...(target === "card.cornerRadius" ? { browserTestName: "browser: Spatial Gallery corner radius changes rendered cards" } : {}),
       componentType: "slider",
       expectedObservable: `${target} changes card geometry, depth, cast-shadow spread, motion response, interaction feedback, or the fixed scene view.`,
       id: target.replaceAll(".", "-"),

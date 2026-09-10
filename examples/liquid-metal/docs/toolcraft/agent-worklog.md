@@ -613,3 +613,21 @@ Skip: No performance gate is skipped because the user explicitly requested anima
 - State/output mapping: Package name, HTML title, control/acceptance identity, persistence/settings-transfer namespace where present, Vite base, public asset prefix, and Vercel rewrites now use `liquid-metal`. Changed persistence namespaces intentionally reset prior browser-local settings.
 - Verification: Canonical package/title/base audit and every available standalone `demo-deployment.test.mjs` passed for this migration batch.
 - Risks: Old demo paths are intentionally absent; no compatibility redirect is retained.
+
+
+## 2026-09-10 — Focused accepted-gallery repair
+
+- Request: Continue app-only repairs and check for lost functionality, using necessary checks only.
+- Task type: Product acceptance/test repair after owner-accepted initial delivery.
+- User-visible result: The model.scale test now measures the model rather than treating the whole opaque frame as foreground.
+- Source/reference checked: The failed foreground comparison and actual preserveDrawingBuffer canvas from liquid-metal-renderer.tsx.
+- Reference inputs: No new external reference assets; existing product and audit evidence.
+- Docs/contracts read: Local AGENTS.md, gallery-workflow.md, workflow.md and acceptance-testing.md.
+- Contract rules applied: Focused-only development; real UI/output proof; copied framework, delivery record, defaults and runtime remain unchanged.
+- Decision: Turn Include background off through UI, verify the empty canvas has no foreground, then measure actual alpha-positive model pixels for both scales. Keep the strict width increase and paused shader-frame equality; also require area growth.
+- Alternatives rejected: Larger timeouts, fabricated evidence, weakening the output checks, changing defaults or patching signed helpers.
+- State/output mapping: model.scale changes actual uploaded-model width/area while shader phase remains fixed.
+- Files changed: e2e/app-controls.spec.ts.
+- Verification: npm run test:feature -- model.scale passed (14.4s).
+- Skipped checks: No aggregate build, typecheck, delivery, performance, or unrelated browser matrix; product implementation is unchanged.
+- Risks: The local shared node_modules symlink produces a font allow-list 403; it did not affect canvas/model proof. Product export/background code was not changed.

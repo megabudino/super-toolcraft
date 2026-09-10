@@ -245,7 +245,7 @@ export function FineDetailsImageTrail({ settings }: { settings: FineDetailsTrail
   const rawX = useMotionValue(0);
   const rawY = useMotionValue(0);
   const springOptions = useMemo(
-    () => ({ bounce: 0, duration: Math.max(1, settings.smoothness) / 1000 }),
+    () => ({ bounce: 0, duration: Math.max(1, settings.smoothness) }),
     [settings.smoothness],
   );
   const smoothX = useSpring(rawX, springOptions);

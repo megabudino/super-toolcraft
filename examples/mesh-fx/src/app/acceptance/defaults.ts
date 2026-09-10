@@ -47,7 +47,9 @@ function acceptanceForControl({
     isOrientation ||
     control.target.startsWith("ascii.") ||
     control.target.startsWith("dither.");
-  const browserTestName = isMedia
+  const browserTestName = control.target === "adjustments.exposure"
+    ? "browser: Mesh FX Exposure changes luminance without moving the camera"
+    : isMedia
     ? browserModelTestName
     : isOutputAction || isExportSetting || isBackground
       ? browserExportTestName

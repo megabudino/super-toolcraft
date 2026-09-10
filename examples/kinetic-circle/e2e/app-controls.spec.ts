@@ -794,28 +794,32 @@ test("browser: orientation gizmo and direct object drag rotate one 3D relief", a
   const gizmoBoxAfter = await gizmo.boundingBox();
   expect(gizmoBoxAfter?.x).toBeCloseTo(gizmoBoxBefore?.x ?? 0, 0);
   expect(gizmoBoxAfter?.y).toBeCloseTo(gizmoBoxBefore?.y ?? 0, 0);
+});
 
-  await test.step(
-    "browser: exported mosaic follows orientation without editor gizmo pixels",
-    async () => {
-      const resolution = page
-        .locator('[data-slot="field"]')
-        .filter({
-          has: page
-            .locator('[data-slot="field-label"]')
-            .filter({ hasText: /^\s*Resolution\s*$/ }),
-        })
-        .first();
-      await expect(resolution).toBeVisible();
-      await resolution.getByRole("combobox").click();
-      await page.getByText("2K", { exact: true }).last().click();
-      await expectExportExcludesCanvasHandles(page, async () => {
-        const download = page.waitForEvent("download");
-        await page.getByRole("button", { name: "Export PNG" }).click();
-        await download;
-      });
-    },
-  );
+test("browser: exported mosaic follows orientation without editor gizmo pixels", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "Pause playback" }).click();
+  await expectToolcraftProductObservableToChange(page, async () => {
+    await dragCanvasHandle(page, "toolcraft-orientation-gizmo", { x: 15, y: -13 });
+  });
+  const resolution = page
+    .locator('[data-slot="field"]')
+    .filter({
+      has: page
+        .locator('[data-slot="field-label"]')
+        .filter({ hasText: /^\s*Resolution\s*$/ }),
+    })
+    .first();
+  await expect(resolution).toBeVisible();
+  await resolution.getByRole("combobox").click();
+  await page.getByText("2K", { exact: true }).last().click();
+  await expectExportExcludesCanvasHandles(page, async () => {
+    const download = page.waitForEvent("download");
+    await page.getByRole("button", { name: "Export PNG" }).click();
+    await download;
+  });
 });
 
 test("browser: Infinity canvas preserves finite size, history, and persistence", async ({

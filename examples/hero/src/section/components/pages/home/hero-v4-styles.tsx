@@ -184,7 +184,9 @@ function CardStack({
           data-hero-card-edge={side}
           data-hero-card-index={index}
           data-hero-card-radius={settings.gallery.cardRadius}
-          key={`${side}-${source.key}-${index}`}
+          // The row owns fixed physical slots. Source changes already refresh
+          // renderer resources; retaining the canvas retains its WebGL context.
+          key={`${side}-${index}`}
           style={{
             ...(index === 0
               ? {}

@@ -17,9 +17,9 @@
   "workflowFiles": {
     "scripts/gallery-workflow/asset-loader.mjs": "f610f1b0c30c84c5ba56778c0efcfc70052e1aa4f5a2ad694ee6c4dbb6ee48a2",
     "scripts/gallery-workflow/delivery.mjs": "27a7458e06f1254eeb80f81db39e2ac9f5b4906ea0ee24864b5e0fc495ab2392",
-    "scripts/gallery-workflow/feature.mjs": "ae90abe050b4dcff1efc2fc816cd59f2ee77eacb7ba8dd85bf9fc604be3888e4",
+    "scripts/gallery-workflow/feature.mjs": "9b2d58e8a33583ce220aad7a1b974794b1894705a0f4734002b8908ba1d96db8",
     "scripts/gallery-workflow/playwright.config.mjs": "570ff7fa0d748c705f275afc7d73b37fa73fe43471cf26eb78e78b31cec97959",
-    "scripts/gallery-workflow/process.mjs": "4828d29f1b2ee40dfac15750a0e18d7720d2c9e835635693835ea8eca3eec6d9",
+    "scripts/gallery-workflow/process.mjs": "3d6d8a330ac01e589313b5a606caa3ea1f8fbe5ba458994cb6b6ebadf9c8d97b",
     "scripts/gallery-workflow/register-assets.mjs": "b43a5f5816c7e644b1a21b6aec62cc22516dff630900ac88cc308c8aef5b91cc",
     "scripts/gallery-workflow/release.mjs": "98a77ec7ba74bd17284c57315f856bd9d99e84bb33c092b1ebf95aecb8b4bedc",
     "scripts/gallery-workflow/reporter.mjs": "e63a8c96956f9a702250f719f5738ab6c65190780a4402949e20c0388440fc36",
@@ -33,5 +33,5 @@
     "test:feature": "node scripts/gallery-workflow/feature.mjs",
     "verify:final": "node scripts/gallery-workflow/delivery.mjs"
   },
-  "signature": "tx99R8llo+Y/yBjhaSYKeD7ct8KbBhOHtFbAFrGqEBZ997V93pnSSrWMmeJV2Y+HuikFZSiIEJKCwXMC1m6mCg=="
+  "signature": "Hn5iVOe1lGPFtnOdLYsvZQH+h4GruiGdJtOUf7YyInnlxShBad9BT7sRHyLMO1t+YXpK+UTfbwNH3GzSS4Y1AQ=="
 }

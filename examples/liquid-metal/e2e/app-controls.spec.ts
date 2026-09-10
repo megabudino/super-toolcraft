@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 
-import { expect, type Page, test } from "@playwright/test";
+import { expect, type Locator, type Page, test } from "@playwright/test";
 
 import {
   dragToolcraftSliderToValue,
@@ -548,22 +548,11 @@ async function readFoldedStickerPixelDistribution(
 }
 
 async function readForegroundBounds(
-  page: Page,
-  screenshot: Buffer,
-  backgroundScreenshot: Buffer,
+  canvas: Locator,
 ): Promise<{ area: number; height: number; width: number }> {
-  return page.evaluate(
-    async ({ backgroundEncoded, encoded }) => {
-      const decode = async (value: string): Promise<ImageBitmap> => {
-        const bytes = Uint8Array.from(atob(value), (character) =>
-          character.charCodeAt(0),
-        );
-        return createImageBitmap(new Blob([bytes], { type: "image/png" }));
-      };
-      const [bitmap, backgroundBitmap] = await Promise.all([
-        decode(encoded),
-        decode(backgroundEncoded),
-      ]);
+  return canvas.evaluate((element) => {
+      // Read the actual WebGL drawing buffer, not a composited screenshot that
+      // can include an opaque background or an overlapping editor panel.
       const sample = document.createElement("canvas");
       sample.width = 256;
       sample.height = 144;
@@ -571,15 +560,7 @@ async function readForegroundBounds(
 
       if (!context) throw new Error("Could not inspect model bounds.");
 
-      context.drawImage(backgroundBitmap, 0, 0, sample.width, sample.height);
-      const backgroundPixels = context.getImageData(
-        0,
-        0,
-        sample.width,
-        sample.height,
-      ).data;
-      context.clearRect(0, 0, sample.width, sample.height);
-      context.drawImage(bitmap, 0, 0, sample.width, sample.height);
+      context.drawImage(element as HTMLCanvasElement, 0, 0, sample.width, sample.height);
       const pixels = context.getImageData(
         0,
         0,
@@ -595,16 +576,7 @@ async function readForegroundBounds(
       for (let y = 0; y < sample.height; y += 1) {
         for (let x = 0; x < sample.width; x += 1) {
           const index = (y * sample.width + x) * 4;
-          const difference =
-            Math.abs((pixels[index] ?? 0) - (backgroundPixels[index] ?? 0)) +
-            Math.abs(
-              (pixels[index + 1] ?? 0) - (backgroundPixels[index + 1] ?? 0),
-            ) +
-            Math.abs(
-              (pixels[index + 2] ?? 0) - (backgroundPixels[index + 2] ?? 0),
-            );
-
-          if (difference <= 18) continue;
+          if ((pixels[index + 3] ?? 0) <= 18) continue;
           area += 1;
           minX = Math.min(minX, x);
           maxX = Math.max(maxX, x);
@@ -613,20 +585,12 @@ async function readForegroundBounds(
         }
       }
 
-      bitmap.close();
-      backgroundBitmap.close();
-
       return {
         area,
         height: maxY >= minY ? maxY - minY + 1 : 0,
         width: maxX >= minX ? maxX - minX + 1 : 0,
       };
-    },
-    {
-      backgroundEncoded: backgroundScreenshot.toString("base64"),
-      encoded: screenshot.toString("base64"),
-    },
-  );
+  });
 }
 
 async function pausePlayback(page: Page): Promise<void> {
@@ -1196,12 +1160,15 @@ test("browser: model scale changes object bounds without changing shader phase",
   await fillToolcraftTextField(page, "Canvas width", "960");
   await fillToolcraftTextField(page, "Canvas height", "540");
   await dragToolcraftSliderToValue(page, "Resolution scale", 1);
+  const includeBackground = (await getToolcraftFieldByLabel(page, "Include")).getByRole("switch");
+  if (await includeBackground.isChecked()) await includeBackground.click();
+  await expect(includeBackground).not.toBeChecked();
   const canvas = page.locator("[data-liquid-metal-canvas]");
   await uploadObjModel(page, "model-scale.obj");
   await pausePlayback(page);
   await page.getByRole("button", { name: "Remove model-scale.obj" }).click();
   await waitForToolcraftAnimationFrames(page, 4);
-  const emptyCanvas = await canvas.screenshot();
+  expect((await readForegroundBounds(canvas)).area).toBe(0);
   await uploadObjModel(page, "model-scale.obj");
 
   const output = page.locator("[data-toolcraft-product-output]");
@@ -1211,21 +1178,14 @@ test("browser: model scale changes object bounds without changing shader phase",
   const pausedFrame = await output.getAttribute(
     "data-liquid-metal-surface-frame",
   );
-  const smallBounds = await readForegroundBounds(
-    page,
-    await canvas.screenshot(),
-    emptyCanvas,
-  );
+  const smallBounds = await readForegroundBounds(canvas);
+  expect(smallBounds.area).toBeGreaterThan(0);
 
   await expectToolcraftProductObservableToChange(page, async () => {
     await dragToolcraftSliderToValue(page, "Model scale", 0.7);
     await waitForToolcraftAnimationFrames(page, 4);
   });
-  const largeBounds = await readForegroundBounds(
-    page,
-    await canvas.screenshot(),
-    emptyCanvas,
-  );
+  const largeBounds = await readForegroundBounds(canvas);
 
   expect(
     Number(
@@ -1238,6 +1198,7 @@ test("browser: model scale changes object bounds without changing shader phase",
     pausedFrame,
   );
   expect(largeBounds.width).toBeGreaterThan(smallBounds.width + 20);
+  expect(largeBounds.area).toBeGreaterThan(smallBounds.area);
 });
 
 test("browser: scratch mask adds triplanar normal depth to Liquid Metal", async ({

@@ -1,4 +1,5 @@
 import type { ToolcraftMediaAsset } from "@/toolcraft/runtime";
+import { getFineDetailsDefaultTrailAsset } from "@/section/components/pages/home/fine-details-default-assets";
 
 export const fineDetailsTrailTargets = {
   borderColor: "trail.border.color",
@@ -160,9 +161,14 @@ export function createFineDetailsTrailImagesFromMediaAssets(
         return [];
       }
 
+      // Built-ins render their original reference artwork with the existing
+      // native DPR-sized fallback. Panel thumbnail metadata must not replace
+      // that geometry; uploaded media still uses its decoded original size.
+      const builtin = getFineDetailsDefaultTrailAsset(asset.id);
+
       return [
         {
-          height: asset.size?.height ?? 0,
+          height: builtin ? 0 : asset.size?.height ?? 0,
           id: asset.id,
           ref: asset.resourceRef,
           transform: {
@@ -170,7 +176,7 @@ export function createFineDetailsTrailImagesFromMediaAssets(
             flipVertical: asset.transform?.flipVertical === true,
             rotationDeg: normalizeRotation(asset.transform?.rotationDeg),
           },
-          width: asset.size?.width ?? 0,
+          width: builtin ? 0 : asset.size?.width ?? 0,
         },
       ];
     });

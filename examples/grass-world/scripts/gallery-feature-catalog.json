@@ -1,4 +1,6 @@
 {
+  "grass Exposure changes the paused field lighting": "e2e/product-exposure.spec.ts",
+  "grass field state restores after reload": "e2e/grass-timeline-persistence.spec.ts",
   "acceptance evidence is attached only after semantic verification succeeds": "e2e/app-browser-runtime-provenance.spec.ts",
   "acceptance outcome rejects a return to its baseline during stability sampling": "e2e/app-browser-acceptance-evidence.spec.ts",
   "acceptance outcome snapshots a reused mutable observation": "e2e/app-browser-acceptance-evidence.spec.ts",

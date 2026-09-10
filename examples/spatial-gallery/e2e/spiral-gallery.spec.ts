@@ -32,6 +32,7 @@ import {
   waitForSpiralSettled,
 } from "./spiral-gallery-test-helpers";
 import { expect, test } from "./toolcraft-product-test";
+import { spiralSliderEndpoint } from "./spiral-slider-endpoint";
 const controlsBrowserTest = "browser: image gallery controls update rendered output";
 const exportBrowserTest = "browser: image gallery background and export preserve output semantics";
 const interactionBrowserTest = "browser: image gallery canvas navigation preserves physical behavior";
@@ -88,11 +89,11 @@ test(controlsBrowserTest, async ({ page }) => {
   for (const [requirementId, target] of spiralSliderRequirements) {
     let pointerHeld = false;
     const action = session.controlAction(target, async (control, currentPage) => {
-      await dragSliderToFraction(control, currentPage, 0.78);
       const slider = control.getByRole("slider");
       const current = Number(await slider.getAttribute("aria-valuenow"));
-      const minimum = Number(await slider.getAttribute("aria-valuemin"));
-      const maximum = Number(await slider.getAttribute("aria-valuemax"));
+      const minimum = Number(await slider.getAttribute("aria-valuemin") ?? await slider.getAttribute("min"));
+      const maximum = Number(await slider.getAttribute("aria-valuemax") ?? await slider.getAttribute("max"));
+      await dragSliderToFraction(control, currentPage, 0.78);
       const requiresMaximum = new Set([
         "depth.minScale",
         "interaction.parallax",
@@ -102,7 +103,7 @@ test(controlsBrowserTest, async ({ page }) => {
         "physics.wheelSpeed",
       ]).has(target);
       await slider.press(
-        requiresMaximum || current <= (minimum + maximum) / 2 ? "End" : "Home",
+        requiresMaximum ? "End" : spiralSliderEndpoint(current, minimum, maximum),
       );
       if (target === "spiral.repetitions") {
         await slider.press("End");

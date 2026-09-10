@@ -50,7 +50,7 @@ function rowImagesAcceptance(
     browserTestName: `browser: Row ${rowNumber} images preserve upload order, aspect and transforms`,
     componentType: "fileDrop",
     evidence: "media-lifecycle",
-    expectedObservable: `Only the uploaded images for Row ${rowNumber} appear in that sphere row, preserve their order, aspect and transforms, and leave that row blank after every image is removed or reset without changing sibling row content.`,
+    expectedObservable: `Only the attached images for Row ${rowNumber} appear in that sphere row and preserve their order, aspect and transforms. Removing every image leaves the row blank without changing sibling row content; resetting the Row Images section restores its attached default images.`,
     fixture: "Two small portrait and landscape PNG sphere-row fixtures",
     id: target,
     interactionId: `panel-${target.replaceAll(".", "-")}`,
@@ -275,7 +275,7 @@ export const heroProductControlAcceptance: readonly ToolcraftComponentAcceptance
       ...controlAcceptance({
         componentType: "vector",
         expectedObservable:
-          "Changing either axis moves the V4 badge and both heading lines together while crossing gallery cards remain visually above the group.",
+          "Changing either axis moves the V4 badge and both heading lines together while preserving the native reference's heading-above-gallery layer order.",
         id: heroHeadingTargets.position,
         target: heroHeadingTargets.position,
         userAction: "Move Position horizontally and vertically.",

@@ -1,4 +1,5 @@
 {
+  "browser: Mesh FX Exposure changes luminance without moving the camera": "e2e/product-exposure.spec.ts",
   "browser acceptance matrix points at real fallback Playwright tests": "e2e/app-browser-control-coverage.spec.ts",
   "browser canvas contains product output without app UI controls or CTA copy": "e2e/app-browser-shell.spec.ts",
   "browser canvas handle entries use handle helpers and no forbidden canvas UI check": "e2e/app-browser-control-coverage.spec.ts",

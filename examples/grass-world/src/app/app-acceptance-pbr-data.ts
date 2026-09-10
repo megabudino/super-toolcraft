@@ -154,7 +154,9 @@ export const grassPbrAcceptanceRows = [
     controlAcceptance({
       automatedTestName: "grass HDRI settings map to the entire scene output",
       browserTestName:
-        "scene-wide HDRI and always-PBR materials render lighting",
+        id === "grass.scene-exposure"
+          ? "grass Exposure changes the paused field lighting"
+          : "scene-wide HDRI and always-PBR materials render lighting",
       componentType,
       evidence: "rendered-pixels",
       expectedObservable: `Changing this control updates ${observable} across the retained scene and export renderer.`,

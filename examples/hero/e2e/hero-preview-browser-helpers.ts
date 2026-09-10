@@ -20,7 +20,7 @@ import { expectToolcraftSegmentedControlCellsPreservePadding } from "./performan
 import { expect, test } from "./toolcraft-product-test";
 
 export const heroPreviewSelector =
-  '[data-toolcraft-product-output="hero-external-preview"]';
+  '[data-toolcraft-product-output="hero-native-preview"]';
 export const heroFrameSelector =
   'iframe[title="Recraft hero website preview"]';
 
@@ -49,7 +49,7 @@ export async function waitForWebsitePreview(
   page: Page,
   timeoutMs = 15_000,
 ): Promise<void> {
-  const preview = page.frameLocator(heroFrameSelector);
+  const preview = page.locator(heroPreviewSelector);
   await expect(
     preview.getByRole("heading", { name: "Recraft Styles" }),
   ).toBeVisible({ timeout: timeoutMs });
@@ -146,7 +146,7 @@ async function expectReferenceEffectSurfaceParity(
   requirementId: string,
   target: string,
 ): Promise<void> {
-  const preview = page.frameLocator(heroFrameSelector);
+  const preview = page.locator(heroPreviewSelector);
   const gallery = preview.locator(
     '[data-hero-gallery][data-hero-gallery-ready="true"]',
   );
@@ -222,7 +222,7 @@ async function expectCenteredSafetyCorridor(
   page: Page,
   expectedWidth: number,
 ): Promise<void> {
-  const preview = page.frameLocator(heroFrameSelector);
+  const preview = page.locator(heroPreviewSelector);
   await expect
     .poll(() =>
       preview.locator("[data-hero-card-row]").evaluateAll(

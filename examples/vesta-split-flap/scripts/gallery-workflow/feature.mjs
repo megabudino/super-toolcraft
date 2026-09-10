@@ -19,6 +19,7 @@ if (request.mode === "list") {
   const outputPath = path.join(temporary, "result.json");
   console.log(`[toolcraft] ${plan.acceptanceIds.join(", ")} → ${plan.scenarios.length} functional scenario(s); no build, delivery or performance.`);
   try {
+    const testPort = await focusedBrowserPort();
     await runProcess(path.join(projectDir, "node_modules/.bin/playwright"), [
       "test", "--config=scripts/gallery-workflow/playwright.config.mjs",
       ...[...new Set(plan.scenarios.map(({ file }) => file))].map((file) => `${escapeRegex(path.join(projectDir, file))}$`),
@@ -28,8 +29,8 @@ if (request.mode === "list") {
       `--reporter=list,${path.join(projectDir, "scripts/gallery-workflow/reporter.mjs")}`,
     ], {
       cwd: projectDir,
-      env: { ...browserEnvironment(projectDir), TOOLCRAFT_GALLERY_RESULT: outputPath,
-        TOOLCRAFT_BROWSER_SERVER_MODE: "dev", TOOLCRAFT_TEST_PORT: await focusedBrowserPort() },
+      env: { ...browserEnvironment(projectDir, { ...process.env, TOOLCRAFT_TEST_PORT: testPort }),
+        TOOLCRAFT_GALLERY_RESULT: outputPath, TOOLCRAFT_BROWSER_SERVER_MODE: "dev" },
       timeout: 90000 + plan.scenarios.reduce((sum, item) => sum + (item.budget === "extended-io" ? 120000 : 30000), 0),
     });
     validateResults(plan, JSON.parse(await fs.readFile(outputPath, "utf8")));
