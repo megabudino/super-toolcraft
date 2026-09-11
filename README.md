@@ -99,6 +99,11 @@ on their own.
 <details>
 <summary>How long does it take to generate an app?</summary>
 
+It depends on what you want to build. You can usually expect a first working
+result 30–60 minutes after your initial prompt. More complex tasks, such as
+reverse engineering a reference, combining multiple WebGL effects, or building
+3D tools, can take longer.
+
 Toolcraft isn’t a magic tool that lets you create anything instantly. It gives
 you the workspace, AI guardrails, and skills to make the process smoother and
 improve your chances of getting the result you want.
