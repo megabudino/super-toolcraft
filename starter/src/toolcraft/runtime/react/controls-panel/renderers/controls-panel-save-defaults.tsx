@@ -39,7 +39,7 @@ export function SaveAppDefaults({ getState }: { getState: () => ToolcraftState }
       <Button type="button" variant="outline" loading={status === "saving"}
         aria-label={status === "saving" ? "Saving Defaults…" : undefined}
         onClick={() => { void save(); }}>
-        Save as Defaults
+        Save State as Default
       </Button>
     </PanelActions>
     {error ? <FieldError role="alert">{error}</FieldError> : null}

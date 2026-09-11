@@ -103,6 +103,7 @@ function applyToolcraftHistoryPatch(
   side: "after" | "before",
 ): Pick<
   ToolcraftState,
+  | "controlRanges"
   | "canvas"
   | "panels"
   | "layers"
@@ -122,6 +123,7 @@ function applyToolcraftHistoryPatch(
   );
 
   return {
+    controlRanges: "controlRanges" in patch ? patch.controlRanges as ToolcraftState["controlRanges"] : state.controlRanges,
     canvas: workspaceReset ? patch.canvas as ToolcraftState["canvas"] : nextCanvas,
     panels: workspaceReset ? patch.panels as ToolcraftState["panels"] : state.panels,
     layers:
@@ -166,6 +168,7 @@ export function commitToolcraftStatePatch(
 
   return {
     ...state,
+    controlRanges: next.controlRanges,
     canvas: next.canvas,
     panels: next.panels,
     history: getNextToolcraftHistoryState(state, patch, historyOptions),
@@ -204,6 +207,7 @@ export function undoToolcraftHistory(state: ToolcraftState): ToolcraftState {
 
   return {
     ...state,
+    controlRanges: next.controlRanges,
     canvas: next.canvas,
     panels: next.panels,
     history: {
@@ -229,6 +233,7 @@ export function redoToolcraftHistory(state: ToolcraftState): ToolcraftState {
 
   return {
     ...state,
+    controlRanges: next.controlRanges,
     canvas: next.canvas,
     panels: next.panels,
     history: {

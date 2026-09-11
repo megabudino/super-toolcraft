@@ -1,3 +1,4 @@
+import { getToolcraftNumericDomain, type ToolcraftEditableSliderRange } from "../schema/slider-range";
 import {
   isToolcraftBuiltInControlType,
   type ToolcraftBuiltInControlType,
@@ -18,6 +19,7 @@ export type ToolcraftControlValueDecodeResult<Value = unknown> =
 
 /** Internal decoding input, never a product authoring schema. */
 export type ToolcraftControlValueDescriptor = Readonly<{
+  editableRange?: ToolcraftEditableSliderRange;
   defaultValue?: unknown;
   itemControl?: ToolcraftControlValueDescriptor;
   itemControls?: Readonly<Record<string, ToolcraftControlValueDescriptor>>;
@@ -142,9 +144,10 @@ function decodeBoundedNumber(
 ): ToolcraftControlValueDecodeResult<
   ToolcraftBuiltInControlValueMap["slider"]
 > {
+  const { min, max } = getToolcraftNumericDomain(control);
   return isFiniteNumber(candidate) &&
-    (control.min === undefined || candidate >= control.min) &&
-    (control.max === undefined || candidate <= control.max)
+    (min === undefined || candidate >= min) &&
+    (max === undefined || candidate <= max)
     ? accept(candidate)
     : reject();
 }
@@ -290,14 +293,15 @@ function decodeRangeSlider(
 ): ToolcraftControlValueDecodeResult<
   ToolcraftBuiltInControlValueMap["rangeSlider"]
 > {
-  if (!Array.isArray(candidate) || candidate.length === 0) {
+  if (!Array.isArray(candidate) || candidate.length === 0 || control.editableRange && candidate.length !== 2) {
     return reject();
   }
+  const { min, max } = getToolcraftNumericDomain(control);
   for (const value of candidate) {
     if (
       !isFiniteNumber(value) ||
-      (control.min !== undefined && value < control.min) ||
-      (control.max !== undefined && value > control.max)
+      (min !== undefined && value < min) ||
+      (max !== undefined && value > max)
     ) {
       return reject();
     }

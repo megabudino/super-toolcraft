@@ -109,6 +109,10 @@ for (const label of ["Export PNG", "Export SVG"]) {
     const downloads: Download[] = [];
     page.on("download", (download) => downloads.push(download));
     await fixtureCall(page, "hold");
+    if (label === "Export SVG") {
+      await panel.getByRole("combobox", { name: "PNG", exact: true }).click();
+      await page.getByRole("option", { name: "SVG", exact: true }).click();
+    }
     await panel.getByRole("button", { name: label, exact: true }).click();
     await expect
       .poll(async () => (await fixtureCall(page, "read")).renderCalls)
@@ -121,14 +125,14 @@ for (const label of ["Export PNG", "Export SVG"]) {
   });
 }
 
-test("export format labels follow live selects, settings import, reset and reload", async ({
+test("export format labels follow live selects, reset and reload", async ({
   page,
 }) => {
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
   let panel = await mount(page);
   const expectLabels = async (image: string, video: string) => {
-    for (const format of [image, video, "SVG"]) {
+    for (const format of [image, video]) {
       const label = `Export ${format}`;
       await expect(
         panel.getByRole("button", { name: label, exact: true }),
@@ -137,36 +141,26 @@ test("export format labels follow live selects, settings import, reset and reloa
   };
   await expectLabels("PNG", "MP4");
   await panel.getByRole("combobox", { name: "PNG", exact: true }).click();
-  await page.keyboard.press("End");
-  await page.keyboard.press("Enter");
+  await page.getByRole("option", { name: "JPG", exact: true }).click();
   await expectLabels("JPG", "MP4");
   await panel.getByRole("combobox", { name: "MP4", exact: true }).click();
-  await page.keyboard.press("End");
-  await page.keyboard.press("Enter");
+  await page.getByRole("option", { name: "WebM", exact: true }).click();
   await expectLabels("JPG", "WebM");
 
-  const settingsDownload = page.waitForEvent("download");
-  await panel
-    .getByRole("button", { name: "Export Settings", exact: true })
-    .click();
-  const settingsBytes = await readFile((await (await settingsDownload).path())!);
   await panel
     .getByRole("button", { name: "Reset controls", exact: true })
     .click();
   await expectLabels("PNG", "MP4");
-  const chooser = page.waitForEvent("filechooser");
-  await panel
-    .getByRole("button", { name: "Import Settings", exact: true })
-    .click();
-  await (await chooser).setFiles({
-    name: "export-label-settings.json",
-    mimeType: "application/json",
-    buffer: settingsBytes,
-  });
-  await expectLabels("JPG", "WebM");
-  // Remount after a real page navigation so runtime persistence supplies the formats.
+  await panel.getByRole("combobox", { name: "PNG", exact: true }).click();
+  await page.getByRole("option", { name: "SVG", exact: true }).click();
+  await expectLabels("SVG", "MP4");
+  await expect(panel.getByRole("button", { name: "Export PNG", exact: true })).toHaveCount(0);
+  // Restore the selected vector format through real workspace persistence.
   panel = await mount(page);
-  await expectLabels("JPG", "WebM");
+  await expectLabels("SVG", "MP4");
+  await panel.getByRole("combobox", { name: "SVG", exact: true }).click();
+  await page.getByRole("option", { name: "JPG", exact: true }).click();
+  await expectLabels("JPG", "MP4");
 
   const imageDownload = page.waitForEvent("download");
   await panel.getByRole("button", { name: "Export JPG", exact: true }).click();

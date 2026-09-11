@@ -64,6 +64,7 @@ export type ControlsPanelControlGroupProps = {
   headerKeyframeTarget: string | null;
   hideControlLabel: boolean;
   keyframesSupported: boolean;
+  plainColorFullWidth: boolean;
   runAction: ActionControlRunAction;
   sectionHasOnlyColorFields: boolean;
   sectionTitle: string | undefined;
@@ -138,6 +139,7 @@ function controlGroupPropsEqual(
     previous.headerKeyframeTarget === next.headerKeyframeTarget &&
     previous.hideControlLabel === next.hideControlLabel &&
     previous.keyframesSupported === next.keyframesSupported &&
+    previous.plainColorFullWidth === next.plainColorFullWidth &&
     previous.runAction === next.runAction &&
     previous.sectionHasOnlyColorFields === next.sectionHasOnlyColorFields &&
     previous.sectionTitle === next.sectionTitle &&
@@ -254,6 +256,7 @@ export const ControlsPanelControlGroup = React.memo(
     headerKeyframeTarget,
     hideControlLabel,
     keyframesSupported,
+    plainColorFullWidth,
     runAction,
     sectionHasOnlyColorFields,
     sectionTitle,
@@ -443,6 +446,7 @@ export const ControlsPanelControlGroup = React.memo(
         break;
       case "compound":
         node = renderCompoundControl({
+          plainColorFullWidth,
           commit,
           commitWithLabel,
           control,

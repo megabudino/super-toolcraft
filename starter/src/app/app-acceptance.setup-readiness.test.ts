@@ -239,7 +239,7 @@ describe("Toolcraft starter setup and readiness acceptance coverage", () => {
         componentType: "settingsTransfer",
         evidence: "persistence-state",
         expectedObservable:
-          "Save as Defaults writes app-scoped source defaults and header Reset restores them.",
+          "Save State as Default writes app-scoped source defaults and header Reset restores them.",
         fixture: "source defaults complex fixture",
         id: "settings.transfer",
         kind: "control",
@@ -318,9 +318,9 @@ describe("Toolcraft starter setup and readiness acceptance coverage", () => {
     ).toEqual(
       expect.arrayContaining([
         "Runtime Setup must not include the Timeline switch unless panels.timeline is enabled.",
-        'Runtime Duplicates / manualWidth uses runtime Setup target "canvas.size.width". Runtime Setup owns Save as Defaults, Infinity canvas, Aspect ratio, Canvas width, Canvas height, Resolution scale, Timeline, and Lock rotation; do not declare these controls in app-authored sections.',
-        'Runtime Duplicates / manualRenderScale uses runtime Setup target "canvas.renderScale". Runtime Setup owns Save as Defaults, Infinity canvas, Aspect ratio, Canvas width, Canvas height, Resolution scale, Timeline, and Lock rotation; do not declare these controls in app-authored sections.',
-        'Runtime Duplicates / manualTimeline uses runtime Setup target "panels.timeline.extended". Runtime Setup owns Save as Defaults, Infinity canvas, Aspect ratio, Canvas width, Canvas height, Resolution scale, Timeline, and Lock rotation; do not declare these controls in app-authored sections.',
+        'Runtime Duplicates / manualWidth uses runtime Setup target "canvas.size.width". Runtime Setup owns Save State as Default, Infinity canvas, Aspect ratio, Canvas width, Canvas height, Resolution scale, Timeline, and Lock rotation; do not declare these controls in app-authored sections.',
+        'Runtime Duplicates / manualRenderScale uses runtime Setup target "canvas.renderScale". Runtime Setup owns Save State as Default, Infinity canvas, Aspect ratio, Canvas width, Canvas height, Resolution scale, Timeline, and Lock rotation; do not declare these controls in app-authored sections.',
+        'Runtime Duplicates / manualTimeline uses runtime Setup target "panels.timeline.extended". Runtime Setup owns Save State as Default, Infinity canvas, Aspect ratio, Canvas width, Canvas height, Resolution scale, Timeline, and Lock rotation; do not declare these controls in app-authored sections.',
       ]),
     );
   });

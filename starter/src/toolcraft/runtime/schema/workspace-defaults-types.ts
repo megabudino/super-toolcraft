@@ -13,7 +13,7 @@ export type ToolcraftDefaultResource = Readonly<{
 export type ToolcraftWorkspaceDefaults = Readonly<{
   version: 2;
   appId: string;
-  state: Pick<ToolcraftState, "values" | "canvas" | "panels" | "layers" | "selectedLayerId" | "mediaAssets" | "timeline">;
+  state: Pick<ToolcraftState, "values" | "canvas" | "panels" | "layers" | "selectedLayerId" | "mediaAssets" | "timeline"> & Partial<Pick<ToolcraftState, "controlRanges">>;
   resources: readonly ToolcraftDefaultResource[];
   theme: "dark" | "light" | "system";
 }>;

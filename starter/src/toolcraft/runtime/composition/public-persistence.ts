@@ -93,4 +93,4 @@ export function createToolcraftPersistenceSnapshot(state: ToolcraftState, persis
 export function createToolcraftPersistenceController(options: Omit<Parameters<typeof createController>[0], "createSnapshot">) {
   return createController({ ...options, createSnapshot: createToolcraftPersistenceSnapshot });
 }
-export type { ToolcraftPersistenceController, ToolcraftPersistenceStatus, ToolcraftPersistenceStorage, ToolcraftPersistenceWriteResult } from "../state/persistence-controller";
+export type { ToolcraftPersistenceCheckpoint, ToolcraftPersistenceController, ToolcraftPersistenceStatus, ToolcraftPersistenceStorage, ToolcraftPersistenceWriteResult } from "../state/persistence-controller";

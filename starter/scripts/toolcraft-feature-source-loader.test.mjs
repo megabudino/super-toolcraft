@@ -3,6 +3,7 @@ import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import test from "node:test";
+import { createToolcraftProductBoundaryFixture } from "./toolcraft-product-boundary-test-fixtures.mjs";
 
 import {
   loadToolcraftFeatureVerificationPlanFromSource,
@@ -25,6 +26,33 @@ const plan = Object.freeze({
     }),
   ]),
   version: 2,
+});
+
+test("feature loading rejects current UI/CSS violations before executing Vite or product code", async (context) => {
+  for (const files of [
+    { "src/editor.tsx": 'import { InputGroupInput } from "@/toolcraft/ui"; export const Editor = <InputGroupInput type="color" />;' },
+    { "src/editor.module.css": '.scope [data-slot="input"] { background: red; }' },
+  ]) {
+    const projectDir = await createToolcraftProductBoundaryFixture(context, files);
+    const fixture = createDependencies();
+    await assert.rejects(loadToolcraftFeatureVerificationPlanFromSource({
+      dependencies: fixture.dependencies, projectDir, request,
+    }), /feature product boundary failed/u);
+    assert.deepEqual(fixture.calls, []);
+  }
+});
+
+test("feature loading checks edits after an earlier successful source check", async (context) => {
+  const file = "src/editor.tsx";
+  const projectDir = await createToolcraftProductBoundaryFixture(context, {
+    [file]: 'import { Input } from "@/toolcraft/ui"; export const Editor = <Input type="text" />;',
+  });
+  const first = createDependencies();
+  await loadToolcraftFeatureVerificationPlanFromSource({ dependencies: first.dependencies, projectDir, request });
+  await writeFile(path.join(projectDir, file), 'import { Input } from "@/toolcraft/ui"; export const Editor = <Input style={{ background: "red" }} />;');
+  const second = createDependencies();
+  await assert.rejects(loadToolcraftFeatureVerificationPlanFromSource({ dependencies: second.dependencies, projectDir, request }), /feature product boundary failed/u);
+  assert.deepEqual(second.calls, []);
 });
 
 function createDependencies({ close, load, select } = {}) {

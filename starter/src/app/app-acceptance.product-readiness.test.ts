@@ -63,7 +63,7 @@ describe("Toolcraft product readiness", () => {
         appSchema.panels.controls,
         "Generated product apps must define a controls panel so runtime Setup, product controls, background, export settings, and sticky export actions are visible.",
       ).toBeTruthy();
-      expect(appSchema.panels.controls?.sections[0]?.title).toBe("Setup");
+      expect(appSchema.panels.controls?.sections[1]?.title).toBe("Settings");
       return;
     }
 

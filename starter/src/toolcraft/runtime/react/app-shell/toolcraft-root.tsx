@@ -12,7 +12,7 @@ import type {
   ToolcraftInitialState,
   ToolcraftState,
 } from "../../state/types";
-import { ToolcraftThemeProvider } from "./theme-runtime";
+import { ToolcraftThemeContext, ToolcraftThemeProvider, ToolcraftThemeScope } from "./theme-runtime";
 import { ToolcraftBrowserZoomBoundary } from "./toolcraft-browser-zoom-boundary";
 import { ToolcraftPipelineProvider } from "./toolcraft-pipeline-context";
 import { ToolcraftSourceAssetProvider } from "./toolcraft-source-asset-context";
@@ -121,6 +121,7 @@ export function ToolcraftRoot({
   rendererPipelineRegistration,
   schema,
 }: ToolcraftRootProps) {
+  const inheritedTheme = React.useContext(ToolcraftThemeContext);
   const [persistenceBootstrap] = React.useState(() =>
     readToolcraftPersistenceBootstrap(schema),
   );
@@ -143,6 +144,7 @@ export function ToolcraftRoot({
   const dispatch: React.Dispatch<ToolcraftCommand> = store.dispatch;
   const persistenceStatus = useToolcraftPersistence(schema, store, {
     blockedReason: persistenceBootstrap.blockedReason,
+    checkpoint: persistenceBootstrap.checkpoint,
   });
   const value = React.useMemo(() => ({ dispatch, state }), [dispatch, state]);
   const resolvedModelPresentation = React.useMemo(
@@ -179,23 +181,30 @@ export function ToolcraftRoot({
     };
   }, [dispatch, schema.toolbar.history]);
 
+  const workspace = (
+    <ToolcraftStoreContext.Provider value={store}>
+      <ToolcraftSourceAssetProvider store={store}>
+        <ToolcraftExportProvider store={store}>
+          <ToolcraftContext.Provider value={value}>
+            {children}
+          </ToolcraftContext.Provider>
+        </ToolcraftExportProvider>
+      </ToolcraftSourceAssetProvider>
+    </ToolcraftStoreContext.Provider>
+  );
   const content = (
     <ToolcraftPersistenceStatusProvider status={persistenceStatus}>
       <ToolcraftModelPresentationModeContext.Provider
         value={resolvedModelPresentation}
       >
         <ToolcraftBrowserZoomBoundary>
-          <ToolcraftThemeProvider defaultPreference={schema.sourceDefaults?.theme}>
-            <ToolcraftStoreContext.Provider value={store}>
-              <ToolcraftSourceAssetProvider store={store}>
-                <ToolcraftExportProvider store={store}>
-                  <ToolcraftContext.Provider value={value}>
-                    {children}
-                  </ToolcraftContext.Provider>
-                </ToolcraftExportProvider>
-              </ToolcraftSourceAssetProvider>
-            </ToolcraftStoreContext.Provider>
-          </ToolcraftThemeProvider>
+          {inheritedTheme ? (
+            <ToolcraftThemeScope value={inheritedTheme}>{workspace}</ToolcraftThemeScope>
+          ) : (
+            <ToolcraftThemeProvider defaultPreference={schema.sourceDefaults?.theme}>
+              {workspace}
+            </ToolcraftThemeProvider>
+          )}
         </ToolcraftBrowserZoomBoundary>
       </ToolcraftModelPresentationModeContext.Provider>
     </ToolcraftPersistenceStatusProvider>

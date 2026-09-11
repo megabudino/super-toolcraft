@@ -1,3 +1,5 @@
+import { assertToolcraftEditableSliderRange } from "./slider-range";
+import { isToolcraftRuntimeOwnedTarget } from "./runtime-targets";
 import { getToolcraftSegmentedStaticFitError } from "../contracts/segmented-control-fit";
 import type { DistributiveOmit } from "./control-schema-common";
 import { isToolcraftBuiltInControlSchema } from "./control-schema";
@@ -269,7 +271,12 @@ type SliderNormalizableControl =
 function normalizeSliderControlSchema<T extends SliderNormalizableControl>(
   control: T,
   location: string,
+  owner: "product" | "collection",
 ): T {
+  assertToolcraftEditableSliderRange(control, location);
+  if (control.editableRange && (owner === "collection" || !("target" in control) || typeof control.target !== "string" || isToolcraftRuntimeOwnedTarget(control.target))) {
+    throw new Error(`Toolcraft editableRange ${location}: requires a top-level product slider target.`);
+  }
   const issue = getToolcraftVisualDiscreteSliderMarkerIssue(control);
 
   if (issue?.kind === "domain") {
@@ -321,6 +328,7 @@ function snapshotOwnedCollectionControls<T extends ToolcraftControlSchema>(
 
   return {
     ...control,
+    ...(control.editableRange ? { editableRange: { ...control.editableRange } } : {}),
     ...(itemControlSnapshot ? { itemControl: itemControlSnapshot } : {}),
     ...(itemControlsSnapshot ? { itemControls: itemControlsSnapshot } : {}),
   };
@@ -337,6 +345,7 @@ function normalizeCollectionSliderControls<T extends ToolcraftControlSchema>(
       ? normalizeSliderControlSchema(
           control.itemControl,
           `for target "${control.target}" itemControl`,
+          "collection",
         )
       : undefined;
   const itemControls =
@@ -347,6 +356,7 @@ function normalizeCollectionSliderControls<T extends ToolcraftControlSchema>(
             normalizeSliderControlSchema(
               field,
               `for target "${control.target}" itemControls.${id}`,
+              "collection",
             ),
           ]),
         )
@@ -418,6 +428,7 @@ function normalizeControlSchema(
         applicability,
       },
       `for target "${controlSnapshot.target}"`,
+      "product",
     ),
   );
 }

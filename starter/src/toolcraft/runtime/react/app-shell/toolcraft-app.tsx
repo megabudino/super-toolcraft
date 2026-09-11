@@ -32,6 +32,7 @@ import {
 } from "./product-scene-requirement";
 import { assertToolcraftAppModulePorts } from "./toolcraft-app-port-validation";
 import { useToolcraftPersistenceStatus } from "./use-toolcraft-persistence";
+import { ToolcraftPersistenceConflictNotice } from "./toolcraft-persistence-conflict-notice";
 
 export type ToolcraftAppComposition = Readonly<{
   canvasContent?: React.ReactNode;
@@ -127,6 +128,7 @@ function ToolcraftAppContent({
       {surfaces.panels.toolbar.enabled ? (
         <ToolbarPanel panelPlacement="floating" />
       ) : null}
+      <ToolcraftPersistenceConflictNotice />
     </div>
   );
 }

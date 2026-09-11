@@ -7,8 +7,6 @@ import type {
 } from "../rendering/renderer-pipeline-registration";
 import type { ToolcraftPerformanceFixtureAdapterRegistry } from "./performance-fixture-adapter-types";
 import type {
-  ToolcraftRenderPassCost,
-  ToolcraftRenderPassLifecycle,
   ToolcraftWorkloadEnvelope,
 } from "./performance-workload-types";
 

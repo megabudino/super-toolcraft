@@ -57,6 +57,7 @@ function renderCollectionItemControl({
       id={`${control.target}:${index}`}
       name={itemName}
       onChange={(nextValue, meta) => onItemChange(index, nextValue, meta)}
+      plainColorFullWidth={itemControl.type === "color"}
       target={control.target}
       value={item}
     />

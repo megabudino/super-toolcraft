@@ -13,7 +13,7 @@ describe("product mode authority boundaries", () => {
       },
     }] });
     inventory.push({ id: "background", title: "Background", entity: "Background", entityId: "background", groupingReason: "Runtime consumes the standard scene background pair.", targets: ["export.includeBackground", "appearance.background"], finiteSelectors: [{ target: "export.includeBackground", role: "parameter", reason: "Include the runtime-owned output background." }] });
-    expect(schema.panels.controls?.sections.slice(0, 2).map(({ id }) => id)).toEqual(["runtime.setup", "scene-choice"]);
+    expect(schema.panels.controls?.sections.slice(0, 3).map(({ id }) => id)).toEqual(["runtime.defaults", "runtime.setup", "scene-choice"]);
     expect(getToolcraftControlSectionInventoryErrors(schema, inventory)).toEqual([]);
   });
 

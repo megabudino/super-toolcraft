@@ -85,3 +85,22 @@ export async function createToolcraftIntegrityFixture() {
   await installToolcraftIntegrityFixture(rootDir);
   return rootDir;
 }
+
+// Stable signed test data: independent of a developer's edited starter package
+// and portable to generated apps, where ../package.json is a different product.
+export async function createToolcraftStarterIntegrityFixture() {
+  const rootDir = await fs.mkdtemp(path.join(os.tmpdir(), "toolcraft-starter-domain-"));
+  const packageSource = '{"name":"toolcraft-starter-fixture"}\n';
+  const manifest = {
+    domain: "starter",
+    files: { "runtime.mjs": sha256(runtimeSource) },
+    packageScripts: {},
+    protectedFiles: { "package.json": sha256(packageSource) },
+    version: 3,
+    signature: "BFWnMevXoy6Ri1jPWA6F57awc9fmOg6EFTpt+1IGzdP0ktmrUa6TBuWsWSYrFs428Q/A6P2zOOUlADFGxGkjAQ==",
+  };
+  await fs.mkdir(path.join(rootDir, "src/toolcraft"), { recursive: true });
+  await fs.writeFile(path.join(rootDir, "package.json"), packageSource);
+  await fs.writeFile(path.join(rootDir, "src/toolcraft/.toolcraft-manifest.json"), JSON.stringify(manifest));
+  return rootDir;
+}

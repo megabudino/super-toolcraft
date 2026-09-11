@@ -6,6 +6,7 @@ import type { ToolcraftPersistableStateSlice } from "../../schema/types";
 import type { ResolvedToolcraftAppSchema } from "../../schema/resolved-app-schema";
 import {
   createToolcraftPersistenceController,
+  type ToolcraftPersistenceCheckpoint,
   type ToolcraftPersistenceStatus,
 } from "../../composition/public-persistence";
 import { getToolcraftPersistedValueTargets } from "../../state/persistence-value-targets";
@@ -41,6 +42,7 @@ function getPersistedStateReferences(
         references.push(state.timeline);
         break;
       case "values":
+        references.push(state.controlRanges);
         for (const target of getToolcraftPersistedValueTargets(
           state.defaults,
           additionalValueTargets,
@@ -85,8 +87,13 @@ export function useToolcraftPersistence(
   store: ToolcraftExternalStore,
   options: {
     blockedReason?: "incompatible-version";
+    checkpoint?: ToolcraftPersistenceCheckpoint;
   } = {},
 ): ToolcraftPersistenceStatus {
+  const checkpoint = React.useMemo<ToolcraftPersistenceCheckpoint>(
+    () => options.checkpoint ?? {},
+    [options.checkpoint, store],
+  );
   const [status, setStatus] = React.useState<ToolcraftPersistenceStatus>(() =>
     options.blockedReason === "incompatible-version"
       ? { reason: "incompatible-version", status: "failed" }
@@ -115,6 +122,7 @@ export function useToolcraftPersistence(
     }
     const controller = createToolcraftPersistenceController({
       blockedReason: options.blockedReason,
+      checkpoint,
       getCommittedState: store.getCommittedState,
       onStatusChange: (nextStatus) => {
         if (mounted) {
@@ -158,7 +166,7 @@ export function useToolcraftPersistence(
       unsubscribe();
       controller.dispose();
     };
-  }, [options.blockedReason, schema, store]);
+  }, [checkpoint, options.blockedReason, schema, store]);
 
   return status;
 }

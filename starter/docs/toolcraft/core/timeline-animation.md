@@ -23,7 +23,7 @@ Use no timeline only when the motion is explicitly autonomous decoration with no
 
 ## Compact And Extended Timeline
 
-- Setup places the standard Background switch beside Infinity canvas immediately after settings transfer, then Background color and finite sizing. Timeline and optional Lock rotation share the final Setup row.
+- Setup places the standard Background switch beside Infinity canvas after the local Save State as Default action when available, then Background color beside the Blanc/Dots workspace selector and finite sizing. Timeline and optional Lock rotation share the final Setup row.
 - Timeline and Infinity canvas are self-explanatory runtime mode switches and do not render help icons.
 - Off shows compact Play-only transport.
 - On shows the extended timeline with scrubber, duration, loop, and keyframe UI.

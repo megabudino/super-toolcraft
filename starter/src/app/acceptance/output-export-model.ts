@@ -131,7 +131,7 @@ export function buildToolcraftOutputExportFacts({
     schema,
     "Background",
   );
-  const setupSection = getSchemaControlsSectionByTitle(schema, "Setup");
+  const setupSection = schema.panels.controls?.sections.find((section) => section.id === "runtime.setup");
   const imageExportSection = getSchemaControlsSectionByTitle(
     schema,
     "Image Export",
@@ -183,7 +183,7 @@ export function buildToolcraftOutputExportFacts({
     ),
     panelActionsSectionIndex: getFirstPanelActionsSectionIndex(schema),
     setupSection,
-    setupSectionIndex: getSchemaControlsSectionIndexByTitle(schema, "Setup"),
+    setupSectionIndex: schema.panels.controls?.sections.findIndex((section) => section.id === "runtime.setup") ?? -1,
     videoExportSection,
     videoExportSectionIndex,
     videoFormatEntry: getSectionControlEntryByTarget(

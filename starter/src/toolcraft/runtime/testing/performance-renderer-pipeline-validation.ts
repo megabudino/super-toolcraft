@@ -5,7 +5,6 @@ import {
 } from "./performance-render-plan-assessment";
 import type { ToolcraftEnvelopeValidationContext } from "./performance-envelope-validation-context";
 import {
-  parseToolcraftRendererPipeline,
   type ToolcraftRendererPipelineParseResult,
 } from "./performance-renderer-pipeline-parser";
 import type {

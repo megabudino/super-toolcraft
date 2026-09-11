@@ -1,3 +1,4 @@
+export type { ToolcraftEditableSliderRange, ToolcraftSliderRange } from "./schema/slider-range";
 export * from "./contracts/component-contracts";
 export * from "./contracts/decision-contracts";
 export * from "./contracts/performance-verification-policy";

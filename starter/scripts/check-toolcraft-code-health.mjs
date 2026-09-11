@@ -3,6 +3,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { findMisplacedDevelopmentFiles } from "./toolcraft-development-files.mjs";
 
 import { isToolcraftTypeScriptCompilerAvailable } from "./toolcraft-typescript-source-evidence.mjs";
 import {
@@ -124,6 +125,11 @@ export async function runGeneratedCodeHealth({
   logger = console,
   rootDir = appRoot,
 } = {}) {
+  const misplacedFiles = await findMisplacedDevelopmentFiles(rootDir);
+  if (misplacedFiles.length) {
+    for (const finding of misplacedFiles) logger.error(`${finding.path}: ${finding.reason}`);
+    return false;
+  }
   if (!isToolcraftTypeScriptCompilerAvailable()) {
     logger.log(
       "Toolcraft code health check passed (dependency-backed graph and AST checks are deferred until dependencies are installed).",

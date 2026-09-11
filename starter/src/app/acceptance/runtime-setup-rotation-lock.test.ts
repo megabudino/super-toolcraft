@@ -60,8 +60,8 @@ function editSetup(
       ...app.panels,
       controls: {
         ...controls,
-        sections: controls.sections.map((section, index) =>
-          index === 0 ? edit(section) : section,
+        sections: controls.sections.map((section) =>
+          section.id === "runtime.setup" ? edit(section) : section,
         ),
       },
     },
@@ -85,7 +85,7 @@ describe("generated app rotation lock contract", () => {
 
   it("excludes the runtime lock from app-authored product controls", () => {
     const lock =
-      schema().panels.controls!.sections[0]!.controls.rotationLocked!;
+      schema().panels.controls!.sections[1]!.controls.rotationLocked!;
     expect(isRuntimeSetupControlTarget(lock.target)).toBe(true);
     expect(isToolcraftProductSectionControl(lock)).toBe(false);
   });
@@ -126,7 +126,7 @@ describe("generated app rotation lock contract", () => {
 
   it("rejects an irrelevant lock in a 2D app", () => {
     const lock =
-      schema().panels.controls!.sections[0]!.controls.rotationLocked!;
+      schema().panels.controls!.sections[1]!.controls.rotationLocked!;
     const invalid = editSetup(schema(false), (setup) => ({
       ...setup,
       controls: { ...setup.controls, rotationLocked: lock },

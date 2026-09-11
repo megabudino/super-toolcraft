@@ -97,6 +97,10 @@ If the custom control owns a repeated runtime item set, `checkedBuiltIns` must i
 
 Do not justify a custom control with icons, layout, styling, compactness, or custom buttons alone. If the built-in control has the right value model and mechanics, use it or improve that built-in instead.
 
+The fit-check fields are declarations, not independent proof that custom UI is necessary. Review the actual value model and interaction against the closest built-in, then verify the declared output through the acceptance row's browser scenario. Passing metadata validation never grants permission to restyle a public component or substitute a native value control. Record which inner interactions use public primitives and which specific behavior needs product geometry; a different frame, spacing or color palette is not a behavioral gap.
+
+The product source boundary protects every component rendered from the public UI root, including composite wrappers and secondary class props such as `containerClassName`. `Input`, `InputGroupInput`, `ComboboxInput` and `CommandInput` cannot forward native color/range/file/checkbox/radio models into product controls. Keep standard value models in schema controls. The same boundary runs before product source loading in `test:feature`, including later edits.
+
 ## State Rules
 
 Custom renderers must write through the provided `setValue(nextValue, meta)` callback or existing runtime commands.

@@ -7,6 +7,7 @@ import {
   validateToolcraftFeatureVerificationPlan,
 } from "./toolcraft-feature-verification-plan.mjs";
 import { captureToolcraftProofIpcProcess } from "./toolcraft-proof-process.mjs";
+import { evaluateToolcraftProductBoundary, toolcraftProductBoundaryPassed } from "./toolcraft-product-boundary.mjs";
 
 const childPath = fileURLToPath(
   new URL("./toolcraft-feature-source-loader-child.mjs", import.meta.url),
@@ -25,6 +26,17 @@ export async function loadToolcraftFeatureVerificationPlanFromSource({
   projectDir,
   request,
 }) {
+  // Check the current cross-file UI/CSS boundary before evaluating product code.
+  // This uses the already signed loader closure and does not run code-health,
+  // a build, the global test catalog or another delivery batch.
+  const boundary = await evaluateToolcraftProductBoundary({ rootDir: projectDir });
+  if (!toolcraftProductBoundaryPassed(boundary)) {
+    const problems = [
+      ...boundary.filesystemViolations.map(({ repoPath, reason }) => `${repoPath}: ${reason}`),
+      ...boundary.violations.map(({ repoPath, line, message }) => `${repoPath}:${line}: ${message}`),
+    ];
+    throw new Error(`Toolcraft feature product boundary failed:\n${problems.join("\n")}`);
+  }
   const server = await dependencies.createServer({
     appType: "custom",
     logLevel: "error",

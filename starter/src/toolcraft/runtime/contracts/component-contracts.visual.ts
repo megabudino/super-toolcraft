@@ -208,9 +208,9 @@ export const TOOLCRAFT_VISUAL_COMPONENT_CONTRACTS = {
         "Use Palette for constrained design-token choices.",
       ],
       layoutConstraints: [
-        "Plain Color controls may render two per row only when no opacity is present.",
+        "A standalone plain Color fills the available row. Adjacent related plain Color controls may render two per row; ColorOpacity occupies a full row.",
         "In a mixed section with multiple plain Color controls, declare semanticGroup on every plain Color; runtime pairs only adjacent colors in the same semantic group. A color-only section is one implicit bank.",
-        "Odd trailing plain Color controls in a multi-color bank keep the same half-width footprint as paired colors.",
+        "Odd trailing plain Color controls in a multi-color bank without opacity keep the same half-width footprint as paired colors. Unpaired plain colors in an opacity bank fill their stacked rows.",
         "Color label visibility depends on user usefulness: palette variation banks omit per-item labels; distinct color roles keep labels.",
       ],
       requiredAcceptance: [
@@ -235,11 +235,11 @@ export const TOOLCRAFT_VISUAL_COMPONENT_CONTRACTS = {
       "Plain Color popovers must not show opacity controls. If opacity is editable, use ColorOpacity instead.",
       "Color product state is a canonical hex string even though the UI callback payload is { hex }.",
       "Product-output apps always expose renderer-owned output background color as a schema color target such as appearance.background or scene.background.",
-      'Declare renderer-owned output background color with export.includeBackground in one authored Background source section. Runtime normalizes them into Setup: a Switch labeled "Background" sits left of Infinity canvas in an equal-width row, Background color renders below, and Timeline and optional Lock rotation share the final Setup row.',
+      'Declare renderer-owned output background color with export.includeBackground in one authored Background source section. Runtime normalizes them into Setup: a Switch labeled "Background" sits left of Infinity canvas in an equal-width row, Background color sits left of the Blanc/Dots workspace selector in the row below, and Timeline and optional Lock rotation share the final Setup row.',
       "CanvasShell reads the evaluated runtime background color and owns both live modes: finite renders below runtime model/image media and transparent product content; Infinity fills the complete viewport without a duplicate finite layer. Product renderers stay transparent in live preview. export.includeBackground controls the runtime layer and PNG alpha, and disabling it restores finite mode instead of leaving a transparent infinite workspace.",
       "Render multiple related color fields in one section with at most two colors per row.",
       "In a mixed section with multiple plain Color controls, declare semanticGroup on every plain Color; runtime pairs only adjacent colors in the same semantic group. A color-only section is one implicit bank.",
-      "If a multi-color bank has an odd trailing plain Color, keep that last Color at half width; only ColorOpacity or intentionally full-width compound controls occupy a full row.",
+      "A standalone plain Color fills the available row. In a multi-color bank without opacity, keep an odd trailing plain Color at half width; an unpaired plain Color in an opacity bank fills its stacked row.",
     ],
   },
   gradient: {

@@ -84,7 +84,8 @@ export function applyToolcraftAppDefaults(
     : schema.canvas;
   const updateControl = (control: ResolvedToolcraftControlSchema): ResolvedToolcraftControlSchema => {
     if (Object.hasOwn(defaults.values, control.target)) {
-      return { ...control, defaultValue: defaults.values[control.target] } as ResolvedToolcraftControlSchema;
+      const range = parsed.version === 2 ? parsed.state.controlRanges?.[control.target] : undefined;
+      return { ...control, ...range, defaultValue: defaults.values[control.target] } as ResolvedToolcraftControlSchema;
     }
     if (defaults.canvas) {
       if (control.target === "canvas.size.width") return { ...control, defaultValue: canvas.size.width } as ResolvedToolcraftControlSchema;

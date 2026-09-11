@@ -1,3 +1,4 @@
+import { readToolcraftControlRanges } from "./control-ranges";
 import type { ResolvedToolcraftControlSchema } from "../schema/types";
 import type { ResolvedToolcraftAppSchema } from "../schema/resolved-app-schema";
 import type {
@@ -203,6 +204,7 @@ export function createToolcraftState(
     toolbar: { offset: { x: 0, y: 0 } },
   };
   return {
+    controlRanges: readToolcraftControlRanges(schema, initialState.controlRanges),
     canvas: initialCanvas,
     defaults,
     history: {

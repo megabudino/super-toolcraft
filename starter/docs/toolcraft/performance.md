@@ -52,6 +52,8 @@ Declare only the profiles consumed by renderer passes. A schema control can chan
 
 Each explicit workload control maps to exactly one schema-backed dimension. The dimension boundary equals the value the schema or product runtime actually enforces. A scenario or browser test cannot lower that boundary. Interactive boundaries are fully guaranteed.
 
+For controls opting into `editableRange`, workload boundaries derive from `hardMin`/`hardMax`, which must both be finite for workload declarations. The initial and current visible scale never grant a larger workload limit.
+
 Numeric capability is structural. Sliders and range sliders use their effective numeric bounds. Any other control participates as a numeric schema source only when it declares finite `min`, `max`, and numeric `defaultValue`; a partial domain, inverted bounds, or a default outside the bounds is invalid. Control names and kinds do not manufacture numeric limits.
 
 The empty starter uses:

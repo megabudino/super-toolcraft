@@ -11,6 +11,13 @@ export function createToolcraftHostCallOrigin({
   return function callOrigin(call, visited, context) {
     if (visited.has(call)) return [{ kind: "unknown", overflow: true }];
     visited = new Set(visited).add(call);
+    const callee = call.expression;
+    const requireDeclarations = ts.isIdentifier(callee) && callee.text === "require"
+      ? checker.getSymbolAtLocation(callee)?.declarations ?? [] : undefined;
+    const moduleLoad = callee.kind === ts.SyntaxKind.ImportKeyword ||
+      requireDeclarations?.every((declaration) => declaration.getSourceFile().isDeclarationFile);
+    const specifier = moduleLoad && call.arguments[0] && resolveStaticString(call.arguments[0]);
+    if (specifier) return [{ kind: "import", importedName: "*", members: [], sourceFiles: [], specifier }];
     const wrappers = operations.originOf(
       call.expression,
       new Set(visited),

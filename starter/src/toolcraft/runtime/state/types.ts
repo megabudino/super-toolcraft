@@ -1,3 +1,4 @@
+import type { ToolcraftControlRanges } from "./control-ranges";
 import type { ToolcraftTimelineCommand } from "../modules/built-ins/timeline/contracts";
 import type { ToolcraftLayersCommand } from "../modules/built-ins/layers/contracts";
 import type { ToolcraftCanvasSize } from "../schema/types";
@@ -14,6 +15,7 @@ export type ToolcraftSettingsState = {
 };
 
 export type ToolcraftCommand =
+  | { type: "controls.editSlider"; target: string; value: number | readonly number[]; displayedValue?: unknown; label?: string; reason?: "reset" }
   | { type: "settings.apply"; settings: ToolcraftSettingsState }
   | {
       history?: ToolcraftHistoryMode;
@@ -148,6 +150,7 @@ export type ToolcraftCommand =
   | { type: "history.redo" };
 
 export const toolcraftRuntimeCommandTypes = [
+  "controls.editSlider",
   "controls.setValue",
   "controls.apply",
   "controls.addCollectionItem",
@@ -456,6 +459,7 @@ export type ToolcraftPanelsState = {
 };
 
 export type ToolcraftState = {
+  controlRanges: ToolcraftControlRanges;
   canvas: ToolcraftCanvasState;
   defaults: Record<string, unknown>;
   history: {
@@ -472,6 +476,7 @@ export type ToolcraftState = {
 };
 
 export type ToolcraftInitialState = {
+  controlRanges?: ToolcraftControlRanges;
   canvas?: Partial<ToolcraftCanvasState>;
   layers?: ToolcraftLayer[];
   mediaAssets?: ToolcraftInitialMediaAsset[];

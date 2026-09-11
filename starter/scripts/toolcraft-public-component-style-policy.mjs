@@ -1,17 +1,8 @@
-function ownedComponent(exportName) {
-  return Object.freeze({ exportName });
-}
+import { isToolcraftFrameworkCssToken,
+  toolcraftPublicUiSpecifiers } from "./toolcraft-public-ui-ownership.mjs";
 
 export const toolcraftPublicComponentStylePolicy = Object.freeze({
-  components: Object.freeze([
-    ownedComponent("Anchor"),
-    ownedComponent("Button"),
-  ]),
-  publicSpecifiers: Object.freeze([
-    "#/toolcraft/ui",
-    "@/toolcraft/ui",
-    "@/toolcraft/ui",
-  ]),
+  publicSpecifiers: toolcraftPublicUiSpecifiers,
   utilityDomains: Object.freeze([
     Object.freeze({
       domain: "border",
@@ -32,6 +23,10 @@ export const toolcraftPublicComponentStylePolicy = Object.freeze({
     Object.freeze({
       domain: "opacity",
       namespaces: Object.freeze(["opacity"]),
+    }),
+    Object.freeze({
+      domain: "filter",
+      namespaces: Object.freeze(["filter", "blur", "brightness", "contrast", "grayscale", "hue-rotate", "invert", "saturate", "sepia", "mix-blend"]),
     }),
     Object.freeze({
       domain: "color",
@@ -106,6 +101,7 @@ const inlineStyleDomains = Object.freeze([
     "boxshadow", "textshadow",
   ]) }),
   Object.freeze({ domain: "opacity", names: Object.freeze(["opacity"]) }),
+  Object.freeze({ domain: "filter", names: Object.freeze(["filter", "backdropfilter", "mixblendmode", "mask", "maskimage", "webkitmaskimage"]) }),
   Object.freeze({ domain: "text-decoration", prefixes: Object.freeze([
     "textdecoration",
   ]) }),
@@ -119,6 +115,8 @@ export const toolcraftOwnedPublicChromeDomains = Object.freeze([
   "radius",
   "shadow",
   "text-decoration",
+  "filter",
+  "framework-token",
 ]);
 
 const ownedStateAttributes = Object.freeze(new Map([
@@ -168,6 +166,8 @@ function arbitraryUtilityDomain(utility) {
     return undefined;
   }
   const property = normalized.slice(1, -1).split(":", 1)[0].toLowerCase();
+  if (isToolcraftFrameworkCssToken(property)) return "framework-token";
+  if (getToolcraftOwnedInlineStyleDomain(property) === "filter") return "filter";
   if (property === "border-radius" ||
     property.startsWith("border-") && property.endsWith("-radius")) {
     return "radius";
@@ -263,8 +263,9 @@ export function getToolcraftOwnedComponentChromeDomains(token) {
 }
 
 export function getToolcraftOwnedInlineStyleDomain(propertyName) {
+  if (typeof propertyName === "string" && isToolcraftFrameworkCssToken(propertyName)) return "framework-token";
   const normalized = typeof propertyName === "string"
-    ? propertyName.toLowerCase().replaceAll("-", "")
+    ? propertyName.toLowerCase().replaceAll("-", "").replace(/^(webkit|moz|ms)/u, "")
     : "";
   for (const entry of inlineStyleDomains) {
     if (entry.names?.includes(normalized) || entry.prefixes?.some((prefix) =>
@@ -296,13 +297,16 @@ export function isToolcraftOwnedComponentStateAttribute(name, value) {
   return accepted.includes(String(value).toLowerCase());
 }
 
-export function getToolcraftOwnedPublicComponent(origin) {
-  if (origin?.kind !== "import" ||
-    !toolcraftPublicComponentStylePolicy.publicSpecifiers.includes(
-      origin.specifier,
-    )) return undefined;
-  const operation = origin.members.at(-1) ?? origin.importedName;
-  return toolcraftPublicComponentStylePolicy.components.find(
-    ({ exportName }) => exportName === operation,
-  );
+export function getToolcraftAncestorUtilityDomains(token) {
+  const parts = tokenParts(token);
+  const domains = getToolcraftOwnedComponentChromeDomains(token);
+  const targetsDescendants = parts.slice(0, -1).some((part) =>
+    part === "*" || part === "**" || (part.startsWith("[") && /[_>+~]/u.test(part)));
+  return targetsDescendants ? domains : domains.filter((domain) =>
+    ["opacity", "filter", "framework-token", "color"].includes(domain));
+}
+
+export function getToolcraftAncestorStyleDomains(property) {
+  return getToolcraftOwnedCssDeclarationDomains(property).filter((domain) =>
+    ["opacity", "filter", "framework-token", "color"].includes(domain));
 }

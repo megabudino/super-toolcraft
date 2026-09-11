@@ -4,6 +4,7 @@ import {
 } from "./toolcraft-public-component-style-policy.mjs";
 import { toolcraftCssPseudoName as pseudoName } from
   "./toolcraft-css-pseudo-name.mjs";
+import { toolcraftPublicUiHostTags } from "./toolcraft-public-ui-ownership.mjs";
 
 export function toolcraftCssSubjectNodes(selector) {
   let subject = [];
@@ -45,6 +46,7 @@ function toolcraftCssCompoundNecessarilyMatchesTag(nodes, tag) {
 }
 
 export function toolcraftCssCompoundAllowsTag(nodes, tag) {
+  if (tag === "*") return true;
   for (const node of nodes) {
     if (node.type === "tag" && node.value.toLowerCase() !== tag) return false;
     if (node.type !== "pseudo" || !node.nodes?.length) continue;
@@ -114,4 +116,24 @@ export function toolcraftCssSelectorTargetsPublicTag(selector, tag) {
 
 export function toolcraftCssSelectorUsesOwnedState(selector) {
   return toolcraftCssSubjectUsesOwnedState(toolcraftCssSubjectNodes(selector));
+}
+
+export function toolcraftCssSelectorTargetsPublicChrome(selector) {
+  const nodes = toolcraftCssSubjectNodes(selector);
+  const htmlTags = toolcraftPublicUiHostTags.filter((tag) => !["svg", "img"].includes(tag));
+  if (htmlTags.some((tag) => toolcraftCssSelectorTargetsPublicTag(selector, tag))) return true;
+  function mentionsPublicAttribute(items) {
+    return items.some((node) => {
+      if (node.type === "attribute") return node.attribute === "data-slot" ||
+        (node.attribute === "role" && ["button", "checkbox", "radio", "slider", "switch",
+          "textbox", "combobox", "listbox", "option", "tab", "tablist", "menuitem"].includes(node.value));
+      return [":is", ":where"].includes(pseudoName(node)) &&
+        node.nodes?.some((branch) => mentionsPublicAttribute(toolcraftCssSubjectNodes(branch)));
+    });
+  }
+  if (mentionsPublicAttribute(nodes)) return true;
+  // A locally named geometric child is handled where its class is applied.
+  // An unqualified descendant/universal selector can reach any public host.
+  return toolcraftCssSubjectLocalClasses(nodes).length === 0 &&
+    htmlTags.some((tag) => toolcraftCssCompoundAllowsTag(nodes, tag));
 }

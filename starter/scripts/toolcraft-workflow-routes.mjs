@@ -21,6 +21,15 @@ function defineRoute(route) {
 export const toolcraftWorkflowRoutes = Object.freeze(
   [
     {
+      id: "development-files",
+      task: "Working attachments, diagnostics, file placement and cleanup",
+      phases: {
+        plan: ["core/development-files.md"],
+        implementation: ["core/development-files.md"],
+        verification: ["core/development-files.md"],
+      },
+    },
+    {
       id: "app-assembly",
       task: "App assembly, route structure, generated app porting",
       phases: {

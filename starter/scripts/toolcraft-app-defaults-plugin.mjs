@@ -1,6 +1,7 @@
 import { createHash, randomUUID } from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
+import { createRunnableDevEnvironment, isRunnableDevEnvironment } from "vite";
 import { saveDefaultResourceFile, verifyDefaultResourceFiles } from "./toolcraft-default-resource-files.mjs";
 import { createDefaultResourceCleanup } from "./toolcraft-default-resource-cleanup.mjs";
 
@@ -27,9 +28,14 @@ async function readBody(request) {
   catch { throw fail("Invalid defaults request."); }
 }
 
-export function createAppDefaultsMiddleware({ appRoot, validate, onWrite = () => {}, token = randomUUID() }) {
+export function createAppDefaultsMiddleware({ appRoot, validate, onWrite = () => {}, token = randomUUID(), localHostnames = [] }) {
+  if (!Array.isArray(localHostnames) || localHostnames.some((host) => typeof host !== "string" || !/^(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+localhost$/.test(host))) {
+    throw new Error("Defaults authoring aliases must be explicit .localhost hostnames.");
+  }
+  const allowedHosts = new Set(["localhost", "127.0.0.1", "[::1]", ...localHostnames]);
   const file = path.join(appRoot, "src/app/app-defaults.json");
   const cleanup = createDefaultResourceCleanup(appRoot);
+  const uploadsByPath = new Map();
   let saving = false;
   let uploading = 0;
   const read = async () => {
@@ -48,7 +54,7 @@ export function createAppDefaultsMiddleware({ appRoot, validate, onWrite = () =>
     try {
       if (!loopback(request.socket.remoteAddress)) throw fail("Defaults authoring is local only.", 403);
       const origin = new URL(`http://${request.headers.host}`);
-      if (!["localhost", "127.0.0.1", "[::1]"].includes(origin.hostname) ||
+      if (!allowedHosts.has(origin.hostname) ||
           (request.headers.origin && request.headers.origin !== origin.origin)) {
         throw fail("Defaults must be saved from this application's local panel.", 403);
       }
@@ -65,8 +71,16 @@ export function createAppDefaultsMiddleware({ appRoot, validate, onWrite = () =>
       if (isResource) {
         if (saving) throw fail("Defaults are being saved. Retry the file upload.", 409);
         uploading += 1;
-        try { send(response, 200, await saveDefaultResourceFile(appRoot, url.slice(resourcePrefix.length), request)); }
-        finally { uploading -= 1; }
+        // Identical uploads share a destination and must publish in ownership
+        // order. Different resources still stream independently.
+        const upload = (uploadsByPath.get(url) ?? Promise.resolve()).catch(() => {}).then(() =>
+          saveDefaultResourceFile(appRoot, url.slice(resourcePrefix.length), request, cleanup.recordUpload));
+        uploadsByPath.set(url, upload);
+        try { send(response, 200, await upload); }
+        finally {
+          uploading -= 1;
+          if (uploadsByPath.get(url) === upload) uploadsByPath.delete(url);
+        }
         return;
       }
       const input = await readBody(request);
@@ -102,14 +116,25 @@ export function createAppDefaultsMiddleware({ appRoot, validate, onWrite = () =>
   };
 }
 
-export function toolcraftAppDefaultsPlugin({ appRoot }) {
+export function toolcraftAppDefaultsPlugin({ appRoot, localHostnames = [] }) {
   return {
     name: "toolcraft-app-defaults",
     apply: "serve",
+    // Hosts such as TanStack Start/Nitro own a non-runnable SSR environment.
+    // Source validation needs its own runner, independent of the host's SSR.
+    config() {
+      return { environments: {
+        toolcraftDefaults: {
+          consumer: "server",
+          dev: { createEnvironment: createRunnableDevEnvironment },
+        },
+      } };
+    },
     async configureServer(server) {
       const root = await fs.realpath(appRoot);
       server.middlewares.use(createAppDefaultsMiddleware({
         appRoot: root,
+        localHostnames,
         onWrite: (file) => {
           // Reload can beat the filesystem watcher. Invalidate both browser and
           // validation imports before acknowledging the committed source file.
@@ -118,7 +143,11 @@ export function toolcraftAppDefaultsPlugin({ appRoot }) {
           }
         },
         validate: async (value) => {
-          const module = await server.ssrLoadModule("/src/toolcraft/app-defaults-validation.ts");
+          const environment = server.environments.toolcraftDefaults;
+          if (!isRunnableDevEnvironment(environment)) {
+            throw new Error("The source-defaults validation environment is unavailable. Restart the development server.");
+          }
+          const module = await environment.runner.import("/src/toolcraft/app-defaults-validation.ts");
           return module.validateAppDefaults(value);
         },
       }));

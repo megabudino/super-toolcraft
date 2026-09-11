@@ -3,7 +3,6 @@ import type { ReadonlyToolcraftState } from "./readonly-state";
 import type {
   ToolcraftCanvasState,
   ToolcraftHistoryPatch,
-  ToolcraftState,
 } from "./types";
 import { toolcraftCanvasInfinityTarget } from "../schema/runtime-targets";
 import { tagToolcraftCanvasStateHistoryPatch } from "./history-patch-metadata";

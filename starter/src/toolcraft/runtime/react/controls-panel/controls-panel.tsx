@@ -2,9 +2,10 @@
 
 import * as React from "react";
 import { Panel, type ControlChangeMeta } from "@/toolcraft/ui";
+import { toolcraftRuntimeDefaultsSectionId } from "../../schema/runtime-defaults-section";
+import { useToolcraftDefaultsAuthoring } from "../app-shell/toolcraft-defaults-authoring";
 
 import type {
-  ToolcraftControlSchema,
   ResolvedToolcraftControlSectionSchema,
   ResolvedToolcraftControlsPanelSchema,
 } from "../../schema/types";
@@ -160,9 +161,9 @@ function selectControlsPanel(
       )
       .filter(
         ({ entries, section }) =>
-          entries.some(([, control]) =>
-            isControlsPanelRenderableControl(control),
-          ) && isToolcraftSectionVisible(state, section),
+          (section.id === "runtime.setup" ||
+            entries.some(([, control]) => isControlsPanelRenderableControl(control))) &&
+          isToolcraftSectionVisible(state, section),
       ) ?? [];
   const visibleControlsPanelSections = visibleSections.map(
     ({ entries, section }) => ({
@@ -199,6 +200,7 @@ export function ControlsPanel({
   const dispatch = useToolcraftDispatch();
   const store = useToolcraftStore();
   const theme = React.useContext(ToolcraftThemeContext);
+  const defaultsAuthoring = useToolcraftDefaultsAuthoring();
   const contentRef = useControlsPanelScroll();
   const schema = store.getCommittedState().schema;
   const controlsPanel = schema.panels.controls;
@@ -278,14 +280,16 @@ export function ControlsPanel({
   }
 
   const placement = panelPlacement ?? (framed ? "frame" : "surface");
-  const renderedSections = selection.visibleSections.map(
-    ({ entries, section }) => ({
+  const renderedSections = selection.visibleSections
+    .filter(({ section }) =>
+      section.id !== toolcraftRuntimeDefaultsSectionId || defaultsAuthoring !== null,
+    )
+    .map(({ entries, section }) => ({
       entries,
       navigationId: `toolcraft-controls-section-${section.id}`,
       section,
       sectionCollapseKey: section.id,
-    }),
-  );
+    }));
   const navigationItems = renderedSections.flatMap(
     ({ navigationId, section }) =>
       section.actionGroup === undefined && section.title

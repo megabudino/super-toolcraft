@@ -39,14 +39,18 @@ function viewportTransformsEqual(
   );
 }
 
-export function CanvasViewportWorld({
-  children,
-}: CanvasViewportWorldProps): React.JSX.Element {
-  const transform = useToolcraftDependencySelector(
+export function useCanvasViewportTransform(): CanvasViewportTransform {
+  return useToolcraftDependencySelector(
     selectViewportTransform,
     viewportTransformsEqual,
     viewportDependencies,
   );
+}
+
+export function CanvasViewportWorld({
+  children,
+}: CanvasViewportWorldProps): React.JSX.Element {
+  const transform = useCanvasViewportTransform();
 
   return (
     <div

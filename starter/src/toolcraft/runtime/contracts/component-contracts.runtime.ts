@@ -15,7 +15,7 @@ const controlsPanelContract = panel(
 );
 
 const runtimeSetupModeRowRule =
-  "Runtime Setup places the standard Background switch beside Infinity canvas after the local Save as Defaults action when available, then Background color and finite sizing; Timeline and optional Lock rotation share the final Setup row when enabled.";
+  "Runtime Setup places the standard Background switch beside Infinity canvas inside Settings, below the separate local defaults section when available, then Background color beside the Blanc/Dots workspace selector and finite sizing; Timeline and optional Lock rotation share the final Setup row when enabled.";
 const runtimeSetupModeHelpRule =
   "Timeline and Infinity canvas are self-explanatory runtime mode switches and do not render help icons.";
 
@@ -42,9 +42,9 @@ export const TOOLCRAFT_RUNTIME_COMPONENT_CONTRACTS = {
       "A reference or previous app lacking a size editor, or defining a fixed-size baseline, is not a fixed-output reason for a generated product app; product-output clones still use editable-output.",
       "Resolved canvas.size exists for every canvas app, but visible Canvas width and Canvas height controls are mandatory only for editable-output sizing and live in the mandatory runtime Setup section.",
       "If canvas.size is provided without an explicit sizing mode, defineToolcraft treats it as editable-output and adds Canvas width and Canvas height controls.",
-      "The runtime Canvas width and Canvas height block uses the mandatory headerless Setup controls block; do not add a separate Canvas section label above these fields.",
-      "When the user manually edits Canvas width or Canvas height, the runtime keeps the typed dimension, keeps the other dimension unchanged, switches Aspect ratio to Custom, stores the reduced current ratio in state, and keeps Canvas width and Canvas height as the sole custom numeric editors.",
-      "Aspect ratio presets are the only interaction that may resize both canvas dimensions from a preset; manual size inputs are exact output dimensions.",
+      "The runtime Canvas width and Canvas height block belongs to the mandatory Settings section with the standard header; do not add a separate Canvas section label above these fields.",
+      "When the user commits Canvas width or Canvas height, runtime keeps the typed dimension, preserves the selected preset or custom ratio, and recalculates the opposite dimension with integer rounding as one undoable change.",
+      "Aspect ratio presets apply canonical initial dimensions. Custom shows separate Ratio W and Ratio H fields; editing a custom ratio preserves canvas width and recalculates height. Pixel edits retain the active proportion, and repeated values do not introduce rounding drift.",
       "For non-vector raster, Canvas 2D, WebGL, and WebGPU previews, set canvas.renderScale: true so the runtime adds Resolution scale after canvas sizing. The scale changes backing pixels from 1 to 2 without changing visible canvas size.",
       TOOLCRAFT_PERFORMANCE_VERIFICATION_POLICY.renderScaleFidelity,
       "Do not enable canvas.renderScale for DOM/SVG/vector-native previews; preserve vector fidelity through native vector rendering instead of raster supersampling.",
@@ -101,8 +101,8 @@ export const TOOLCRAFT_RUNTIME_COMPONENT_CONTRACTS = {
   settingsTransfer: {
     aiUsageRules: [
       "Generated apps keep a controls panel so runtime Setup is visible from the first run; product controls are added after that mandatory runtime section.",
-      "Local Setup offers Save as Defaults instead of Export Settings / Import Settings; the panel-header Reset remains available in every host.",
-      "Save as Defaults captures the full current workspace and reachable binary resources into the project; header Reset restores that saved workspace. Incomplete media prevents publishing partial defaults.",
+      "Local Save State as Default occupies a separate headerless block above Settings; the whole block is absent without host authoring capability. Settings uses standard section Reset and collapse controls; the panel-header Reset remains available in every host.",
+      "Save State as Default captures the full current workspace and reachable binary resources into the project; header Reset restores that saved workspace. Incomplete media prevents publishing partial defaults.",
       "Do not add settings file actions or source-writing controls in product routes or panelActions.",
       "The runtime settings codecs support control values, canvas size, timeline playback settings, and attachment paths with durable resource references; they do not expose settings-file actions in Setup. Runtime restores available attachments and settings atomically; missing or invalid attachments are skipped independently. Paths are browser-visible names/relative paths, not permission to read the filesystem or network; JSON does not embed file bytes.",
       "App-authored sections must not declare runtime Setup targets such as runtime.settingsTransfer, canvas.aspectRatio, canvas.size.width, canvas.size.height, canvas.renderScale, or panels.timeline.extended; those controls never suppress the mandatory runtime Setup controls.",
@@ -253,15 +253,15 @@ export const TOOLCRAFT_RUNTIME_COMPONENT_CONTRACTS = {
       "Every Control Section Inventory entry declares required entityId, entity, exact targets, and groupingReason. Group by user task and dependency cohesion, not by component type or target namespace. Recommend semanticGroup where helpful; mixed plain-color rows retain their mandatory grouping.",
       "A coherent section may exceed ten controls, and smaller entities may have justified workflow stages. Every split section keeps the same entityId and entity and declares a unique workflowStage plus concrete splitReason. A complete task may have one control; never split or merge solely to satisfy a count.",
       "Section splitting must preserve dependency cohesion: keep selectors with their applicability-gated controls by default. A justified workflow split may share the same inventory entity across sections; unique stages and concrete split reasons remain mandatory. A selector option alone is not a separate task.",
-      "Every app-authored controls-panel body section must have a short meaningful visible title. Runtime-created Setup renders as the first visible headerless controls block with no title, reset action, collapse button, or collapsed state; sticky footer action sections use the technical title Export but render without a visible heading.",
+      "Every app-authored controls-panel body section must have a short meaningful visible title. Runtime-created Settings uses the standard visible title, scoped reset action and collapse controls, and remains present before product sections in every mode. Local Save State as Default lives in its own headerless block above Settings; sticky footer action sections use the technical title Export but render without a visible heading.",
       "Controls-panel section titles normally use one to three words and name only the edited product entity or workflow stage. Four words is the exceptional maximum; starter acceptance rejects more than four semantic words or 32 Unicode code points.",
       "Use section.description only when the section scope or output relationship is not obvious from its concise title and visible controls. The runtime renders it only behind the standard filled question-mark help icon and never as a visible descriptor or subtitle.",
       "An actually overflowing legacy or localized section title stays on one line, fades at the right edge, and exposes its full text on hover. This defensive fallback never authorizes a generated app to keep an overlong title.",
       "Every visible app-authored controls-panel section title renders through the standard 36px collapsible header row with vertically centered, left-aligned text and a separate rightmost 24px design-system collapse icon button; title, help, reset and collapse controls are never nested, and generated apps must not hand-build section headers.",
       "Controls-panel section expand and collapse uses the standard runtime height/opacity animation; generated apps must not replace it with instant custom section visibility.",
-      "Controls-panel section collapsed/expanded state persists as a runtime UI preference per app. It is not undo/redo state, not settings import/export state, and Reset controls must not clear it. Runtime Setup is not collapsible; sticky footer Export sections are not collapsible.",
+      "Controls-panel section collapsed/expanded state persists as a runtime UI preference per app. It is not undo/redo state, not settings import/export state, and Reset controls must not clear it. Settings follows ordinary section collapse behavior; the separate defaults action block and sticky footer Export sections are not collapsible.",
       "Ordinary controls-panel section headers expose the runtime section reset action before the collapse button; it dispatches controls.resetTargets and restores only that section's control targets to their schema defaultValue.",
-      "Runtime Setup uses 12px top spacing so its first control row has equal top, left, and right insets. Ordinary controls-panel body sections keep 8px top spacing. Both use 24px bottom spacing; sticky footer action sections keep their dedicated spacing.",
+      "The local defaults action block uses public technical spacing with 12px on all sides. Settings uses the standard section header and ordinary body spacing, with 8px top and 24px bottom insets; sticky footer action sections keep their dedicated spacing.",
       "Section titles must identify the edited entity or workflow stage. Use more specific names when the scope is unclear, not merely because the section has many controls.",
       "Section titles in one controls panel must be unique.",
       "Use section titles, option labels, tests, or renderer/spec prose for details instead of long field labels.",
@@ -293,7 +293,7 @@ export const TOOLCRAFT_RUNTIME_COMPONENT_CONTRACTS = {
     ...controlsPanelContract,
     aiUsageRules: [
       ...controlsPanelContract.aiUsageRules,
-      "An overflowing controls panel reveals runtime-owned section navigation only after a 300ms pointer dwell within its 12px inner-left padding strip, ending before control content begins. Fast crossings cancel the reveal; while visible, the popup and direct 8px corridor retain it by pointer geometry, remaining outside for 50ms starts a fast 120ms reduced-motion-aware exit before unmount, and reopening requires another dwell. It reuses PanelSurface and the shared ScrollFade, keeps its scrollbar at the right surface edge, shows position-aware top and bottom fades, uses a 12px list inset with zero horizontal item padding, sits 8px to the left centered on the content viewport, enters and exits with opacity and a 2px horizontal offset, renders 13px labels with 8px item gaps at foreground 50%, uses foreground 80% on hover and full foreground for the current item, renders no vertical item markers, jumps immediately to clicked sections, lets focused Arrow Up and Arrow Down wrap, focus, and immediately activate visible sections, includes Setup, and excludes sticky action sections.",
+      "An overflowing controls panel reveals runtime-owned section navigation only after a 300ms pointer dwell within its 12px inner-left padding strip, ending before control content begins. Fast crossings cancel the reveal; while visible, the popup and direct 8px corridor retain it by pointer geometry, remaining outside for 50ms starts a fast 120ms reduced-motion-aware exit before unmount, and reopening requires another dwell. It reuses PanelSurface and the shared ScrollFade, keeps its scrollbar at the right surface edge, shows position-aware top and bottom fades, uses a 12px list inset with zero horizontal item padding, sits 8px to the left centered on the content viewport, enters and exits with opacity and a 2px horizontal offset, renders 13px labels with 8px item gaps at foreground 50%, uses foreground 80% on hover and full foreground for the current item, renders no vertical item markers, jumps immediately to clicked sections, lets focused Arrow Up and Arrow Down wrap, focus, and immediately activate visible sections, includes Settings and the local defaults block when available, and excludes sticky action sections.",
       "Overflowing navigation labels use the shared right-edge ScrollFade mask without ellipsis and expose the full title on hover. Short labels remain unfaded. Navigation shares the panel reset lifecycle: stale listeners and hover timers are discarded, and a fresh dwell opens it on the replacement panel.",
     ],
     capabilities: [...controlsPanelContract.capabilities, "section-navigation"],
@@ -301,9 +301,9 @@ export const TOOLCRAFT_RUNTIME_COMPONENT_CONTRACTS = {
   layersPanel: {
     ...panel("layersPanel", "LayersPanel", "left", ["left", "right"], "handle"),
     aiUsageRules: [
-      "Enable panels.layers only when the app needs editable layer selection, ordering, grouping, visibility, or multi-object media management.",
-      "Do not enable the layers panel for single-layer apps.",
-      "If the user intent is ambiguous, ask whether layer management is required before enabling panels.layers.",
+      "Enable layersModule() only when the user explicitly requests a workflow with layers, such as layer selection, ordering, grouping, visibility, or layer-based media management.",
+      "Multiple uploads or editable objects alone do not authorize enabling Layers; without a user-requested layer workflow, leave the module absent.",
+      "Lab layer demonstrations are isolated development fixtures, not generated-product defaults or permission to enable Layers.",
       "When layers are enabled, layer-specific controls should target selectedLayer.* and apply to the currently selected runtime layer.",
       "Do not use selectedLayer.* targets when panels.layers is disabled; single-layer apps use app-specific targets.",
       "Layer-enabled apps need layerCoverage acceptance for selection, visibility, reorder, and grouping.",

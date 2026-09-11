@@ -54,6 +54,7 @@ export type CompoundShouldShowColorFieldLabel = (args: {
 }) => boolean;
 
 export type CompoundControlRenderArgs = {
+  plainColorFullWidth?: boolean;
   commit: CompoundControlCommit;
   commitWithLabel: CompoundControlCommitWithLabel;
   control: ToolcraftControlSchema;
@@ -170,6 +171,7 @@ export function renderCompoundColorGroup({
 }
 
 export function renderCompoundControl({
+  plainColorFullWidth = true,
   commit,
   commitWithLabel,
   control,
@@ -214,6 +216,7 @@ export function renderCompoundControl({
       return withKeyframeLabelAction({
         children: (
           <Color
+            fullWidth={plainColorFullWidth}
             hex={colorValue.hex}
             key={id}
             name={name}

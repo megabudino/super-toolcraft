@@ -6,14 +6,31 @@ import os from "node:os";
 import path from "node:path";
 import test from "node:test";
 import { appDefaultsEndpoint, createAppDefaultsMiddleware, toolcraftAppDefaultsPlugin } from "./toolcraft-app-defaults-plugin.mjs";
+import { createDefaultResourceCleanup } from "./toolcraft-default-resource-cleanup.mjs";
+import { saveDefaultResourceFile } from "./toolcraft-default-resource-files.mjs";
 
-async function fixture(run) {
+// Node fetch owns Host itself; raw HTTP exercises the named-host guard.
+function hostFetch(url, options = {}) {
+  if (!options.headers?.host) return fetch(url, options);
+  return new Promise((resolve, reject) => {
+    const request = http.request(url, { agent: false, method: options.method, headers: options.headers }, (response) => {
+      const chunks = [];
+      response.on("data", (chunk) => chunks.push(chunk));
+      response.on("error", reject);
+      response.on("end", () => resolve(new Response(Buffer.concat(chunks), { status: response.statusCode })));
+    });
+    request.on("error", reject);
+    request.end(options.body);
+  });
+}
+
+async function fixture(run, { localHostnames = [] } = {}) {
   const root = await fs.mkdtemp(path.join(await fs.realpath(os.tmpdir()), "app-defaults-test-"));
   const file = path.join(root, "src/app/app-defaults.json");
   await fs.mkdir(path.dirname(file), { recursive: true });
   await fs.writeFile(file, "null\n");
   const invalidated = [];
-  const middleware = createAppDefaultsMiddleware({ appRoot: root, onWrite: async (file) => {
+  const middleware = createAppDefaultsMiddleware({ appRoot: root, localHostnames, onWrite: async (file) => {
     invalidated.push({ file, contents: await fs.readFile(file, "utf8") });
   }, validate: async (value) => {
     if (value?.appId !== "fixture") throw new Error("Wrong app.");
@@ -24,7 +41,7 @@ async function fixture(run) {
   const origin = `http://127.0.0.1:${server.address().port}`;
   const url = origin + appDefaultsEndpoint;
   const capability = await (await fetch(url)).json();
-  const save = (body, headers = {}) => fetch(url, { method: "POST", headers: {
+  const save = (body, headers = {}) => hostFetch(url, { method: "POST", headers: {
     "content-type": "application/json", origin,
     "x-toolcraft-defaults-token": capability.token, ...headers,
   }, body: JSON.stringify(body) });
@@ -34,6 +51,35 @@ async function fixture(run) {
   try { await run({ root, file, url, capability, save, upload, invalidated }); }
   finally { server.closeAllConnections(); await new Promise((resolve) => server.close(resolve)); await fs.rm(root, { recursive: true, force: true }); }
 }
+
+for (const namedOrigin of ["http://toolcraft.localhost", "http://toolcraft.localhost:43127"]) {
+test(`explicit localhost aliases save with their own Origin and retain session protection: ${namedOrigin}`, () => fixture(async ({ file, url, capability, save }) => {
+  const body = { defaults: { version: 1, appId: "fixture", values: { amount: 21 } }, revision: capability.revision };
+  const headers = { host: new URL(namedOrigin).host, origin: namedOrigin };
+  const response = await save(body, headers);
+  assert.equal(response.status, 200, await response.text());
+  assert.deepEqual(JSON.parse(await fs.readFile(file, "utf8")), body.defaults);
+  for (const invalid of [
+    { ...headers, origin: "http://other.localhost" },
+    { ...headers, origin: namedOrigin === "http://toolcraft.localhost" ? "http://toolcraft.localhost:43127" : "http://toolcraft.localhost" },
+    { ...headers, origin: "http://toolcraft.localhost:43128" },
+    { ...headers, host: "other.localhost", origin: "http://other.localhost" },
+    { ...headers, host: "toolcraft.localhost.evil.test", origin: "http://toolcraft.localhost.evil.test" },
+    { ...headers, "x-toolcraft-defaults-token": "invalid" },
+  ]) assert.equal((await save(body, invalid)).status, 403);
+  assert.equal((await hostFetch(url, { headers: { host: "unconfigured.localhost" } })).status, 403);
+  assert.deepEqual(JSON.parse(await fs.readFile(file, "utf8")), body.defaults);
+}, { localHostnames: ["toolcraft.localhost"] }));
+}
+
+test("named authoring hosts are opt-in and cannot authorize non-local domains", async () => {
+  await fixture(async ({ url }) => {
+    assert.equal((await hostFetch(url, { headers: { host: "toolcraft.localhost" } })).status, 403);
+  });
+  for (const hostname of ["example.com", "localhost.evil", "*.localhost", "toolcraft.localhost:80", ".localhost"]) {
+    assert.throws(() => createAppDefaultsMiddleware({ appRoot: "/tmp", validate: async (x) => x, localHostnames: [hostname] }), /explicit .localhost hostnames/);
+  }
+});
 
 test("the local authoring endpoint atomically saves and invalidates its fixed file before responding", () => fixture(async ({ file, root, capability, save, invalidated }) => {
   const defaults = { version: 1, appId: "fixture", values: { amount: 42 }, canvas: null };
@@ -77,6 +123,46 @@ test("production preview has no authoring middleware", () => {
   assert.equal(plugin.configurePreviewServer, undefined);
 });
 
+test("source defaults validate through their own Vite runner without host SSR", async () => {
+  const { createServer } = await import("vite");
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), "toolcraft-defaults-runner-"));
+  let server;
+  try {
+    await fs.mkdir(path.join(root, "src/app"), { recursive: true });
+    await fs.mkdir(path.join(root, "src/toolcraft"), { recursive: true });
+    await fs.writeFile(path.join(root, "src/app/app-defaults.json"), "null\n");
+    await fs.writeFile(path.join(root, "src/toolcraft/app-defaults-validation.ts"), `
+      export function validateAppDefaults(value: unknown) {
+        if (!value || typeof value !== 'object' || !('appId' in value) || value.appId !== 'fixture') {
+          throw new Error('Invalid fixture identity');
+        }
+        return value;
+      }
+    `);
+    server = await createServer({
+      configFile: false, root, logLevel: "silent",
+      plugins: [toolcraftAppDefaultsPlugin({ appRoot: root })],
+      server: { host: "127.0.0.1", port: 0 },
+    });
+    server.ssrLoadModule = () => { throw new Error("Host SSR must not execute authoring validation"); };
+    await server.listen();
+    const origin = `http://127.0.0.1:${server.httpServer.address().port}`;
+    const endpoint = `${origin}/.toolcraft/app-defaults`;
+    const capability = await (await fetch(endpoint)).json();
+    const defaults = { version: 1, appId: "fixture", values: {}, canvas: null };
+    const response = await fetch(endpoint, {
+      method: "POST",
+      headers: { origin, "content-type": "application/json", "x-toolcraft-defaults-token": capability.token },
+      body: JSON.stringify({ revision: capability.revision, defaults }),
+    });
+    assert.equal(response.status, 200, await response.text());
+    assert.deepEqual(JSON.parse(await fs.readFile(path.join(root, "src/app/app-defaults.json"), "utf8")), defaults);
+  } finally {
+    await server?.close();
+    await fs.rm(root, { recursive: true, force: true });
+  }
+});
+
 test("full snapshots commit only after immutable resource bytes pass validation", () => fixture(async ({ root, file, capability, save, upload }) => {
   const bytes = Buffer.from("portable image bytes");
   const sha256 = createHash("sha256").update(bytes).digest("hex");
@@ -112,6 +198,78 @@ function snapshot(resources) { return { version: 2, appId: "fixture", resources 
 async function exists(file) {
   return fs.stat(file).then(() => true, error => { if (error.code === "ENOENT") return false; throw error; });
 }
+
+test("failed saves retain uploads for retries, then reclaim only expired owned files after restart", () => fixture(async ({ root, file, capability, upload, save }) => {
+  const bytes = Buffer.from("abandoned upload");
+  const abandoned = resource(bytes, "images");
+  const currentBytes = Buffer.from("current defaults");
+  const current = resource(currentBytes, "files");
+  const unowned = resource(Buffer.from("unowned image"), "images");
+  const unownedFile = path.join(root, "public", unowned.path);
+  await fs.mkdir(path.dirname(unownedFile), { recursive: true });
+  await fs.writeFile(unownedFile, "unowned image");
+  await Promise.all([
+    upload(address(abandoned), bytes).then(response => assert.equal(response.status, 200)),
+    upload(address(current), currentBytes).then(response => assert.equal(response.status, 200)),
+    upload(address(unowned), Buffer.from("unowned image")).then(response => assert.equal(response.status, 200)),
+  ]);
+  assert.equal((await save({ defaults: { appId: "wrong" }, revision: capability.revision })).status, 400);
+  assert.equal(await fs.readFile(file, "utf8"), "null\n");
+  const readCurrent = async () => JSON.parse(await fs.readFile(file, "utf8"));
+  await createDefaultResourceCleanup(root).finish(readCurrent);
+  assert.equal(await exists(path.join(root, "public", abandoned.path)), true, "Retry grace preserves staged uploads");
+  assert.equal((await save({ defaults: snapshot([current]), revision: capability.revision })).status, 200);
+  const restarted = createDefaultResourceCleanup(root, { now: () => Date.now() + 25 * 60 * 60 * 1000 });
+  await restarted.finish(readCurrent);
+  assert.equal(await exists(path.join(root, "public", abandoned.path)), false, "A failed save must not leak its uploads forever");
+  assert.deepEqual(await fs.readFile(path.join(root, "public", current.path)), currentBytes);
+  assert.equal(await fs.readFile(unownedFile, "utf8"), "unowned image");
+}));
+
+test("parallel identical uploads keep one durable owner and remain collectable", () => fixture(async ({ root, upload }) => {
+  const bytes = Buffer.from("same simultaneous upload");
+  const item = resource(bytes, "files");
+  const responses = await Promise.all(Array.from({ length: 6 }, () => upload(address(item), bytes)));
+  assert.ok(responses.every(response => response.status === 200));
+  await createDefaultResourceCleanup(root, { now: () => Date.now() + 25 * 60 * 60 * 1000 }).finish(async () => null);
+  assert.equal(await exists(path.join(root, "public", item.path)), false);
+}));
+
+test("retrying an owned unpublished upload renews its grace without adopting existing assets", () => fixture(async ({ root }) => {
+  let now = 0;
+  const bytes = Buffer.from("retry after a day");
+  const item = resource(bytes, "files");
+  const cleanup = createDefaultResourceCleanup(root, { now: () => now });
+  await saveDefaultResourceFile(root, address(item), [bytes], cleanup.recordUpload);
+  now += 25 * 60 * 60 * 1000;
+  await saveDefaultResourceFile(root, address(item), [bytes], cleanup.recordUpload);
+  await cleanup.finish(async () => null);
+  assert.equal(await exists(path.join(root, "public", item.path)), true);
+  now += 25 * 60 * 60 * 1000;
+  await cleanup.finish(async () => null);
+  assert.equal(await exists(path.join(root, "public", item.path)), false);
+}));
+
+test("upload ownership survives a prepared snapshot that never commits", () => fixture(async ({ root, upload }) => {
+  const bytes = Buffer.from("failed JSON publication");
+  const item = resource(bytes, "files");
+  assert.equal((await upload(address(item), bytes)).status, 200);
+  await createDefaultResourceCleanup(root).prepare(null, snapshot([item]));
+  await createDefaultResourceCleanup(root, { now: () => Date.now() + 25 * 60 * 60 * 1000 }).finish(async () => null);
+  assert.equal(await exists(path.join(root, "public", item.path)), false);
+}));
+
+test("unpublished uploads replaced with identical authored bytes are never deleted", () => fixture(async ({ root, upload }) => {
+  const bytes = Buffer.from("same bytes, different owner");
+  const item = resource(bytes, "files");
+  assert.equal((await upload(address(item), bytes)).status, 200);
+  const target = path.join(root, "public", item.path);
+  const authored = path.join(root, "authored.bin");
+  await fs.writeFile(authored, bytes);
+  await fs.rename(authored, target);
+  await assert.rejects(createDefaultResourceCleanup(root, { now: () => Date.now() + 25 * 60 * 60 * 1000 }).finish(async () => null), /replaced outside Toolcraft/);
+  assert.deepEqual(await fs.readFile(target), bytes);
+}));
 
 test("saves attachments into their folders and deletes only retired managed files after publication", () => fixture(async ({ root, capability, save, upload }) => {
   const imageBytes = Buffer.from("old image");

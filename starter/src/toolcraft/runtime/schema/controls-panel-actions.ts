@@ -132,6 +132,11 @@ export function splitControlsPanelActionSections(
 
   for (const section of sections) {
     const entries: ResolvedControlEntry[] = Object.entries(section.controls);
+    // Settings is mandatory even for hosts with no enabled canvas/timeline fields.
+    if (section.id === "runtime.setup" && entries.length === 0) {
+      bodySections.push(section);
+      continue;
+    }
     const { actionEntries, passthroughEntries } =
       partitionControlEntries(entries);
 

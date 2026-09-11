@@ -2,12 +2,14 @@ import type { ResolvedToolcraftAppSchema } from "../../schema/resolved-app-schem
 import {
   getToolcraftPersistenceKey,
   parseToolcraftPersistenceSnapshotResult,
+  type ToolcraftPersistenceCheckpoint,
 } from "../../composition/public-persistence";
 import type { ToolcraftInitialState } from "../../state/types";
 
 export type ToolcraftPersistenceBootstrap = {
   blockedReason?: "incompatible-version";
   initialState?: ToolcraftInitialState;
+  checkpoint?: ToolcraftPersistenceCheckpoint;
 };
 
 const emptyBootstrap: ToolcraftPersistenceBootstrap = {};
@@ -22,18 +24,18 @@ export function readToolcraftPersistenceBootstrap(
   }
 
   try {
-    const parsed = parseToolcraftPersistenceSnapshotResult(
-      schema,
-      window.localStorage.getItem(storageKey),
-    );
+    const snapshot = window.localStorage.getItem(storageKey);
+    const checkpoint = { current: { snapshot } };
+    const parsed = parseToolcraftPersistenceSnapshotResult(schema, snapshot);
 
     if (parsed.kind === "incompatible-version") {
       return {
         blockedReason: "incompatible-version",
+        checkpoint,
       };
     }
-    return parsed.kind === "current" ? { initialState: parsed.state } : {};
+    return parsed.kind === "current" ? { checkpoint, initialState: parsed.state } : { checkpoint };
   } catch {
-    return emptyBootstrap;
+    return { checkpoint: { current: { status: "failed", reason: "unavailable" } } };
   }
 }

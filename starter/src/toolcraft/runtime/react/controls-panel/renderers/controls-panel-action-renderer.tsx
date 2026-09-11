@@ -13,11 +13,16 @@ import type {
 } from "../../../schema/types";
 import { isToolcraftArtifactExportAction } from "../../../schema/artifact-export-actions";
 import {
-  readToolcraftImageExportFormat,
+  readToolcraftStillExportFormat,
   readToolcraftVideoExportFormat,
   toolcraftImageExportFormatTarget,
   toolcraftVideoExportFormatTarget,
 } from "../../../export/artifact-export-settings";
+import {
+  getToolcraftVisibleExportActions,
+  resolveToolcraftStillExportAction,
+} from "../../../export/still-export-actions";
+import { useToolcraftStore } from "../../app-shell/toolcraft-store-context";
 import type { ReadonlyToolcraftState } from "../../../state/readonly-state";
 import type { ToolcraftStoreDependency } from "../../../state/toolcraft-external-store-dependencies";
 import { useToolcraftDependencySelector } from "../../app-shell/toolcraft-selectors";
@@ -72,7 +77,7 @@ function getDisplayActionLabel(
 ): string {
   switch (action.role) {
     case "export-image": {
-      const format = readToolcraftImageExportFormat(state);
+      const format = readToolcraftStillExportFormat(state);
       return format ? `Export ${format.toUpperCase()}` : "Export Image";
     }
     case "export-video": {
@@ -101,6 +106,11 @@ function RuntimePanelActions({
   actions: readonly ToolcraftActionSchema[];
   runAction: ActionControlRunAction;
 }): React.JSX.Element {
+  const store = useToolcraftStore();
+  const visibleActions = React.useMemo(
+    () => getToolcraftVisibleExportActions(actions),
+    [actions],
+  );
   const dependencies = React.useMemo<ToolcraftStoreDependency[]>(() => {
     const targets = new Set<string>();
     for (const action of actions) {
@@ -116,8 +126,8 @@ function RuntimePanelActions({
   const labels = useToolcraftDependencySelector(
     React.useCallback(
       (state: ReadonlyToolcraftState) =>
-        actions.map((action) => getDisplayActionLabel(action, state)),
-      [actions],
+        visibleActions.map((action) => getDisplayActionLabel(action, state)),
+      [visibleActions],
     ),
     actionLabelsEqual,
     dependencies,
@@ -125,7 +135,7 @@ function RuntimePanelActions({
 
   return (
     <PanelActions
-      actions={actions.map((action, index) => ({
+      actions={visibleActions.map((action, index) => ({
         icon: getPanelActionIcon(action),
         name: labels[index]!,
         value: action.value,
@@ -134,7 +144,12 @@ function RuntimePanelActions({
       onAction={(actionValue) => {
         const action = actions.find((item) => item.value === actionValue);
         if (action) {
-          runAction(action, { trackFooterPending: true });
+          const selectedAction = resolveToolcraftStillExportAction(
+            action,
+            actions,
+            readToolcraftStillExportFormat(store.getState()),
+          );
+          runAction(selectedAction, { trackFooterPending: true });
         }
       }}
     />

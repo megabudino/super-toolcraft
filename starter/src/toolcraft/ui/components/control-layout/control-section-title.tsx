@@ -23,7 +23,7 @@ export function ControlSectionTitle({
   const overflowTitle = useOverflowTitle(viewportRef, titleText);
 
   return (
-    <div className="flex min-w-0 flex-1 items-center gap-1 has-data-[icon-active=true]:[&_[data-slot=panel-title]]:text-[color:var(--link)]">
+    <div className="flex min-w-0 items-center gap-1 has-data-[icon-active=true]:[&_[data-slot=panel-title]]:text-[color:var(--link)]">
       <ScrollFade
         className="min-w-0 overflow-x-hidden overflow-y-hidden"
         containerClassName="min-w-0 flex-1"

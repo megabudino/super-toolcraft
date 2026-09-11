@@ -3,7 +3,6 @@ import type {
   ToolcraftControlDisabledConditionSchema,
   ToolcraftControlOrderRole,
   ToolcraftControlPerformanceRole,
-  ToolcraftControlPredicateSchema,
 } from "./types";
 
 /** Shared authoring semantics, not a bag of built-in component props. */

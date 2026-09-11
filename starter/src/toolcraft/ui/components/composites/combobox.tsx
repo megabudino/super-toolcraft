@@ -13,7 +13,6 @@ import {
   PrimitiveArrowIcon,
   ScrollFade,
 } from "../primitives";
-import { sanitizeComposedHostProps } from "../primitives/sanitize-composed-host-props";
 import { ComboboxList } from "./combobox-list";
 
 function Combobox<

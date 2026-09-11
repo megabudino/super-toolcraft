@@ -17,6 +17,28 @@ or negating stored/persisted values globally. Mathematical
 `coordinateMode: "cartesian"` changes numeric Y convention, not the required
 screen gesture direction.
 
+## Axis locks
+
+Each XY pad shows an independent open lock before each coordinate. Closing X
+preserves its exact value while Y changes; closing Y does the reverse. Both locks
+may close, disabling pad and numeric editing while keeping unlock buttons usable.
+Locking X hides the horizontal axis line; locking Y hides the vertical axis line.
+Unlocking restores that line. The position handle remains visible with both locked.
+Explicit locks take priority over Shift's temporary dominant-axis constraint.
+Double-click resets only unlocked coordinates; header Reset, Undo and playback
+remain runtime-owned operations and may replace values independently of locks.
+
+Coordinate labels edit separately on blur/Enter; Escape cancels, malformed or
+nonfinite input retains the current value, and valid input uses the existing
+normalized -1..1 domain. Display rounding must not reduce a locked coordinate's
+stored precision. Lock toggles and blocked movement create no value commands.
+
+Locks belong to the mounted control's editing state. They start open when the
+control mounts and are not keyframes, product parameters or source defaults.
+The canonical runtime value remains `{ x, y }`. This behavior applies to all XY
+pad variants, including color pads and repeated collection controls; Width/Height
+size inputs are a different control presentation.
+
 ## Required proof
 
 The schema automatically adds `vector-screen-motion` for default/omitted Vector

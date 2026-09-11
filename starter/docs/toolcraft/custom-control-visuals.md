@@ -16,6 +16,12 @@ A whole-control custom decision does not make its nested interactions custom. Fo
 
 The local fallback stays in that control. Do not create a reusable `PressableSurface`, generic interaction primitive, or parallel component kit.
 
+Public UI owns its chrome by default, including wrappers, loading indicators and other class-name slots. Use the component's supported variants for its appearance; custom classes/styles may extend layout, spacing, sizing and typography. Keep product geometry on a separate local element. For example, a custom matrix backing belongs to a local `div` around an unmodified public `ControlInlineGroup`, with public Buttons inside.
+
+An element supplied through a public component's `render` prop inherits that component's ownership. Its styles obey the same rules, including same-file render functions, local components and element aliases. Opaque/external implementations or replacement roots requiring another file's CSS facts fail source validation; use the public API or a transparent local replacement.
+
+Parent CSS is part of the same ownership boundary. Do not change nested public controls through tag, `data-slot`, role or universal selectors, descendant utilities, inherited color, group opacity, filters, or framework CSS-token definitions. Consume framework tokens without redefining them. Local product variables, actual product colors and opacity/filter effects on independent geometric elements remain available. Use local geometric classes or SVG shape selectors so selectors do not also reach public controls.
+
 ## Product Geometry Tokens
 
 Product CSS consumes the global `--toolcraft-custom-viz-*` tokens. Their formulas live in runtime CSS; do not duplicate them in a CSS module, add theme-specific replacements, or rename them behind a local shade ladder.

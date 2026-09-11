@@ -2,6 +2,20 @@
   border-radius: var(--radius-lg);
 }
 
+/* A compound item's bottom edge owns the boundary with the next compound item. */
+@custom-variant after-compound-divider {
+  [data-control-list] > [data-control-item-compound-context]:not([data-control-item-compound-divider-placement='top']):has([data-control-section-divider='compound']) + &:has([data-control-section-divider='compound']) {
+    @slot;
+  }
+}
+
+/* A curve without its own divider uses the following item's gap for its trailing clearance. */
+@custom-variant after-plain-curve {
+  [data-control-list] > :has([data-slot='curves-control']):not([data-control-item-compound-context]:has([data-control-section-divider='compound'])) + & {
+    @slot;
+  }
+}
+
 @custom-variant data-open {
   &:where([data-state='open']),
   &:where([data-open]:not([data-open='false'])) {

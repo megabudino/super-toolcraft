@@ -1,7 +1,6 @@
 import { sanitizeComposedHostProps, type SafeComposedHostElementProps } from "../primitives/sanitize-composed-host-props";
 import { mergeProps } from "@base-ui/react/merge-props";
 import { useRender } from "@base-ui/react/use-render";
-import * as React from "react";
 
 import {
   PrimitiveArrowIcon,

@@ -37,7 +37,7 @@ export function getToolcraftProductModeInventoryErrors(
         continue;
       }
       const { section, control } = selected;
-      if (sections[0]?.id !== "runtime.setup" || sections[1]?.id !== section.id) {
+      if (sections[0]?.id !== "runtime.defaults" || sections[1]?.id !== "runtime.setup" || sections[2]?.id !== section.id) {
         errors.push(`Product mode "${branch.target}" must be in the first product section immediately after runtime Setup.`);
       }
       if (

@@ -27,6 +27,7 @@ type SliderRuntimeOptions<Value extends number | readonly number[]> = {
   onPointerUpCapture?: SliderPointerEventHandler;
   onValueChange?: SliderProps<Value>["onValueChange"];
   onValueCommitted?: SliderProps<Value>["onValueCommitted"];
+  onValueReset?: SliderProps<Value>["onValueReset"];
   resetValue?: Value;
   snapValues?: readonly number[];
   step: number;
@@ -49,6 +50,7 @@ export function useSliderRuntime<Value extends number | readonly number[]>({
   onPointerUpCapture,
   onValueChange,
   onValueCommitted,
+  onValueReset,
   resetValue,
   snapValues,
   step,
@@ -96,6 +98,7 @@ export function useSliderRuntime<Value extends number | readonly number[]>({
     handleValueChange,
     handleValueCommitted: sliderValue.handleValueCommitted,
     isDiscrete: sliderValue.isDiscrete,
+    onValueReset,
     max,
     min,
     resetValue,

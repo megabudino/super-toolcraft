@@ -1,7 +1,9 @@
+import type { ToolcraftEditableSliderRange } from "./slider-range";
 import type { ToolcraftRangeInputValue } from "../state/control-value-types";
 import type { ToolcraftSliderValueKind, ToolcraftTextValueKind, ToolcraftVectorCoordinateMode } from "./types";
 
 type NumericFields = {
+  editableRange?: ToolcraftEditableSliderRange;
   markerCount?: number;
   max?: number;
   min?: number;

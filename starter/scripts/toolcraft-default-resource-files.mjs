@@ -37,11 +37,12 @@ async function verify(file, digest, byteLength) {
 }
 
 /** Immutable blobs are staged first; the JSON rename publishes the snapshot. */
-export async function saveDefaultResourceFile(appRoot, address, request) {
+export async function saveDefaultResourceFile(appRoot, address, request, recordUpload) {
   const resourcePath = `toolcraft-defaults/${digestPattern.test(address) ? `${address}.bin` : address}`;
   const { digest, parts } = parseDefaultResourcePath(resourcePath);
   const dir = await requireDefaultResourceDirectory(appRoot, parts.slice(0, -1), true);
-  const temporary = path.join(dir, `.${randomUUID()}.tmp`);
+  const scratch = await requireDefaultResourceDirectory(appRoot, [".toolcraft", "scratch", "default-uploads"], true);
+  const temporary = path.join(scratch, `${randomUUID()}.tmp`);
   const target = path.join(dir, `${digest}.bin`);
   const file = await fs.open(temporary, "wx");
   let byteLength = 0;
@@ -55,8 +56,15 @@ export async function saveDefaultResourceFile(appRoot, address, request) {
     }
     if (hash.digest("hex") !== digest) throw fail("Uploaded default file failed its integrity check.");
     await file.close();
-    // Never overwrite an existing path (including a symlink).
-    await fs.link(temporary, target).catch(error => { if (error.code !== "EEXIST") throw error; });
+    const existing = await fs.lstat(target).catch(error => { if (error.code !== "ENOENT") throw error; return null; });
+    if (existing) await verify(target, digest, byteLength);
+    const owned = await fs.stat(existing ? target : temporary, { bigint: true });
+    await recordUpload({
+      path: resourcePath, sha256: digest, byteLength,
+      createdFile: { dev: owned.dev.toString(), ino: owned.ino.toString() },
+    }, existing ? "reused" : "created");
+    // Never overwrite/adopt a destination created outside our upload queue.
+    if (!existing) await fs.link(temporary, target);
     await verify(target, digest, byteLength);
   } finally {
     await file.close();

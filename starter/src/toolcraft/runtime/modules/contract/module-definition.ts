@@ -16,8 +16,8 @@ const toolcraftProductModuleDefinitionBrand: unique symbol = Symbol(
 );
 const registeredToolcraftProductModuleDefinitions = new WeakSet<object>();
 
-class ToolcraftProductModuleDefinitionIdentity {
-  private readonly opaqueDefinition = undefined;
+declare class ToolcraftProductModuleDefinitionIdentity {
+  private readonly opaqueDefinition: undefined;
 }
 
 export type ToolcraftProductModuleRecord = {

@@ -58,7 +58,7 @@ Do not render built-in controls such as `SliderControl`, `SelectControl`, `Color
 
 ## Product Readiness
 
-The starter baseline is neutral: canvas/upload/toolbar shell only. Do not include demo controls, prompt fields, timeline, or layers until product behavior requires them.
+The starter baseline is neutral: canvas/upload/toolbar shell only. Do not include demo controls, prompt fields or timeline until product behavior requires them. Layers additionally requires an explicit user request for a workflow with layers; upload count or Lab examples never enable it.
 
 Once the folder is a real product, switch `src/app/app-acceptance-data.ts` from neutral readiness to:
 

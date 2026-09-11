@@ -10,6 +10,8 @@ export type SliderProps<Value extends number | readonly number[]> =
     markerCount?: number;
     markerValues?: readonly number[];
     onPointerDraggingChange?: (isDragging: boolean) => void;
+    /** Let a controlled owner restore a value outside the current visible scale. */
+    onValueReset?: (value: Value) => void;
     resetValue?: Value;
     showFill?: boolean;
     snapValues?: readonly number[];

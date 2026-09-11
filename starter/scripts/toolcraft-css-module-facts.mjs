@@ -1,5 +1,6 @@
 import {
   getToolcraftOwnedCssDeclarationDomains,
+  getToolcraftAncestorStyleDomains,
 } from "./toolcraft-public-component-style-policy.mjs";
 import {
   toolcraftCssCompoundAllowsTag as compoundAllowsTag,
@@ -10,7 +11,8 @@ import {
   toolcraftCssSubjectUsesOwnedState as nodesUseOwnedState,
 } from "./toolcraft-css-selector-subject.mjs";
 
-const PUBLIC_TAGS = Object.freeze(["a", "button"]);
+import { toolcraftPublicUiHostTags } from "./toolcraft-public-ui-ownership.mjs";
+const PUBLIC_TAGS = Object.freeze([...toolcraftPublicUiHostTags, "*", "ancestor"]);
 
 export { toolcraftCssSelectorTargetsPublicTag,
   toolcraftCssSelectorUsesOwnedState };
@@ -52,13 +54,17 @@ export function collectToolcraftCssModuleClassFacts({ root, selectorParser }) {
         if (nodesUseOwnedState(nodes)) domains.push("interaction-state");
         for (const className of classes) {
           for (const tag of PUBLIC_TAGS) {
-            if (!compoundAllowsTag(nodes, tag)) continue;
+            if (tag !== "ancestor" && !compoundAllowsTag(nodes, tag)) continue;
             const key = `${className}\0${tag}`;
             const existing = domainsByClassAndTag.get(key) ?? {
               compositions: new Map(),
               domains: new Set(),
             };
-            for (const domain of domains) existing.domains.add(domain);
+            const effectiveDomains = tag === "ancestor"
+              ? (rule.nodes ?? []).filter((node) => node.type === "decl")
+                .flatMap((node) => getToolcraftAncestorStyleDomains(node.prop))
+              : domains;
+            for (const domain of effectiveDomains) existing.domains.add(domain);
             for (const composition of compositions) {
               existing.compositions.set(
                 `${composition.className}\0${composition.specifier ?? ""}`,

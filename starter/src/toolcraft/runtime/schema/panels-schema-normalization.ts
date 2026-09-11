@@ -1,4 +1,8 @@
 import { createToolcraftRuntimeSetupSection } from "./runtime-setup-section";
+import {
+  createToolcraftRuntimeDefaultsSection,
+  toolcraftRuntimeDefaultsSectionId,
+} from "./runtime-defaults-section";
 import { extractToolcraftRuntimeSetupBackground } from "./runtime-setup-background";
 import { normalizeControlsPanelLayout } from "./controls-panel-normalization";
 import { resolveToolcraftControlSectionId } from "./controls-panel-section-id";
@@ -44,12 +48,15 @@ export function normalizeToolcraftPanels({
     timeline: normalizedTimeline,
   });
   const authoredSections = backgroundExtraction.sections.filter((section) => {
-    if (section.id !== "runtime.setup") {
+    if (
+      section.id !== "runtime.setup" &&
+      section.id !== toolcraftRuntimeDefaultsSectionId
+    ) {
       return true;
     }
 
     // Internal normalization is idempotent for already-materialized runtime
-    // Setup sections: validate the existing section before rebuilding it.
+    // sections: validate the existing section before rebuilding it.
     resolveToolcraftControlSectionId(section);
     return false;
   });
@@ -58,7 +65,11 @@ export function normalizeToolcraftPanels({
     ...normalizedPanels,
     controls: normalizeControlsPanelLayout({
       ...controls,
-      sections: [runtimeSetupSection, ...authoredSections],
+      sections: [
+        createToolcraftRuntimeDefaultsSection(),
+        runtimeSetupSection,
+        ...authoredSections,
+      ],
     }),
   };
 }

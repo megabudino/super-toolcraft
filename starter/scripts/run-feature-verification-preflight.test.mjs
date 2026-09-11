@@ -11,7 +11,7 @@ import { createToolcraftFeaturePlaywrightAuthoritySeal, createToolcraftFeaturePr
   createToolcraftFeaturePreflightSnapshot } from "./toolcraft-feature-playwright-authority-seal.mjs";
 import { inspectToolcraftExecutableConfigCandidates,
   requireToolcraftFeaturePreflightManifest } from "./toolcraft-feature-preflight-manifest.mjs";
-import { createToolcraftIntegrityFixture } from "./toolcraft-integrity-test-utils.mjs";
+import { createToolcraftIntegrityFixture, createToolcraftStarterIntegrityFixture } from "./toolcraft-integrity-test-utils.mjs";
 
 test("rejects mutated signed Vite authority before loading the source plan", async () => {
   const projectDir = await createToolcraftIntegrityFixture();
@@ -148,24 +148,16 @@ test("rejects manifest replacement between inspection and seal creation", async 
 });
 
 test("rejects the starter manifest domain inside a generated runtime", async () => {
-  const projectDir = await mkdtemp(path.join(tmpdir(), "toolcraft-starter-domain-"));
+  const projectDir = await createToolcraftStarterIntegrityFixture();
   try {
     await mkdir(path.join(projectDir, "src/toolcraft/runtime"), { recursive: true });
-    await mkdir(path.join(projectDir, "src/toolcraft"), { recursive: true });
-    await writeFile(path.join(projectDir, "package.json"), await readFile(new URL("../package.json", import.meta.url)));
-    await writeFile(path.join(projectDir, "src/toolcraft/.toolcraft-manifest.json"),
-      await readFile(new URL("../src/toolcraft/.toolcraft-manifest.json", import.meta.url)));
     await assert.rejects(requireToolcraftFeaturePreflightManifest(projectDir), /cannot use the starter preflight manifest domain/iu);
   } finally { await rm(projectDir, { force: true, recursive: true }); }
 });
 
 test("rejects restoring a generated runtime after starter-domain inspection", async () => {
-  const projectDir = await mkdtemp(path.join(tmpdir(), "toolcraft-starter-domain-snapshot-"));
+  const projectDir = await createToolcraftStarterIntegrityFixture();
   try {
-    await mkdir(path.join(projectDir, "src/toolcraft"), { recursive: true });
-    await writeFile(path.join(projectDir, "package.json"), await readFile(new URL("../package.json", import.meta.url)));
-    await writeFile(path.join(projectDir, "src/toolcraft/.toolcraft-manifest.json"),
-      await readFile(new URL("../src/toolcraft/.toolcraft-manifest.json", import.meta.url)));
     const manifestAuthority = await requireToolcraftFeaturePreflightManifest(projectDir);
     const snapshot = createToolcraftFeaturePreflightSnapshot({ configCandidates: [], directories: new Map(), manifestAuthority,
       resolutions: [], sources: new Map([["src/toolcraft/.toolcraft-manifest.json", manifestAuthority.source]]) });

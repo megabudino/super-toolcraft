@@ -512,6 +512,8 @@ export type ToolcraftVectorCoordinateMode = "cartesian" | "screen";
 
 export type ToolcraftControlLayoutGroupSchema = {
   columns?: ToolcraftControlLayoutGroupColumns;
+  /** Keep the declared column count when only one control remains visible. */
+  preserveColumns?: boolean;
   controls: readonly string[];
   layout: ToolcraftControlLayoutGroupLayout;
 };

@@ -15,7 +15,7 @@ Read this module before changing sections, labels, helper icons, inline rows, di
 - Every app-authored controls-panel body section has a short meaningful visible title.
 - A section title normally uses one to three words and names only the edited product entity or workflow stage. Four words is the exceptional maximum. Starter acceptance rejects titles with more than four semantic words or more than 32 Unicode code points.
 - Remove indices, modes, explanations, and secondary context from section titles. Put necessary non-obvious scope or output relationships in `description`, not in the title.
-- Runtime `Setup` is the first visible headerless controls block. Sticky footer export actions render without a visible heading.
+- Runtime `Settings` is a mandatory section with the standard title, Reset and collapse header. Local Save State as Default occupies a separate headerless block above it; without host authoring capability that block is absent. Sticky footer export actions render without a visible heading.
 
 ## Dependency Cohesion
 
@@ -70,12 +70,12 @@ Prove each declared mode through the existing applicability browser cases: activ
 - Controls-panel scroll position persists automatically in the per-app runtime `panels` slice and restores on page reload, together with collapsed sections. Do not implement app-owned scroll storage or restoration.
 - Scroll is a workspace preference, not undo/redo, settings import/export, or Reset controls state. The runtime preserves it across panel collapse/remount, restores without animation, and clamps to the nearest valid position if content is shorter. User scrolling takes priority over delayed restoration. `persistence.storage: "none"` disables reload persistence, including panel scroll.
 - Ordinary section headers expose the runtime section reset action before the collapse button.
-- Section reset dispatches `controls.resetTargets` and restores only that section's targets to schema `defaultValue`.
-- Runtime `Setup` is not collapsible and has no reset action. Sticky footer export sections are not collapsible.
+- Section reset dispatches `controls.resetTargets` and restores only that section's targets to schema `defaultValue`. This includes controls hidden by applicability, such as an inactive tab; switching tabs alone preserves their values.
+- Runtime `Settings` follows ordinary section collapse and scoped reset behavior. The separate local defaults action block and sticky footer export sections are not collapsible.
 
 ## Section Spacing
 
-- Runtime `Setup` uses 12px top spacing so its first control row has equal top, left, and right insets. Ordinary body sections keep 8px top spacing. Both use 24px bottom spacing.
+- The local defaults action block uses the public technical spacing: 12px on all sides. Settings uses ordinary section spacing and its standard header, like other body sections: the body keeps 8px top and 24px bottom spacing.
 - Sticky footer action sections keep their dedicated spacing.
 - Do not add custom padding in generated apps to compensate for a local section issue. Fix the shared layout rule.
 
@@ -84,8 +84,10 @@ Prove each declared mode through the existing applicability browser cases: activ
 - Full-width dividers belong only to panel sections.
 - Large built-in compound controls inside a section render content-width internal dividers only when their parent section contains more than one visible control item.
 - Keep 18px between each rendered internal divider and compound-control content.
+- Curves use 20px from the bottom of the graph to a following internal divider, for both RGB and single variants. RGB owns its bottom divider; a single curve keeps its ordinary-control classification and uses the gap before the next control's divider. Do not add a divider or app-owned padding just to achieve this spacing.
 - If the compound control is the first item in that section, render only its bottom internal divider and remove top internal padding.
 - If the compound control is the last item, render only its top internal divider and remove bottom internal padding.
+- Adjacent compound controls share one internal divider: the preceding control owns its bottom line, and the following control suppresses its duplicate top line. At that boundary, replace the ordinary list gap with 18px of content clearance on each side of the 1px line. Runtime/UI owns this adjacency rule; do not compensate with app-specific borders, spacers or negative margins.
 - If a section contains exactly one control, simple or compound, render only the parent section dividers.
 - Do not add full-width borders inside a compound control.
 - Do not put dividers only around an internal subsection such as Gradient Stops.
@@ -134,13 +136,14 @@ Prove each declared mode through the existing applicability browser cases: activ
 - Standalone color section titles must describe product role. Never create a section titled `Color` or `Colors`.
 - A section with multiple sibling `color` or `colorOpacity` controls must not use sequential per-item labels such as `Color 1`, `Color 2`, or `Color 3`, regardless of target spelling, section title, or `semanticGroup`.
 - Keep visible labels when each color edits a distinct user-facing entity or role.
+- An explicit string `label` (or `label: true` for the control ID) remains visible in color-only sections. Use `label: false` for an unlabeled variation bank; its control IDs still provide accessible field names. An omitted label keeps the contextual default: hidden in a color-only section, visible in a mixed section.
 - Apply label visibility to the whole semantic color group; do not mix labeled and unlabeled items inside one bank.
 - Matching control type and schema adjacency never prove that colors belong to one bank.
 - A section containing only color fields is one implicit color bank. In a mixed section with two or more plain `color` controls, declare `semanticGroup` on every plain color; use the same group only for colors that form one product-meaning row.
 - Runtime pairs only adjacent plain colors with the same semantic group. Conditional controls are filtered before rows are built, so an inactive color never pulls an unrelated visible color into its row.
 - Multiple related plain colors render at most two per row.
-- An odd trailing plain `color` keeps the same half-width footprint instead of stretching to full width.
-- If any color has opacity, keep it stacked instead of placing it in a two-column row.
+- A standalone plain `color` fills the available row, including a lone visible color after applicability filtering. An odd trailing plain color in a multi-color bank without opacity keeps one half-width column, including the same column gap as paired colors.
+- `colorOpacity` always occupies the full content width. Within one contiguous semantic color bank, pair adjacent plain colors first; if that bank includes opacity, any unpaired plain color also occupies the full width of its stacked row. One plain color plus opacity therefore forms two full-width rows; two plain colors plus opacity form a half-width pair followed by one full-width row. Keep authored order and semantic group boundaries.
 - `colorOpacity` owns color plus opacity for one entity and must not be split into color plus opacity slider/input.
 
 ## Select And Segmented Fit

@@ -16,7 +16,7 @@ type ResolvedControl = ResolvedControlsSection["controls"][string];
 export function schemaHasProductSurface(): boolean {
   return (
     (appSchema.panels.controls?.sections ?? []).some(
-      (section) => section.title !== "Setup" && Object.keys(section.controls).length > 0,
+      (section) => section.id !== "runtime.setup" && section.id !== "runtime.defaults" && Object.keys(section.controls).length > 0,
     ) ||
     appSchema.panels.layers === true ||
     appSchema.panels.timeline?.enabled === true ||

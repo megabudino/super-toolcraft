@@ -3,6 +3,7 @@
 export * from "./animated-loader";
 export { Anchor } from "./anchor";
 export { Button, buttonVariants } from "./button";
+export { CanvasDotPattern } from "./canvas-dot-pattern";
 export {
   ButtonGroup,
   ButtonGroupSeparator,

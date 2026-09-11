@@ -9,6 +9,7 @@ import { toolcraftRuntimeSetupSectionTitle } from "./runtime-section-titles";
 import {
   toolcraftCanvasInfinityTarget,
   toolcraftCanvasRotationLockedTarget,
+  toolcraftCanvasWorkspaceBackgroundTarget,
   toolcraftTimelinePanelExtendedTarget,
 } from "./runtime-targets";
 import {
@@ -39,7 +40,6 @@ const canvasSizeControlTargets = {
 } as const;
 const canvasAspectRatioTarget = "canvas.aspectRatio";
 const canvasRenderScaleTarget = "canvas.renderScale";
-const settingsTransferTarget = "runtime.settingsTransfer";
 const finiteCanvasCondition = Object.freeze({
   equals: false,
   target: toolcraftCanvasInfinityTarget,
@@ -251,11 +251,13 @@ function createTimelineExtendedControl(
 
 function createRuntimeSetupBackgroundControls({
   background,
-  infinityCanvasControl,
+  canvas,
 }: {
   background: ToolcraftRuntimeSetupBackgroundControls | undefined;
-  infinityCanvasControl: ToolcraftControlSchema | undefined;
+  canvas: ResolvedToolcraftAppSchema["canvas"];
 }): RuntimeSetupControlGroup {
+  const infinityCanvasControl = createInfinityCanvasControl(canvas, background);
+  const workspaceBackground = canvas.enabled ? createWorkspaceBackgroundControl() : undefined;
   const includeBackgroundControl = background
     ? {
         ...background.include,
@@ -291,21 +293,32 @@ function createRuntimeSetupBackgroundControls({
             },
           }
         : {}),
+      ...(workspaceBackground ? { workspaceBackground } : {}),
     },
-    layoutGroups:
-      includeBackgroundControl && infinityCanvasControl
+    layoutGroups: [
+      ...(includeBackgroundControl && infinityCanvasControl
         ? [
             {
-              columns: 2,
+              columns: 2 as const,
               controls: ["includeBackground", "infinityCanvas"],
-              layout: "inline",
+              layout: "inline" as const,
             },
           ]
-        : [],
+        : []),
+      ...(backgroundColorControl && workspaceBackground
+        ? [
+            {
+              columns: 2 as const,
+              controls: ["background", "workspaceBackground"],
+              layout: "inline" as const,
+            },
+          ]
+        : []),
+    ],
   };
 }
 
-function createFiniteCanvasControls(
+function createCanvasControls(
   canvas: ResolvedToolcraftAppSchema["canvas"],
 ): RuntimeSetupControlGroup {
   if (!canvas.enabled || canvas.sizing.mode !== "editable-output") {
@@ -358,11 +371,25 @@ function createFiniteCanvasControls(
   };
 }
 
+function createWorkspaceBackgroundControl(): ToolcraftControlSchema {
+  return {
+    applicability: alwaysApplicable,
+    defaultValue: "dots",
+    keyframeable: false,
+    label: "Workspace",
+    options: [
+      { label: "Blanc", value: "blanc" },
+      { label: "Dots", value: "dots" },
+    ],
+    target: toolcraftCanvasWorkspaceBackgroundTarget,
+    type: "select",
+  };
+}
+
 export function createToolcraftRuntimeSetupSection({
   background,
   canvas,
   hasOrientationGizmo,
-  settingsTransfer,
   timeline,
 }: {
   background: ToolcraftRuntimeSetupBackgroundControls | undefined;
@@ -371,25 +398,18 @@ export function createToolcraftRuntimeSetupSection({
   settingsTransfer: ResolvedToolcraftSettingsTransferSchema;
   timeline: ResolvedToolcraftTimelinePanelSchema | undefined;
 }): ToolcraftControlSectionSchema {
-  const infinityCanvasControl = createInfinityCanvasControl(canvas, background);
   const backgroundControls = createRuntimeSetupBackgroundControls({
     background,
-    infinityCanvasControl,
+    canvas,
   });
-  const finiteCanvas = createFiniteCanvasControls(canvas);
+  const canvasControls = createCanvasControls(canvas);
   const renderScaleControl = createRenderScaleControl(canvas);
   const timelineExtendedControl = createTimelineExtendedControl(timeline);
 
   const section: ToolcraftControlSectionSchema & { id: string } = {
     controls: {
-      settingsTransfer: {
-        applicability: alwaysApplicable,
-        label: false,
-        target: settingsTransferTarget,
-        type: "settingsTransfer",
-      },
       ...backgroundControls.controls,
-      ...finiteCanvas.controls,
+      ...canvasControls.controls,
       ...(renderScaleControl ? { canvasRenderScale: renderScaleControl } : {}),
       ...(timelineExtendedControl
         ? { timelineExtended: timelineExtendedControl }
@@ -412,7 +432,7 @@ export function createToolcraftRuntimeSetupSection({
     layout: "standalone",
     layoutGroups: [
       ...backgroundControls.layoutGroups,
-      ...finiteCanvas.layoutGroups,
+      ...canvasControls.layoutGroups,
       ...(timelineExtendedControl && hasOrientationGizmo && canvas.enabled
         ? [
             {

@@ -154,7 +154,7 @@ describe("Toolcraft Control Section Inventory identity", () => {
       targets: ["export.includeBackground", "appearance.background"],
       title: "Background",
     } as const;
-    expect(schema.panels.controls?.sections[0]?.id).toBe("runtime.setup");
+    expect(schema.panels.controls?.sections[1]?.id).toBe("runtime.setup");
     expect(
       getToolcraftControlSectionInventoryErrors(schema, [backgroundInventory]),
     ).toEqual([]);

@@ -10,7 +10,7 @@ import {
   "./toolcraft-host-construction-evidence.mjs";
 import { isToolcraftTypeOnlyReference } from
   "./toolcraft-host-origin-values.mjs";
-import { createToolcraftUiInputBindingTracker } from "./toolcraft-product-control-bindings.mjs";
+import { getToolcraftPublicUiOwner } from "./toolcraft-public-ui-ownership.mjs";
 import { isToolcraftNativeSemanticHostTag } from
   "./toolcraft-native-semantic-policy.mjs";
 import { createToolcraftProductComponentExtensionEvidence } from
@@ -59,10 +59,6 @@ export function createToolcraftProductControlInspector({
   resolveStaticString,
   sourceFile,
 }) {
-  const { isTrackedInputTag } = createToolcraftUiInputBindingTracker({
-    checker,
-    resolveStaticString,
-  });
   const hostConstruction = createToolcraftHostConstructionEvidence({
     checker,
     failClosedUnresolvedDomAuthority: true,
@@ -250,7 +246,9 @@ export function createToolcraftProductControlInspector({
       ];
     }
 
-    if (!tagNames.includes("input") && !isTrackedInputTag(node.tagName)) return [];
+    const forwardsInputType = hostConstruction.originOf(node.tagName)
+      .some((origin) => getToolcraftPublicUiOwner(origin)?.forwardsInputType);
+    if (!tagNames.includes("input") && !forwardsInputType) return [];
 
     const inputType = getInputType(node.attributes);
     if (inputType === null) {

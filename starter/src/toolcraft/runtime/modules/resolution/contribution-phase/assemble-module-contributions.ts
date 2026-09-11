@@ -5,6 +5,7 @@ import type {
 } from "../../../schema/types";
 import { resolveToolcraftArtifactActionContributions } from "../../contributions/artifact-action-contributions";
 import { resolveToolcraftArtifactSettingsContributions } from "../../contributions/artifact-settings-contributions";
+import { composeToolcraftStillExportSettings } from "../../contributions/still-export-settings";
 import {
   resolveToolcraftCanvasBehaviorContributions,
   type ResolvedToolcraftCanvasBehavior,
@@ -104,7 +105,10 @@ export function assembleToolcraftModuleContributions(
       preflight.canvasBehaviorContributions,
     );
   const controlSections = phaseTable.settingsContributions.controlSections(
-    preflight.settingsContributions,
+    composeToolcraftStillExportSettings(
+      preflight.settingsContributions,
+      preflight.actionContributions,
+    ),
   );
   const mediaPolicy = phaseTable.mediaPolicyContributions.mediaPolicy(
     preflight.mediaPolicyContributions,

@@ -72,10 +72,7 @@ export type ToolcraftArtifactSettingsSelectControl<
   PerformanceRole extends ToolcraftArtifactSettingsPerformanceRole =
     ToolcraftArtifactSettingsPerformanceRole,
 > = Readonly<{
-  applicability: Extract<
-    ToolcraftControlApplicabilitySchema,
-    Readonly<{ mode: "always" }>
-  >;
+  applicability: ToolcraftControlApplicabilitySchema;
   defaultValue: string;
   label: Extract<NonNullable<ToolcraftControlSchema["label"]>, string>;
   options: readonly ToolcraftArtifactSettingsSelectOption[];
@@ -86,6 +83,7 @@ export type ToolcraftArtifactSettingsSelectControl<
 
 export type ToolcraftArtifactSettingsLayoutGroup = Readonly<{
   columns: NonNullable<ToolcraftControlLayoutGroupSchema["columns"]>;
+  preserveColumns?: ToolcraftControlLayoutGroupSchema["preserveColumns"];
   controls: readonly string[];
   layout: ToolcraftControlLayoutGroupSchema["layout"];
 }>;

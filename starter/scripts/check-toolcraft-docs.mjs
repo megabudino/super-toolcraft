@@ -36,6 +36,7 @@ const requiredCoreDocs = [
   "core/control-selection.md",
   "core/layout.md",
   "core/media-upload.md",
+  "core/development-files.md",
   "core/timeline-animation.md",
   "core/performance.md",
   "core/reference-study.md",

@@ -6,7 +6,6 @@ import { cva, type VariantProps } from "class-variance-authority";
 
 import { outlineControlSurfaceClassName } from "../../lib/control-outline";
 import { cn } from "../../lib/utils";
-import { observeBrowserResize } from "./browser-transport";
 import {
   PortalLayerContainerProvider,
   usePortalLayerContainer,

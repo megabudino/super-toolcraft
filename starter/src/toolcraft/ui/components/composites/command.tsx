@@ -2,7 +2,7 @@
 
 import { sanitizeComposedHostProps, sanitizeInteractionHostProps, type SafeComposedHostElementProps } from "../primitives/sanitize-composed-host-props";
 import * as React from "react";
-import { Command as CommandPrimitive } from "cmdk";
+import { Autocomplete as CommandPrimitive } from "@base-ui/react/autocomplete";
 
 import { cn } from "../../lib/utils";
 import {
@@ -11,11 +11,14 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "./dialog";
 import { MagnifyingGlassIcon, CheckIcon } from "@phosphor-icons/react";
 import {
   ScrollFade,
 } from "../primitives";
+
+const CommandReadOnlyContext = React.createContext(false);
 
 const commandWindowFrameClassName =
   "floating-popup-surface overflow-hidden rounded-3xl border popup-text-xs-plus text-[color:var(--popover-foreground)]";
@@ -37,16 +40,42 @@ const CommandWindowFrame = React.forwardRef<
 );
 CommandWindowFrame.displayName = "CommandWindowFrame";
 
-function Command({ className, ...props }: React.ComponentProps<typeof CommandPrimitive>) {
+/** Inline action search. Items and search state follow Base UI Autocomplete. */
+function Command<ItemValue>({
+  className,
+  style,
+  ref,
+  children,
+  ...props
+}: Omit<CommandPrimitive.Root.Props<ItemValue>, "open" | "defaultOpen" | "inline" | "items"> & {
+  items: NonNullable<CommandPrimitive.Root.Props<ItemValue>["items"]>;
+  className?: string;
+  style?: React.CSSProperties;
+  ref?: React.Ref<HTMLDivElement>;
+}) {
   return (
-    <CommandPrimitive
-      data-slot="command"
-      className={cn(
-        "floating-popup-fill flex w-full min-h-0 flex-col overflow-hidden rounded-3xl text-[color:var(--popover-foreground)]",
-        className,
-      )}
-      {...props}
-    />
+    <CommandReadOnlyContext.Provider value={props.readOnly ?? false}>
+      <CommandPrimitive.Root
+        autoHighlight="always"
+        keepHighlight
+        loopFocus={false}
+        {...props}
+        open
+        inline
+      >
+        <div
+          data-slot="command"
+          className={cn(
+            "floating-popup-fill flex w-full min-h-0 flex-col overflow-hidden rounded-3xl text-[color:var(--popover-foreground)]",
+            className,
+          )}
+          ref={ref}
+          style={style}
+        >
+          {children}
+        </div>
+      </CommandPrimitive.Root>
+    </CommandReadOnlyContext.Provider>
   );
 }
 
@@ -56,17 +85,26 @@ function CommandDialog({
   children,
   className,
   showCloseButton = false,
+  trigger,
+  initialFocus,
+  finalFocus,
   ...props
 }: Omit<React.ComponentProps<typeof Dialog>, "children"> & {
   title?: string;
   description?: string;
   className?: string;
   showCloseButton?: boolean;
+  trigger?: React.ReactElement;
+  initialFocus?: React.ComponentProps<typeof DialogContent>["initialFocus"];
+  finalFocus?: React.ComponentProps<typeof DialogContent>["finalFocus"];
   children: React.ReactNode;
 }) {
   return (
     <Dialog {...props}>
+      {trigger ? <DialogTrigger render={trigger} /> : null}
       <DialogContent
+        initialFocus={initialFocus}
+        finalFocus={finalFocus}
         className={cn(
           commandWindowFrameClassName,
           "top-1/3 translate-y-0 gap-0 rounded-3xl! p-0 ring-0",
@@ -86,7 +124,8 @@ function CommandDialog({
 
 const CommandInput = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive.Input>,
-  React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input> & {
+  Omit<CommandPrimitive.Input.Props, "className"> & {
+    className?: string;
     leadingVisual?: React.ReactNode;
   }
 >(({ className, leadingVisual, ...props }, ref) => {
@@ -102,6 +141,7 @@ const CommandInput = React.forwardRef<
         {leadingVisual ?? <MagnifyingGlassIcon className="size-(--command-icon-size)" />}
       </span>
       <CommandPrimitive.Input
+        aria-label="Search commands"
         className={cn(
           "w-full min-w-0 border-0 bg-transparent p-0 text-xs-plus leading-relaxed font-medium shadow-none outline-hidden placeholder:text-[color:var(--muted-foreground)] disabled:cursor-not-allowed disabled:opacity-50",
           className,
@@ -113,7 +153,7 @@ const CommandInput = React.forwardRef<
     </label>
   );
 });
-CommandInput.displayName = CommandPrimitive.Input.displayName;
+CommandInput.displayName = "CommandInput";
 
 const CommandTextInput = React.forwardRef<
   HTMLInputElement,
@@ -163,7 +203,8 @@ function CommandList({
   scrollFadeContainerClassName,
   scrollFadeWatch = [],
   ...props
-}: React.ComponentProps<typeof CommandPrimitive.List> & {
+}: Omit<CommandPrimitive.List.Props, "className"> & React.RefAttributes<HTMLDivElement> & {
+  className?: string;
   scrollFade?: boolean;
   scrollFadeClassName?: string;
   scrollFadeContainerClassName?: string;
@@ -173,7 +214,7 @@ function CommandList({
     <CommandPrimitive.List
       data-slot="command-list"
       className={cn(
-        "no-scrollbar max-h-72 min-h-0 scroll-pt-1 overflow-x-hidden overflow-y-auto outline-none **:[[cmdk-list-sizer]]:min-w-full",
+        "no-scrollbar max-h-72 min-h-0 scroll-pt-1 overflow-x-hidden overflow-y-auto outline-none",
         scrollFade ? "max-h-none! overflow-visible!" : null,
         className,
       )}
@@ -203,12 +244,12 @@ function CommandList({
 function CommandEmpty({
   className,
   ...props
-}: React.ComponentProps<typeof CommandPrimitive.Empty>) {
+}: Omit<CommandPrimitive.Empty.Props, "className"> & React.RefAttributes<HTMLDivElement> & { className?: string }) {
   return (
     <CommandPrimitive.Empty
       data-slot="command-empty"
       className={cn(
-        "py-6 text-center popup-text-xs-plus leading-normal tracking-tight text-[color:color-mix(in_oklab,var(--foreground)_60%,transparent)]",
+        "py-6 empty:py-0 text-center popup-text-xs-plus leading-normal tracking-tight text-[color:color-mix(in_oklab,var(--foreground)_60%,transparent)]",
         className,
       )}
       {...props}
@@ -218,24 +259,38 @@ function CommandEmpty({
 
 function CommandGroup({
   className,
+  heading,
+  children,
   ...props
-}: React.ComponentProps<typeof CommandPrimitive.Group>) {
+}: Omit<CommandPrimitive.Group.Props, "className"> & React.RefAttributes<HTMLDivElement> & {
+  className?: string;
+  heading?: React.ReactNode;
+}) {
   return (
     <CommandPrimitive.Group
       data-slot="command-group"
-      className={cn(
-        "overflow-hidden p-1.5 text-[color:var(--foreground)] **:[[cmdk-group-heading]]:px-2.5 **:[[cmdk-group-heading]]:py-1.5 **:[[cmdk-group-heading]]:font-medium **:[[cmdk-group-heading]]:text-[color:color-mix(in_oklab,var(--foreground)_60%,transparent)]",
-        className,
-      )}
+      className={cn("overflow-hidden p-1.5 text-[color:var(--foreground)]", className)}
       {...props}
-    />
+    >
+      {heading != null ? (
+        <CommandPrimitive.GroupLabel
+          data-slot="command-group-heading"
+          className="px-2.5 py-1.5 font-medium text-[color:color-mix(in_oklab,var(--foreground)_60%,transparent)]"
+        >
+          {heading}
+        </CommandPrimitive.GroupLabel>
+      ) : null}
+      {children}
+    </CommandPrimitive.Group>
   );
 }
+
+const CommandCollection = CommandPrimitive.Collection;
 
 function CommandSeparator({
   className,
   ...props
-}: React.ComponentProps<typeof CommandPrimitive.Separator>) {
+}: Omit<CommandPrimitive.Separator.Props, "className"> & React.RefAttributes<HTMLDivElement> & { className?: string }) {
   return (
     <CommandPrimitive.Separator
       data-slot="command-separator"
@@ -245,24 +300,39 @@ function CommandSeparator({
   );
 }
 
-function CommandItem({
+function CommandItem<ItemValue>({
   active = false,
   className,
   children,
   tintIconsOnSelect = true,
+  value,
+  onSelect,
+  onClick,
   ...props
-}: React.ComponentProps<typeof CommandPrimitive.Item> & {
+}: Omit<CommandPrimitive.Item.Props, "className" | "value" | "onSelect"> & React.RefAttributes<HTMLDivElement> & {
+  className?: string;
+  value: ItemValue;
+  onSelect?: (value: ItemValue) => void;
   active?: boolean;
-  tintIconsOnSelect?: boolean;
-}) {
+    tintIconsOnSelect?: boolean;
+  }) {
+  const readOnly = React.useContext(CommandReadOnlyContext);
+
   return (
     <CommandPrimitive.Item
+      value={value}
+      onClick={(event) => {
+        // Base UI's internal read-only guard runs after external click handlers.
+        if (readOnly) return;
+        onClick?.(event);
+        if (!event.defaultPrevented) onSelect?.(value);
+      }}
       data-active={active ? "true" : "false"}
       data-slot="command-item"
       className={cn(
-        "group/command-item relative flex h-(--command-item-block-size) cursor-pointer items-center gap-2 rounded-md px-2.5 py-1.5 popup-text-xs-plus leading-normal tracking-tight font-medium outline-hidden select-none in-data-[slot=dialog-content]:rounded-md data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 data-selected:bg-[color:color-mix(in_oklab,var(--foreground)_4%,transparent)] data-selected:text-[color:var(--foreground)] data-[active=true]:bg-[color:color-mix(in_oklab,var(--foreground)_5%,transparent)] data-[active=true]:text-[color:var(--foreground)] [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-(--command-icon-size)",
+        "group/command-item relative flex h-(--command-item-block-size) cursor-pointer items-center gap-2 rounded-md px-2.5 py-1.5 popup-text-xs-plus leading-normal tracking-tight font-medium outline-hidden select-none in-data-[slot=dialog-content]:rounded-md data-disabled:pointer-events-none data-disabled:opacity-50 data-highlighted:bg-[color:color-mix(in_oklab,var(--foreground)_4%,transparent)] data-highlighted:text-[color:var(--foreground)] data-[active=true]:bg-[color:color-mix(in_oklab,var(--foreground)_5%,transparent)] data-[active=true]:text-[color:var(--foreground)] [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-(--command-icon-size)",
         tintIconsOnSelect
-          ? "data-selected:*:[svg]:text-[color:var(--foreground)] data-[active=true]:*:[svg]:text-[color:var(--foreground)]"
+          ? "data-highlighted:*:[svg]:text-[color:var(--foreground)] data-[active=true]:*:[svg]:text-[color:var(--foreground)]"
           : null,
         className,
       )}
@@ -279,7 +349,7 @@ function CommandShortcut({ className, ...props }: SafeComposedHostElementProps<"
     <span
       data-slot="command-shortcut"
       className={cn(
-        "ml-auto text-[0.625rem] tracking-widest text-[color:color-mix(in_oklab,var(--foreground)_60%,transparent)] group-data-selected/command-item:text-[color:color-mix(in_oklab,var(--foreground)_95%,transparent)] group-data-[active=true]/command-item:text-[color:var(--foreground)]",
+        "ml-auto text-[0.625rem] tracking-widest text-[color:color-mix(in_oklab,var(--foreground)_60%,transparent)] group-data-highlighted/command-item:text-[color:color-mix(in_oklab,var(--foreground)_95%,transparent)] group-data-[active=true]/command-item:text-[color:var(--foreground)]",
         className,
       )}
       {...sanitizeComposedHostProps(props)}
@@ -290,6 +360,7 @@ function CommandShortcut({ className, ...props }: SafeComposedHostElementProps<"
 export {
   Command,
   CommandDialog,
+  CommandCollection,
   CommandInput,
   CommandTextInput,
   CommandList,

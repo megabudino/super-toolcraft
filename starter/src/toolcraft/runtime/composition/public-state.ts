@@ -1,3 +1,4 @@
+import { reduceToolcraftSliderEdit } from "../state/slider-edit-reducer";
 import type { ToolcraftCommandHandlers } from "../modules/contract/command-handlers";
 import { createToolcraftExternalStore as createStore } from "../state/toolcraft-external-store";
 import { reduceToolcraftCanvasCommand } from "../state/canvas-reducer";
@@ -56,6 +57,7 @@ const mediaHandlers = Object.freeze({
   "media.transform": reduceToolcraftMediaCommand,
 } satisfies ToolcraftCommandHandlers<ToolcraftState, Parameters<typeof reduceToolcraftMediaCommand>[1]>);
 const documentHandlers = {
+  "controls.editSlider": reduceToolcraftSliderEdit,
   "settings.apply": (state: ToolcraftState, command: Extract<ToolcraftCommand, { type: "settings.apply"; }>) => applyToolcraftSettingsState(state, command.settings),
   "history.undo": undoToolcraftHistory,
   "history.redo": redoToolcraftHistory,

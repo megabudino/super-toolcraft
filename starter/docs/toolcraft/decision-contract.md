@@ -19,7 +19,7 @@ Use this before writing a schema, spec, or implementation plan. It separates har
 | Runtime shell      | Invariant                 | Use `defineToolcraft({ base, modules })` and `composeToolcraftApp`; the signed host renders `ToolcraftApp`                                    |
 | Canvas             | Mixed                     | No app UI in `canvasContent`; handles are product-dependent                                                                                   |
 | Panels             | Mixed                     | Panel mechanics are hard; panel presence is product-dependent                                                                                 |
-| Layers             | Heuristic, then invariant | Enable only for real layer behavior; fully test when enabled                                                                                  |
+| Layers             | Heuristic, then invariant | Enable only for user-requested layer workflows; fully test when enabled                                                                                  |
 | Timeline           | Heuristic, then invariant | Choose from Animation Intent Inventory and transport behavior                                                                                 |
 | Controls           | Mixed                     | Bind every visible control, choose one evidence-backed surface per operation, and make artifact UI match required export intent               |
 | Renderer           | Default plus invariant    | Choose technique from fidelity/workload and declare spatial view interaction before renderer code                                             |

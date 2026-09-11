@@ -1,3 +1,4 @@
+import { getToolcraftControlRangeResetPatch } from "./control-ranges";
 import { createToolcraftState } from "./create-template-state";
 import {
   isToolcraftTimelinePanelExtendedTarget,
@@ -200,7 +201,7 @@ export function reduceToolcraftControlsCommand(
     case "controls.reset": {
       if (state.schema.sourceDefaults) {
         const fresh = createToolcraftState(state.schema);
-        const fields = ["canvas", "panels", "timeline", "layers", "mediaAssets", "selectedLayerId"] as const;
+        const fields = ["controlRanges", "canvas", "panels", "timeline", "layers", "mediaAssets", "selectedLayerId"] as const;
         return commitToolcraftStatePatch(state, tagToolcraftWorkspaceResetHistoryPatch(tagToolcraftControlsResetHistoryPatch(
           { after: {}, before: {}, label: "Reset to saved defaults" },
           { values: { before: state.values, after: fresh.values }, state: {
@@ -214,6 +215,7 @@ export function reduceToolcraftControlsCommand(
         state,
         values: { ...state.values, ...state.defaults },
       });
+      const resetRangePatch = getToolcraftControlRangeResetPatch(state);
       const resetCanvasPatch = getToolcraftCanvasResetPatch(state);
       const resetMediaPatch = getToolcraftResetMediaPatch({
         ...state,
@@ -237,6 +239,7 @@ export function reduceToolcraftControlsCommand(
           },
           state: {
             before: {
+              ...resetRangePatch?.before,
               ...resetCanvasPatch?.before,
               ...resetMediaPatch?.before,
               ...(replacement.timeline === state.timeline
@@ -244,6 +247,7 @@ export function reduceToolcraftControlsCommand(
                 : { timeline: state.timeline }),
             },
             after: {
+              ...resetRangePatch?.after,
               ...resetCanvasPatch?.after,
               ...(replacement.timeline === state.timeline
                 ? {}
@@ -255,6 +259,7 @@ export function reduceToolcraftControlsCommand(
       );
 
       if (
+        resetRangePatch ||
         resetCanvasPatch ||
         resetMediaPatch ||
         replacement.timeline !== state.timeline
@@ -277,6 +282,7 @@ export function reduceToolcraftControlsCommand(
         values: { ...state.values, ...defaults },
       });
       const valuePatch = getChangedValuePatch(state.values, replacement.values);
+      const resetRangePatch = getToolcraftControlRangeResetPatch(state, targetSet);
       const resetCanvasPatch = getToolcraftCanvasResetPatch(state, targetSet);
       const resetMediaPatch = getToolcraftResetMediaPatch(
         { ...state, timeline: replacement.timeline },
@@ -285,6 +291,7 @@ export function reduceToolcraftControlsCommand(
 
       if (
         Object.keys(valuePatch.after).length === 0 &&
+        !resetRangePatch &&
         !resetCanvasPatch &&
         !resetMediaPatch &&
         replacement.timeline === state.timeline
@@ -297,6 +304,7 @@ export function reduceToolcraftControlsCommand(
           values: valuePatch,
           state: {
             before: {
+              ...resetRangePatch?.before,
               ...resetCanvasPatch?.before,
               ...resetMediaPatch?.before,
               ...(replacement.timeline === state.timeline
@@ -304,6 +312,7 @@ export function reduceToolcraftControlsCommand(
                 : { timeline: state.timeline }),
             },
             after: {
+              ...resetRangePatch?.after,
               ...resetCanvasPatch?.after,
               ...(replacement.timeline === state.timeline
                 ? {}

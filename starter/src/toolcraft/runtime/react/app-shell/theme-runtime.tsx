@@ -138,15 +138,26 @@ export function ToolcraftThemeProvider({
     [initialized, resolvedTheme, setThemePreference, themePreference, toggleResolvedTheme],
   );
 
+  return <ToolcraftThemeScope value={value}>{children}</ToolcraftThemeScope>;
+}
+
+/** Share theme state while retaining a local portal container and input boundary. */
+export function ToolcraftThemeScope({
+  children,
+  value,
+}: {
+  children: React.ReactNode;
+  value: ToolcraftThemeContextValue;
+}): React.JSX.Element {
   const portalRootRef = React.useRef<HTMLDivElement | null>(null);
 
   return (
     <ToolcraftThemeContext.Provider value={value}>
       <div
-        data-toolcraft-theme={resolvedTheme}
+        data-toolcraft-theme={value.resolvedTheme}
         data-toolcraft-theme-scope=""
         style={{
-          colorScheme: resolvedTheme,
+          colorScheme: value.resolvedTheme,
           display: "contents",
         }}
       >

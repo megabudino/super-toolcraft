@@ -69,6 +69,7 @@ Use the smallest route set that covers the changed surface. When a task matches 
 [//]: # (toolcraft-workflow-routes:start)
 | Task route | Plan phase | Implementation phase | Verification phase |
 | --- | --- | --- | --- |
+| Working attachments, diagnostics, file placement and cleanup | `core/development-files.md` | `core/development-files.md` | `core/development-files.md` |
 | App assembly, route structure, generated app porting | `core/runtime-boundary.md`<br>`assembly-workflow.md` | `decision-contract.md` | `acceptance-testing.md` |
 | Reference app study, audit, or port | `core/reference-study.md`<br>`core/runtime-boundary.md`<br>`assembly-workflow.md` | `schema-reference.md`<br>`decision-contract.md` | `acceptance-testing.md` |
 | Schema, controls, defaults, persistence, actions | `core/control-selection.md`<br>`core/layout.md` | `schema-reference.md`<br>`component-rules.md` | `acceptance-testing.md` |
@@ -104,6 +105,10 @@ For product app work, update `docs/toolcraft/agent-worklog.md` before reporting 
 If the folder is still the neutral starter, do not invent product decisions. Once it becomes a product, switch the worklog to product mode and keep it concrete.
 
 Protected receipts own first-delivery and performance proof. The worklog records which focused tests and browser checks were selected for later edits; those edits do not create another functional receipt.
+
+### Development files
+
+Follow [Development Files](core/development-files.md) for file ownership, durable assets, diagnostics and cleanup. Working browser artifacts belong in `.toolcraft/browser-artifacts/`, agent scratch inputs in `.toolcraft/scratch/`. After adding working files run `pnpm files:check`; `pnpm files:clean` previews old disposable files and `pnpm files:clean -- --apply` removes only eligible files in those two roots. Preserve text journals, reference studies, verification receipts and framework-owned `.toolcraft/tmp/` transactions.
 
 ### Text journal
 
@@ -161,6 +166,8 @@ Use the smallest focused unit and browser checks while implementation is changin
 2. **Later ordinary edits:** after the receipt exists, run the exact unit/component test for the changed implementation while developing. Run `pnpm test:feature -- <acceptance-id>` once after the behavior is stable. On failure, diagnose the failed behavior and rerun only the failed acceptance ID. Multiple changed behaviors use multiple explicit IDs. Use `pnpm test:feature -- --all` only when a cross-cutting functional edit cannot be honestly bounded to acceptance IDs; `--all` still means all product acceptance, not all Playwright tests. Do not automatically run typecheck, AI/code-health, build, raw full browser, delivery, export/reload/theme/DPR matrices, framework tests, benchmarks, or measured performance. Each conditional extra requires a direct reason tied to the changed behavior. Commit, push, deploy, preview, steering, and fixes do not authorize aggregate proof. A repeated bare `pnpm verify:delivery` is a protected no-op that exits before inventory, build, tests, export, and performance work and preserves the initial receipt byte-for-byte.
 3. **Localized or clarified targeted performance work:** only a localized complaint or a post-clarification targeted choice records domain authority in the worklog—an exact request quote plus canonical affected path IDs—and runs one bare `pnpm verify:delivery`. It executes one targeted iteration against the reachable development fixture, returns the verified app, and waits for user evaluation. Classifier output alone never localizes a path; unresolved localization creates neither performance-iteration intent nor canonical path authority, whether classification returned high-confidence `performance-iteration` or `needs-agent-judgment`.
 4. **Full audit:** only an explicit operator request or accepted offer authorizes `pnpm verify:perf`. It performs one fresh build and the complete maximum-fixture performance matrix without replacing the initial delivery receipt.
+
+Before the focused loader evaluates current product code, it runs the canonical product source boundary over the current product modules and their CSS/import relationships. This catches new control restyles, native-model substitutions and cross-file wrapper changes after the initial receipt. Framework modules supply import context; their implementation is not subjected to product-only authoring rules. This source check does not run code-health budgets, typecheck, a build, the global test catalog, delivery or performance verification. A boundary violation stops before Vite/product evaluation and reports its source location. All current product modules participate because an unchanged wrapper or CSS module can affect the edited component; no editable cache or new delivery receipt bypasses the check.
 
 Focused feature verification uses one Vite source load and one Playwright process restricted to the selected file set to derive and run the declared browser descriptors. It does not use Playwright `--list` or global Playwright collection, and it never loads unrelated spec files. Selector roles come from the Control Section Inventory's required `finiteSelectors`: a selected `parameter` remains bounded to its own acceptance row, while a selected `branch` expands by fixed point only to acceptance rows for its exact `affectedTargets` and explicit `applicability` dependents. No section-wide finite-selector fanout exists. Complete catalog collection remains allowed for first delivery because that lifecycle must prove the full product.
 

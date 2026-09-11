@@ -13,7 +13,7 @@ describe("appSchema", () => {
     expect(appSchema.canvas.enabled).toBe(true);
     expect(appSchema.canvas.sizing).toEqual({ mode: "editable-output" });
     expect(appSchema.canvas.upload).toBe(true);
-    expect(appSchema.panels.controls?.sections[0]?.title).toBe("Setup");
+    expect(appSchema.panels.controls?.sections[1]?.title).toBe("Settings");
     expect(
       appSchema.panels.controls?.sections[0]?.controls.settingsTransfer,
     ).toMatchObject({
@@ -21,19 +21,19 @@ describe("appSchema", () => {
       type: "settingsTransfer",
     });
     expect(
-      appSchema.panels.controls?.sections[0]?.controls.canvasAspectRatio,
+      appSchema.panels.controls?.sections[1]?.controls.canvasAspectRatio,
     ).toMatchObject({
       target: "canvas.aspectRatio",
       type: "aspectRatio",
     });
     expect(
-      appSchema.panels.controls?.sections[0]?.controls.canvasWidth,
+      appSchema.panels.controls?.sections[1]?.controls.canvasWidth,
     ).toMatchObject({
       target: "canvas.size.width",
       type: "text",
     });
     expect(
-      appSchema.panels.controls?.sections[0]?.controls.canvasHeight,
+      appSchema.panels.controls?.sections[1]?.controls.canvasHeight,
     ).toMatchObject({
       target: "canvas.size.height",
       type: "text",
@@ -104,10 +104,10 @@ describe("appSchema", () => {
   it("starts with runtime setup but without product-specific panels or controls", () => {
     const productSections =
       appSchema.panels.controls?.sections.filter(
-        (section) => section.title !== "Setup",
+        (section) => section.id !== "runtime.setup" && section.id !== "runtime.defaults",
       ) ?? [];
 
-    expect(appSchema.panels.controls?.sections[0]?.title).toBe("Setup");
+    expect(appSchema.panels.controls?.sections[1]?.title).toBe("Settings");
     expect(productSections).toEqual([]);
     expect(appSchema.panels.layers).toBeUndefined();
     expect(appSchema.panels.timeline).toBeUndefined();

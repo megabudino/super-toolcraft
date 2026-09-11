@@ -48,6 +48,7 @@ export function ControlsPanelCollectionItemField({
   id,
   name,
   onChange,
+  plainColorFullWidth = true,
   target,
   value,
   withKeyframeLabelAction = renderWithoutKeyframeAction,
@@ -57,6 +58,7 @@ export function ControlsPanelCollectionItemField({
   id: string;
   name: string;
   onChange: ItemFieldChange;
+  plainColorFullWidth?: boolean;
   target: string;
   value: unknown;
   withKeyframeLabelAction?: (args: { children: React.ReactNode }) => React.ReactNode;
@@ -86,6 +88,7 @@ export function ControlsPanelCollectionItemField({
       withKeyframeLabelAction,
     }) ??
     renderCompoundControl({
+      plainColorFullWidth,
       commit: commitCanonicalValue,
       commitWithLabel: () => commitCanonicalValue,
       control: fieldSchema,

@@ -14,6 +14,7 @@ import {
   getVisibleCanvasImageAssets,
 } from "./canvas-default-media-layer";
 import { CanvasViewportWorld } from "./canvas-viewport-world";
+import { CanvasWorkspaceBackground } from "./canvas-workspace-background";
 import { CanvasSceneSurface } from "./canvas-scene-surface";
 import {
   useCanvasDropImport,
@@ -251,6 +252,7 @@ export function CanvasShell({
           : undefined
       }
     >
+      <CanvasWorkspaceBackground />
       {canvasFrame.kind === "infinite" && infiniteCanvasContent ? (
         <div
           className="pointer-events-none absolute inset-0 overflow-hidden"

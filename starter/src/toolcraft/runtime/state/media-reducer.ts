@@ -11,7 +11,6 @@ import { normalizeToolcraftMediaImportIngress } from "./media-import-ingress";
 import { getMediaReadyTimelineState } from "./timeline-readiness";
 import type {
   ToolcraftCommand,
-  ToolcraftMediaBatchImportAsset,
   ToolcraftMediaAsset,
   ToolcraftMediaAssetDraft,
   ToolcraftMediaTransform,

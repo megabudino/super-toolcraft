@@ -1,19 +1,25 @@
 import type { ResolvedToolcraftAppSchema } from "../schema/resolved-app-schema";
 import type { ToolcraftPersistencePayload } from "./persistence-shared";
 import type { ToolcraftState } from "./types";
+import { equalToolcraftPersistenceSnapshots } from "./persistence-snapshot-equality";
 
-export type ToolcraftPersistenceStorage = Pick<Storage, "setItem">;
+export type ToolcraftPersistenceStorage = Pick<Storage, "getItem" | "setItem">;
 
 export type ToolcraftPersistenceWriteResult =
   | { status: "disabled" | "success" }
   | {
-      reason: "incompatible-version" | "quota" | "unavailable" | "unknown";
+      reason: "incompatible-version" | "stale-snapshot" | "quota" | "unavailable" | "unknown";
       status: "failed";
     };
 
-export type ToolcraftPersistenceStatus =
-  | ToolcraftPersistenceWriteResult
-  | { status: "pending" };
+export type ToolcraftPersistenceStatus = ToolcraftPersistenceWriteResult | { status: "pending" };
+
+type PersistenceFailure = Extract<ToolcraftPersistenceWriteResult, { status: "failed" }>;
+
+// Owned by the store: effect restarts must not adopt another tab's snapshot.
+export type ToolcraftPersistenceCheckpoint = {
+  current?: { snapshot: string | null } | PersistenceFailure;
+};
 
 export type ToolcraftPersistenceController = {
   dispose(): ToolcraftPersistenceWriteResult;
@@ -40,6 +46,7 @@ function classifyPersistenceFailure(
 
 export function createToolcraftPersistenceController({
   blockedReason,
+  checkpoint = {},
   debounceMs = 120,
   getCommittedState,
   createSnapshot,
@@ -48,9 +55,13 @@ export function createToolcraftPersistenceController({
   storage,
 }: {
   blockedReason?: "incompatible-version";
+  checkpoint?: ToolcraftPersistenceCheckpoint;
   debounceMs?: number;
   getCommittedState: () => ToolcraftState;
-  createSnapshot: (state: ToolcraftState, persistence: ResolvedToolcraftAppSchema["persistence"]) => ToolcraftPersistencePayload | undefined;
+  createSnapshot: (
+    state: ToolcraftState,
+    persistence: ResolvedToolcraftAppSchema["persistence"],
+  ) => ToolcraftPersistencePayload | undefined;
   onStatusChange?: (status: ToolcraftPersistenceStatus) => void;
   schema: ResolvedToolcraftAppSchema;
   storage?: ToolcraftPersistenceStorage;
@@ -58,6 +69,16 @@ export function createToolcraftPersistenceController({
   let disposed = false;
   let pending = false;
   let timer: ReturnType<typeof setTimeout> | undefined;
+
+  if (!blockedReason && schema.persistence.storage === "localStorage" && !checkpoint.current) {
+    try {
+      checkpoint.current = storage
+        ? { snapshot: storage.getItem(schema.persistence.key) }
+        : { status: "failed", reason: "unavailable" };
+    } catch (error) {
+      checkpoint.current = { status: "failed", reason: classifyPersistenceFailure(error) };
+    }
+  }
   let status: ToolcraftPersistenceStatus =
     blockedReason === "incompatible-version"
       ? { reason: "incompatible-version", status: "failed" }
@@ -100,6 +121,11 @@ export function createToolcraftPersistenceController({
     clearScheduledFlush();
     pending = false;
 
+    if (checkpoint.current && "reason" in checkpoint.current) {
+      publishStatus(checkpoint.current);
+      return checkpoint.current;
+    }
+
     if (!storage) {
       const result = { reason: "unavailable", status: "failed" } as const;
 
@@ -108,10 +134,7 @@ export function createToolcraftPersistenceController({
     }
 
     try {
-    const snapshot = createSnapshot(
-        getCommittedState(),
-        schema.persistence,
-      );
+      const snapshot = createSnapshot(getCommittedState(), schema.persistence);
 
       if (!snapshot) {
         const result = { status: "disabled" } as const;
@@ -120,7 +143,23 @@ export function createToolcraftPersistenceController({
         return result;
       }
 
-      storage.setItem(schema.persistence.key, JSON.stringify(snapshot));
+      const serialized = JSON.stringify(snapshot);
+      const saved = storage.getItem(schema.persistence.key);
+      if (
+        !checkpoint.current ||
+        !equalToolcraftPersistenceSnapshots(saved, checkpoint.current.snapshot)
+      ) {
+        const result = { reason: "stale-snapshot", status: "failed" } as const;
+        checkpoint.current = result;
+        publishStatus(result);
+        return result;
+      }
+      if (equalToolcraftPersistenceSnapshots(saved, serialized)) {
+        checkpoint.current = { snapshot: saved };
+      } else {
+        storage.setItem(schema.persistence.key, serialized);
+        checkpoint.current = { snapshot: serialized };
+      }
 
       const result = { status: "success" } as const;
 
@@ -143,11 +182,7 @@ export function createToolcraftPersistenceController({
         return status.status === "pending" ? flush() : status;
       }
 
-      const result = pending
-        ? flush()
-        : status.status === "pending"
-          ? flush()
-          : status;
+      const result = pending ? flush() : status.status === "pending" ? flush() : status;
 
       disposed = true;
       clearScheduledFlush();
@@ -163,6 +198,11 @@ export function createToolcraftPersistenceController({
         disposed ||
         schema.persistence.storage !== "localStorage"
       ) {
+        return;
+      }
+
+      if (checkpoint.current && "reason" in checkpoint.current) {
+        publishStatus(checkpoint.current);
         return;
       }
 

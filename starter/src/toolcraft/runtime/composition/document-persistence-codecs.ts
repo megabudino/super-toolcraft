@@ -1,3 +1,4 @@
+import { readToolcraftControlRanges } from "../state/control-ranges";
 import type { ToolcraftWorkspaceSliceCodec } from "../state/persistence-codec-types";
 import type { ToolcraftState } from "../state/types";
 import type { ResolvedToolcraftAppSchema } from "../schema/resolved-app-schema";
@@ -31,9 +32,9 @@ function pickPersistedValues(
 
 export const documentPersistenceCodecs = {
   values: {
-    fields: ["values"],
-    read: (schema, data) => { const values = readValues(schema, data.values); return values ? { values } : undefined; },
-    write: (state, schema) => ({ values: schema.persistence.storage === "localStorage" ? pickPersistedValues(state, schema.persistence) : undefined }),
+    fields: ["values", "controlRanges"],
+    read: (schema, data) => { const values = readValues(schema, data.values); return { ...(values ? { values } : {}), ...(data.controlRanges === undefined ? {} : { controlRanges: readToolcraftControlRanges(schema, data.controlRanges) }) }; },
+    write: (state, schema) => ({ ...(Object.keys(state.controlRanges).length ? { controlRanges: state.controlRanges } : {}), values: schema.persistence.storage === "localStorage" ? pickPersistedValues(state, schema.persistence) : undefined }),
   },
   canvas: {
     fields: ["canvas"],

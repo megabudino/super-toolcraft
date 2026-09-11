@@ -13,6 +13,10 @@ export function mergeToolcraftInitialState(
       continue;
     }
 
+    if (state.controlRanges) {
+      merged.controlRanges = { ...merged.controlRanges, ...state.controlRanges };
+    }
+
     if (state.canvas) {
       merged.canvas = { ...merged.canvas, ...state.canvas };
     }

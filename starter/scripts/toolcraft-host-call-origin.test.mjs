@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import ts from "typescript";
 import { createToolcraftHostCallOrigin } from "./toolcraft-host-call-origin.mjs";
 
 test("cyclic evaluated call-result origins remain unknown instead of recursing", () => {
@@ -14,6 +15,7 @@ test("cyclic evaluated call-result origins remain unknown instead of recursing",
     },
   };
   callOrigin = createToolcraftHostCallOrigin({
+    ts,
     flowValues: { resultAt: (call) => ({ kind: "exact", values: [calls.get(call)] }) },
     mergeFacts: (facts) => facts,
     operations,

@@ -184,9 +184,9 @@ Use `core/layout.md` for label naming, help tooltip eligibility, switch/checkbox
 
 ## Layers
 
-Enable layers only when the app has multiple editable objects, media objects, groups, visibility, selection, reorder, or selected-layer controls.
+Enable `layersModule()` only when the user explicitly requests a workflow with layers: layer selection, ordering, grouping, visibility, or layer-based media management. Multiple uploads or editable objects alone do not authorize enabling it. Lab demonstration fixtures are not generated-product defaults.
 
-Do not show Layers for a single-layer app. Do not use `selectedLayer.*` targets when Layers are disabled.
+Without a user-requested layer workflow, leave Layers absent. Do not use `selectedLayer.*` targets when Layers are disabled.
 
 When Layers are enabled, browser tests must use the real LayersPanel UI: select, visibility, reorder, grouping, and media lifecycle when uploads/deletes create or remove layers.
 

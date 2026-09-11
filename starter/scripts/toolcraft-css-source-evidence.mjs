@@ -9,9 +9,10 @@ import {
 } from "./toolcraft-public-component-style-policy.mjs";
 import {
   collectToolcraftCssModuleClassFacts,
-  toolcraftCssSelectorTargetsPublicTag,
   toolcraftCssSelectorUsesOwnedState,
 } from "./toolcraft-css-module-facts.mjs";
+import { toolcraftCssSelectorTargetsPublicChrome } from "./toolcraft-css-selector-subject.mjs";
+import { isToolcraftFrameworkCssToken } from "./toolcraft-public-ui-ownership.mjs";
 
 const EXTERNAL_CSS_URL_PATTERN =
   /^(?:[A-Za-z][A-Za-z0-9+.-]*:|\/\/|#)/u;
@@ -112,9 +113,7 @@ function selectorTargetsPublicChrome(selector) {
   const scopeReasons = [];
   inspectSelector(selector, scopeReasons);
   if (scopeReasons.length > 0) return false;
-  return ["a", "button"].some((tag) =>
-    toolcraftCssSelectorTargetsPublicTag(selector, tag)
-  );
+  return toolcraftCssSelectorTargetsPublicChrome(selector);
 }
 
 function selectorUsesOwnedState(selector) {
@@ -126,14 +125,17 @@ function publicChromeViolation(rule, selectors, repoPath) {
   selectors.each((selector) => {
     if (selectorTargetsPublicChrome(selector)) ownedSelectors.push(selector);
   });
-  if (ownedSelectors.length === 0) return undefined;
+  const reservedTokens = (rule.nodes ?? []).filter((node) =>
+    node.type === "decl" && isToolcraftFrameworkCssToken(node.prop));
+  if (ownedSelectors.length === 0 && reservedTokens.length === 0) return undefined;
   const domains = new Set();
+  if (reservedTokens.length > 0) domains.add("framework-token");
   if (ownedSelectors.some(selectorUsesOwnedState)) {
     domains.add("interaction-state");
   }
   for (const node of rule.nodes ?? []) {
     if (node.type !== "decl") continue;
-    for (const domain of getToolcraftOwnedCssDeclarationDomains(node.prop)) {
+    for (const domain of ownedSelectors.length > 0 ? getToolcraftOwnedCssDeclarationDomains(node.prop) : []) {
       domains.add(domain);
     }
   }
@@ -142,7 +144,7 @@ function publicChromeViolation(rule, selectors, repoPath) {
     kind: "public-component-chrome",
     line: rule.source?.start?.line ?? 1,
     message:
-      `Product CSS Modules cannot replace public Button or Anchor chrome (found: ${[...domains].join(", ")}). Use component-owned variants and limit subject rules to layout, spacing, sizing, or typography.`,
+      `Product CSS Modules cannot replace public UI chrome or define framework theme tokens (found: ${[...domains].join(", ")}). Use component-owned variants and limit public subject rules to layout, spacing, sizing, or typography.`,
     repoPath,
   });
 }
@@ -237,6 +239,11 @@ export function createToolcraftCssSourceRecord({ rawSource, repoPath }) {
     classFacts = collectToolcraftCssModuleClassFacts({ root, selectorParser });
     root.walkAtRules("import", () => {
       reasons.push("CSS @import can pull unscoped styles into the product bundle");
+    });
+    root.walkAtRules("property", (rule) => {
+      if (isToolcraftFrameworkCssToken(rule.params.trim())) {
+        reasons.push("CSS @property cannot redefine a framework theme token");
+      }
     });
     root.walkRules((rule) => {
       selectorParser((selectors) => {

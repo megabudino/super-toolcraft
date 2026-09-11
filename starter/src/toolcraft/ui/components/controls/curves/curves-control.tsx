@@ -378,7 +378,7 @@ export function CurvesControl(props: CurvesControlProps): React.JSX.Element {
   const accessibleName = name || defaultName;
 
   return (
-    <div className="flex min-w-0 flex-col gap-3" aria-label={accessibleName}>
+    <div className="flex min-w-0 flex-col gap-3" aria-label={accessibleName} data-slot="curves-control">
       {singleCurve ? (
         name ? <ControlFieldLabel>{name}</ControlFieldLabel> : null
       ) : (

@@ -123,6 +123,12 @@ export async function evaluateToolcraftProductBoundary({
     (await createToolcraftLocalDependencyGraph({
       aliases: localAliases,
       entries: inventory.entries,
+      // Framework files participate in import resolution, but product-only AST
+      // policy must not be evaluated against every copied framework module.
+      sourceRecordMode: "imports-only",
+      fullEvidenceEntryPaths: inventory.entries
+        .filter((entry) => entry.owner === "product")
+        .map((entry) => entry.repoPath),
       rootDir: resolvedRootDir,
     }));
   const productEntries = localDependencyGraph.entries.filter(

@@ -47,7 +47,7 @@ export function writeToolcraftWorkspaceDefaults(state: ToolcraftState): Toolcraf
 export function parseToolcraftWorkspaceDefaults(schema: ResolvedToolcraftAppSchema, input: unknown): ToolcraftWorkspaceDefaults {
   if (!isRecord(input) || Object.keys(input).sort().join() !== "appId,resources,state,theme,version" ||
       input.version !== 2 || input.appId !== schema.identity.id || !isRecord(input.state) ||
-      Object.keys(input.state).sort().join() !== fields || !isRecord(input.state.values) ||
+      ![fields, "canvas,controlRanges,layers,mediaAssets,panels,selectedLayerId,timeline,values"].includes(Object.keys(input.state).sort().join()) || !isRecord(input.state.values) ||
       typeof input.theme !== "string" || !["dark", "light", "system"].includes(input.theme)) {
     throw new Error("Invalid complete application defaults or application identity.");
   }

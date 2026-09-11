@@ -160,13 +160,13 @@ export const TOOLCRAFT_DECISION_CONTRACT = [
   {
     area: "layers",
     currentConstraint:
-      "Layers are optional and should appear only for multiple editable entities, grouping, visibility, selection, or reorder workflows.",
+      "Layers are optional and require an explicit user request for a workflow with layers; uploads or multiple editable entities alone do not authorize enabling them.",
     desiredBehavior:
-      "AI decides whether the product needs layers; single-layer apps do not render a layers panel.",
+      "The agent enables layersModule() only for a user-requested layer workflow. Otherwise the module stays absent. Isolated Lab layer demonstrations do not establish product requirements.",
     enforcement: ["starter-agents", "spec-checklist"],
     id: "layers-enable-only-when-needed",
     level: "heuristic",
-    title: "Layer enablement is product-dependent",
+    title: "Layer enablement requires a user request",
     verdict: "keep-but-clarify",
   },
   {
@@ -222,7 +222,7 @@ export const TOOLCRAFT_DECISION_CONTRACT = [
     currentConstraint:
       "Product artifact delivery must match the required productReadiness.exportIntent declaration.",
     desiredBehavior:
-      'Every product declares productReadiness.exportIntent. Image export starts as the Toolcraft default and is removed only with explicit user-removal evidence; SVG and video require explicit user request evidence. Animation, playback, keyframes, or timeline presence never changes artifact delivery intent. Every nondefault decision records structured user-message evidence with messageRef, messageText, and exact quote; plans, summaries, and worklogs are not primary request evidence. Missing primary permission leaves optional export off; later user exclusions override earlier evidence. Structural validation does not authenticate chat authorship. Resolved intent capabilities correspond exactly to typed schema actions, applicable settings sections, and artifact-specific acceptance coverage. SVG means self-contained editable vector geometry/text and never permits raster bytes wrapped in SVG. Product apps declare the standard background pair and runtime places it in Setup: Background beside Infinity canvas, Color below, and Timeline beside optional Lock rotation in the final row. Product code uses exportRenderer for deterministic image/video pixels and svgExportRenderer for namespace-aware vector nodes; runtime owns settings, scene crop/frame, background, visible runtime media/model composition, validation, encoding/serialization, download, progress, and typed failures.',
+      'Every product declares productReadiness.exportIntent. Image export starts as the Toolcraft default and is removed only with explicit user-removal evidence; SVG and video require explicit user request evidence. Animation, playback, keyframes, or timeline presence never changes artifact delivery intent. Every nondefault decision records structured user-message evidence with messageRef, messageText, and exact quote; plans, summaries, and worklogs are not primary request evidence. Missing primary permission leaves optional export off; later user exclusions override earlier evidence. Structural validation does not authenticate chat authorship. Resolved intent capabilities correspond exactly to typed schema actions, applicable settings sections, and artifact-specific acceptance coverage. SVG means self-contained editable vector geometry/text and never permits raster bytes wrapped in SVG. Product apps declare the standard background pair and runtime places it in Setup: Background beside Infinity canvas, Color beside the Blanc/Dots workspace selector below, and Timeline beside optional Lock rotation in the final row. Product code uses exportRenderer for deterministic image/video pixels and svgExportRenderer for namespace-aware vector nodes; runtime owns settings, scene crop/frame, background, visible runtime media/model composition, validation, encoding/serialization, download, progress, and typed failures.',
     enforcement: ["acceptance-validator", "performance-validator", "browser-helper", "starter-agents"],
     id: "output-export-required",
     level: "invariant",

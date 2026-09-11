@@ -7,6 +7,7 @@ export const toolcraftVideoExportFormatTarget = "export.video.format";
 export const toolcraftVideoExportResolutionTarget = "export.video.resolution";
 
 export type ToolcraftImageExportFormat = "jpg" | "png";
+export type ToolcraftStillExportFormat = ToolcraftImageExportFormat | "svg";
 export type ToolcraftImageExportPresetResolution = "2k" | "4k" | "8k";
 export type ToolcraftVideoExportFormat = "mp4" | "webm";
 export type ToolcraftVideoExportPresetResolution = "4k" | "current";
@@ -42,6 +43,13 @@ export function readToolcraftImageExportFormat(
 ): ToolcraftImageExportFormat | null {
   const value = getSettingValue(state, toolcraftImageExportFormatTarget, "png");
   return value === "jpg" || value === "png" ? value : null;
+}
+
+export function readToolcraftStillExportFormat(
+  state: ReadonlyToolcraftState,
+): ToolcraftStillExportFormat | null {
+  const value = getSettingValue(state, toolcraftImageExportFormatTarget, "png");
+  return value === "svg" || value === "png" || value === "jpg" ? value : null;
 }
 
 function resolveImageResolution(

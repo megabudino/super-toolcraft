@@ -24,13 +24,13 @@ export const TOOLCRAFT_INPUT_COMPONENT_CONTRACTS = {
         "AspectRatio belongs to the mandatory runtime Setup block before Canvas width and Canvas height.",
       ],
       requiredAcceptance: [
-        "Prove presets resize the current canvas and manual dimensions select Custom, retain the reduced ratio in state, and do not render duplicate ratio dimension fields.",
+        "Prove presets resize the canvas, pixel edits preserve the selected proportion and update the other side, and Custom reveals editable ratio fields distinct from pixel dimensions.",
       ],
     }),
     aiUsageRules: [
       "AspectRatio is runtime-owned Setup UI and is not authored as a product control.",
-      "Manual canvas dimension edits switch the value to Custom without changing the other dimension.",
-      "Custom keeps its reduced ratio in runtime state while Canvas width and Canvas height remain the sole numeric editors.",
+      "Canvas dimension edits retain the selected preset or custom ratio and recalculate the opposite side with integer pixel rounding.",
+      "Custom exposes positive-integer Ratio W and Ratio H; Canvas width and Canvas height edit pixel dimensions under that ratio. Invalid ratio input reverts and Escape cancels.",
     ],
   },
   slider: {

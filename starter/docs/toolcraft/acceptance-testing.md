@@ -222,7 +222,7 @@ Artifact acceptance follows `productReadiness.exportIntent`. Image/video use com
 
 Export-content proof is distinct from export mechanics: content inspects selected artifact semantics; mechanics proves lifecycle, format, dimensions, transport, and errors. Neither substitutes.
 
-Image-enabled apps test two `export.image.format` and two `export.image.resolution` values in `Image Export`, then decode downloads to prove type and dimensions; video coverage never replaces this. For every image/video format, assert button text and accessible name: `Export PNG/JPG` or `Export MP4/WebM`, also after restore/import, Undo/Redo and reset. The same action exports the selected format; SVG stays `Export SVG`.
+Cover every image format (PNG/JPG plus enabled SVG) and raster resolution; decode downloads to prove format and dimensions. SVG hides resolution; returning to raster restores its value. Verify button labels after edits, restore/import, Undo/Redo and reset: Export PNG/JPG/SVG or Export MP4/WebM. Select each format before clicking the shared still button; keep separate image/SVG artifact proofs. Video proof never replaces image proof.
 
 Runtime Export acceptance must prove the sticky footer top accent indicator advances through real render/encode/download work and hides only after the artifact settles. Async non-export Download, Copy, Generate, or Apply acceptance must prove the indicator is visible while the returned `onPanelAction` Promise is pending, advances when `reportProgress(0..1)` is called, and hides after it settles.
 

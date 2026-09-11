@@ -1,5 +1,4 @@
 import { sanitizeComposedHostProps, type SafeComposedHostElementProps } from "../primitives/sanitize-composed-host-props";
-import * as React from "react";
 
 import { cn } from "../../lib/utils";
 import {
