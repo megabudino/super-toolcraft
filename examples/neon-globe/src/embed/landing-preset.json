@@ -1,0 +1,74 @@
+{
+  "appId": "neon-globe-2",
+  "canvas": {
+    "aspectRatio": {
+      "height": 9,
+      "mode": "preset",
+      "value": "16:9",
+      "width": 16
+    },
+    "mode": "finite",
+    "size": {
+      "height": 1080,
+      "unit": "px",
+      "width": 1920
+    }
+  },
+  "exportedAt": "2026-08-27T12:57:53.292Z",
+  "source": "toolcraft-settings",
+  "timeline": {
+    "currentTimeSeconds": 0,
+    "durationSeconds": 8,
+    "expanded": false,
+    "isLooping": true,
+    "isPlaying": false
+  },
+  "values": {
+    "export.includeBackground": true,
+    "appearance.background": "#000000",
+    "canvas.renderScale": 2,
+    "globe.sphereColor": "#000000",
+    "globe.lineColor": "#FFFFFF",
+    "globe.latitudeCount": 8,
+    "globe.meridianCount": 16,
+    "globe.lineWidth": 1.5,
+    "globe.orientation": {
+      "position": [
+        0.5481637778242294,
+        1.2696368424374171,
+        5.493408665028698
+      ],
+      "up": [
+        -0.02225418023154345,
+        0.9745598888152974,
+        -0.22301967306615994
+      ]
+    },
+    "globe.outline": true,
+    "effects.crtIntensity": 100,
+    "bands.distance": 1,
+    "bands.dotSize": 1.25,
+    "bands.columnSpacing": 3.5,
+    "bands.band1.position": 69,
+    "bands.band1.width": 17,
+    "bands.band4.position": 46,
+    "bands.band4.width": 24,
+    "bands.band2.position": 6,
+    "bands.band2.width": 50,
+    "bands.band3.position": -30,
+    "bands.band3.width": 16,
+    "logos.holdSeconds": 3,
+    "logos.speed": 2.5,
+    "logos.dxc.finalPosition": 60,
+    "logos.zillow.finalPosition": 68,
+    "logos.meta.finalPosition": 71,
+    "logos.prada.finalPosition": 76,
+    "logos.dxc.scale": 114,
+    "logos.zillow.scale": 108,
+    "logos.meta.scale": 121,
+    "logos.prada.scale": 100,
+    "export.image.format": "png",
+    "export.image.resolution": "4k"
+  },
+  "version": 2
+}

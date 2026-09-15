@@ -1,0 +1,1472 @@
+{
+  "changeMetric": "max-yuva-diff-v1",
+  "contactSheet": {
+    "columns": 10,
+    "height": 5995,
+    "path": "src/app/reference-studies/motion-v1-ecb194a2782a036d02cd9ede38d995f96f2034831316c1e51ba49224fdef3b21/contact-sheet.png",
+    "rows": 11,
+    "sha256": "93fde572712dd90f985e06198ddcac98e054033ade90c6caf4b860c19d1e39db",
+    "width": 4370
+  },
+  "decodedFrameCount": 237,
+  "detectedEvents": [
+    {
+      "afterFrameId": "source-frame:24",
+      "beforeFrameId": "source-frame:22",
+      "eventId": "motion-event:change:22-23-24",
+      "kind": "change",
+      "peakFrameId": "source-frame:23",
+      "score": 0.019407607843137255,
+      "windowFrameIds": [
+        "source-frame:22",
+        "source-frame:23",
+        "source-frame:24"
+      ]
+    },
+    {
+      "afterFrameId": "source-frame:40",
+      "beforeFrameId": "source-frame:38",
+      "eventId": "motion-event:change:38-39-40",
+      "kind": "change",
+      "peakFrameId": "source-frame:39",
+      "score": 0.4746196078431373,
+      "windowFrameIds": [
+        "source-frame:38",
+        "source-frame:39",
+        "source-frame:40"
+      ]
+    },
+    {
+      "afterFrameId": "source-frame:44",
+      "beforeFrameId": "source-frame:42",
+      "eventId": "motion-event:change:42-43-44",
+      "kind": "change",
+      "peakFrameId": "source-frame:43",
+      "score": 0.05012666666666667,
+      "windowFrameIds": [
+        "source-frame:42",
+        "source-frame:43",
+        "source-frame:44"
+      ]
+    },
+    {
+      "afterFrameId": "source-frame:64",
+      "beforeFrameId": "source-frame:62",
+      "eventId": "motion-event:change:62-63-64",
+      "kind": "change",
+      "peakFrameId": "source-frame:63",
+      "score": 0.033295568627450985,
+      "windowFrameIds": [
+        "source-frame:62",
+        "source-frame:63",
+        "source-frame:64"
+      ]
+    },
+    {
+      "afterFrameId": "source-frame:99",
+      "beforeFrameId": "source-frame:97",
+      "eventId": "motion-event:change:97-98-99",
+      "kind": "change",
+      "peakFrameId": "source-frame:98",
+      "score": 0.034221019607843135,
+      "windowFrameIds": [
+        "source-frame:97",
+        "source-frame:98",
+        "source-frame:99"
+      ]
+    },
+    {
+      "afterFrameId": "source-frame:103",
+      "beforeFrameId": "source-frame:101",
+      "eventId": "motion-event:change:101-102-103",
+      "kind": "change",
+      "peakFrameId": "source-frame:102",
+      "score": 0.4698588235294117,
+      "windowFrameIds": [
+        "source-frame:101",
+        "source-frame:102",
+        "source-frame:103"
+      ]
+    },
+    {
+      "afterFrameId": "source-frame:149",
+      "beforeFrameId": "source-frame:147",
+      "eventId": "motion-event:change:147-148-149",
+      "kind": "change",
+      "peakFrameId": "source-frame:148",
+      "score": 0.018134156862745096,
+      "windowFrameIds": [
+        "source-frame:147",
+        "source-frame:148",
+        "source-frame:149"
+      ]
+    },
+    {
+      "afterFrameId": "source-frame:165",
+      "beforeFrameId": "source-frame:163",
+      "eventId": "motion-event:change:163-164-165",
+      "kind": "change",
+      "peakFrameId": "source-frame:164",
+      "score": 0.4724,
+      "windowFrameIds": [
+        "source-frame:163",
+        "source-frame:164",
+        "source-frame:165"
+      ]
+    },
+    {
+      "afterFrameId": "source-frame:169",
+      "beforeFrameId": "source-frame:167",
+      "eventId": "motion-event:change:167-168-169",
+      "kind": "change",
+      "peakFrameId": "source-frame:168",
+      "score": 0.04665137254901961,
+      "windowFrameIds": [
+        "source-frame:167",
+        "source-frame:168",
+        "source-frame:169"
+      ]
+    },
+    {
+      "afterFrameId": "source-frame:1",
+      "beforeFrameId": "source-frame:236",
+      "eventId": "motion-event:loop-seam:236-0-1",
+      "kind": "loop-seam",
+      "peakFrameId": "source-frame:0",
+      "score": 0.055756862745098036,
+      "windowFrameIds": [
+        "source-frame:236",
+        "source-frame:0",
+        "source-frame:1"
+      ]
+    }
+  ],
+  "durationSeconds": 9.48,
+  "evidenceVersion": 1,
+  "ffmpegVersion": "ffmpeg 6.0",
+  "ffprobeVersion": "ffprobe 6.0",
+  "focusWindows": [],
+  "height": 1430,
+  "maximumSourceFrameGapSeconds": 0.040000000000000924,
+  "nominalFrameRate": 25,
+  "overviewFrameIds": [
+    "source-frame:0",
+    "source-frame:2",
+    "source-frame:4",
+    "source-frame:6",
+    "source-frame:8",
+    "source-frame:10",
+    "source-frame:12",
+    "source-frame:15",
+    "source-frame:17",
+    "source-frame:19",
+    "source-frame:21",
+    "source-frame:23",
+    "source-frame:25",
+    "source-frame:27",
+    "source-frame:29",
+    "source-frame:31",
+    "source-frame:33",
+    "source-frame:35",
+    "source-frame:37",
+    "source-frame:40",
+    "source-frame:42",
+    "source-frame:44",
+    "source-frame:46",
+    "source-frame:48",
+    "source-frame:50",
+    "source-frame:52",
+    "source-frame:54",
+    "source-frame:56",
+    "source-frame:58",
+    "source-frame:60",
+    "source-frame:62",
+    "source-frame:65",
+    "source-frame:67",
+    "source-frame:69",
+    "source-frame:71",
+    "source-frame:73",
+    "source-frame:75",
+    "source-frame:77",
+    "source-frame:79",
+    "source-frame:81",
+    "source-frame:83",
+    "source-frame:85",
+    "source-frame:87",
+    "source-frame:90",
+    "source-frame:92",
+    "source-frame:94",
+    "source-frame:96",
+    "source-frame:98",
+    "source-frame:100",
+    "source-frame:102",
+    "source-frame:104",
+    "source-frame:106",
+    "source-frame:108",
+    "source-frame:110",
+    "source-frame:112",
+    "source-frame:115",
+    "source-frame:117",
+    "source-frame:119",
+    "source-frame:121",
+    "source-frame:123",
+    "source-frame:125",
+    "source-frame:127",
+    "source-frame:129",
+    "source-frame:131",
+    "source-frame:133",
+    "source-frame:135",
+    "source-frame:137",
+    "source-frame:140",
+    "source-frame:142",
+    "source-frame:144",
+    "source-frame:146",
+    "source-frame:148",
+    "source-frame:150",
+    "source-frame:152",
+    "source-frame:154",
+    "source-frame:156",
+    "source-frame:158",
+    "source-frame:160",
+    "source-frame:162",
+    "source-frame:165",
+    "source-frame:167",
+    "source-frame:169",
+    "source-frame:171",
+    "source-frame:173",
+    "source-frame:175",
+    "source-frame:177",
+    "source-frame:179",
+    "source-frame:181",
+    "source-frame:183",
+    "source-frame:185",
+    "source-frame:187",
+    "source-frame:236"
+  ],
+  "overviewTargetFps": 12,
+  "reviewPartition": {
+    "count": 2,
+    "groupId": "motion-group-v1-faef6bc0e35eeb9daa145f0da98c5203825611132c020d11dc42585a306c1f98",
+    "index": 0,
+    "planSha256": "79e827695c0a7609e12d96483b735e806e066404eb80d283e32c11facffce08f",
+    "scope": {
+      "endSeconds": 9.48,
+      "startSeconds": 0
+    }
+  },
+  "reviewedFrames": [
+    {
+      "cell": {
+        "column": 0,
+        "row": 0
+      },
+      "frameId": "source-frame:0",
+      "sourceFrameIndex": 0,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=0",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 0
+    },
+    {
+      "cell": {
+        "column": 1,
+        "row": 0
+      },
+      "frameId": "source-frame:1",
+      "sourceFrameIndex": 1,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=1",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 0.04
+    },
+    {
+      "cell": {
+        "column": 2,
+        "row": 0
+      },
+      "frameId": "source-frame:2",
+      "sourceFrameIndex": 2,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=2",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 0.08
+    },
+    {
+      "cell": {
+        "column": 3,
+        "row": 0
+      },
+      "frameId": "source-frame:4",
+      "sourceFrameIndex": 4,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=4",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 0.16
+    },
+    {
+      "cell": {
+        "column": 4,
+        "row": 0
+      },
+      "frameId": "source-frame:6",
+      "sourceFrameIndex": 6,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=6",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 0.24
+    },
+    {
+      "cell": {
+        "column": 5,
+        "row": 0
+      },
+      "frameId": "source-frame:8",
+      "sourceFrameIndex": 8,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=8",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 0.32
+    },
+    {
+      "cell": {
+        "column": 6,
+        "row": 0
+      },
+      "frameId": "source-frame:10",
+      "sourceFrameIndex": 10,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=10",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 0.4
+    },
+    {
+      "cell": {
+        "column": 7,
+        "row": 0
+      },
+      "frameId": "source-frame:12",
+      "sourceFrameIndex": 12,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=12",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 0.48
+    },
+    {
+      "cell": {
+        "column": 8,
+        "row": 0
+      },
+      "frameId": "source-frame:15",
+      "sourceFrameIndex": 15,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=15",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 0.6
+    },
+    {
+      "cell": {
+        "column": 9,
+        "row": 0
+      },
+      "frameId": "source-frame:17",
+      "sourceFrameIndex": 17,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=17",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 0.68
+    },
+    {
+      "cell": {
+        "column": 0,
+        "row": 1
+      },
+      "frameId": "source-frame:19",
+      "sourceFrameIndex": 19,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=19",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 0.76
+    },
+    {
+      "cell": {
+        "column": 1,
+        "row": 1
+      },
+      "frameId": "source-frame:21",
+      "sourceFrameIndex": 21,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=21",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 0.84
+    },
+    {
+      "cell": {
+        "column": 2,
+        "row": 1
+      },
+      "frameId": "source-frame:22",
+      "sourceFrameIndex": 22,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=22",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 0.88
+    },
+    {
+      "cell": {
+        "column": 3,
+        "row": 1
+      },
+      "frameId": "source-frame:23",
+      "sourceFrameIndex": 23,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=23",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 0.92
+    },
+    {
+      "cell": {
+        "column": 4,
+        "row": 1
+      },
+      "frameId": "source-frame:24",
+      "sourceFrameIndex": 24,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=24",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 0.96
+    },
+    {
+      "cell": {
+        "column": 5,
+        "row": 1
+      },
+      "frameId": "source-frame:25",
+      "sourceFrameIndex": 25,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=25",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 1
+    },
+    {
+      "cell": {
+        "column": 6,
+        "row": 1
+      },
+      "frameId": "source-frame:27",
+      "sourceFrameIndex": 27,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=27",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 1.08
+    },
+    {
+      "cell": {
+        "column": 7,
+        "row": 1
+      },
+      "frameId": "source-frame:29",
+      "sourceFrameIndex": 29,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=29",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 1.16
+    },
+    {
+      "cell": {
+        "column": 8,
+        "row": 1
+      },
+      "frameId": "source-frame:31",
+      "sourceFrameIndex": 31,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=31",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 1.24
+    },
+    {
+      "cell": {
+        "column": 9,
+        "row": 1
+      },
+      "frameId": "source-frame:33",
+      "sourceFrameIndex": 33,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=33",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 1.32
+    },
+    {
+      "cell": {
+        "column": 0,
+        "row": 2
+      },
+      "frameId": "source-frame:35",
+      "sourceFrameIndex": 35,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=35",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 1.4
+    },
+    {
+      "cell": {
+        "column": 1,
+        "row": 2
+      },
+      "frameId": "source-frame:37",
+      "sourceFrameIndex": 37,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=37",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 1.48
+    },
+    {
+      "cell": {
+        "column": 2,
+        "row": 2
+      },
+      "frameId": "source-frame:38",
+      "sourceFrameIndex": 38,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=38",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 1.52
+    },
+    {
+      "cell": {
+        "column": 3,
+        "row": 2
+      },
+      "frameId": "source-frame:39",
+      "sourceFrameIndex": 39,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=39",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 1.56
+    },
+    {
+      "cell": {
+        "column": 4,
+        "row": 2
+      },
+      "frameId": "source-frame:40",
+      "sourceFrameIndex": 40,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=40",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 1.6
+    },
+    {
+      "cell": {
+        "column": 5,
+        "row": 2
+      },
+      "frameId": "source-frame:42",
+      "sourceFrameIndex": 42,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=42",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 1.68
+    },
+    {
+      "cell": {
+        "column": 6,
+        "row": 2
+      },
+      "frameId": "source-frame:43",
+      "sourceFrameIndex": 43,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=43",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 1.72
+    },
+    {
+      "cell": {
+        "column": 7,
+        "row": 2
+      },
+      "frameId": "source-frame:44",
+      "sourceFrameIndex": 44,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=44",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 1.76
+    },
+    {
+      "cell": {
+        "column": 8,
+        "row": 2
+      },
+      "frameId": "source-frame:46",
+      "sourceFrameIndex": 46,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=46",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 1.84
+    },
+    {
+      "cell": {
+        "column": 9,
+        "row": 2
+      },
+      "frameId": "source-frame:48",
+      "sourceFrameIndex": 48,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=48",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 1.92
+    },
+    {
+      "cell": {
+        "column": 0,
+        "row": 3
+      },
+      "frameId": "source-frame:50",
+      "sourceFrameIndex": 50,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=50",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 2
+    },
+    {
+      "cell": {
+        "column": 1,
+        "row": 3
+      },
+      "frameId": "source-frame:52",
+      "sourceFrameIndex": 52,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=52",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 2.08
+    },
+    {
+      "cell": {
+        "column": 2,
+        "row": 3
+      },
+      "frameId": "source-frame:54",
+      "sourceFrameIndex": 54,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=54",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 2.16
+    },
+    {
+      "cell": {
+        "column": 3,
+        "row": 3
+      },
+      "frameId": "source-frame:56",
+      "sourceFrameIndex": 56,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=56",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 2.24
+    },
+    {
+      "cell": {
+        "column": 4,
+        "row": 3
+      },
+      "frameId": "source-frame:58",
+      "sourceFrameIndex": 58,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=58",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 2.32
+    },
+    {
+      "cell": {
+        "column": 5,
+        "row": 3
+      },
+      "frameId": "source-frame:60",
+      "sourceFrameIndex": 60,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=60",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 2.4
+    },
+    {
+      "cell": {
+        "column": 6,
+        "row": 3
+      },
+      "frameId": "source-frame:62",
+      "sourceFrameIndex": 62,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=62",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 2.48
+    },
+    {
+      "cell": {
+        "column": 7,
+        "row": 3
+      },
+      "frameId": "source-frame:63",
+      "sourceFrameIndex": 63,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=63",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 2.52
+    },
+    {
+      "cell": {
+        "column": 8,
+        "row": 3
+      },
+      "frameId": "source-frame:64",
+      "sourceFrameIndex": 64,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=64",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 2.56
+    },
+    {
+      "cell": {
+        "column": 9,
+        "row": 3
+      },
+      "frameId": "source-frame:65",
+      "sourceFrameIndex": 65,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=65",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 2.6
+    },
+    {
+      "cell": {
+        "column": 0,
+        "row": 4
+      },
+      "frameId": "source-frame:67",
+      "sourceFrameIndex": 67,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=67",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 2.68
+    },
+    {
+      "cell": {
+        "column": 1,
+        "row": 4
+      },
+      "frameId": "source-frame:69",
+      "sourceFrameIndex": 69,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=69",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 2.76
+    },
+    {
+      "cell": {
+        "column": 2,
+        "row": 4
+      },
+      "frameId": "source-frame:71",
+      "sourceFrameIndex": 71,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=71",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 2.84
+    },
+    {
+      "cell": {
+        "column": 3,
+        "row": 4
+      },
+      "frameId": "source-frame:73",
+      "sourceFrameIndex": 73,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=73",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 2.92
+    },
+    {
+      "cell": {
+        "column": 4,
+        "row": 4
+      },
+      "frameId": "source-frame:75",
+      "sourceFrameIndex": 75,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=75",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 3
+    },
+    {
+      "cell": {
+        "column": 5,
+        "row": 4
+      },
+      "frameId": "source-frame:77",
+      "sourceFrameIndex": 77,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=77",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 3.08
+    },
+    {
+      "cell": {
+        "column": 6,
+        "row": 4
+      },
+      "frameId": "source-frame:79",
+      "sourceFrameIndex": 79,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=79",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 3.16
+    },
+    {
+      "cell": {
+        "column": 7,
+        "row": 4
+      },
+      "frameId": "source-frame:81",
+      "sourceFrameIndex": 81,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=81",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 3.24
+    },
+    {
+      "cell": {
+        "column": 8,
+        "row": 4
+      },
+      "frameId": "source-frame:83",
+      "sourceFrameIndex": 83,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=83",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 3.32
+    },
+    {
+      "cell": {
+        "column": 9,
+        "row": 4
+      },
+      "frameId": "source-frame:85",
+      "sourceFrameIndex": 85,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=85",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 3.4
+    },
+    {
+      "cell": {
+        "column": 0,
+        "row": 5
+      },
+      "frameId": "source-frame:87",
+      "sourceFrameIndex": 87,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=87",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 3.48
+    },
+    {
+      "cell": {
+        "column": 1,
+        "row": 5
+      },
+      "frameId": "source-frame:90",
+      "sourceFrameIndex": 90,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=90",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 3.6
+    },
+    {
+      "cell": {
+        "column": 2,
+        "row": 5
+      },
+      "frameId": "source-frame:92",
+      "sourceFrameIndex": 92,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=92",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 3.68
+    },
+    {
+      "cell": {
+        "column": 3,
+        "row": 5
+      },
+      "frameId": "source-frame:94",
+      "sourceFrameIndex": 94,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=94",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 3.76
+    },
+    {
+      "cell": {
+        "column": 4,
+        "row": 5
+      },
+      "frameId": "source-frame:96",
+      "sourceFrameIndex": 96,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=96",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 3.84
+    },
+    {
+      "cell": {
+        "column": 5,
+        "row": 5
+      },
+      "frameId": "source-frame:97",
+      "sourceFrameIndex": 97,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=97",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 3.88
+    },
+    {
+      "cell": {
+        "column": 6,
+        "row": 5
+      },
+      "frameId": "source-frame:98",
+      "sourceFrameIndex": 98,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=98",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 3.92
+    },
+    {
+      "cell": {
+        "column": 7,
+        "row": 5
+      },
+      "frameId": "source-frame:99",
+      "sourceFrameIndex": 99,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=99",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 3.96
+    },
+    {
+      "cell": {
+        "column": 8,
+        "row": 5
+      },
+      "frameId": "source-frame:100",
+      "sourceFrameIndex": 100,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=100",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 4
+    },
+    {
+      "cell": {
+        "column": 9,
+        "row": 5
+      },
+      "frameId": "source-frame:101",
+      "sourceFrameIndex": 101,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=101",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 4.04
+    },
+    {
+      "cell": {
+        "column": 0,
+        "row": 6
+      },
+      "frameId": "source-frame:102",
+      "sourceFrameIndex": 102,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=102",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 4.08
+    },
+    {
+      "cell": {
+        "column": 1,
+        "row": 6
+      },
+      "frameId": "source-frame:103",
+      "sourceFrameIndex": 103,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=103",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 4.12
+    },
+    {
+      "cell": {
+        "column": 2,
+        "row": 6
+      },
+      "frameId": "source-frame:104",
+      "sourceFrameIndex": 104,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=104",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 4.16
+    },
+    {
+      "cell": {
+        "column": 3,
+        "row": 6
+      },
+      "frameId": "source-frame:106",
+      "sourceFrameIndex": 106,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=106",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 4.24
+    },
+    {
+      "cell": {
+        "column": 4,
+        "row": 6
+      },
+      "frameId": "source-frame:108",
+      "sourceFrameIndex": 108,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=108",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 4.32
+    },
+    {
+      "cell": {
+        "column": 5,
+        "row": 6
+      },
+      "frameId": "source-frame:110",
+      "sourceFrameIndex": 110,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=110",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 4.4
+    },
+    {
+      "cell": {
+        "column": 6,
+        "row": 6
+      },
+      "frameId": "source-frame:112",
+      "sourceFrameIndex": 112,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=112",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 4.48
+    },
+    {
+      "cell": {
+        "column": 7,
+        "row": 6
+      },
+      "frameId": "source-frame:115",
+      "sourceFrameIndex": 115,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=115",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 4.6
+    },
+    {
+      "cell": {
+        "column": 8,
+        "row": 6
+      },
+      "frameId": "source-frame:117",
+      "sourceFrameIndex": 117,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=117",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 4.68
+    },
+    {
+      "cell": {
+        "column": 9,
+        "row": 6
+      },
+      "frameId": "source-frame:119",
+      "sourceFrameIndex": 119,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=119",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 4.76
+    },
+    {
+      "cell": {
+        "column": 0,
+        "row": 7
+      },
+      "frameId": "source-frame:121",
+      "sourceFrameIndex": 121,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=121",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 4.84
+    },
+    {
+      "cell": {
+        "column": 1,
+        "row": 7
+      },
+      "frameId": "source-frame:123",
+      "sourceFrameIndex": 123,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=123",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 4.92
+    },
+    {
+      "cell": {
+        "column": 2,
+        "row": 7
+      },
+      "frameId": "source-frame:125",
+      "sourceFrameIndex": 125,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=125",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 5
+    },
+    {
+      "cell": {
+        "column": 3,
+        "row": 7
+      },
+      "frameId": "source-frame:127",
+      "sourceFrameIndex": 127,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=127",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 5.08
+    },
+    {
+      "cell": {
+        "column": 4,
+        "row": 7
+      },
+      "frameId": "source-frame:129",
+      "sourceFrameIndex": 129,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=129",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 5.16
+    },
+    {
+      "cell": {
+        "column": 5,
+        "row": 7
+      },
+      "frameId": "source-frame:131",
+      "sourceFrameIndex": 131,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=131",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 5.24
+    },
+    {
+      "cell": {
+        "column": 6,
+        "row": 7
+      },
+      "frameId": "source-frame:133",
+      "sourceFrameIndex": 133,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=133",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 5.32
+    },
+    {
+      "cell": {
+        "column": 7,
+        "row": 7
+      },
+      "frameId": "source-frame:135",
+      "sourceFrameIndex": 135,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=135",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 5.4
+    },
+    {
+      "cell": {
+        "column": 8,
+        "row": 7
+      },
+      "frameId": "source-frame:137",
+      "sourceFrameIndex": 137,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=137",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 5.48
+    },
+    {
+      "cell": {
+        "column": 9,
+        "row": 7
+      },
+      "frameId": "source-frame:140",
+      "sourceFrameIndex": 140,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=140",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 5.6
+    },
+    {
+      "cell": {
+        "column": 0,
+        "row": 8
+      },
+      "frameId": "source-frame:142",
+      "sourceFrameIndex": 142,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=142",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 5.68
+    },
+    {
+      "cell": {
+        "column": 1,
+        "row": 8
+      },
+      "frameId": "source-frame:144",
+      "sourceFrameIndex": 144,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=144",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 5.76
+    },
+    {
+      "cell": {
+        "column": 2,
+        "row": 8
+      },
+      "frameId": "source-frame:146",
+      "sourceFrameIndex": 146,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=146",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 5.84
+    },
+    {
+      "cell": {
+        "column": 3,
+        "row": 8
+      },
+      "frameId": "source-frame:147",
+      "sourceFrameIndex": 147,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=147",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 5.88
+    },
+    {
+      "cell": {
+        "column": 4,
+        "row": 8
+      },
+      "frameId": "source-frame:148",
+      "sourceFrameIndex": 148,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=148",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 5.92
+    },
+    {
+      "cell": {
+        "column": 5,
+        "row": 8
+      },
+      "frameId": "source-frame:149",
+      "sourceFrameIndex": 149,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=149",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 5.96
+    },
+    {
+      "cell": {
+        "column": 6,
+        "row": 8
+      },
+      "frameId": "source-frame:150",
+      "sourceFrameIndex": 150,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=150",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 6
+    },
+    {
+      "cell": {
+        "column": 7,
+        "row": 8
+      },
+      "frameId": "source-frame:152",
+      "sourceFrameIndex": 152,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=152",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 6.08
+    },
+    {
+      "cell": {
+        "column": 8,
+        "row": 8
+      },
+      "frameId": "source-frame:154",
+      "sourceFrameIndex": 154,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=154",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 6.16
+    },
+    {
+      "cell": {
+        "column": 9,
+        "row": 8
+      },
+      "frameId": "source-frame:156",
+      "sourceFrameIndex": 156,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=156",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 6.24
+    },
+    {
+      "cell": {
+        "column": 0,
+        "row": 9
+      },
+      "frameId": "source-frame:158",
+      "sourceFrameIndex": 158,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=158",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 6.32
+    },
+    {
+      "cell": {
+        "column": 1,
+        "row": 9
+      },
+      "frameId": "source-frame:160",
+      "sourceFrameIndex": 160,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=160",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 6.4
+    },
+    {
+      "cell": {
+        "column": 2,
+        "row": 9
+      },
+      "frameId": "source-frame:162",
+      "sourceFrameIndex": 162,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=162",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 6.48
+    },
+    {
+      "cell": {
+        "column": 3,
+        "row": 9
+      },
+      "frameId": "source-frame:163",
+      "sourceFrameIndex": 163,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=163",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 6.52
+    },
+    {
+      "cell": {
+        "column": 4,
+        "row": 9
+      },
+      "frameId": "source-frame:164",
+      "sourceFrameIndex": 164,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=164",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 6.56
+    },
+    {
+      "cell": {
+        "column": 5,
+        "row": 9
+      },
+      "frameId": "source-frame:165",
+      "sourceFrameIndex": 165,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=165",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 6.6
+    },
+    {
+      "cell": {
+        "column": 6,
+        "row": 9
+      },
+      "frameId": "source-frame:167",
+      "sourceFrameIndex": 167,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=167",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 6.68
+    },
+    {
+      "cell": {
+        "column": 7,
+        "row": 9
+      },
+      "frameId": "source-frame:168",
+      "sourceFrameIndex": 168,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=168",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 6.72
+    },
+    {
+      "cell": {
+        "column": 8,
+        "row": 9
+      },
+      "frameId": "source-frame:169",
+      "sourceFrameIndex": 169,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=169",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 6.76
+    },
+    {
+      "cell": {
+        "column": 9,
+        "row": 9
+      },
+      "frameId": "source-frame:171",
+      "sourceFrameIndex": 171,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=171",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 6.84
+    },
+    {
+      "cell": {
+        "column": 0,
+        "row": 10
+      },
+      "frameId": "source-frame:173",
+      "sourceFrameIndex": 173,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=173",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 6.92
+    },
+    {
+      "cell": {
+        "column": 1,
+        "row": 10
+      },
+      "frameId": "source-frame:175",
+      "sourceFrameIndex": 175,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=175",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 7
+    },
+    {
+      "cell": {
+        "column": 2,
+        "row": 10
+      },
+      "frameId": "source-frame:177",
+      "sourceFrameIndex": 177,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=177",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 7.08
+    },
+    {
+      "cell": {
+        "column": 3,
+        "row": 10
+      },
+      "frameId": "source-frame:179",
+      "sourceFrameIndex": 179,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=179",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 7.16
+    },
+    {
+      "cell": {
+        "column": 4,
+        "row": 10
+      },
+      "frameId": "source-frame:181",
+      "sourceFrameIndex": 181,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=181",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 7.24
+    },
+    {
+      "cell": {
+        "column": 5,
+        "row": 10
+      },
+      "frameId": "source-frame:183",
+      "sourceFrameIndex": 183,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=183",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 7.32
+    },
+    {
+      "cell": {
+        "column": 6,
+        "row": 10
+      },
+      "frameId": "source-frame:185",
+      "sourceFrameIndex": 185,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=185",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 7.4
+    },
+    {
+      "cell": {
+        "column": 7,
+        "row": 10
+      },
+      "frameId": "source-frame:187",
+      "sourceFrameIndex": 187,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=187",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 7.48
+    },
+    {
+      "cell": {
+        "column": 8,
+        "row": 10
+      },
+      "frameId": "source-frame:236",
+      "sourceFrameIndex": 236,
+      "sourceLocator": "/tmp/toolcraft-clean-reference-cfr25.mp4#frame=236",
+      "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+      "timeSeconds": 9.44
+    }
+  ],
+  "scannedFrameCount": 237,
+  "segment": {
+    "endSeconds": 7.54,
+    "startSeconds": 0
+  },
+  "sourceBasename": "toolcraft-clean-reference-cfr25.mp4",
+  "sourceKind": "screen-recording",
+  "sourceSha256": "eae935181631e616df3a5a874ac01cd04e5cc8aa96c6ef95b26f3787ed35497f",
+  "studyId": "motion-v1-ecb194a2782a036d02cd9ede38d995f96f2034831316c1e51ba49224fdef3b21",
+  "timing": {
+    "authority": "decoded-timestamps"
+  },
+  "timingMode": "seconds",
+  "width": 1146
+}

@@ -1,0 +1,26 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm run build -- --base /demos/neon-globe/",
+  "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/demos/neon-globe",
+      "permanent": false
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/demos/neon-globe/assets/:path*",
+      "destination": "/assets/:path*"
+    },
+    {
+      "source": "/demos/neon-globe",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/demos/neon-globe/:path*",
+      "destination": "/index.html"
+    }
+  ]
+}

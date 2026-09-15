@@ -1,0 +1,1 @@
+export const GLOBE_SCREEN_RADIUS_RATIO = 0.36;
