@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "changeId": "3715129b-6746-4441-8156-f792485398b3",
+  "revision": 2,
+  "createdAt": "2026-09-14T14:28:04.098Z",
+  "updatedAt": "2026-09-14T14:33:06.054Z",
+  "legacy": null,
+  "title": "Curve the horizontal line pattern",
+  "request": {
+    "text": "мне кажется паттерн состоит не из прямых линий. вообще это интересный вариант, только тогда не хотелось бы чтобы они слишком сильно выпрямлялись.",
+    "messageRef": "user-latest"
+  },
+  "owners": [
+    "src/app/iceberg-plane-pattern.ts",
+    "src/app/iceberg-controls.ts",
+    "e2e/iceberg-plane-pattern-check.ts"
+  ],
+  "decision": "Express line displacement in normalized plane coordinates before multiplying by density, using layered smooth noise. This makes the topographic curvature visually stable across densities while Pattern direction remains the average flow axis.",
+  "result": "Retained the parallel graphic character while making layered curvature stable across the full density range. Protected WebGL/browser checks and embedded comparison at default and maximum density passed; density 42 and zoom 60% were restored.",
+  "checks": [
+    "Protected browser cases for all three line controls",
+    "Real WebGL curvature floor at normal and high density",
+    "Embedded Browser inspection at density 42 and 96",
+    "git diff --check"
+  ],
+  "risks": [
+    "Excessive displacement could obscure the requested direction or collapse adjacent lines."
+  ],
+  "status": "complete"
+}

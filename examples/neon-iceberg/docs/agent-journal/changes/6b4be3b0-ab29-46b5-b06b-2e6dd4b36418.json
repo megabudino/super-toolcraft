@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "changeId": "6b4be3b0-ab29-46b5-b06b-2e6dd4b36418",
+  "revision": 2,
+  "createdAt": "2026-09-14T13:21:10.080Z",
+  "updatedAt": "2026-09-14T13:26:05.929Z",
+  "legacy": null,
+  "title": "Extend plane pattern scale range",
+  "request": {
+    "text": "дай возможность еще больше уменьшать скейл",
+    "messageRef": "user-latest"
+  },
+  "owners": [
+    "src/app/iceberg-controls.ts",
+    "src/app/iceberg-plane-pattern.ts",
+    "e2e/iceberg-plane-pattern-check.ts"
+  ],
+  "decision": "Lower the Pattern scale minimum from 0.5 to 0.1 while preserving the 0.5 default and derivative antialiasing.",
+  "result": "Pattern scale now reaches 0.1 while the default remains 0.5. Focused unit, protected browser/WebGL frequency coverage, and embedded visual inspection passed; the app was restored to scale 0.5 and zoom 60%.",
+  "checks": [
+    "Focused schema unit test",
+    "Protected iceberg.planePatternScale browser acceptance",
+    "Embedded browser visual inspection at 0.1"
+  ],
+  "risks": [
+    "Very small pattern features may antialias into a flat tone, so the lower endpoint must retain balanced ink and higher transition frequency."
+  ],
+  "status": "complete"
+}

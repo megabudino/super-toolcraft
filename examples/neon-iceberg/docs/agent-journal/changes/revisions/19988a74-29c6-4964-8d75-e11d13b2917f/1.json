@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "changeId": "19988a74-29c6-4964-8d75-e11d13b2917f",
+  "revision": 1,
+  "createdAt": "2026-09-14T12:44:31.875Z",
+  "updatedAt": "2026-09-14T12:44:31.875Z",
+  "legacy": null,
+  "title": "Promote current settings and restore plate edge outlines",
+  "request": {
+    "text": "поставь пользовательские настройки дефолтными\n\nмне бы хотелось чтобы линии на границах блоков очерчивали также грани, они потерялись на каком-то этапе",
+    "messageRef": "user-current-settings-and-edge-outlines-2026-09-14"
+  },
+  "owners": [
+    "src/app/app-defaults.json",
+    "src/app/iceberg-controls.ts",
+    "src/app/iceberg-side-patterns.ts",
+    "src/app/iceberg-shaders.ts",
+    "src/app/iceberg-product.test.ts",
+    "e2e/iceberg-grid-facing-check.ts",
+    "e2e/iceberg-plates-check.ts",
+    "e2e/product-iceberg-settings.spec.ts",
+    "docs/toolcraft/agent-worklog.md"
+  ],
+  "decision": "Generate canonical source defaults from the supplied Toolcraft settings JSON v3, and add grid-strength-controlled continuous outlines at the top and bottom side-wall edges of every separated lower plate plus the bottom edge of the upper mountain block.",
+  "result": "Implementation complete; focused verification pending.",
+  "checks": [
+    "Focused product and plate unit tests",
+    "Plate-gap browser acceptance with shader edge-ink proof",
+    "Settings export browser acceptance",
+    "In-app visual inspection at localhost:3003"
+  ],
+  "risks": [
+    "Existing browser workspaces retain precedence until Reset controls; the live deliverable is reset to the new source defaults."
+  ],
+  "status": "open"
+}

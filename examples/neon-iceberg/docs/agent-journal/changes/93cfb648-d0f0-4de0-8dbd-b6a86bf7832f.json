@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "changeId": "93cfb648-d0f0-4de0-8dbd-b6a86bf7832f",
+  "revision": 2,
+  "createdAt": "2026-09-11T09:13:25.100Z",
+  "updatedAt": "2026-09-11T09:18:50.847Z",
+  "legacy": null,
+  "title": "English interface copy",
+  "request": {
+    "text": "сделай в приложении все надписи на английском",
+    "messageRef": null
+  },
+  "owners": [
+    "src/app/iceberg-controls.ts",
+    "src/app/app-schema.ts",
+    "src/app/IcebergCanvas.tsx",
+    "src/app/useIcebergEngine.ts",
+    "e2e"
+  ],
+  "decision": "Translate product labels, help text, accessible canvas name and error copy; update app-owned label locators. Keep target values and original user-request evidence.",
+  "result": "All product labels, help text, canvas accessible name and WebGL error are English. Original request evidence remains verbatim. Longer labels fit after using Iceberg width and On block.",
+  "checks": [
+    "Schema parameter/default contract passed; coverage passed after disambiguating Iceberg width (cee2839b-1662-4d6d-9d3a-b45fe5fcca22).",
+    "Focused iceberg.rockColor browser acceptance passed (591ad4fb-70c1-441f-add5-12b34416e88b). Earlier runs record source changes during validation and a concurrent Playwright trace-directory collision.",
+    "Embedded browser: inspected all sections, active engraving controls and two help popovers; no Cyrillic visible text. Source scan finds Cyrillic only in original request evidence."
+  ],
+  "risks": [],
+  "status": "complete"
+}

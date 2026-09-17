@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "changeId": "a34a3c70-57d2-467f-8264-7fec9d1b29d0",
+  "revision": 2,
+  "createdAt": "2026-09-11T09:21:24.163Z",
+  "updatedAt": "2026-09-11T09:29:22.369Z",
+  "legacy": null,
+  "title": "Hide grid projection from the far boundary",
+  "request": {
+    "text": "при таком угле обзора мы не должны видеть клетчатый паттерн дальней грани",
+    "messageRef": null
+  },
+  "owners": [
+    "src/app/iceberg-side-patterns.ts",
+    "e2e/iceberg-grid-facing-check.ts",
+    "e2e/product-iceberg-patterns.spec.ts"
+  ],
+  "decision": "Restrict projected grid ink to cutouts whose physical cube boundary faces the camera. Keep existing near-side planar continuity and all geometry.",
+  "result": "Grid projection is restricted by the physical boundary orientation. Far and edge-on cap/wall patches remain free of grid ink; visible joins retain straight planar grid lines.",
+  "checks": [
+    "Structural render-plan assessment passed.",
+    "GPU regression reproduced 2570 ink pixels on a far cap patch before the fix (fcefb73e-c52b-4e14-a7c1-ccbc531e0e6b).",
+    "Focused gridThickness/gridStrength passed (f29741c0-8fb6-4c49-9fab-f37506d4aab1): 72 facing samples, zero hidden-side ink, straight joins before/after orbit, PNG decode/difference and unchanged rock interior/alpha.",
+    "Embedded Browser inspected current default pose with jagged edge 0.8 and chip scale 3.",
+    "A failed feature preflight encountered a file deleted by concurrent block-engraving removal; retried after that task completed its browser run."
+  ],
+  "risks": [],
+  "status": "complete"
+}

@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "changeId": "66816802-a39f-4fb1-9ee8-c95ab8c1e090",
+  "revision": 2,
+  "createdAt": "2026-09-14T09:59:14.327Z",
+  "updatedAt": "2026-09-14T10:01:54.644Z",
+  "legacy": null,
+  "title": "Four equal base plates",
+  "request": {
+    "text": "посмотри на референс в сообщении выше, я хочу чтобы мы также могли разделить нашу нижнюю часть, которая являектся кубом на 5 пластин, точнее 4 пластины и то, что останется выше с горой. Давай для начала они будут одинаковой толщины.",
+    "messageRef": "current-user-request"
+  },
+  "owners": [
+    "src/app/iceberg-controls.ts",
+    "src/app/iceberg-topology.ts",
+    "src/app/iceberg-shaders.ts",
+    "src/app/iceberg-camera.ts",
+    "e2e/iceberg-plates-check.ts"
+  ],
+  "decision": "Add one shared gap control and four equal closed lower plates beneath the guaranteed solid base core; the upper remainder keeps the mountain.",
+  "result": "Four equal closed lower plates, zero-gap restoration, framing and orbit behavior are implemented and focused verification passed.",
+  "checks": [
+    "TypeScript and focused topology, camera, render-plan and product-coverage units passed.",
+    "Protected test:feature selection iceberg.plateGap passed, journal run f27b24e8-4c7d-41cd-b1af-a036a4316561.",
+    "Embedded Browser confirmed aligned closed plates after direct-model orbit."
+  ],
+  "risks": [
+    "At extreme recess settings the guaranteed solid core becomes thin by design."
+  ],
+  "status": "complete"
+}

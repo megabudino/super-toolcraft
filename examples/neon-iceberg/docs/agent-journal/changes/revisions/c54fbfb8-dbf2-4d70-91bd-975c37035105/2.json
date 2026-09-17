@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "changeId": "c54fbfb8-dbf2-4d70-91bd-975c37035105",
+  "revision": 2,
+  "createdAt": "2026-09-14T13:03:57.704Z",
+  "updatedAt": "2026-09-14T13:15:29.629Z",
+  "legacy": null,
+  "title": "Organic pattern on plate planes",
+  "request": {
+    "text": "добавь теперь на плоскостях вот такой паттерн, скейлом рисунка хочу управлять",
+    "messageRef": "user-latest"
+  },
+  "owners": [
+    "src/app/iceberg-controls.ts",
+    "src/app/iceberg-plane-pattern.ts",
+    "src/app/iceberg-shaders.ts",
+    "src/app/iceberg-inventory.ts",
+    "src/app/app-schema.ts",
+    "src/app/app-defaults.json",
+    "e2e/iceberg-plane-pattern-check.ts",
+    "e2e/product-iceberg-patterns.spec.ts"
+  ],
+  "decision": "Render a deterministic organic binary pattern only on the four exposed lower plate top faces and expose one continuous scale slider in the base-pattern section.",
+  "result": "Added the organic pattern only to the four lower plate top faces with a persistent Pattern scale slider defaulting to 0.5. Focused units, structural assessment, protected live browser acceptance, WebGL region/frequency assertions, and embedded visual inspection passed.",
+  "checks": [
+    "Focused schema and render-plan unit tests",
+    "Protected iceberg.planePatternScale browser acceptance",
+    "Embedded browser visual inspection"
+  ],
+  "risks": [
+    "High-frequency shader detail needs derivative antialiasing; the test must prove scale changes feature frequency without altering side faces."
+  ],
+  "status": "complete"
+}

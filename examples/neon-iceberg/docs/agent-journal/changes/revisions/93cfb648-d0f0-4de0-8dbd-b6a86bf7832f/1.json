@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "changeId": "93cfb648-d0f0-4de0-8dbd-b6a86bf7832f",
+  "revision": 1,
+  "createdAt": "2026-09-11T09:13:25.100Z",
+  "updatedAt": "2026-09-11T09:13:25.100Z",
+  "legacy": null,
+  "title": "English interface copy",
+  "request": {
+    "text": "сделай в приложении все надписи на английском",
+    "messageRef": null
+  },
+  "owners": [
+    "src/app/iceberg-controls.ts",
+    "src/app/app-schema.ts",
+    "src/app/IcebergCanvas.tsx",
+    "src/app/useIcebergEngine.ts",
+    "e2e"
+  ],
+  "decision": "Translate product labels, help text, accessible canvas name and error copy; update app-owned label locators. Keep target values and original user-request evidence.",
+  "result": null,
+  "checks": [
+    "Focused schema and coverage units",
+    "iceberg.rockColor focused browser acceptance",
+    "Embedded inspection of section labels and help text"
+  ],
+  "risks": [],
+  "status": "open"
+}

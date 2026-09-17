@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "changeId": "33f298eb-fc36-4f4d-ab4f-0e0af110bed2",
+  "revision": 2,
+  "createdAt": "2026-09-14T11:52:23.446Z",
+  "updatedAt": "2026-09-14T12:01:49.504Z",
+  "legacy": null,
+  "title": "Apply imported application settings",
+  "request": {
+    "text": "установи такие настройки в этой ветке",
+    "messageRef": "current-user-request"
+  },
+  "owners": [
+    "src/app/app-defaults.json",
+    "src/app/iceberg-product.test.ts",
+    "e2e/product-iceberg-settings.spec.ts"
+  ],
+  "decision": "Promote all compatible values from the supplied Toolcraft settings JSON v3 to canonical source defaults for codex/iceberg-experiments; ignore source-version-only keys and retain the new Plate gap default at zero.",
+  "result": "All compatible values from the supplied settings file are canonical source defaults for codex/iceberg-experiments; Reset and fresh workspaces now restore them.",
+  "checks": [
+    "TypeScript and five focused product/render-plan tests passed.",
+    "Embedded Browser Reset confirmed representative geometry, material, camera, Infinity, background, 1920x1080 dormant finite size and Plate gap zero.",
+    "Protected test:feature selection settings.export passed with the new defaults, journal run 60edebcf-bb38-4ca9-a592-2a84afb71865."
+  ],
+  "risks": [
+    "The supplied payload does not contain iceberg.plateGap, so its branch default remains zero.",
+    "iceberg.carveAmount and iceberg.carveHeight do not exist in this branch and are intentionally omitted."
+  ],
+  "status": "complete"
+}

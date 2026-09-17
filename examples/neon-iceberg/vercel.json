@@ -1,0 +1,26 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm run build -- --base /demos/neon-iceberg/",
+  "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/demos/neon-iceberg",
+      "permanent": false
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/demos/neon-iceberg/assets/:path*",
+      "destination": "/assets/:path*"
+    },
+    {
+      "source": "/demos/neon-iceberg",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/demos/neon-iceberg/:path*",
+      "destination": "/index.html"
+    }
+  ]
+}

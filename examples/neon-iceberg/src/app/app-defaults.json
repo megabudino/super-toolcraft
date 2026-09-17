@@ -1,0 +1,139 @@
+{
+  "version": 2,
+  "appId": "neon-iceberg-2",
+  "state": {
+    "values": {
+      "export.includeBackground": true,
+      "appearance.background": "#FAFAFA",
+      "canvas.aspectRatio": {
+        "height": 4,
+        "mode": "preset",
+        "value": "3:4",
+        "width": 3
+      },
+      "canvas.size.width": 1200,
+      "canvas.size.height": 1600,
+      "canvas.renderScale": 2,
+      "canvas.rotationLocked": false,
+      "iceberg.height": 1.55,
+      "iceberg.width": 2.18,
+      "iceberg.sharpness": 1.39,
+      "iceberg.asymmetry": 0.15,
+      "iceberg.shoulder": 0.63,
+      "iceberg.seed": 97,
+      "view.orbit": {
+        "position": [
+          5.398182941229226,
+          2.21363371348611,
+          4.971865516638815
+        ],
+        "up": [
+          -0.21241246223585997,
+          0.9573959336839413,
+          -0.19563734830638396
+        ]
+      },
+      "iceberg.ridges": 0.66,
+      "iceberg.frequency": 3,
+      "iceberg.erosion": 0,
+      "iceberg.detail": 0.64,
+      "iceberg.depth": 1.36,
+      "iceberg.plateGap": 0.11,
+      "iceberg.seamLevel": -0.03,
+      "iceberg.seamValley": 0.33,
+      "iceberg.seamPhase": 81,
+      "iceberg.seamWarp": 0.52,
+      "iceberg.seamTerraces": 0.6,
+      "iceberg.seamJagged": 1,
+      "iceberg.seamScale": 1,
+      "iceberg.seamVariation": 0.5,
+      "iceberg.seamFrequency": 11.1,
+      "iceberg.cliff": 0.17,
+      "iceberg.frontColumns": 32,
+      "iceberg.rightColumns": 16,
+      "iceberg.backColumns": 14,
+      "iceberg.leftColumns": 10,
+      "iceberg.gridThickness": 2.5,
+      "iceberg.gridStrength": 0.5,
+      "iceberg.planeLineThickness": 90,
+      "iceberg.planeLineDensity": 84,
+      "iceberg.planeLineDirection": 24,
+      "iceberg.rockColor": "#D9DDE0",
+      "iceberg.iceColor": "#F0F1F2",
+      "iceberg.contrast": 0,
+      "iceberg.grain": 0.65,
+      "iceberg.light": 44,
+      "iceberg.lightDrama": 0.66,
+      "iceberg.engravingEnabled": true,
+      "iceberg.engravingStrength": 0.49,
+      "iceberg.engravingScale": 0.65,
+      "iceberg.engravingThickness": 51,
+      "export.image.format": "png",
+      "export.image.resolution": "4k",
+      "export.video.format": "mp4",
+      "export.video.resolution": "4k"
+    },
+    "canvas": {
+      "offset": {
+        "x": -178.9712787005127,
+        "y": -179.04479436816
+      },
+      "size": {
+        "height": 1600,
+        "unit": "px",
+        "width": 1200
+      },
+      "zoom": 130,
+      "mode": "finite"
+    },
+    "panels": {
+      "controls": {
+        "collapsedSections": {
+          "surface": true,
+          "mountain": true,
+          "rock": true,
+          "base": true,
+          "patterns": true
+        },
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "scrollTop": 0
+      },
+      "layers": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      "timeline": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "extended": true
+      },
+      "toolbar": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        }
+      }
+    },
+    "timeline": {
+      "currentTimeSeconds": 1.4322144685072953,
+      "durationSeconds": 2,
+      "expanded": false,
+      "isLooping": true,
+      "isPlaying": true,
+      "selectedKeyframeId": null,
+      "keyframeGroups": []
+    },
+    "layers": [],
+    "selectedLayerId": null,
+    "mediaAssets": []
+  },
+  "resources": [],
+  "theme": "dark"
+}

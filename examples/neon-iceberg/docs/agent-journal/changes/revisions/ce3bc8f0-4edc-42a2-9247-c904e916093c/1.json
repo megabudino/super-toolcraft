@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "changeId": "ce3bc8f0-4edc-42a2-9247-c904e916093c",
+  "revision": 1,
+  "createdAt": "2026-09-14T14:13:17.958Z",
+  "updatedAt": "2026-09-14T14:13:17.958Z",
+  "legacy": null,
+  "title": "Replace horizontal organic print with directional lines",
+  "request": {
+    "text": "давай поменяем паттерн на лайновый. Хочу управлять толщиной линий, плотностью и направлением",
+    "messageRef": "user-latest"
+  },
+  "owners": [
+    "src/app/iceberg-controls.ts",
+    "src/app/iceberg-plane-pattern.ts",
+    "src/app/app-defaults.json",
+    "src/app/iceberg-inventory.ts",
+    "src/app/iceberg-product.test.ts",
+    "e2e/iceberg-plane-pattern-check.ts",
+    "e2e/product-iceberg-patterns.spec.ts"
+  ],
+  "decision": "Replace the organic island threshold with gently warped parallel print lines on the four lower plate tops. Replace Pattern scale and Pattern density with independent Line thickness, Line density and Line direction controls; keep the high-contrast print material and all vertical grid behavior.",
+  "result": null,
+  "checks": [],
+  "risks": [
+    "High density and thickness endpoints must remain antialiased and retain visible paper gaps."
+  ],
+  "status": "open"
+}

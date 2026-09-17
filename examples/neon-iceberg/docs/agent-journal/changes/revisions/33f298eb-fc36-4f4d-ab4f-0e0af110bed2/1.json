@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "changeId": "33f298eb-fc36-4f4d-ab4f-0e0af110bed2",
+  "revision": 1,
+  "createdAt": "2026-09-14T11:52:23.446Z",
+  "updatedAt": "2026-09-14T11:52:23.446Z",
+  "legacy": null,
+  "title": "Apply imported application settings",
+  "request": {
+    "text": "установи такие настройки в этой ветке",
+    "messageRef": "current-user-request"
+  },
+  "owners": [
+    "src/app/app-defaults.json"
+  ],
+  "decision": "Promote all compatible values from the supplied Toolcraft settings JSON v3 to canonical source defaults for codex/iceberg-experiments; ignore source-version-only keys and retain the new Plate gap default at zero.",
+  "result": null,
+  "checks": [],
+  "risks": [
+    "The supplied payload does not contain iceberg.plateGap, so its branch default remains zero.",
+    "iceberg.carveAmount and iceberg.carveHeight do not exist in this branch and are intentionally omitted."
+  ],
+  "status": "open"
+}

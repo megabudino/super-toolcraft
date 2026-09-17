@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "changeId": "6737abb8-bf45-4a62-ba01-374e68dd2f12",
+  "revision": 1,
+  "createdAt": "2026-09-14T10:13:33.828Z",
+  "updatedAt": "2026-09-14T10:13:33.828Z",
+  "legacy": null,
+  "title": "Export application settings",
+  "request": {
+    "text": "мне нужна функция экспорт настроек приложения",
+    "messageRef": "current-user-request"
+  },
+  "owners": [
+    "src/app/app-schema.ts",
+    "src/app/app-composition.tsx",
+    "src/app/iceberg-settings-export.ts",
+    "e2e/product-iceberg-settings.spec.ts"
+  ],
+  "decision": "Add one export-only panel action that downloads Toolcraft's canonical settings JSON v3 from the immutable action state snapshot.",
+  "result": null,
+  "checks": [],
+  "risks": [
+    "The generated standalone runtime normally exposes Save as Defaults instead of settings-file transfer; this explicit app feature remains export-only."
+  ],
+  "status": "open"
+}

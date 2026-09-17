@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "kind": "gallery-release",
+  "slug": "neon-iceberg",
+  "initialDelivery": "accepted-existing-product",
+  "evidence": {
+    "kind": "owner-approval",
+    "testsExecuted": false,
+    "statement": "Owner requested the existing Neon Iceberg app use the same portable accepted-product and focused-development workflow as the other published apps.",
+    "userRequest": "возтми эту апку, проверь чтобы она была как все остальные с пройденным деливери и легкой последующей разработкой, залей ее на версь как остальные и добавь в кейс стадис. Работам сейчас в ветке кейс стадис, так чтобы она устанавливалась через cli как остальные"
+  },
+  "baseline": {
+    "repositoryCommit": "81cc0962221a477fa402cf6b8d2490256902e991",
+    "productTree": "3b332325c0b98e3a430a4cef342183b83c034f29",
+    "archiveFile": "neon-iceberg-experiments-2026-09-16.zip",
+    "archiveSha256": "4fff3a9b5deb3d0307d08dd81c42b4d16412f8f615a1c7c2dc900ee5cf7e4850"
+  },
+  "workflowVersion": 1,
+  "workflowFiles": {
+    "scripts/gallery-workflow/asset-loader.mjs": "f610f1b0c30c84c5ba56778c0efcfc70052e1aa4f5a2ad694ee6c4dbb6ee48a2",
+    "scripts/gallery-workflow/delivery.mjs": "27a7458e06f1254eeb80f81db39e2ac9f5b4906ea0ee24864b5e0fc495ab2392",
+    "scripts/gallery-workflow/feature.mjs": "9b2d58e8a33583ce220aad7a1b974794b1894705a0f4734002b8908ba1d96db8",
+    "scripts/gallery-workflow/playwright.config.mjs": "570ff7fa0d748c705f275afc7d73b37fa73fe43471cf26eb78e78b31cec97959",
+    "scripts/gallery-workflow/process.mjs": "3d6d8a330ac01e589313b5a606caa3ea1f8fbe5ba458994cb6b6ebadf9c8d97b",
+    "scripts/gallery-workflow/register-assets.mjs": "b43a5f5816c7e644b1a21b6aec62cc22516dff630900ac88cc308c8aef5b91cc",
+    "scripts/gallery-workflow/release.mjs": "98a77ec7ba74bd17284c57315f856bd9d99e84bb33c092b1ebf95aecb8b4bedc",
+    "scripts/gallery-workflow/reporter.mjs": "e63a8c96956f9a702250f719f5738ab6c65190780a4402949e20c0388440fc36",
+    "scripts/gallery-workflow/selection.mjs": "cd0b739ecf2f55c6f6d64ec5a8d51fe756925d8f4c4c64e18ed41433ceb2ea00",
+    "scripts/gallery-workflow/source-child.mjs": "5e51e1529ac0d55b57bba8c54fcf0ad44604877c6e5f96b3e7b3d523b199f39b",
+    "AGENTS.md": "a2d13477ba58685cc3f997d184479efa7210aa76273af579610a0b919b6028ee",
+    "docs/toolcraft/gallery-workflow.md": "70a0d4fce0aa82ec7799d23e7103a81dd808f5639896dd1b6fe88f6192a04394"
+  },
+  "packageScripts": {
+    "verify:delivery": "node scripts/gallery-workflow/delivery.mjs",
+    "test:feature": "node scripts/gallery-workflow/feature.mjs"
+  },
+  "signature": "mQftaKi/6pcFixsrHs8s5Cp94dWpssIPkGJTv236kku+8Z5HboN3ulHnT+BFWtF+k8tVxmh7wT55cAXVWEoEBg=="
+}

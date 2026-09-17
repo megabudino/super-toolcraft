@@ -1,0 +1,457 @@
+{
+  "changeMetric": "max-yuva-diff-v1",
+  "contactSheet": {
+    "columns": 7,
+    "height": 1635,
+    "path": "src/app/reference-studies/motion-v1-c25f10dc0664b22b8119fdd99917dec5e832ac66ba1cda562382b16181d1c7d2/contact-sheet.png",
+    "rows": 5,
+    "sha256": "0837ff699f16d08cb87b80d98ec0405ce21723989c5e986f95ac1a5e2bdd8f88",
+    "width": 3360
+  },
+  "decodedFrameCount": 568,
+  "detectedEvents": [
+    {
+      "afterFrameId": "source-frame:166",
+      "beforeFrameId": "source-frame:164",
+      "eventId": "motion-event:change:164-165-166",
+      "kind": "change",
+      "peakFrameId": "source-frame:165",
+      "score": 0.0006181686274509804,
+      "windowFrameIds": [
+        "source-frame:164",
+        "source-frame:165",
+        "source-frame:166"
+      ]
+    },
+    {
+      "afterFrameId": "source-frame:203",
+      "beforeFrameId": "source-frame:201",
+      "eventId": "motion-event:change:201-202-203",
+      "kind": "change",
+      "peakFrameId": "source-frame:202",
+      "score": 0.0011210470588235294,
+      "windowFrameIds": [
+        "source-frame:201",
+        "source-frame:202",
+        "source-frame:203"
+      ]
+    },
+    {
+      "afterFrameId": "source-frame:223",
+      "beforeFrameId": "source-frame:221",
+      "eventId": "motion-event:change:221-222-223",
+      "kind": "change",
+      "peakFrameId": "source-frame:222",
+      "score": 0.002081282352941176,
+      "windowFrameIds": [
+        "source-frame:221",
+        "source-frame:222",
+        "source-frame:223"
+      ]
+    }
+  ],
+  "durationSeconds": 10.067723004694836,
+  "evidenceVersion": 1,
+  "ffmpegVersion": "ffmpeg 9.0.1",
+  "ffprobeVersion": "ffprobe 9.0.1",
+  "focusWindows": [],
+  "height": 1120,
+  "maximumSourceFrameGapSeconds": 0.05,
+  "nominalFrameRate": 56.42384105960265,
+  "overviewFrameIds": [
+    "source-frame:113",
+    "source-frame:116",
+    "source-frame:121",
+    "source-frame:126",
+    "source-frame:131",
+    "source-frame:134",
+    "source-frame:138",
+    "source-frame:143",
+    "source-frame:148",
+    "source-frame:153",
+    "source-frame:158",
+    "source-frame:163",
+    "source-frame:168",
+    "source-frame:172",
+    "source-frame:177",
+    "source-frame:182",
+    "source-frame:187",
+    "source-frame:192",
+    "source-frame:196",
+    "source-frame:201",
+    "source-frame:206",
+    "source-frame:211",
+    "source-frame:216",
+    "source-frame:221",
+    "source-frame:225"
+  ],
+  "overviewTargetFps": 12,
+  "reviewedFrames": [
+    {
+      "cell": {
+        "column": 0,
+        "row": 0
+      },
+      "frameId": "source-frame:113",
+      "sourceFrameIndex": 113,
+      "sourceLocator": "/Users/elenamorozova/Library/Application Support/CleanShot/media/media_g4dK50HAgL/CleanShot 2026-09-10 at 16.15.04.mp4#frame=113",
+      "sourceSha256": "18163fa069d854e8803c7cc0b0be57f11aa36dc3daac50b967a05ceaf7f05bf6",
+      "timeSeconds": 2
+    },
+    {
+      "cell": {
+        "column": 1,
+        "row": 0
+      },
+      "frameId": "source-frame:116",
+      "sourceFrameIndex": 116,
+      "sourceLocator": "/Users/elenamorozova/Library/Application Support/CleanShot/media/media_g4dK50HAgL/CleanShot 2026-09-10 at 16.15.04.mp4#frame=116",
+      "sourceSha256": "18163fa069d854e8803c7cc0b0be57f11aa36dc3daac50b967a05ceaf7f05bf6",
+      "timeSeconds": 2.083333
+    },
+    {
+      "cell": {
+        "column": 2,
+        "row": 0
+      },
+      "frameId": "source-frame:121",
+      "sourceFrameIndex": 121,
+      "sourceLocator": "/Users/elenamorozova/Library/Application Support/CleanShot/media/media_g4dK50HAgL/CleanShot 2026-09-10 at 16.15.04.mp4#frame=121",
+      "sourceSha256": "18163fa069d854e8803c7cc0b0be57f11aa36dc3daac50b967a05ceaf7f05bf6",
+      "timeSeconds": 2.166667
+    },
+    {
+      "cell": {
+        "column": 3,
+        "row": 0
+      },
+      "frameId": "source-frame:126",
+      "sourceFrameIndex": 126,
+      "sourceLocator": "/Users/elenamorozova/Library/Application Support/CleanShot/media/media_g4dK50HAgL/CleanShot 2026-09-10 at 16.15.04.mp4#frame=126",
+      "sourceSha256": "18163fa069d854e8803c7cc0b0be57f11aa36dc3daac50b967a05ceaf7f05bf6",
+      "timeSeconds": 2.25
+    },
+    {
+      "cell": {
+        "column": 4,
+        "row": 0
+      },
+      "frameId": "source-frame:131",
+      "sourceFrameIndex": 131,
+      "sourceLocator": "/Users/elenamorozova/Library/Application Support/CleanShot/media/media_g4dK50HAgL/CleanShot 2026-09-10 at 16.15.04.mp4#frame=131",
+      "sourceSha256": "18163fa069d854e8803c7cc0b0be57f11aa36dc3daac50b967a05ceaf7f05bf6",
+      "timeSeconds": 2.333333
+    },
+    {
+      "cell": {
+        "column": 5,
+        "row": 0
+      },
+      "frameId": "source-frame:134",
+      "sourceFrameIndex": 134,
+      "sourceLocator": "/Users/elenamorozova/Library/Application Support/CleanShot/media/media_g4dK50HAgL/CleanShot 2026-09-10 at 16.15.04.mp4#frame=134",
+      "sourceSha256": "18163fa069d854e8803c7cc0b0be57f11aa36dc3daac50b967a05ceaf7f05bf6",
+      "timeSeconds": 2.416667
+    },
+    {
+      "cell": {
+        "column": 6,
+        "row": 0
+      },
+      "frameId": "source-frame:138",
+      "sourceFrameIndex": 138,
+      "sourceLocator": "/Users/elenamorozova/Library/Application Support/CleanShot/media/media_g4dK50HAgL/CleanShot 2026-09-10 at 16.15.04.mp4#frame=138",
+      "sourceSha256": "18163fa069d854e8803c7cc0b0be57f11aa36dc3daac50b967a05ceaf7f05bf6",
+      "timeSeconds": 2.483333
+    },
+    {
+      "cell": {
+        "column": 0,
+        "row": 1
+      },
+      "frameId": "source-frame:143",
+      "sourceFrameIndex": 143,
+      "sourceLocator": "/Users/elenamorozova/Library/Application Support/CleanShot/media/media_g4dK50HAgL/CleanShot 2026-09-10 at 16.15.04.mp4#frame=143",
+      "sourceSha256": "18163fa069d854e8803c7cc0b0be57f11aa36dc3daac50b967a05ceaf7f05bf6",
+      "timeSeconds": 2.583333
+    },
+    {
+      "cell": {
+        "column": 1,
+        "row": 1
+      },
+      "frameId": "source-frame:148",
+      "sourceFrameIndex": 148,
+      "sourceLocator": "/Users/elenamorozova/Library/Application Support/CleanShot/media/media_g4dK50HAgL/CleanShot 2026-09-10 at 16.15.04.mp4#frame=148",
+      "sourceSha256": "18163fa069d854e8803c7cc0b0be57f11aa36dc3daac50b967a05ceaf7f05bf6",
+      "timeSeconds": 2.666667
+    },
+    {
+      "cell": {
+        "column": 2,
+        "row": 1
+      },
+      "frameId": "source-frame:153",
+      "sourceFrameIndex": 153,
+      "sourceLocator": "/Users/elenamorozova/Library/Application Support/CleanShot/media/media_g4dK50HAgL/CleanShot 2026-09-10 at 16.15.04.mp4#frame=153",
+      "sourceSha256": "18163fa069d854e8803c7cc0b0be57f11aa36dc3daac50b967a05ceaf7f05bf6",
+      "timeSeconds": 2.75
+    },
+    {
+      "cell": {
+        "column": 3,
+        "row": 1
+      },
+      "frameId": "source-frame:158",
+      "sourceFrameIndex": 158,
+      "sourceLocator": "/Users/elenamorozova/Library/Application Support/CleanShot/media/media_g4dK50HAgL/CleanShot 2026-09-10 at 16.15.04.mp4#frame=158",
+      "sourceSha256": "18163fa069d854e8803c7cc0b0be57f11aa36dc3daac50b967a05ceaf7f05bf6",
+      "timeSeconds": 2.833333
+    },
+    {
+      "cell": {
+        "column": 4,
+        "row": 1
+      },
+      "frameId": "source-frame:163",
+      "sourceFrameIndex": 163,
+      "sourceLocator": "/Users/elenamorozova/Library/Application Support/CleanShot/media/media_g4dK50HAgL/CleanShot 2026-09-10 at 16.15.04.mp4#frame=163",
+      "sourceSha256": "18163fa069d854e8803c7cc0b0be57f11aa36dc3daac50b967a05ceaf7f05bf6",
+      "timeSeconds": 2.916667
+    },
+    {
+      "cell": {
+        "column": 5,
+        "row": 1
+      },
+      "frameId": "source-frame:164",
+      "sourceFrameIndex": 164,
+      "sourceLocator": "/Users/elenamorozova/Library/Application Support/CleanShot/media/media_g4dK50HAgL/CleanShot 2026-09-10 at 16.15.04.mp4#frame=164",
+      "sourceSha256": "18163fa069d854e8803c7cc0b0be57f11aa36dc3daac50b967a05ceaf7f05bf6",
+      "timeSeconds": 2.933333
+    },
+    {
+      "cell": {
+        "column": 6,
+        "row": 1
+      },
+      "frameId": "source-frame:165",
+      "sourceFrameIndex": 165,
+      "sourceLocator": "/Users/elenamorozova/Library/Application Support/CleanShot/media/media_g4dK50HAgL/CleanShot 2026-09-10 at 16.15.04.mp4#frame=165",
+      "sourceSha256": "18163fa069d854e8803c7cc0b0be57f11aa36dc3daac50b967a05ceaf7f05bf6",
+      "timeSeconds": 2.95
+    },
+    {
+      "cell": {
+        "column": 0,
+        "row": 2
+      },
+      "frameId": "source-frame:166",
+      "sourceFrameIndex": 166,
+      "sourceLocator": "/Users/elenamorozova/Library/Application Support/CleanShot/media/media_g4dK50HAgL/CleanShot 2026-09-10 at 16.15.04.mp4#frame=166",
+      "sourceSha256": "18163fa069d854e8803c7cc0b0be57f11aa36dc3daac50b967a05ceaf7f05bf6",
+      "timeSeconds": 2.966667
+    },
+    {
+      "cell": {
+        "column": 1,
+        "row": 2
+      },
+      "frameId": "source-frame:168",
+      "sourceFrameIndex": 168,
+      "sourceLocator": "/Users/elenamorozova/Library/Application Support/CleanShot/media/media_g4dK50HAgL/CleanShot 2026-09-10 at 16.15.04.mp4#frame=168",
+      "sourceSha256": "18163fa069d854e8803c7cc0b0be57f11aa36dc3daac50b967a05ceaf7f05bf6",
+      "timeSeconds": 3
+    },
+    {
+      "cell": {
+        "column": 2,
+        "row": 2
+      },
+      "frameId": "source-frame:172",
+      "sourceFrameIndex": 172,
+      "sourceLocator": "/Users/elenamorozova/Library/Application Support/CleanShot/media/media_g4dK50HAgL/CleanShot 2026-09-10 at 16.15.04.mp4#frame=172",
+      "sourceSha256": "18163fa069d854e8803c7cc0b0be57f11aa36dc3daac50b967a05ceaf7f05bf6",
+      "timeSeconds": 3.083333
+    },
+    {
+      "cell": {
+        "column": 3,
+        "row": 2
+      },
+      "frameId": "source-frame:177",
+      "sourceFrameIndex": 177,
+      "sourceLocator": "/Users/elenamorozova/Library/Application Support/CleanShot/media/media_g4dK50HAgL/CleanShot 2026-09-10 at 16.15.04.mp4#frame=177",
+      "sourceSha256": "18163fa069d854e8803c7cc0b0be57f11aa36dc3daac50b967a05ceaf7f05bf6",
+      "timeSeconds": 3.166667
+    },
+    {
+      "cell": {
+        "column": 4,
+        "row": 2
+      },
+      "frameId": "source-frame:182",
+      "sourceFrameIndex": 182,
+      "sourceLocator": "/Users/elenamorozova/Library/Application Support/CleanShot/media/media_g4dK50HAgL/CleanShot 2026-09-10 at 16.15.04.mp4#frame=182",
+      "sourceSha256": "18163fa069d854e8803c7cc0b0be57f11aa36dc3daac50b967a05ceaf7f05bf6",
+      "timeSeconds": 3.25
+    },
+    {
+      "cell": {
+        "column": 5,
+        "row": 2
+      },
+      "frameId": "source-frame:187",
+      "sourceFrameIndex": 187,
+      "sourceLocator": "/Users/elenamorozova/Library/Application Support/CleanShot/media/media_g4dK50HAgL/CleanShot 2026-09-10 at 16.15.04.mp4#frame=187",
+      "sourceSha256": "18163fa069d854e8803c7cc0b0be57f11aa36dc3daac50b967a05ceaf7f05bf6",
+      "timeSeconds": 3.333333
+    },
+    {
+      "cell": {
+        "column": 6,
+        "row": 2
+      },
+      "frameId": "source-frame:192",
+      "sourceFrameIndex": 192,
+      "sourceLocator": "/Users/elenamorozova/Library/Application Support/CleanShot/media/media_g4dK50HAgL/CleanShot 2026-09-10 at 16.15.04.mp4#frame=192",
+      "sourceSha256": "18163fa069d854e8803c7cc0b0be57f11aa36dc3daac50b967a05ceaf7f05bf6",
+      "timeSeconds": 3.416667
+    },
+    {
+      "cell": {
+        "column": 0,
+        "row": 3
+      },
+      "frameId": "source-frame:196",
+      "sourceFrameIndex": 196,
+      "sourceLocator": "/Users/elenamorozova/Library/Application Support/CleanShot/media/media_g4dK50HAgL/CleanShot 2026-09-10 at 16.15.04.mp4#frame=196",
+      "sourceSha256": "18163fa069d854e8803c7cc0b0be57f11aa36dc3daac50b967a05ceaf7f05bf6",
+      "timeSeconds": 3.5
+    },
+    {
+      "cell": {
+        "column": 1,
+        "row": 3
+      },
+      "frameId": "source-frame:201",
+      "sourceFrameIndex": 201,
+      "sourceLocator": "/Users/elenamorozova/Library/Application Support/CleanShot/media/media_g4dK50HAgL/CleanShot 2026-09-10 at 16.15.04.mp4#frame=201",
+      "sourceSha256": "18163fa069d854e8803c7cc0b0be57f11aa36dc3daac50b967a05ceaf7f05bf6",
+      "timeSeconds": 3.583333
+    },
+    {
+      "cell": {
+        "column": 2,
+        "row": 3
+      },
+      "frameId": "source-frame:202",
+      "sourceFrameIndex": 202,
+      "sourceLocator": "/Users/elenamorozova/Library/Application Support/CleanShot/media/media_g4dK50HAgL/CleanShot 2026-09-10 at 16.15.04.mp4#frame=202",
+      "sourceSha256": "18163fa069d854e8803c7cc0b0be57f11aa36dc3daac50b967a05ceaf7f05bf6",
+      "timeSeconds": 3.6
+    },
+    {
+      "cell": {
+        "column": 3,
+        "row": 3
+      },
+      "frameId": "source-frame:203",
+      "sourceFrameIndex": 203,
+      "sourceLocator": "/Users/elenamorozova/Library/Application Support/CleanShot/media/media_g4dK50HAgL/CleanShot 2026-09-10 at 16.15.04.mp4#frame=203",
+      "sourceSha256": "18163fa069d854e8803c7cc0b0be57f11aa36dc3daac50b967a05ceaf7f05bf6",
+      "timeSeconds": 3.616667
+    },
+    {
+      "cell": {
+        "column": 4,
+        "row": 3
+      },
+      "frameId": "source-frame:206",
+      "sourceFrameIndex": 206,
+      "sourceLocator": "/Users/elenamorozova/Library/Application Support/CleanShot/media/media_g4dK50HAgL/CleanShot 2026-09-10 at 16.15.04.mp4#frame=206",
+      "sourceSha256": "18163fa069d854e8803c7cc0b0be57f11aa36dc3daac50b967a05ceaf7f05bf6",
+      "timeSeconds": 3.666667
+    },
+    {
+      "cell": {
+        "column": 5,
+        "row": 3
+      },
+      "frameId": "source-frame:211",
+      "sourceFrameIndex": 211,
+      "sourceLocator": "/Users/elenamorozova/Library/Application Support/CleanShot/media/media_g4dK50HAgL/CleanShot 2026-09-10 at 16.15.04.mp4#frame=211",
+      "sourceSha256": "18163fa069d854e8803c7cc0b0be57f11aa36dc3daac50b967a05ceaf7f05bf6",
+      "timeSeconds": 3.75
+    },
+    {
+      "cell": {
+        "column": 6,
+        "row": 3
+      },
+      "frameId": "source-frame:216",
+      "sourceFrameIndex": 216,
+      "sourceLocator": "/Users/elenamorozova/Library/Application Support/CleanShot/media/media_g4dK50HAgL/CleanShot 2026-09-10 at 16.15.04.mp4#frame=216",
+      "sourceSha256": "18163fa069d854e8803c7cc0b0be57f11aa36dc3daac50b967a05ceaf7f05bf6",
+      "timeSeconds": 3.833333
+    },
+    {
+      "cell": {
+        "column": 0,
+        "row": 4
+      },
+      "frameId": "source-frame:221",
+      "sourceFrameIndex": 221,
+      "sourceLocator": "/Users/elenamorozova/Library/Application Support/CleanShot/media/media_g4dK50HAgL/CleanShot 2026-09-10 at 16.15.04.mp4#frame=221",
+      "sourceSha256": "18163fa069d854e8803c7cc0b0be57f11aa36dc3daac50b967a05ceaf7f05bf6",
+      "timeSeconds": 3.916667
+    },
+    {
+      "cell": {
+        "column": 1,
+        "row": 4
+      },
+      "frameId": "source-frame:222",
+      "sourceFrameIndex": 222,
+      "sourceLocator": "/Users/elenamorozova/Library/Application Support/CleanShot/media/media_g4dK50HAgL/CleanShot 2026-09-10 at 16.15.04.mp4#frame=222",
+      "sourceSha256": "18163fa069d854e8803c7cc0b0be57f11aa36dc3daac50b967a05ceaf7f05bf6",
+      "timeSeconds": 3.933333
+    },
+    {
+      "cell": {
+        "column": 2,
+        "row": 4
+      },
+      "frameId": "source-frame:223",
+      "sourceFrameIndex": 223,
+      "sourceLocator": "/Users/elenamorozova/Library/Application Support/CleanShot/media/media_g4dK50HAgL/CleanShot 2026-09-10 at 16.15.04.mp4#frame=223",
+      "sourceSha256": "18163fa069d854e8803c7cc0b0be57f11aa36dc3daac50b967a05ceaf7f05bf6",
+      "timeSeconds": 3.95
+    },
+    {
+      "cell": {
+        "column": 3,
+        "row": 4
+      },
+      "frameId": "source-frame:225",
+      "sourceFrameIndex": 225,
+      "sourceLocator": "/Users/elenamorozova/Library/Application Support/CleanShot/media/media_g4dK50HAgL/CleanShot 2026-09-10 at 16.15.04.mp4#frame=225",
+      "sourceSha256": "18163fa069d854e8803c7cc0b0be57f11aa36dc3daac50b967a05ceaf7f05bf6",
+      "timeSeconds": 4
+    }
+  ],
+  "scannedFrameCount": 568,
+  "segment": {
+    "endSeconds": 4,
+    "startSeconds": 2
+  },
+  "sourceBasename": "CleanShot 2026-09-10 at 16.15.04.mp4",
+  "sourceKind": "screen-recording",
+  "sourceSha256": "18163fa069d854e8803c7cc0b0be57f11aa36dc3daac50b967a05ceaf7f05bf6",
+  "studyId": "motion-v1-c25f10dc0664b22b8119fdd99917dec5e832ac66ba1cda562382b16181d1c7d2",
+  "timing": {
+    "authority": "decoded-timestamps"
+  },
+  "timingMode": "seconds",
+  "width": 1642
+}

@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "changeId": "02387229-d3af-4af3-981c-eba477aee975",
+  "revision": 2,
+  "createdAt": "2026-09-14T13:34:43.631Z",
+  "updatedAt": "2026-09-14T13:41:29.734Z",
+  "legacy": null,
+  "title": "Increase horizontal plane pattern contrast",
+  "request": {
+    "text": "мне не хватает контрастности между горизонтальным паттерном и вертикальными , как на рефе, там очень хороший контраст. А у нас как ни меняй скейл - не получается",
+    "messageRef": "user-latest"
+  },
+  "owners": [
+    "src/app/iceberg-plane-pattern.ts",
+    "src/app/iceberg-shaders.ts",
+    "e2e/iceberg-plane-pattern-check.ts"
+  ],
+  "decision": "Render lower plate top faces as a dedicated high-contrast print layer with a near-white paper tone, near-black pattern ink, and strongly reduced grain response. Keep Pattern scale responsible only for pattern feature size and preserve the independently lit vertical grid faces.",
+  "result": "Horizontal plate planes now use a near-white/near-black print response independent of directional face lighting and with only 8% of shared grain. Protected feature verification and embedded visual inspection passed; canvas zoom was restored to 60%.",
+  "checks": [
+    "Protected iceberg.planePatternScale browser and WebGL verification",
+    "Embedded Browser visual comparison at 60% and 80%",
+    "git diff --check"
+  ],
+  "risks": [
+    "A hard material override could flatten the horizontal surfaces; retain slight grain while removing directional lighting from the print tone."
+  ],
+  "status": "complete"
+}

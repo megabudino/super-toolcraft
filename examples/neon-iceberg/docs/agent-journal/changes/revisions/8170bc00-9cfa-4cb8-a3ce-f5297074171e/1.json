@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "changeId": "8170bc00-9cfa-4cb8-a3ce-f5297074171e",
+  "revision": 1,
+  "createdAt": "2026-09-14T13:49:36.699Z",
+  "updatedAt": "2026-09-14T13:49:36.699Z",
+  "legacy": null,
+  "title": "Add horizontal pattern density control",
+  "request": {
+    "text": "может добавить параметр плотности паттерна?",
+    "messageRef": "user-latest"
+  },
+  "owners": [
+    "src/app/iceberg-controls.ts",
+    "src/app/iceberg-plane-pattern.ts",
+    "src/app/app-defaults.json",
+    "src/app/iceberg-inventory.ts",
+    "e2e/iceberg-plane-pattern-check.ts",
+    "e2e/product-iceberg-patterns.spec.ts"
+  ],
+  "decision": "Add Pattern density next to Pattern scale as an independent continuous parameter. Density changes the dark-ink coverage from sparse to dense while scale continues to control feature size; 0.5 preserves the current threshold.",
+  "result": null,
+  "checks": [],
+  "risks": [
+    "Density endpoints must preserve recognizable black and white regions instead of collapsing to a solid plane."
+  ],
+  "status": "open"
+}
