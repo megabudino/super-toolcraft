@@ -1,4 +1,4 @@
-import type { ResolvedToolcraftAppSchema } from "@/toolcraft/runtime";
+import type { ResolvedToolcraftAppSchema, ToolcraftRendererPipeline } from "@/toolcraft/runtime";
 
 import {
   getToolcraftAnimationConfigurationErrors,
@@ -52,6 +52,7 @@ import { getToolcraftBrowserProofErrors } from "./browser-proof";
 export type ToolcraftAcceptanceValidationInput = {
   acceptance: readonly ToolcraftComponentAcceptance[];
   productReadiness: ToolcraftProductReadiness;
+  rendererPipeline?: ToolcraftRendererPipeline;
   schema: ResolvedToolcraftAppSchema;
   sectionInventory: readonly ToolcraftControlSectionInventoryEntry[];
   transferMode: ToolcraftTransferMode;
@@ -74,16 +75,11 @@ export function collectToolcraftVisibleAcceptanceControls(
 function createToolcraftAcceptanceValidationContext({
   acceptance,
   productReadiness,
+  rendererPipeline,
   schema,
   sectionInventory,
   transferMode,
-}: {
-  acceptance: readonly ToolcraftComponentAcceptance[];
-  productReadiness: ToolcraftProductReadiness;
-  schema: ResolvedToolcraftAppSchema;
-  sectionInventory: readonly ToolcraftControlSectionInventoryEntry[];
-  transferMode: ToolcraftTransferMode;
-}): ToolcraftAcceptanceValidationContext {
+}: ToolcraftAcceptanceValidationInput): ToolcraftAcceptanceValidationContext {
   const controls = collectToolcraftVisibleAcceptanceControls(schema);
   const persistence = getToolcraftPersistenceCoverageResult({
     acceptance,
@@ -97,6 +93,7 @@ function createToolcraftAcceptanceValidationContext({
     layersEnabled: Boolean(schema.panels.layers),
     persistence,
     productReadiness,
+    rendererPipeline,
     schema,
     sectionInventory,
     timelineMode: schema.panels.timeline?.enabled
@@ -262,10 +259,11 @@ const toolcraftAcceptanceValidators: readonly ToolcraftAcceptanceValidator[] = [
   {
     path: "acceptance.infinityCanvasCoverage",
     ruleId: "infinity-canvas-scene-bounds",
-    validate: ({ acceptance, productReadiness, schema }) =>
+    validate: ({ acceptance, productReadiness, rendererPipeline, schema }) =>
       getToolcraftInfinityCanvasCoverageErrors({
         acceptance,
         productReadiness,
+        rendererPipeline,
         schema,
       }),
   },
@@ -308,6 +306,7 @@ export function validateToolcraftAcceptanceDiagnostics(
 export function validateToolcraftAcceptanceCoverage({
   acceptance,
   productReadiness,
+  rendererPipeline,
   schema,
   sectionInventory,
   transferMode,
@@ -316,6 +315,7 @@ export function validateToolcraftAcceptanceCoverage({
     validateToolcraftAcceptanceDiagnostics({
       acceptance,
       productReadiness,
+      rendererPipeline,
       schema,
       sectionInventory,
       transferMode,

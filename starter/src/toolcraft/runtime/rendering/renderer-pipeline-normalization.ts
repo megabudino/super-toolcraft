@@ -1,3 +1,4 @@
+import { normalizeRendererSceneBounds } from "./renderer-scene-bounds";
 import type { ToolcraftGpuPassExecution } from "./renderer-gpu-contract";
 import { normalizeToolcraftGpuPassExecution } from "./renderer-gpu-execution-normalization";
 import type { ToolcraftInteractionInvalidation, ToolcraftRenderPass,
@@ -235,6 +236,7 @@ function clonePass(
     output: pass.output,
     quality: pass.quality,
     runsOn: pass.runsOn,
+    ...(pass.sceneBounds === undefined ? {} : { sceneBounds: normalizeRendererSceneBounds(pass.sceneBounds) }),
   });
 }
 

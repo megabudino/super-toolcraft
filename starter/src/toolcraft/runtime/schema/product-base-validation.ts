@@ -5,10 +5,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
 }
 
-function collectAuthoredControlBoundaryErrors(
-  base: ToolcraftProductBase,
-  errors: string[],
-): void {
+function collectAuthoredControlBoundaryErrors(base: ToolcraftProductBase, errors: string[]): void {
   const controlsPanel = base.panels.controls;
   if (controlsPanel === undefined) return;
 
@@ -30,10 +27,7 @@ function collectAuthoredControlBoundaryErrors(
           `Toolcraft product-authored control "${controlId}" cannot declare visibleWhen; use applicability.`,
         );
       }
-      if (
-        isRecord(control.applicability) &&
-        Object.hasOwn(control.applicability, "origin")
-      ) {
+      if (isRecord(control.applicability) && Object.hasOwn(control.applicability, "origin")) {
         errors.push(
           `Toolcraft product-authored control "${controlId}" cannot author applicability.origin; Toolcraft owns resolved provenance.`,
         );
@@ -53,11 +47,7 @@ function collectSerializableProductValueErrors(
   ancestors: WeakSet<object>,
   errors: string[],
 ): void {
-  if (
-    value === null ||
-    typeof value === "string" ||
-    typeof value === "boolean"
-  ) {
+  if (value === null || typeof value === "string" || typeof value === "boolean") {
     return;
   }
   if (value === undefined) {
@@ -121,12 +111,7 @@ function collectSerializableProductValueErrors(
         );
         continue;
       }
-      collectSerializableProductValueErrors(
-        descriptor.value,
-        `${path}.${key}`,
-        ancestors,
-        errors,
-      );
+      collectSerializableProductValueErrors(descriptor.value, `${path}.${key}`, ancestors, errors);
     }
   }
   ancestors.delete(value);
@@ -161,10 +146,8 @@ function collectSerializableArrayErrors(
   for (const key of Reflect.ownKeys(value)) {
     if (key === "length") continue;
     const descriptor = Object.getOwnPropertyDescriptor(value, key);
-    const keyPath =
-      typeof key === "symbol" ? `${path}[symbol]` : `${path}.${key}`;
-    const isIndex =
-      typeof key === "string" && isCanonicalArrayIndex(key, value.length);
+    const keyPath = typeof key === "symbol" ? `${path}[symbol]` : `${path}.${key}`;
+    const isIndex = typeof key === "string" && isCanonicalArrayIndex(key, value.length);
 
     if (!isIndex) {
       errors.push(
@@ -184,12 +167,7 @@ function collectSerializableArrayErrors(
       );
       continue;
     }
-    collectSerializableProductValueErrors(
-      descriptor.value,
-      keyPath,
-      ancestors,
-      errors,
-    );
+    collectSerializableProductValueErrors(descriptor.value, keyPath, ancestors, errors);
   }
   if (indexCount !== value.length) {
     errors.push(
@@ -198,9 +176,7 @@ function collectSerializableArrayErrors(
   }
 }
 
-export function getToolcraftProductPlainDataValidationErrors(
-  base: unknown,
-): readonly string[] {
+export function getToolcraftProductPlainDataValidationErrors(base: unknown): readonly string[] {
   const errors: string[] = [];
   collectSerializableProductValueErrors(base, "base", new WeakSet(), errors);
   return Object.freeze(errors.sort());
@@ -267,8 +243,7 @@ export function getToolcraftProductBaseSemanticValidationErrors(
   const contributions = resolution.contributionResolution;
   if (
     base.panels.controls === undefined &&
-    (contributions.controlSections.length > 0 ||
-      contributions.panelActionsSection !== undefined)
+    (contributions.controlSections.length > 0 || contributions.panelActionsSection !== undefined)
   ) {
     errors.push(
       "Toolcraft product definition cannot compose module control contributions without a base controls panel.",

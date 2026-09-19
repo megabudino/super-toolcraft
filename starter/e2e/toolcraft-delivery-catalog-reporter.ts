@@ -90,6 +90,7 @@ export async function validateToolcraftDeliveryCatalogReferences(
   {
     acceptance,
     productReadiness,
+    rendererPipeline,
     rootDir,
     schema,
     sectionInventory,
@@ -101,6 +102,7 @@ export async function validateToolcraftDeliveryCatalogReferences(
   const semanticErrors = validateToolcraftAcceptanceCoverage({
     acceptance,
     productReadiness,
+    rendererPipeline,
     schema,
     sectionInventory,
     transferMode,
@@ -144,6 +146,7 @@ export default class ToolcraftDeliveryCatalogReporter implements Reporter {
       const referenceValidationInput = {
         acceptance: appAcceptance,
         productReadiness: appProductReadiness,
+        rendererPipeline: appPerformance.rendererPipeline,
         rootDir: projectRoot,
         schema: appSchema,
         sectionInventory: appControlSectionInventory,

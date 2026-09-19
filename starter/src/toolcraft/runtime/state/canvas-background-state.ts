@@ -69,6 +69,7 @@ export function normalizeToolcraftCanvasModeForBackground({
   values: Readonly<Record<string, unknown>>;
 }): ReadonlyToolcraftState["canvas"]["mode"] {
   return mode === "infinite" &&
+    schema.canvas.infinityBackgroundPolicy !== "optional" &&
     !isToolcraftRuntimeBackgroundEnabled({ schema, values })
     ? "finite"
     : mode;

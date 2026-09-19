@@ -1,3 +1,4 @@
+import { validateContribution as masks } from "../modules/built-ins/masks/declaration";
 import { validateContribution as canvas_editing } from "../modules/built-ins/canvas-editing/declaration";
 import { validateContribution as spatial_view } from "../modules/built-ins/spatial-view/declaration";
 import { validateContribution as layers } from "../modules/built-ins/layers/declaration";
@@ -12,6 +13,7 @@ import type { ToolcraftProductModuleContribution } from "../modules/contract/con
 import type { ToolcraftContributionValidator } from "../modules/contract/validate-module-contribution";
 
 const validators = Object.freeze({
+  masks,
   "canvas-editing": canvas_editing,
   "spatial-view": spatial_view,
   "layers": layers,

@@ -207,6 +207,7 @@ export function renderBasicControl({
     case "select":
       return (
         <Select
+          disabled={control.disabled}
           key={id}
           name={name}
           onValueChange={commit}
@@ -275,6 +276,7 @@ export function renderBasicControl({
       return withKeyframeLabelAction({
         children: (
           <TextInput
+            disabled={control.disabled}
             commitOnBlur={shouldCommitTextControlOnBlur(control)}
             defaultValue={asString(control.defaultValue, asString(value))}
             key={id}
@@ -298,6 +300,7 @@ export function renderBasicControl({
       return withKeyframeLabelAction({
         children: (
           <Vector
+            disabled={control.disabled}
             defaultValue={asVectorValue(control.defaultValue)}
             key={id}
             name={name}

@@ -1,3 +1,4 @@
+import { appPerformance } from "./app-performance";
 import {
   getToolcraftControlKeyframeCapability,
   type ResolvedToolcraftAppSchema,
@@ -47,6 +48,7 @@ import type {
   ToolcraftInteractionOwnershipEntry,
   ToolcraftInteractionSurface,
   ToolcraftInfinityCanvasCoverage,
+  ToolcraftInfinityOverflowCoverage,
   ToolcraftMediaLifecycleCoverage,
   ToolcraftModelImportCoverage,
   ToolcraftOrientationGizmoCoverage,
@@ -136,6 +138,7 @@ export type {
   ToolcraftInteractionOwnershipEntry,
   ToolcraftInteractionSurface,
   ToolcraftInfinityCanvasCoverage,
+  ToolcraftInfinityOverflowCoverage,
   ToolcraftMediaLifecycleCoverage,
   ToolcraftModelImportCoverage,
   ToolcraftOrientationGizmoCoverage,
@@ -254,6 +257,7 @@ export function validateToolcraftAcceptanceCoverage(
     : {
         acceptance,
         productReadiness,
+        rendererPipeline: appPerformance.rendererPipeline,
         schema: inputOrSchema,
         sectionInventory,
         transferMode,
@@ -266,6 +270,7 @@ export function validateProductAcceptanceCoverage(): string[] {
   return validateToolcraftAcceptanceCoverage({
     acceptance: appAcceptance,
     productReadiness: appProductReadiness,
+    rendererPipeline: appPerformance.rendererPipeline,
     schema: appSchema,
     sectionInventory: appControlSectionInventory,
     transferMode: appTransferMode,

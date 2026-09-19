@@ -1,4 +1,5 @@
 import type { ToolcraftArtifactExportActionRole } from "../../schema/artifact-export-actions";
+import type { ToolcraftSettingsContribution } from "./control-section-contribution";
 import type {
   ToolcraftControlApplicabilitySchema,
   ToolcraftControlLayoutGroupSchema,
@@ -12,6 +13,7 @@ export type ToolcraftProductModuleContributionId =
   | "canvas-editing.behavior"
   | "image-export.action"
   | "image-export.settings"
+  | "masks.settings"
   | "layers.persistence"
   | "layers.surface"
   | "media-source.persistence"
@@ -96,66 +98,63 @@ type ToolcraftArtifactSettingsSectionFields<
   title: NonNullable<ToolcraftControlSectionSchema["title"]>;
 }>;
 
-export type ToolcraftImageExportSettingsSection =
-  ToolcraftArtifactSettingsSectionFields<Readonly<{
+export type ToolcraftImageExportSettingsSection = ToolcraftArtifactSettingsSectionFields<
+  Readonly<{
     imageFormat: ToolcraftArtifactSettingsSelectControl<
-      ToolcraftArtifactSettingsPerformanceRoleFor<
-        "image-export.settings",
-        "imageFormat"
-      >
+      ToolcraftArtifactSettingsPerformanceRoleFor<"image-export.settings", "imageFormat">
     >;
     imageResolution: ToolcraftArtifactSettingsSelectControl<
-      ToolcraftArtifactSettingsPerformanceRoleFor<
-        "image-export.settings",
-        "imageResolution"
-      >
+      ToolcraftArtifactSettingsPerformanceRoleFor<"image-export.settings", "imageResolution">
     >;
-  }>>;
+  }>
+>;
 
-export type ToolcraftVideoExportSettingsSection =
-  ToolcraftArtifactSettingsSectionFields<Readonly<{
+export type ToolcraftVideoExportSettingsSection = ToolcraftArtifactSettingsSectionFields<
+  Readonly<{
     videoFormat: ToolcraftArtifactSettingsSelectControl<
-      ToolcraftArtifactSettingsPerformanceRoleFor<
-        "video-export.settings",
-        "videoFormat"
-      >
+      ToolcraftArtifactSettingsPerformanceRoleFor<"video-export.settings", "videoFormat">
     >;
     videoResolution: ToolcraftArtifactSettingsSelectControl<
-      ToolcraftArtifactSettingsPerformanceRoleFor<
-        "video-export.settings",
-        "videoResolution"
-      >
+      ToolcraftArtifactSettingsPerformanceRoleFor<"video-export.settings", "videoResolution">
     >;
-  }>>;
+  }>
+>;
 
 export type ToolcraftArtifactSettingsSection =
   | ToolcraftImageExportSettingsSection
   | ToolcraftVideoExportSettingsSection;
 
-type ToolcraftArtifactSettingsContributionFields<
-  Section extends ToolcraftArtifactSettingsSection,
-> = Readonly<{
-  kind: "control-section";
-  placement: Readonly<{
-    after: readonly ToolcraftArtifactSettingsContributionId[];
-    before: readonly ToolcraftArtifactSettingsContributionId[];
-    slot: "artifact-settings";
+type ToolcraftArtifactSettingsContributionFields<Section extends ToolcraftArtifactSettingsSection> =
+  Readonly<{
+    kind: "control-section";
+    placement: Readonly<{
+      after: readonly ToolcraftArtifactSettingsContributionId[];
+      before: readonly ToolcraftArtifactSettingsContributionId[];
+      slot: "artifact-settings";
+    }>;
+    runtimeSectionId: `runtime.${string}`;
+    section: Section;
   }>;
-  runtimeSectionId: `runtime.${string}`;
-  section: Section;
-}>;
 
 export type ToolcraftControlSectionModuleContribution =
-  | ToolcraftArtifactSettingsContributionFields<ToolcraftImageExportSettingsSection> &
+  | Readonly<{
+      id: "masks.settings";
+      kind: "control-section";
+      moduleId: "masks";
+      placement: Readonly<{ after: readonly "masks.settings"[]; before: readonly "masks.settings"[]; slot: "product-settings" }>;
+      runtimeSectionId: "runtime.masks";
+      section: ToolcraftSettingsContribution["section"];
+    }>
+  | (ToolcraftArtifactSettingsContributionFields<ToolcraftImageExportSettingsSection> &
       Readonly<{
         id: "image-export.settings";
         moduleId: "image-export";
-      }>
-  | ToolcraftArtifactSettingsContributionFields<ToolcraftVideoExportSettingsSection> &
+      }>)
+  | (ToolcraftArtifactSettingsContributionFields<ToolcraftVideoExportSettingsSection> &
       Readonly<{
         id: "video-export.settings";
         moduleId: "video-export";
-      }>;
+      }>);
 
 export type ToolcraftPanelActionModuleContribution =
   | Readonly<{

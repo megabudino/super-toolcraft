@@ -58,10 +58,12 @@ function createTargetDouble(
   let size: readonly [number, number] = [2, 1];
   let rgba = initialRgba;
   return {
-    read: vi.fn(async () => {
-      order.push("read");
-      return rgba;
-    }),
+    color: {
+      read: vi.fn(async () => {
+        order.push("read");
+        return rgba;
+      }),
+    },
     resize: vi.fn((nextSize: readonly [number, number]) => {
       size = nextSize;
       rgba = new Uint8Array(nextSize[0] * nextSize[1] * 4).fill(9);
@@ -162,6 +164,7 @@ describe("Toolcraft VGPU export", () => {
       size: [2, 1],
     });
     expect(render).toHaveBeenCalledTimes(1);
+    expect(target.color.read).toHaveBeenCalledWith({ mipLevel: 0, region: "all" });
     expect(order).toEqual([
       "frame",
       "render",
@@ -288,7 +291,7 @@ describe("Toolcraft VGPU export", () => {
     const secondRead = deferred<Uint8Array>();
     const secondReadStarted = deferred<void>();
     const target = createTargetDouble();
-    vi.mocked(target.read)
+    vi.mocked(target.color.read)
       .mockImplementationOnce(() => {
         firstReadStarted.resolve();
         return firstRead.promise;
@@ -330,7 +333,7 @@ describe("Toolcraft VGPU export", () => {
     await firstReadStarted.promise;
 
     expect(vgpu.frame).toHaveBeenCalledTimes(1);
-    expect(target.read).toHaveBeenCalledTimes(1);
+    expect(target.color.read).toHaveBeenCalledTimes(1);
     expect(target.resize).not.toHaveBeenCalled();
 
     firstRead.resolve(new Uint8Array(8));
@@ -338,7 +341,7 @@ describe("Toolcraft VGPU export", () => {
     await secondReadStarted.promise;
 
     expect(vgpu.frame).toHaveBeenCalledTimes(2);
-    expect(target.read).toHaveBeenCalledTimes(2);
+    expect(target.color.read).toHaveBeenCalledTimes(2);
     expect(target.resize).toHaveBeenCalledTimes(resizeCount);
 
     secondRead.resolve(new Uint8Array(width * height * 4));
@@ -352,7 +355,7 @@ describe("Toolcraft VGPU export", () => {
     const secondRead = deferred<Uint8Array>();
     const secondReadStarted = deferred<void>();
     const target = createTargetDouble();
-    vi.mocked(target.read).mockImplementationOnce(() => {
+    vi.mocked(target.color.read).mockImplementationOnce(() => {
       secondReadStarted.resolve();
       return secondRead.promise;
     });
@@ -393,13 +396,13 @@ describe("Toolcraft VGPU export", () => {
     await firstFrameStarted.promise;
 
     expect(vgpu.frame).toHaveBeenCalledTimes(1);
-    expect(target.read).not.toHaveBeenCalled();
+    expect(target.color.read).not.toHaveBeenCalled();
     firstDone.resolve();
 
     await expect(first).rejects.toMatchObject({ code: "vgpu-export-failed" });
     await secondReadStarted.promise;
     expect(vgpu.frame).toHaveBeenCalledTimes(2);
-    expect(target.read).toHaveBeenCalledTimes(1);
+    expect(target.color.read).toHaveBeenCalledTimes(1);
 
     secondRead.resolve(new Uint8Array(8));
     await expect(second).resolves.toBeUndefined();
@@ -522,7 +525,7 @@ describe("Toolcraft VGPU export", () => {
   it("rejects invalid dimensions and mismatched readback bytes", async () => {
     const gpu = createGpuDouble();
     const target = createTargetDouble();
-    vi.mocked(target.read).mockResolvedValueOnce(new Uint8Array(7));
+    vi.mocked(target.color.read).mockResolvedValueOnce(new Uint8Array(7));
     const provider = createToolcraftVgpuProvider({
       init: vi.fn(async () => gpu),
       navigator: { gpu: {} },

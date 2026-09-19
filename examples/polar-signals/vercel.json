@@ -1,0 +1,26 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm run build -- --base /demos/polar-signals/",
+  "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/demos/polar-signals",
+      "permanent": false
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/demos/polar-signals/assets/:path*",
+      "destination": "/assets/:path*"
+    },
+    {
+      "source": "/demos/polar-signals",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/demos/polar-signals/:path*",
+      "destination": "/index.html"
+    }
+  ]
+}

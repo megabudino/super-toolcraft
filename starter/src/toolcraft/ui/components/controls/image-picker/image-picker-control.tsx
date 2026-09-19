@@ -3,7 +3,7 @@
 import * as React from "react";
 
 import { ControlFieldLabel } from "../../control-layout";
-import { Field } from "../../primitives";
+import { Field, selectedImageOutlineClassName } from "../../primitives";
 import { cn } from "../../../lib/utils";
 
 type ImagePickerColumns = 2 | 3 | 4;
@@ -111,7 +111,7 @@ export function ImagePickerControl({
                 "group/image-picker-item relative min-w-0 cursor-pointer rounded-lg border border-[color:color-mix(in_oklab,var(--border)_10%,transparent)] bg-[color:var(--muted)] p-0 outline-none transition-[border-color,background-color,box-shadow] duration-150 ease-out",
                 "hover:border-[color:color-mix(in_oklab,var(--border)_22%,transparent)] hover:bg-[color:var(--muted)]",
                 "focus-visible:ring-2 focus-visible:ring-[color:color-mix(in_oklab,var(--ring)_30%,transparent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--background)]",
-                "data-[selected=true]:outline data-[selected=true]:outline-[1px] data-[selected=true]:outline-offset-2 data-[selected=true]:outline-[color:var(--border)] data-[selected=true]:[outline-style:solid]",
+                selectedImageOutlineClassName,
               )}
               data-selected={isSelected}
               key={item.value}

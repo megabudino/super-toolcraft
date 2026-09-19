@@ -1,17 +1,11 @@
 import type { ToolcraftCanvasBehaviorModuleContribution } from "../contract/contribution";
 
-type CanvasBehaviorByName<
-  Behavior extends ToolcraftCanvasBehaviorModuleContribution["behavior"],
-> = Extract<
-  ToolcraftCanvasBehaviorModuleContribution,
-  Readonly<{ behavior: Behavior }>
->;
+type CanvasBehaviorByName<Behavior extends ToolcraftCanvasBehaviorModuleContribution["behavior"]> =
+  Extract<ToolcraftCanvasBehaviorModuleContribution, Readonly<{ behavior: Behavior }>>;
 
 export type ResolvedToolcraftCanvasBehavior =
   | Readonly<Pick<CanvasBehaviorByName<"editing">, "behavior" | "operations">>
-  | Readonly<
-      Pick<CanvasBehaviorByName<"spatial-view">, "behavior" | "operations">
-    >;
+  | Readonly<Pick<CanvasBehaviorByName<"spatial-view">, "behavior" | "operations">>;
 
 function materializeCanvasBehavior(
   contribution: ToolcraftCanvasBehaviorModuleContribution,

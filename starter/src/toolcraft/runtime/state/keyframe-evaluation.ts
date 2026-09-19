@@ -1,3 +1,4 @@
+import { resolveToolcraftCollectionItemIndex } from "../schema/collection-identity";
 import type {
   ReadonlyToolcraftState,
   ToolcraftReadonly,
@@ -39,9 +40,14 @@ function getLiveCollectionField(
     field &&
     isToolcraftCollectionFieldKeyframeable(field) &&
     Array.isArray(items) &&
-    address.index < items.length
+    resolveToolcraftCollectionItemIndex(control, items, { itemId: address.itemId, itemIndex: address.index }) >= 0
     ? field
     : undefined;
+}
+
+function resolveCollectionAddressIndex(state: ReadonlyToolcraftState, address: ToolcraftCollectionItemControlAddress, items: readonly unknown[]): number {
+  const control = getToolcraftCollectionActionsControls(state.schema.panels.controls).get(address.collectionTarget);
+  return control ? resolveToolcraftCollectionItemIndex(control, items, { itemId: address.itemId, itemIndex: address.index }) : -1;
 }
 
 function decodeEvaluatedCollectionField(
@@ -247,7 +253,7 @@ export function evaluateToolcraftTimelineValue(
     if (!field) return undefined;
     const parent = state.values[nestedAddress.collectionTarget];
     const fallback = Array.isArray(parent)
-      ? (parent[nestedAddress.index] as Record<string, unknown> | undefined)?.[
+      ? (parent[resolveCollectionAddressIndex(state, nestedAddress, parent)] as Record<string, unknown> | undefined)?.[
           nestedAddress.fieldId
         ]
       : undefined;
@@ -273,7 +279,7 @@ export function evaluateToolcraftTimelineValue(
 
   const next = value.map((item) => (isPlainRecord(item) ? { ...item } : item));
   for (const nested of nestedGroups) {
-    const item = next[nested.address.index];
+    const item = next[resolveCollectionAddressIndex(state, nested.address, next)];
     if (!isPlainRecord(item)) continue;
     item[nested.address.fieldId] = decodeEvaluatedCollectionField(
       nested.field,

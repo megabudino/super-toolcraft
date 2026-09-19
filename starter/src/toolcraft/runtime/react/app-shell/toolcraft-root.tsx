@@ -1,18 +1,19 @@
 "use client";
 
 import * as React from "react";
+import { ToolcraftHistoryContext, createRuntimeHistoryPort, requestToolcraftHistory } from './history-scope';
 
 import type { AnyToolcraftRendererPipelineRegistration } from "../../rendering";
 import type { ResolvedToolcraftAppSchema } from "../../schema/resolved-app-schema";
 import { createToolcraftState } from "../../state/create-template-state";
 import { mergeToolcraftInitialState } from "../../composition/public-persistence";
 import { createToolcraftExternalStore } from "../../composition/public-state";
-import type {
-  ToolcraftCommand,
-  ToolcraftInitialState,
-  ToolcraftState,
-} from "../../state/types";
-import { ToolcraftThemeContext, ToolcraftThemeProvider, ToolcraftThemeScope } from "./theme-runtime";
+import type { ToolcraftCommand, ToolcraftInitialState, ToolcraftState } from "../../state/types";
+import {
+  ToolcraftThemeContext,
+  ToolcraftThemeProvider,
+  ToolcraftThemeScope,
+} from "./theme-runtime";
 import { ToolcraftBrowserZoomBoundary } from "./toolcraft-browser-zoom-boundary";
 import { ToolcraftPipelineProvider } from "./toolcraft-pipeline-context";
 import { ToolcraftSourceAssetProvider } from "./toolcraft-source-asset-context";
@@ -34,13 +35,13 @@ export type ToolcraftContextValue = {
   state: ToolcraftState;
 };
 
-export const ToolcraftContext =
-  React.createContext<ToolcraftContextValue | null>(null);
+export const ToolcraftContext = React.createContext<ToolcraftContextValue | null>(null);
 
 export type ToolcraftRootProps = {
   children: React.ReactNode;
   initialState?: ToolcraftInitialState;
   modelPresentation?: ToolcraftModelPresentationMode;
+  persistenceAuthority?: "runtime" | "external";
   rendererPipelineRegistration?: AnyToolcraftRendererPipelineRegistration;
   schema: ResolvedToolcraftAppSchema;
 };
@@ -75,10 +76,7 @@ function isEditableKeyboardTarget(target: EventTarget | null): boolean {
     return true;
   }
 
-  if (
-    typeof candidate.closest === "function" &&
-    candidate.closest("[contenteditable='true']")
-  ) {
+  if (typeof candidate.closest === "function" && candidate.closest("[contenteditable='true']")) {
     return true;
   }
 
@@ -89,8 +87,7 @@ function isEditableKeyboardTarget(target: EventTarget | null): boolean {
   }
 
   return (
-    tagName === "input" &&
-    nativeTextEditingInputTypes.has(candidate.type?.toLowerCase() ?? "text")
+    tagName === "input" && nativeTextEditingInputTypes.has(candidate.type?.toLowerCase() ?? "text")
   );
 }
 
@@ -109,8 +106,7 @@ function isRedoShortcut(event: KeyboardEvent): boolean {
   return (
     (event.metaKey || event.ctrlKey) &&
     !event.altKey &&
-    ((event.shiftKey && key === "z") ||
-      (!event.metaKey && event.ctrlKey && key === "y"))
+    ((event.shiftKey && key === "z") || (!event.metaKey && event.ctrlKey && key === "y"))
   );
 }
 
@@ -118,31 +114,32 @@ export function ToolcraftRoot({
   children,
   initialState,
   modelPresentation,
+  persistenceAuthority = "runtime",
   rendererPipelineRegistration,
   schema,
 }: ToolcraftRootProps) {
   const inheritedTheme = React.useContext(ToolcraftThemeContext);
+  const persistenceSchema = schema;
+  const storageKind = "localStorage";
   const [persistenceBootstrap] = React.useState(() =>
-    readToolcraftPersistenceBootstrap(schema),
+    persistenceAuthority === "external"
+      ? {}
+      : readToolcraftPersistenceBootstrap(persistenceSchema, storageKind),
   );
-  const [store] = React.useState(() =>
-    createToolcraftExternalStore(
-      createToolcraftState(
-        schema,
-        mergeToolcraftInitialState(
-          persistenceBootstrap.initialState,
-          initialState,
-        ),
-      ),
-    ),
-  );
-  const state = React.useSyncExternalStore(
-    store.subscribe,
-    store.getState,
-    store.getState,
-  );
+  const [owner] = React.useState(() => {
+    const state = createToolcraftState(
+      schema,
+      mergeToolcraftInitialState(persistenceBootstrap.initialState, initialState),
+    );
+    return createToolcraftExternalStore(state);
+  });
+  const store = owner;
+  const history = React.useMemo(() => createRuntimeHistoryPort(store), [store]);
+  const state = React.useSyncExternalStore(store.subscribe, store.getState, store.getState);
   const dispatch: React.Dispatch<ToolcraftCommand> = store.dispatch;
-  const persistenceStatus = useToolcraftPersistence(schema, store, {
+  const persistenceStatus = useToolcraftPersistence(persistenceSchema, store, {
+    authority: persistenceAuthority,
+    storageKind,
     blockedReason: persistenceBootstrap.blockedReason,
     checkpoint: persistenceBootstrap.checkpoint,
   });
@@ -164,13 +161,13 @@ export function ToolcraftRoot({
 
       if (isUndoShortcut(event)) {
         event.preventDefault();
-        dispatch({ type: "history.undo" });
+        requestToolcraftHistory(history, 'undo');
         return;
       }
 
       if (isRedoShortcut(event)) {
         event.preventDefault();
-        dispatch({ type: "history.redo" });
+        requestToolcraftHistory(history, 'redo');
       }
     };
 
@@ -179,24 +176,22 @@ export function ToolcraftRoot({
     return () => {
       document.removeEventListener("keydown", handleDocumentKeyDown);
     };
-  }, [dispatch, schema.toolbar.history]);
+  }, [history, schema.toolbar.history]);
 
   const workspace = (
     <ToolcraftStoreContext.Provider value={store}>
-      <ToolcraftSourceAssetProvider store={store}>
-        <ToolcraftExportProvider store={store}>
-          <ToolcraftContext.Provider value={value}>
-            {children}
-          </ToolcraftContext.Provider>
-        </ToolcraftExportProvider>
-      </ToolcraftSourceAssetProvider>
+        <ToolcraftSourceAssetProvider store={store}>
+          <ToolcraftExportProvider store={store}>
+            <ToolcraftHistoryContext.Provider value={history}>
+              <ToolcraftContext.Provider value={value}>{children}</ToolcraftContext.Provider>
+            </ToolcraftHistoryContext.Provider>
+          </ToolcraftExportProvider>
+        </ToolcraftSourceAssetProvider>
     </ToolcraftStoreContext.Provider>
   );
   const content = (
     <ToolcraftPersistenceStatusProvider status={persistenceStatus}>
-      <ToolcraftModelPresentationModeContext.Provider
-        value={resolvedModelPresentation}
-      >
+      <ToolcraftModelPresentationModeContext.Provider value={resolvedModelPresentation}>
         <ToolcraftBrowserZoomBoundary>
           {inheritedTheme ? (
             <ToolcraftThemeScope value={inheritedTheme}>{workspace}</ToolcraftThemeScope>

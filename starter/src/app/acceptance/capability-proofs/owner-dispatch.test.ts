@@ -37,6 +37,7 @@ function createOwnerSpies(
     "model-3d": createOwner("model-3d", 4),
     "spatial-view": createOwner("spatial-view", 5),
     timeline: createOwner("timeline", 6),
+    masks: createOwner("masks", 7),
   } satisfies ToolcraftCapabilityProofOwnerRegistry;
 }
 

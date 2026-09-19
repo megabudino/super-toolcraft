@@ -3,6 +3,7 @@ import {
   imageExportModule,
   mediaSourceModule,
   svgExportModule,
+  toolcraftMaskTargets,
   type ResolvedToolcraftAppSchema,
   type ToolcraftProductCapabilityId,
   videoExportModule,
@@ -204,6 +205,14 @@ export function createStrayCapabilityProofAcceptance(
       });
     case "layers.management":
       return createRuntimeAcceptance(id, { layerCoverage: "selection" });
+    case "foreground.soft-ellipses":
+      return createRuntimeAcceptance(id, {
+        kind: "control",
+        componentType: "collectionActions",
+        target: toolcraftMaskTargets.items,
+        evidence: "rendered-pixels",
+        controlPartCoverage: "all-visible-parts",
+      });
     case "media.source":
       return createRuntimeAcceptance(id, {
         mediaLifecycleCoverage: ["upload"],

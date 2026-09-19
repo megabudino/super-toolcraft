@@ -23,3 +23,10 @@ export type {
   ResolvedProductModule,
   ResolvedProductModulePlan,
 } from "./contract/module-plan";
+export { masksModule } from "./built-ins/masks/masks-module";
+export { createToolcraftMasksSettings, withToolcraftMaskCanvasInteraction } from "./built-ins/masks/settings";
+export * from "./built-ins/masks/contracts";
+export * from "./built-ins/masks/core/geometry";
+export * from "./built-ins/masks/core/coverage";
+export { createToolcraftMaskInteraction } from "./built-ins/masks/core/interaction";
+export * from "./built-ins/masks/rendering/webgl-mask";

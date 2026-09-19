@@ -3,6 +3,7 @@ import type { ToolcraftPersistableStateSlice } from "../schema/types";
 import type { ToolcraftWorkspaceDefaults } from "../schema/workspace-defaults-types";
 import { parseToolcraftDefaultResources } from "../source-assets/default-resource-manifest";
 import { createToolcraftState } from "../state/create-template-state";
+import { migrateToolcraftAuthoredState } from "../state/authored-state-migration";
 import { areToolcraftControlValuesEqual } from "../state/control-value-codecs";
 import { isToolcraftPersistenceRecord as isRecord } from "../state/persistence-shared";
 import type { ToolcraftState } from "../state/types";
@@ -51,7 +52,7 @@ export function parseToolcraftWorkspaceDefaults(schema: ResolvedToolcraftAppSche
       typeof input.theme !== "string" || !["dark", "light", "system"].includes(input.theme)) {
     throw new Error("Invalid complete application defaults or application identity.");
   }
-  const state = input.state;
+  const state = migrateToolcraftAuthoredState(schema, input.state, "defaults", input.version);
   const decoded = workspacePersistenceCodec.read(context(schema, state.values as Record<string, unknown>), state, slices);
   if (!decoded || !decoded.mediaAssets || !decoded.layers || !decoded.timeline) throw new Error("Incomplete workspace defaults.");
   // Readers intentionally tolerate old local workspaces. Authoring is stricter:

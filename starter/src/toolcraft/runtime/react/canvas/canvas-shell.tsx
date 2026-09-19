@@ -222,7 +222,7 @@ export function CanvasShell({
   return (
     <div
       aria-label="Canvas viewport"
-      className="group/canvas absolute inset-0 touch-none overflow-hidden bg-[color:var(--background)]"
+      className="group/canvas absolute inset-0 touch-none overflow-clip bg-[color:var(--background)]"
       data-canvas-pan-state={panState}
       data-drag-over={dragOver}
       data-slot="toolcraft-runtime-canvas"

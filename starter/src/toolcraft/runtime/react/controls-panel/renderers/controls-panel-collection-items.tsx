@@ -1,3 +1,4 @@
+import { getToolcraftCollectionItemIdentity } from "../../../schema/collection-identity";
 import * as React from "react";
 import { CollectionItemGroups, type ControlChangeMeta } from "@/toolcraft/ui";
 
@@ -82,13 +83,14 @@ export function ControlsPanelCollectionItems({
           <div
             data-selected={selectedIndex === index ? "true" : undefined}
             data-toolcraft-collection-item-index={index}
-            key={index}
+            data-toolcraft-collection-item-id={control.identityField ? getToolcraftCollectionItemIdentity(control, item, index) : undefined}
+            key={getToolcraftCollectionItemIdentity(control, item, index)}
             onFocusCapture={() => onSelectItem?.(index)}
             onPointerDown={() => onSelectItem?.(index)}
           >
             <ControlsPanelCollectionItemFields
               controls={itemControls}
-              id={`${control.target}:${index}`}
+              id={`${control.target}:${getToolcraftCollectionItemIdentity(control, item, index)}`}
               onChange={(nextValue, fieldName, meta) =>
                 onItemChange(index, nextValue, meta, fieldName)
               }

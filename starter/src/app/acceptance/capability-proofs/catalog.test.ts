@@ -1,4 +1,17 @@
-import type { ToolcraftProductCapabilityId } from "@/toolcraft/runtime";
+import {
+  canvasEditingModule,
+  imageExportModule,
+  layersModule,
+  masksModule,
+  mediaSourceModule,
+  model3dModule,
+  spatialViewModule,
+  svgExportModule,
+  timelineModule,
+  videoExportModule,
+  type ToolcraftProductModuleDefinition,
+  type ToolcraftProductModuleId,
+} from "@/toolcraft/runtime";
 import { describe, expect, it } from "vitest";
 
 import { TOOLCRAFT_ARTIFACT_CAPABILITY_PROOFS_BY_ROLE } from "../export-artifact-coverage";
@@ -37,6 +50,7 @@ const expectedRecipes = {
     ownerId: "canvas-editing",
     proof: { kind: "canvas-editing" },
   },
+  "foreground.soft-ellipses": { ownerId: "masks", proof: { kind: "masks" } },
   "layers.management": { ownerId: "layers", proof: { kind: "layers" } },
   "media.source": {
     ownerId: "media-source",
@@ -57,9 +71,24 @@ const expectedRecipes = {
   },
 } as const;
 
-const allCapabilities = Object.keys(
-  expectedRecipes,
-) as ToolcraftProductCapabilityId[];
+// Read capabilities from the executable runtime definitions, independently of
+// both the proof catalog and its expected descriptors. The record also makes a
+// newly added runtime module a compile error until this oracle includes it.
+const runtimeModules = {
+  "canvas-editing": canvasEditingModule(),
+  "image-export": imageExportModule(),
+  layers: layersModule(),
+  masks: masksModule(),
+  "media-source": mediaSourceModule(),
+  "model-3d": model3dModule(),
+  "spatial-view": spatialViewModule(),
+  "svg-export": svgExportModule(),
+  timeline: timelineModule({ mode: "keyframes" }),
+  "video-export": videoExportModule(),
+} satisfies Record<ToolcraftProductModuleId, ToolcraftProductModuleDefinition>;
+const allCapabilities = [...new Set(
+  Object.values(runtimeModules).flatMap((module) => module.provides),
+)].sort();
 
 describe("Toolcraft capability proof catalog", () => {
   it("is an exhaustive frozen data-only map to executable owner descriptors", () => {

@@ -3,7 +3,6 @@ import {
   deriveToolcraftPerformancePaths,
   isToolcraftRendererPipelineRegistration,
   type ToolcraftPerformanceConfig,
-  type ToolcraftRendererPipelineSnapshot,
 } from "@/toolcraft/runtime";
 
 import {
@@ -20,34 +19,12 @@ import { appSchema } from "../src/app/app-schema";
 import { attachToolcraftBrowserPerformanceEvidence } from "./browser-performance-evidence";
 import { evaluateToolcraftBrowserPerformanceEvidence } from "./browser-performance-report";
 import { createCanonicalZeroPipelineSnapshot } from "./performance-pipeline-invariants";
-
-const pipelineEvidenceSelector =
-  "output[hidden][data-toolcraft-pipeline-evidence]";
-const pipelineSnapshotSymbolKey =
-  "toolcraft.renderer-pipeline-evidence.snapshot";
+import { readToolcraftRendererPipelineSnapshot } from "./browser-pipeline-snapshot";
 
 async function readToolcraftPipelineSnapshot(
   page: Page,
 ): Promise<ReturnType<typeof createToolcraftPerformancePipelineSnapshot>> {
-  const bridges = page.locator(pipelineEvidenceSelector);
-  const bridgeCount = await bridges.count();
-  if (bridgeCount !== 1) {
-    throw new Error(
-      `Toolcraft pipeline evidence requires exactly one hidden runtime bridge; found ${bridgeCount}.`,
-    );
-  }
-
-  const snapshot = await bridges.first().evaluate((bridge, symbolKey) => {
-    const getter = Reflect.get(bridge, Symbol.for(symbolKey)) as unknown;
-    if (typeof getter !== "function") {
-      throw new Error(
-        "Toolcraft pipeline evidence bridge does not expose its protected snapshot getter.",
-      );
-    }
-    return getter() as ToolcraftRendererPipelineSnapshot;
-  }, pipelineSnapshotSymbolKey);
-
-  return createToolcraftPerformancePipelineSnapshot(snapshot);
+  return createToolcraftPerformancePipelineSnapshot(await readToolcraftRendererPipelineSnapshot(page));
 }
 
 async function readDocumentTimeOrigin(page: Page): Promise<number> {

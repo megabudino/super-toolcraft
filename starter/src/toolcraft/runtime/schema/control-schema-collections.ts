@@ -16,6 +16,7 @@ import type {
 type ItemFields = ToolcraftInputControlFields & ToolcraftCompoundControlFields;
 type ItemCommon = Pick<
   ToolcraftControlSchemaBase,
+  | "disabled"
   | "description"
   | "keyframeable"
   | "label"
@@ -35,12 +36,14 @@ type ItemFieldUniverse =
   | CollectionCardinality
   | {
       actions?: never;
+      identityField?: never;
       itemControl?: never;
       itemControls?: never;
       itemDefaultValue?: never;
       itemLabel?: never;
       selectionTarget?: never;
       variant?: never;
+      optionsSource?: never;
     };
 export type ToolcraftCollectionItemControlSchema = StrictControlUnion<
   ItemBranches[ToolcraftCollectionItemControlType],
@@ -59,6 +62,8 @@ type SingleItemCollection = {
   };
 }[ToolcraftCollectionItemControlType];
 type CompoundItemCollection = {
+  /** Hidden stable identity; only compound collectionActions may opt in. */
+  identityField?: "id";
   defaultValue?: readonly Readonly<Record<string, unknown>>[];
   itemControl?: never;
   itemControls: ToolcraftCollectionItemControlsSchema;

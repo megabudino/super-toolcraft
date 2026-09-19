@@ -12,7 +12,8 @@ type ActionFields = {
   /** Legacy empty authoring placeholder; actions never own a state value. */
   defaultValue?: readonly never[] | null;
 };
-type BuiltInFields = Omit<ToolcraftInputControlFields, "text"> & ToolcraftCompoundControlFields & ToolcraftCollectionControlFields & {
+type BuiltInFields = Omit<ToolcraftInputControlFields, "text" | "select"> & ToolcraftCompoundControlFields & ToolcraftCollectionControlFields & {
+  select: ToolcraftInputControlFields["select"];
   text: ToolcraftInputControlFields["text"] | (Omit<ToolcraftInputControlFields["text"], "defaultValue"> & {
     defaultValue?: number;
     target: "canvas.size.width" | "canvas.size.height";

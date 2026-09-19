@@ -1,4 +1,5 @@
-import type { ResolvedToolcraftAppSchema } from "@/toolcraft/runtime";
+import type { ResolvedToolcraftAppSchema, ToolcraftRendererPipeline } from "@/toolcraft/runtime";
+import { getToolcraftInfinityOverflowErrors } from "./infinity-overflow";
 
 import {
   schemaHasPngExportPanelAction,
@@ -35,10 +36,12 @@ function hasInfinityCanvasProof(
 export function getToolcraftInfinityCanvasCoverageErrors({
   acceptance,
   productReadiness,
+  rendererPipeline,
   schema,
 }: {
   acceptance: readonly ToolcraftComponentAcceptance[];
   productReadiness: ToolcraftProductReadiness;
+  rendererPipeline?: ToolcraftRendererPipeline;
   schema: ResolvedToolcraftAppSchema;
 }): string[] {
   if (
@@ -63,7 +66,7 @@ export function getToolcraftInfinityCanvasCoverageErrors({
       coverage: "scene-bounds-image-export",
       evidence: "exported-bytes",
       message:
-        'Export PNG with editable-output canvas requires a runtime acceptance entry with infinityCanvasCoverage "scene-bounds-image-export" proving infinite export crops to the union of visible scene elements through ToolcraftAppComposition.sceneBoundsProvider.',
+        'Export PNG with editable-output canvas requires a runtime acceptance entry with infinityCanvasCoverage "scene-bounds-image-export" proving Infinity exports complete visible composition bounds, dimensions, background and decoded image content.',
     });
   }
 
@@ -72,7 +75,7 @@ export function getToolcraftInfinityCanvasCoverageErrors({
       coverage: "scene-bounds-svg-export",
       evidence: "exported-bytes",
       message:
-        'Export SVG with editable-output canvas requires a runtime acceptance entry with infinityCanvasCoverage "scene-bounds-svg-export" proving infinite export uses the exact visible scene union through ToolcraftAppComposition.sceneBoundsProvider.',
+        'Export SVG with editable-output canvas requires a runtime acceptance entry with infinityCanvasCoverage "scene-bounds-svg-export" proving Infinity exports complete visible composition dimensions, viewBox and vector content.',
     });
   }
 
@@ -81,11 +84,11 @@ export function getToolcraftInfinityCanvasCoverageErrors({
       coverage: "scene-bounds-video-export",
       evidence: "exported-bytes",
       message:
-        'Export Video with editable-output canvas requires a runtime acceptance entry with infinityCanvasCoverage "scene-bounds-video-export" proving infinite export uses one scene-bounds time-range envelope for every rendered frame.',
+        'Export Video with editable-output canvas requires a runtime acceptance entry with infinityCanvasCoverage "scene-bounds-video-export" proving Infinity preserves the saved finite artboard dimensions, duration and decoded video frames.',
     });
   }
 
-  return requiredProofs
+  return [...requiredProofs
     .filter((proof) => !hasInfinityCanvasProof(acceptance, proof))
-    .map((proof) => proof.message);
+    .map((proof) => proof.message), ...getToolcraftInfinityOverflowErrors({ acceptance, rendererPipeline, schema })];
 }

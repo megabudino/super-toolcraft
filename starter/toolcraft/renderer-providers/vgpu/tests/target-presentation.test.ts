@@ -32,7 +32,7 @@ function createTargetDouble(initialSize: readonly [number, number]) {
   let size = initialSize;
   let pixels = new Uint8Array(size[0] * size[1] * 4).fill(17);
   return {
-    read: vi.fn(async () => pixels),
+    color: { read: vi.fn(async () => pixels) },
     resize: vi.fn((nextSize: readonly [number, number]) => {
       size = nextSize;
       pixels = new Uint8Array(size[0] * size[1] * 4).fill(29);
@@ -109,6 +109,7 @@ describe("Toolcraft VGPU target-readback presentation", () => {
       size: [1600, 900],
     });
     expect(render).toHaveBeenCalledWith(gpu, target);
+    expect(target.color.read).toHaveBeenCalledWith({ mipLevel: 0, region: "all" });
     expect(canvas.width).toBe(1600);
     expect(canvas.height).toBe(900);
     expect(canvas.style).toEqual({ height: "450px", width: "800px" });
@@ -164,7 +165,7 @@ describe("Toolcraft VGPU target-readback presentation", () => {
       renderScale: 1,
     };
     const malformedTarget = {
-      read: vi.fn(async () => new Uint8Array(15)),
+      color: { read: vi.fn(async () => new Uint8Array(15)) },
       resize: vi.fn(),
       size: [2, 2] as const,
     } as unknown as Target;
@@ -244,11 +245,13 @@ describe("Toolcraft VGPU target-readback presentation", () => {
     const releaseRead = deferred<void>();
     const pixels = new Uint8Array(1).fill(41);
     const target = {
-      read: vi.fn(async () => {
-        readStarted.resolve();
-        await releaseRead.promise;
-        return pixels;
-      }),
+      color: {
+        read: vi.fn(async () => {
+          readStarted.resolve();
+          await releaseRead.promise;
+          return pixels;
+        }),
+      },
       resize: vi.fn(),
       size: [16, 16] as const,
     } as unknown as Target;
@@ -316,7 +319,7 @@ describe("Toolcraft VGPU target-readback presentation", () => {
     releaseRender.resolve();
     await expect(commit).rejects.toThrow("disposed before the frame committed");
     await disposal;
-    expect(target.read).not.toHaveBeenCalled();
+    expect(target.color.read).not.toHaveBeenCalled();
     await expect(
       presentation.commit({
         canvas: createCanvasDouble().canvas,

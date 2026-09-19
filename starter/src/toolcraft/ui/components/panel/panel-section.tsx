@@ -32,7 +32,7 @@ export type PanelSectionProps = Omit<
   description?: string;
   flush?: boolean;
   onCollapsedChange?: (collapsed: boolean) => void;
-  spacing?: "default" | "technical";
+  spacing?: "default" | "technical" | "uniform";
   title?: React.ReactNode;
 };
 
@@ -60,7 +60,8 @@ export function PanelSection({
     <ControlList
       className={cn(
         !isActionSection &&
-          (spacing === "technical" ? "py-3" : "pt-2 pb-6"),
+          (spacing === "default" ? "pt-2 pb-6" : "py-3"),
+        spacing === "uniform" && "[--control-list-gap:12px]",
       )}
     >
       {childArray.map((child, index) => (

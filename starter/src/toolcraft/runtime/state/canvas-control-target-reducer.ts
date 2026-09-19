@@ -7,7 +7,6 @@ import {
   toolcraftCanvasInfinityTarget,
 } from "../schema/runtime-targets";
 import {
-  isToolcraftRuntimeBackgroundEnabled,
   normalizeToolcraftCanvasModeForBackground,
 } from "./canvas-background-state";
 import {
@@ -72,7 +71,7 @@ function reduceCanvasModeControlValue(
 
   if (
     command.value &&
-    !isToolcraftRuntimeBackgroundEnabled(state)
+    normalizeToolcraftCanvasModeForBackground({ ...state, mode: "infinite" }) !== "infinite"
   ) {
     return { handled: true, state };
   }
@@ -96,6 +95,7 @@ function reduceCanvasBackgroundControlValue(
 
   if (
     !background ||
+    state.schema.canvas.infinityBackgroundPolicy === "optional" ||
     command.target !== toolcraftOutputBackgroundToggleTarget ||
     command.target !== background.include.target ||
     command.value !== false ||
@@ -315,6 +315,7 @@ export function getToolcraftCanvasResetPatch(
   const globalReset = targets === undefined;
   const background = getToolcraftRuntimeSetupBackgroundControls(state.schema);
   const resetsBackgroundToDisabled =
+    state.schema.canvas.infinityBackgroundPolicy !== "optional" &&
     targets !== undefined &&
     background !== undefined &&
     targets.has(background.include.target) &&

@@ -1,3 +1,6 @@
+import { getSettingsTransferActivity } from "./settings-transfer-activity";
+import { migrateToolcraftAuthoredState } from "../../state/authored-state-migration";
+import { areToolcraftControlValuesEqual } from "../../state/control-value-codecs";
 import type { ResolvedToolcraftAppSchema } from "../../schema/resolved-app-schema";
 import {
   createToolcraftSettingsAttachments,
@@ -10,6 +13,7 @@ import { isToolcraftCanvasSizingTarget } from "../../schema/runtime-targets";
 import { normalizeToolcraftCanvasAspectRatioValue } from "../../state/canvas-state";
 import {
   getToolcraftValueControls,
+  getInvalidToolcraftKeyedCollectionTarget,
   normalizeToolcraftControlValue,
 } from "../../state/control-value-normalization";
 import type {
@@ -27,7 +31,7 @@ const settingsTransferPayloadSource = "toolcraft-settings";
 const settingsTransferPayloadVersion = 3;
 
 type ToolcraftDispatch = (command: ToolcraftCommand) => void;
-const activeSettingsImports = new WeakSet<ToolcraftDispatch>();
+
 
 export type ToolcraftSettingsTransferPayload = {
   appId: string;
@@ -180,14 +184,24 @@ export function parseToolcraftSettingsPayload(
     return null;
   }
 
-  if (Object.keys(value.values).some(isToolcraftCanvasSizingTarget)) {
+  const canvas = parseToolcraftSettingsCanvas(value.canvas);
+  let timeline = readToolcraftSettingsTimeline(value.timeline);
+
+  if (!canvas || !timeline) {
     return null;
   }
 
-  const canvas = parseToolcraftSettingsCanvas(value.canvas);
-  const timeline = readToolcraftSettingsTimeline(value.timeline);
-
-  if (!canvas || !timeline) {
+  let values: Record<string, unknown>;
+  try {
+    const migrated = migrateToolcraftAuthoredState(schema, { values: value.values, canvas, timeline }, "settings", value.version);
+    values = migrated.values as Record<string, unknown>;
+    timeline = readToolcraftSettingsTimeline(migrated.timeline as Record<string, unknown>);
+  } catch {
+    return null;
+  }
+  if (!timeline || Object.keys(value.values).some(isToolcraftCanvasSizingTarget) ||
+      Object.keys(values).some(isToolcraftCanvasSizingTarget) ||
+      getInvalidToolcraftKeyedCollectionTarget(getToolcraftValueControls(schema), values)) {
     return null;
   }
 
@@ -198,7 +212,7 @@ export function parseToolcraftSettingsPayload(
     exportedAt: value.exportedAt,
     source: settingsTransferPayloadSource,
     timeline,
-    values: value.values,
+    values,
     version: settingsTransferPayloadVersion,
   };
 }
@@ -207,8 +221,11 @@ export function applyToolcraftSettingsPayload(
   context: ImportContext,
   payload: ToolcraftSettingsTransferPayload,
   assets: readonly ToolcraftMediaAsset[],
+  strict = false,
 ): void {
   const importableTargets = getToolcraftValueControls(context.state.schema);
+  const invalidCollection = getInvalidToolcraftKeyedCollectionTarget(importableTargets, payload.values);
+  if (invalidCollection) throw new Error(`Invalid settings value: ${invalidCollection}.`);
   const additionalTargets = new Set(
     context.state.schema.settingsTransfer.additionalValueTargets,
   );
@@ -221,6 +238,7 @@ export function applyToolcraftSettingsPayload(
       isToolcraftCanvasSizingTarget(target) ||
       (!control && !additionalTargets.has(target))
     ) {
+      if (strict) throw new Error(`Unknown settings target: ${target}.`);
       continue;
     }
 
@@ -228,6 +246,7 @@ export function applyToolcraftSettingsPayload(
       ? normalizeToolcraftControlValue(control, value)
       : { accepted: true as const, value };
 
+    if (strict && (!normalized.accepted || !areToolcraftControlValuesEqual(normalized.value, value))) throw new Error(`Invalid settings value: ${target}.`);
     values[target] = normalized.accepted
       ? normalized.value
       : normalized.fallback;
@@ -273,10 +292,12 @@ export async function importToolcraftSettings(context: {
     ToolcraftSourceAssetCoordinator,
     "resolveSettingsAsset" | "retainResourceRef"
   >;
+  strict?: boolean;
+  beforeApply?(payload: ToolcraftSettingsTransferPayload): Promise<void> | void;
 }): Promise<void> {
   // The store owns the operation even if the controls panel is remounted.
-  if (activeSettingsImports.has(context.dispatch)) return;
-  activeSettingsImports.add(context.dispatch);
+  const releaseOperation = getSettingsTransferActivity(context.getState).begin("import");
+  if (!releaseOperation) return;
   const input = document.createElement("input");
   input.accept = "application/json,.json";
   input.style.display = "none";
@@ -306,24 +327,31 @@ export async function importToolcraftSettings(context: {
     if (!payload) {
       throw new Error("Invalid Toolcraft settings payload.");
     }
+    await context.beforeApply?.(payload);
 
     const releases: (() => void)[] = [];
     try {
       const assets = await Promise.all(
         payload.attachments.map(async ({ asset }) => {
-          if (!asset) return null;
+          if (!asset) {
+            if (context.strict) throw new Error("Settings contain an invalid attachment.");
+            return null;
+          }
           try {
             for (const ref of collectToolcraftMediaResourceRefs([asset])) {
               const release =
                 context.sourceAssetCoordinator.retainResourceRef?.(ref);
               if (release) releases.push(release);
             }
-            return (
+            const resolved = (
               (await context.sourceAssetCoordinator.resolveSettingsAsset?.(
                 asset,
               )) ?? null
             );
-          } catch {
+            if (!resolved && context.strict) throw new Error("A required settings attachment is unavailable in this app.");
+            return resolved;
+          } catch (error) {
+            if (context.strict) throw error;
             return null;
           }
         }),
@@ -332,6 +360,7 @@ export async function importToolcraftSettings(context: {
         { dispatch: context.dispatch, state: context.getState() },
         payload,
         assets.filter((asset) => asset !== null),
+        context.strict,
       );
     } finally {
       for (const release of releases) release();
@@ -340,6 +369,6 @@ export async function importToolcraftSettings(context: {
     reportImportError(error);
   } finally {
     input.remove();
-    activeSettingsImports.delete(context.dispatch);
+    releaseOperation();
   }
 }

@@ -225,3 +225,15 @@ export function mergeCanonicalToolcraftInitialValues({
 
   return values;
 }
+
+/** Keyed collection identity is document structure: an invalid candidate cannot fall back destructively. */
+export function getInvalidToolcraftKeyedCollectionTarget(
+  controls: ReadonlyMap<string, ResolvedToolcraftControlSchema>,
+  values: Readonly<Record<string, unknown>>,
+): string | undefined {
+  for (const [target, candidate] of Object.entries(values)) {
+    const control = controls.get(target);
+    if (control?.identityField && !decodeToolcraftBuiltInControlValue(control, candidate)?.accepted) return target;
+  }
+  return undefined;
+}

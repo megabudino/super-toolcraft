@@ -9,10 +9,7 @@ import type {
 } from "./types";
 import { mergeToolcraftInitialState } from "./persistence-merge";
 import { toolcraftCanvasZoomDefault } from "./canvas-zoom";
-import {
-  getToolcraftDefaultCanvasMode,
-  normalizeToolcraftCanvasMode,
-} from "./canvas-frame";
+import { getToolcraftDefaultCanvasMode, normalizeToolcraftCanvasMode } from "./canvas-frame";
 import { normalizeToolcraftCanvasModeForBackground } from "./canvas-background-state";
 import {
   cloneToolcraftLayers,
@@ -89,10 +86,7 @@ function createDefaultTimelineState({
     isPlaying: true,
     selectedKeyframeId: null,
     ...timeline,
-    keyframeGroups: cloneTimelineKeyframeGroups(
-      timeline?.keyframeGroups ?? [],
-      controls,
-    ),
+    keyframeGroups: cloneTimelineKeyframeGroups(timeline?.keyframeGroups ?? [], controls),
   };
 }
 
@@ -102,9 +96,7 @@ export function createToolcraftState(
 ): ToolcraftState {
   initialState = mergeToolcraftInitialState(schema.sourceDefaults?.initialState, initialState);
   const valueControls = getToolcraftValueControls(schema);
-  const collectionControls = getToolcraftCollectionActionsControls(
-    schema.panels.controls,
-  );
+  const collectionControls = getToolcraftCollectionActionsControls(schema.panels.controls);
   const defaults = {
     ...createCanonicalToolcraftControlDefaults(valueControls),
     ...createToolcraftCollectionSelectionDefaults(schema),
@@ -126,17 +118,13 @@ export function createToolcraftState(
     ...initialState.canvas,
     mode: normalizeToolcraftCanvasModeForBackground({
       mode: normalizeToolcraftCanvasMode(
-        initialState.canvas?.mode ??
-          getToolcraftDefaultCanvasMode(schema.canvas),
+        initialState.canvas?.mode ?? getToolcraftDefaultCanvasMode(schema.canvas),
       ),
       schema,
       values,
     }),
   };
-  const defaultMediaState = createToolcraftDefaultMediaState(
-    schema,
-    initialCanvas,
-  );
+  const defaultMediaState = createToolcraftDefaultMediaState(schema, initialCanvas);
   const hasInitialMediaAssets = Object.hasOwn(initialState, "mediaAssets");
   const mediaAssets = hasInitialMediaAssets
     ? cloneToolcraftInitialMediaAssets(
@@ -148,22 +136,18 @@ export function createToolcraftState(
   const layers =
     initialState.layers ??
     (hasInitialMediaAssets
-      ? createToolcraftLayersFromMediaAssets(
-          mediaAssets,
-          defaultMediaState.layers,
-        )
+      ? createToolcraftLayersFromMediaAssets(mediaAssets, defaultMediaState.layers)
       : cloneToolcraftLayers(defaultMediaState.layers));
-  const selectedLayerId =
-    Object.hasOwn(initialState, "selectedLayerId") ? initialState.selectedLayerId ?? null :
-    (hasInitialMediaAssets
+  const selectedLayerId = Object.hasOwn(initialState, "selectedLayerId")
+    ? (initialState.selectedLayerId ?? null)
+    : hasInitialMediaAssets
       ? (layers[0]?.id ?? null)
-      : defaultMediaState.selectedLayerId);
+      : defaultMediaState.selectedLayerId;
   const initialTimeline = getMediaReadyTimelineState(
     schema,
     createDefaultTimelineState({
       controls: valueControls,
-      defaultDurationSeconds:
-        schema.panels.timeline?.defaultDurationSeconds ?? 8,
+      defaultDurationSeconds: schema.panels.timeline?.defaultDurationSeconds ?? 8,
       timeline: initialState.timeline,
     }),
     mediaAssets,
@@ -174,9 +158,7 @@ export function createToolcraftState(
     values,
   });
   const selectedKeyframeId = keyframeGroups.some((group) =>
-    group.keyframes.some(
-      (keyframe) => keyframe.id === initialTimeline.selectedKeyframeId,
-    ),
+    group.keyframes.some((keyframe) => keyframe.id === initialTimeline.selectedKeyframeId),
   )
     ? initialTimeline.selectedKeyframeId
     : null;
@@ -190,11 +172,8 @@ export function createToolcraftState(
     schema.panels.controls?.sections.map((section) => section.id) ?? [],
   );
   const collapsedSections = Object.fromEntries(
-    Object.entries(
-      initialState.panels?.controls?.collapsedSections ?? {},
-    ).filter(
-      ([sectionId, collapsed]) =>
-        validSectionIds.has(sectionId) && collapsed === true,
+    Object.entries(initialState.panels?.controls?.collapsedSections ?? {}).filter(
+      ([sectionId, collapsed]) => validSectionIds.has(sectionId) && collapsed === true,
     ),
   );
   const panels: ToolcraftState["panels"] = {

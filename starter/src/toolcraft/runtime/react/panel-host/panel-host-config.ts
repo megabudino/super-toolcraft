@@ -32,14 +32,14 @@ export const panelHostConfig = {
     panelId: "timeline",
     snapEdges: ["top", "bottom"],
     stageClassName: "min-h-[320px]",
-    wrapperClassName: "absolute top-2.5 left-1/2 z-40 -translate-x-1/2",
+    wrapperClassName: "absolute bottom-2.5 left-1/2 z-40 -translate-x-1/2",
   },
   toolbar: {
     dragMode: "panel",
     panelId: "toolbar",
     snapEdges: ["top", "bottom"],
     stageClassName: "min-h-[180px]",
-    wrapperClassName: "absolute bottom-2.5 left-1/2 z-[70] -translate-x-1/2",
+    wrapperClassName: "absolute top-2.5 left-1/2 z-[70] -translate-x-1/2",
   },
 } satisfies Record<ToolcraftPanelType, PanelTypeConfig>;
 

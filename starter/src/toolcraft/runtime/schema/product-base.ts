@@ -1,4 +1,5 @@
 import type { ToolcraftProductModuleDefinition } from "../modules/contract/module-definition";
+import type { ToolcraftAuthoredStateMigration } from "./authored-state-migration";
 import type {
   ToolcraftAppIdentitySchema,
   ToolcraftCanvasSchema,
@@ -40,5 +41,7 @@ export type ToolcraftProductDefinition = Readonly<{
   base: ToolcraftProductBase;
   /** App-owned source snapshot saved through the local authoring panel. */
   defaults?: unknown;
+  /** Migrate app-authored values after format admission and before canonical decoding. */
+  authoredStateMigration?: ToolcraftAuthoredStateMigration;
   modules: readonly ToolcraftProductModuleDefinition[];
 }>;

@@ -68,8 +68,8 @@ export function readPanels(
   const panels: NonNullable<ToolcraftInitialState["panels"]> = {};
 
   for (const panelId of toolcraftPersistedPanelIds) {
-    const panelContract = schema.assembly.surfaces.panels[panelId];
-    const panel = readPanel(value[panelId], panelContract?.snapEdges ?? []);
+    const snapEdges = schema.assembly.surfaces.panels[panelId]?.snapEdges ?? [];
+    const panel = readPanel(value[panelId], snapEdges);
 
     if (panel) {
       panels[panelId] = panel;

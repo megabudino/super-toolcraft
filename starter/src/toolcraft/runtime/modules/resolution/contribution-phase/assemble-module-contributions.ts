@@ -4,7 +4,7 @@ import type {
   ToolcraftTimelinePanelSchema,
 } from "../../../schema/types";
 import { resolveToolcraftArtifactActionContributions } from "../../contributions/artifact-action-contributions";
-import { resolveToolcraftArtifactSettingsContributions } from "../../contributions/artifact-settings-contributions";
+import { resolveToolcraftSettingsContributions } from "../../contributions/settings-contributions";
 import { composeToolcraftStillExportSettings } from "../../contributions/still-export-settings";
 import {
   resolveToolcraftCanvasBehaviorContributions,
@@ -59,7 +59,7 @@ type ContributionPhaseOutputs = Readonly<{
   }>;
   settingsContributions: Readonly<{
     controlSections: ReturnType<
-      typeof resolveToolcraftArtifactSettingsContributions
+      typeof resolveToolcraftSettingsContributions
     >;
   }>;
   surfaceContributions: Readonly<{
@@ -89,7 +89,7 @@ export const TOOLCRAFT_CONTRIBUTION_PHASE_TABLE = Object.freeze({
     persistenceRequirements: resolveToolcraftPersistenceContributions,
   }),
   settingsContributions: Object.freeze({
-    controlSections: resolveToolcraftArtifactSettingsContributions,
+    controlSections: resolveToolcraftSettingsContributions,
   }),
   surfaceContributions: Object.freeze({
     panelSurfaces: resolveToolcraftPanelSurfaceContributions,

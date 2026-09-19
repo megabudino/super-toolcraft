@@ -1,3 +1,4 @@
+import { getToolcraftCollectionItemIdentity } from "../../../schema/collection-identity";
 import * as React from "react";
 import { CollectionActions, type ControlChangeMeta } from "@/toolcraft/ui";
 
@@ -25,7 +26,7 @@ export type CollectionControlRenderArgs = {
   name: string;
   setControlValue: CollectionControlSetValue;
   dispatchCommand: (command: ToolcraftCommand) => void;
-  selectedIndex?: number | null;
+  selectedIndex?: number | string | null;
   value: unknown;
 };
 
@@ -70,6 +71,7 @@ function CollectionActionsControl({
   const hardMaxItems = getCollectionHardMaxItems(control);
   const canAdd = hardMaxItems === null || items.length < hardMaxItems;
   const canRemove = items.length > minItems;
+  const selectedItemIndex = control.identityField ? items.findIndex((item, index) => getToolcraftCollectionItemIdentity(control, item, index) === selectedIndex) : selectedIndex;
 
   const withFieldKeyframeAction = useControlsPanelCollectionKeyframes({
     control,
@@ -87,6 +89,7 @@ function CollectionActionsControl({
         onAdd={() => {
           if (canAdd) {
             dispatchCommand({
+              ...(control.identityField ? { itemId: crypto.randomUUID() } : {}),
               label: control.addLabel ?? "Add item",
               target: control.target,
               type: "controls.addCollectionItem",
@@ -96,6 +99,7 @@ function CollectionActionsControl({
         onRemove={() => {
           if (canRemove) {
             dispatchCommand({
+              ...(control.identityField ? { itemId: getToolcraftCollectionItemIdentity(control, items[typeof selectedItemIndex === "number" && selectedItemIndex >= 0 ? selectedItemIndex : items.length - 1], 0) as string } : {}),
               label: control.removeLabel ?? "Remove item",
               target: control.target,
               type: "controls.removeCollectionItem",
@@ -127,7 +131,7 @@ function CollectionActionsControl({
             fieldId,
             history: meta?.history,
             historyGroup: meta?.historyGroup,
-            itemIndex: index,
+            ...(control.identityField ? { itemId: getToolcraftCollectionItemIdentity(control, items[index], index) as string } : { itemIndex: index }),
             label: fieldName,
             target: control.target,
             type: "controls.setCollectionItemField",
@@ -136,12 +140,12 @@ function CollectionActionsControl({
         }}
         onSelectItem={(index) =>
           dispatchCommand({
-            itemIndex: index,
+            ...(control.identityField ? { itemId: getToolcraftCollectionItemIdentity(control, items[index], index) as string } : { itemIndex: index }),
             target: control.target,
             type: "controls.selectCollectionItem",
           })
         }
-        selectedIndex={selectedIndex}
+        selectedIndex={typeof selectedItemIndex === "number" ? selectedItemIndex : null}
         slotPrefix="collection-actions"
         withFieldKeyframeAction={withFieldKeyframeAction}
       />

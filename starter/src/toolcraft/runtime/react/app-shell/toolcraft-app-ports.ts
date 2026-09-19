@@ -86,6 +86,7 @@ function snapshotRasterRenderer(
     ? undefined
     : Object.freeze({
         baseFileName: renderer.baseFileName,
+        getContentBounds: renderer.getContentBounds,
         renderFrame: renderer.renderFrame,
       });
 }
@@ -97,6 +98,7 @@ function snapshotVectorRenderer(
     ? undefined
     : Object.freeze({
         baseFileName: renderer.baseFileName,
+        getContentBounds: renderer.getContentBounds,
         renderFrame: renderer.renderFrame,
       });
 }

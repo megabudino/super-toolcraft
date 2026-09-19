@@ -9,13 +9,32 @@ import type { ToolcraftCanvasAspectRatioValue } from "./canvas-state";
 
 export type ToolcraftSettingsState = {
   assets: readonly ToolcraftMediaAsset[];
-  canvas: Pick<ToolcraftCanvasState, "mode" | "size"> & { aspectRatio?: ToolcraftCanvasAspectRatioValue };
-  timeline: Pick<ToolcraftTimelineState, "currentTimeSeconds" | "durationSeconds" | "expanded" | "isLooping"> & { isPlaying: false };
+  canvas: Pick<ToolcraftCanvasState, "mode" | "size"> & {
+    aspectRatio?: ToolcraftCanvasAspectRatioValue;
+  };
+  timeline: Pick<
+    ToolcraftTimelineState,
+    "currentTimeSeconds" | "durationSeconds" | "expanded" | "isLooping"
+  > & { isPlaying: false };
   values: Record<string, unknown>;
 };
 
+export type ToolcraftCollectionItemAddress =
+  | { itemId: string; itemIndex?: never }
+  | { itemId?: never; itemIndex: number };
+export type ToolcraftCollectionSelectionAddress =
+  | { itemId: string | null; itemIndex?: never }
+  | { itemId?: never; itemIndex: number | null };
+
 export type ToolcraftCommand =
-  | { type: "controls.editSlider"; target: string; value: number | readonly number[]; displayedValue?: unknown; label?: string; reason?: "reset" }
+  | {
+      type: "controls.editSlider";
+      target: string;
+      value: number | readonly number[];
+      displayedValue?: unknown;
+      label?: string;
+      reason?: "reset";
+    }
   | { type: "settings.apply"; settings: ToolcraftSettingsState }
   | {
       history?: ToolcraftHistoryMode;
@@ -32,26 +51,24 @@ export type ToolcraftCommand =
       type: "controls.apply";
       values?: Record<string, unknown>;
     }
-  | { label?: string; target: string; type: "controls.addCollectionItem" }
-  | { label?: string; target: string; type: "controls.removeCollectionItem" }
-  | {
-      itemIndex: number | null;
+  | { itemId?: string; label?: string; target: string; type: "controls.addCollectionItem" }
+  | { itemId?: string; label?: string; target: string; type: "controls.removeCollectionItem" }
+  | (ToolcraftCollectionSelectionAddress & {
       label?: string;
       target: string;
       type: "controls.selectCollectionItem";
-    }
-  | {
+    })
+  | (ToolcraftCollectionItemAddress & {
       fieldId: string;
       history?: ToolcraftHistoryMode;
       historyGroup?: string;
-      itemIndex: number;
       label?: string;
       target: string;
       type: "controls.setCollectionItemField";
       value: unknown;
-    }
+    })
   | { type: "controls.reset" }
-  | { label?: string; targets: string[]; type: "controls.resetTargets" }
+  | { label?: string; targets: string[]; type: "controls.resetTargets"; baseline?: Pick<ToolcraftState, "values" | "controlRanges" | "canvas" | "timeline"> }
   | ToolcraftLayersCommand
   | { delta: ToolcraftPoint; type: "canvas.panBy" }
   | { offset: ToolcraftPoint; type: "canvas.setOffset" }
@@ -249,9 +266,7 @@ export type ToolcraftLayerDraft = {
   visible?: boolean;
 };
 
-export type ToolcraftMediaAssetBase<
-  AssetKind extends "file" | "image" | "model",
-> = {
+export type ToolcraftMediaAssetBase<AssetKind extends "file" | "image" | "model"> = {
   assetKind: AssetKind;
   fileName: string;
   id: string;
@@ -292,28 +307,21 @@ export type ToolcraftModelAsset = ToolcraftMediaAssetBase<"model"> &
   ToolcraftSceneElementFrame &
   ToolcraftModelAssetRecord;
 
-export type ToolcraftMediaAsset =
-  | ToolcraftFileAsset
-  | ToolcraftImageAsset
-  | ToolcraftModelAsset;
+export type ToolcraftMediaAsset = ToolcraftFileAsset | ToolcraftImageAsset | ToolcraftModelAsset;
 
-type ToolcraftAssetDraftFor<Asset extends { id: string; layerId: string }> =
-  Asset extends unknown
-    ? Omit<Asset, "id" | "layerId"> & {
-        id?: string;
-        layerId?: string;
-        layerName?: string;
-      }
-    : never;
+type ToolcraftAssetDraftFor<Asset extends { id: string; layerId: string }> = Asset extends unknown
+  ? Omit<Asset, "id" | "layerId"> & {
+      id?: string;
+      layerId?: string;
+      layerName?: string;
+    }
+  : never;
 
-type ToolcraftMediaAssetDraftFor<Asset extends ToolcraftMediaAsset> =
-  ToolcraftAssetDraftFor<Asset>;
+type ToolcraftMediaAssetDraftFor<Asset extends ToolcraftMediaAsset> = ToolcraftAssetDraftFor<Asset>;
 
-export type ToolcraftFileAssetDraft =
-  ToolcraftMediaAssetDraftFor<ToolcraftFileAsset>;
+export type ToolcraftFileAssetDraft = ToolcraftMediaAssetDraftFor<ToolcraftFileAsset>;
 
-export type ToolcraftImageAssetDraft =
-  ToolcraftMediaAssetDraftFor<ToolcraftImageAsset>;
+export type ToolcraftImageAssetDraft = ToolcraftMediaAssetDraftFor<ToolcraftImageAsset>;
 
 type ToolcraftImageAssetWithoutSceneSize<Asset> = Asset extends unknown
   ? Omit<Asset, "size"> & { size?: never }
@@ -325,8 +333,7 @@ export type ToolcraftPreparedSourceImageAssetDraft =
 export type ToolcraftPreparedSourceImageAsset =
   ToolcraftImageAssetWithoutSceneSize<ToolcraftImageAsset>;
 
-export type ToolcraftModelAssetDraft =
-  ToolcraftMediaAssetDraftFor<ToolcraftModelAsset>;
+export type ToolcraftModelAssetDraft = ToolcraftMediaAssetDraftFor<ToolcraftModelAsset>;
 
 export type ToolcraftMediaAssetDraft =
   | ToolcraftFileAssetDraft
@@ -362,9 +369,7 @@ export type ToolcraftCanonicalMediaImportAllocation = {
   items: readonly ToolcraftCanonicalMediaImportAllocationItem[];
 };
 
-export type ToolcraftInitialMediaAsset =
-  | ToolcraftInitialImageAssetIngress
-  | ToolcraftMediaAsset;
+export type ToolcraftInitialMediaAsset = ToolcraftInitialImageAssetIngress | ToolcraftMediaAsset;
 
 export type ToolcraftMediaTransform = {
   flipHorizontal?: boolean;
@@ -387,12 +392,7 @@ export type ToolcraftHistoryPatch = {
 
 export type ToolcraftHistoryMode = "merge" | "record" | "skip";
 
-export type ToolcraftTimelineBezierControlPoints = [
-  number,
-  number,
-  number,
-  number,
-];
+export type ToolcraftTimelineBezierControlPoints = [number, number, number, number];
 
 export type ToolcraftTimelineKeyframeEasing =
   | {
@@ -463,6 +463,7 @@ export type ToolcraftState = {
   canvas: ToolcraftCanvasState;
   defaults: Record<string, unknown>;
   history: {
+    authority?: { canUndo: boolean; canRedo: boolean };
     redo: ToolcraftHistoryPatch[];
     undo: ToolcraftHistoryPatch[];
   };

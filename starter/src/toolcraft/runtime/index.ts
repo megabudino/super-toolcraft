@@ -1,4 +1,6 @@
 export type { ToolcraftEditableSliderRange, ToolcraftSliderRange } from "./schema/slider-range";
+export { createCurveEvaluator } from "@/toolcraft/ui/lib/curve";
+export type { CurveEvaluator, CurveInterpolation, CurvePoint } from "@/toolcraft/ui/lib/curve";
 export * from "./contracts/component-contracts";
 export * from "./contracts/decision-contracts";
 export * from "./contracts/performance-verification-policy";
@@ -14,6 +16,7 @@ export type {
   ToolcraftModelPresentationMode,
 } from "./react/model-rendering/model-render-binding";
 export * from "./schema/define-toolcraft";
+export type { ToolcraftAuthoredStateMigration, ToolcraftAuthoredStateMigrationInput, ToolcraftAuthoredStateMigrationResult } from "./schema/authored-state-migration";
 export type {
   ToolcraftProductBase,
   ToolcraftProductDefinition,
@@ -43,6 +46,8 @@ export type * from "./state/control-value-types";
 export * from "./state/keyframe-evaluation";
 export * from "./composition/public-persistence";
 export * from "./composition/public-state";
+export { getToolcraftCanvasBackgroundState, type ToolcraftCanvasBackgroundState } from "./state/canvas-background-state";
+export type { ToolcraftExternalInteractionPort, ToolcraftExternalInteractionSnapshot, ToolcraftExternalInteractionEvent, ToolcraftExternalGuide, ToolcraftExternalHandle, ToolcraftExternalPoint } from "./schema/external-interaction";
 export * from "./state/timeline-loop";
 export * from "./state/timeline-values";
 export * from "./state/types";
@@ -50,3 +55,5 @@ export * from "./testing/performance";
 
 export { createToolcraftAppDefaults, parseToolcraftAppDefaults } from "./schema/app-defaults";
 export type { ToolcraftAppDefaults } from "./schema/app-defaults";
+
+export { prepareToolcraftCollectionCommand } from "./state/collection-command-facade";

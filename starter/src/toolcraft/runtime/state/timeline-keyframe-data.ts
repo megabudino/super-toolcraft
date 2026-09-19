@@ -1,3 +1,4 @@
+import { resolveToolcraftCollectionItemIndex } from "../schema/collection-identity";
 import {
   getToolcraftCollectionActionsControls,
   isToolcraftCollectionFieldKeyframeable,
@@ -70,7 +71,7 @@ export function normalizeTimelineControlValue(
       !field ||
       !isToolcraftCollectionFieldKeyframeable(field) ||
       !Array.isArray(items) ||
-      nestedAddress.index >= items.length
+      resolveToolcraftCollectionItemIndex(control, items, { itemId: nestedAddress.itemId, itemIndex: nestedAddress.index }) < 0
     ) {
       return { accepted: false };
     }

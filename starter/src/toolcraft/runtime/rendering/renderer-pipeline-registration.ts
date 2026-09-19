@@ -37,6 +37,7 @@ export type {
   ToolcraftRenderPassOutput,
   ToolcraftRenderPassQuality,
   ToolcraftRenderPassRunLocation,
+  ToolcraftRenderPassSceneBounds,
 } from "./renderer-pipeline-types";
 
 type RegistrationInternals = {

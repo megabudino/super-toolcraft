@@ -172,6 +172,23 @@ function makeInfinityCanvasAcceptance(
 }
 
 describe("Toolcraft canvas sizing acceptance coverage", () => {
+  it("the public acceptance facade requires source bounds even with complete continuity and export coverage", () => {
+    const errors = validateContractAcceptance({
+      schema: createEditableOutputSchema("export-image"),
+      productReadiness: infinityProductReadiness,
+      acceptance: [
+        makeInfinityCanvasAcceptance("mode-continuity-and-restoration"),
+        makeInfinityCanvasAcceptance("scene-bounds-image-export"),
+      ],
+      rendererPipeline: {
+        runtimeId: "source-bounds-fixture",
+        interactionInvalidation: [],
+        passes: [{ id: "generated", inputs: [], invalidatedBy: [], kind: "pixel-transform", output: "source", quality: "full", runsOn: "main" }],
+      },
+    });
+    expect(errors).toContain('Renderer pass "generated" requires sceneBounds: intrinsic product domain or content with overflow proofIds.');
+  });
+
   it("requires mode and finite-size restoration coverage for editable output", () => {
     expect(
       validateContractAcceptance({
@@ -197,7 +214,7 @@ describe("Toolcraft canvas sizing acceptance coverage", () => {
       }),
     ).toEqual(
       expect.arrayContaining([
-        'Export PNG with editable-output canvas requires a runtime acceptance entry with infinityCanvasCoverage "scene-bounds-image-export" proving infinite export crops to the union of visible scene elements through ToolcraftAppComposition.sceneBoundsProvider.',
+        'Export PNG with editable-output canvas requires a runtime acceptance entry with infinityCanvasCoverage "scene-bounds-image-export" proving Infinity exports complete visible composition bounds, dimensions, background and decoded image content.',
       ]),
     );
   });
@@ -213,7 +230,7 @@ describe("Toolcraft canvas sizing acceptance coverage", () => {
       }),
     ).toEqual(
       expect.arrayContaining([
-        'Export Video with editable-output canvas requires a runtime acceptance entry with infinityCanvasCoverage "scene-bounds-video-export" proving infinite export uses one scene-bounds time-range envelope for every rendered frame.',
+        'Export Video with editable-output canvas requires a runtime acceptance entry with infinityCanvasCoverage "scene-bounds-video-export" proving Infinity preserves the saved finite artboard dimensions, duration and decoded video frames.',
       ]),
     );
   });

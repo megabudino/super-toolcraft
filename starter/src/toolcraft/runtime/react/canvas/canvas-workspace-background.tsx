@@ -5,9 +5,9 @@ import { toolcraftCanvasWorkspaceBackgroundTarget } from "../../schema/runtime-t
 import { useToolcraftValue } from "../app-shell/use-toolcraft";
 import { useCanvasViewportTransform } from "./canvas-viewport-world";
 
-function WorkspaceDots(): React.JSX.Element {
+function WorkspaceDots({ color }: { color?: string }): React.JSX.Element {
   const { offsetX, offsetY, zoom } = useCanvasViewportTransform();
-  return <CanvasDotPattern offset={{ x: offsetX, y: offsetY }} scale={zoom / 100} />;
+  return <CanvasDotPattern color={color} offset={{ x: offsetX, y: offsetY }} scale={zoom / 100} />;
 }
 
 export function CanvasWorkspaceBackground(): React.JSX.Element | null {

@@ -389,7 +389,8 @@ export const ControlsPanelControlGroup = React.memo(
       return null;
     }
 
-    const [id, rawControl] = entry;
+    const [id, declaredControl] = entry;
+    const rawControl = declaredControl;
     const disabled = selection.disabledById[id] === true;
     const resolvedControl =
       disabled === Boolean(rawControl.disabled)

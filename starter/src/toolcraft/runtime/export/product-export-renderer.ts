@@ -1,6 +1,7 @@
 import type { ToolcraftRendererPipelineClient } from "../rendering";
 import type { ReadonlyToolcraftState } from "../state/readonly-state";
 import type { ToolcraftExportFrame } from "./export-frame";
+import type { ToolcraftProductExportBoundsProvider } from "./product-export-bounds";
 
 export type ToolcraftProductExportFrameContext = Readonly<{
   context: CanvasRenderingContext2D;
@@ -19,5 +20,6 @@ export type ToolcraftProductExportFrameRenderer = (
 
 export type ToolcraftProductExportRenderer = Readonly<{
   baseFileName: string;
+  getContentBounds?: ToolcraftProductExportBoundsProvider;
   renderFrame: ToolcraftProductExportFrameRenderer;
 }>;

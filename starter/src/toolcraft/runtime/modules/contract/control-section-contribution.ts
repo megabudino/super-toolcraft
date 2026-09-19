@@ -1,13 +1,14 @@
 import { snapshotToolcraftModuleData } from "./module-data";
-import type { ToolcraftControlSchema, ToolcraftControlLayoutGroupSchema } from "../../schema/types";
+import type { ToolcraftControlSchema, ToolcraftControlLayoutGroupSchema, ToolcraftControlSectionSchema } from "../../schema/types";
 
 export type ToolcraftSettingsContribution = Readonly<{
   id: string;
   kind: "control-section";
   moduleId: string;
-  placement: Readonly<{ after: readonly string[]; before: readonly string[]; slot: "artifact-settings"; }>;
+  placement: Readonly<{ after: readonly string[]; before: readonly string[]; slot: "artifact-settings" | "product-settings"; }>;
   runtimeSectionId: `runtime.${string}`;
   section: Readonly<{
+    layout?: ToolcraftControlSectionSchema["layout"];
     controls: Readonly<Record<string, Readonly<ToolcraftControlSchema>>>;
     layoutGroups: readonly Readonly<ToolcraftControlLayoutGroupSchema>[];
     title: string;
@@ -27,6 +28,6 @@ export function normalizeToolcraftSettingsContribution<Contribution extends Tool
   return snapshotToolcraftModuleData({
     id, kind, moduleId, runtimeSectionId,
     placement: { after: placement.after, before: placement.before, slot: placement.slot },
-    section: { controls: section.controls, layoutGroups: section.layoutGroups, title: section.title },
+    section: { ...(section.layout ? { layout: section.layout } : {}), controls: section.controls, layoutGroups: section.layoutGroups, title: section.title },
   }) as Contribution;
 }

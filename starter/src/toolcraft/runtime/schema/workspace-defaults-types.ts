@@ -21,5 +21,7 @@ export type ToolcraftWorkspaceDefaults = Readonly<{
 export type ToolcraftResolvedWorkspaceDefaults = Readonly<{
   initialState: ToolcraftInitialState;
   resources: readonly ToolcraftDefaultResource[];
-  theme: ToolcraftWorkspaceDefaults["theme"];
+  /** Migrated v1 defaults own parameters; complete v2 defaults own the workspace. */
+  scope?: "parameters";
+  theme?: ToolcraftWorkspaceDefaults["theme"];
 }>;

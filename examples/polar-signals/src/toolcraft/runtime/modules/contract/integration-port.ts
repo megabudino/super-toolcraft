@@ -1,0 +1,14 @@
+export type ToolcraftProductIntegrationPortId =
+  | "scene.externalDocument"
+  | "modelPresentation"
+  | "scene.canvasContent"
+  | "scene.rasterFrameRenderer"
+  | "scene.vectorFrameRenderer";
+
+export type ToolcraftProductIntegrationPortRequirement = {
+  readonly applicability:
+    | "always"
+    | "product-scene"
+    | "spatial-product-scene";
+  readonly id: ToolcraftProductIntegrationPortId;
+};

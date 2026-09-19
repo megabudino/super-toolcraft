@@ -17,7 +17,7 @@ import {
   createToolcraftArtifactFrameState,
   getToolcraftArtifactTimelineProgress,
 } from "./artifact-frame-state";
-import { resolveToolcraftStillArtifactFrame } from "./artifact-scene-frame";
+import { resolveToolcraftStillArtifactContentFrame } from "./still-artifact-content-frame";
 import {
   ToolcraftSceneExportError,
   validateToolcraftArtifactSize,
@@ -60,11 +60,14 @@ export async function exportToolcraftSvgArtifact(
     request.state,
     request.state.timeline.currentTimeSeconds,
   );
-  const scenePlan = resolveToolcraftStillArtifactFrame({
+  const scenePlan = await resolveToolcraftStillArtifactContentFrame({
     boundsProvider: request.boundsProvider,
+    getContentBounds: request.svgExportRenderer?.getContentBounds,
+    rendererPipeline: request.rendererPipeline,
+    signal: request.signal,
+    visibility: request.visibility,
     productSceneRequired: request.svgExportRenderer !== undefined,
     state: frameState,
-    visibility: request.visibility,
   });
   const sizeValidation = validateToolcraftArtifactSize(scenePlan.outputFrame);
   if (!sizeValidation.ok) {

@@ -16,6 +16,7 @@ The starter app itself is intentionally neutral. It should show the Toolcraft ca
 - `core/layout.md` — sections, dependency cohesion, headers, reset, spacing, dividers, labels, inline rows, actions layout, colors, select, and segmented fit.
 - `core/media-upload.md` — file/image upload, multi-upload, sorting, transform actions, canvas source images, default assets, and source material behavior.
 - `core/development-files.md` — durable assets, agent scratch and diagnostics, shared CLI exclusions, file checks and explicit cleanup.
+- `core/app-cover.md` — required app-owned covers captured from real app compositions, their settings and Workspace registration.
 - `core/timeline-animation.md` — animation intent, timeline requirement, compact/extended timeline, seamless forward loops, duration changes, keyframes, and video timing.
 - `core/performance.md` — verification triggers, workload envelopes, compiled path fixtures, render scale, live slider responsiveness, renderer pipeline inventory, and optimization evidence.
 - `core/reference-study.md` — reference-runtime clone, feature inventory, reference study, Figma source, video references, acceptance mapping, and worklog evidence.

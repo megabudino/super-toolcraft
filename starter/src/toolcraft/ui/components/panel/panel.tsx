@@ -31,7 +31,7 @@ export function Panel({
   contentTransitionSuppressionKey,
   defaultCollapsed = false,
   onCollapsedChange,
-  onResetControls = noop,
+  onResetControls,
   stickyFooterActive = false,
   stickyFooterProgress = null,
   title,
@@ -92,8 +92,6 @@ export function Panel({
     </PanelSurface>
   );
 }
-
-function noop(): void {}
 
 function useInitialPanelContentTransitionSuppression(
   dependency: unknown,

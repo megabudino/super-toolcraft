@@ -2,6 +2,7 @@
 
 import * as React from "react";
 
+import { getToolcraftCollectionItemIdentity } from "../../../schema/collection-identity";
 import type {
   ToolcraftCollectionItemControlSchema,
   ToolcraftControlSchema,
@@ -58,7 +59,7 @@ export function useControlsPanelCollectionKeyframes({
           if (field.keyframeable !== true) return [];
           const target = getToolcraftCollectionItemControlAddress(
             control.target,
-            index,
+            getToolcraftCollectionItemIdentity(control, item, index),
             fieldId,
           );
           const value =
@@ -68,7 +69,7 @@ export function useControlsPanelCollectionKeyframes({
           return [[target, field, value] as const];
         }),
       ),
-    [control.itemControls, control.target, items],
+    [control, items],
   );
   const targetSet = React.useMemo(
     () => new Set(fieldControls.map(([target]) => target)),
@@ -138,7 +139,7 @@ export function useControlsPanelCollectionKeyframes({
     if (field.keyframeable !== true) return children;
     const target = getToolcraftCollectionItemControlAddress(
       control.target,
-      index,
+      getToolcraftCollectionItemIdentity(control, items[index], index),
       fieldId,
     );
     return actions.withKeyframeLabelAction({

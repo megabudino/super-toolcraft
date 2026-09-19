@@ -35,6 +35,7 @@ type BrowserAcceptanceRequirementSource = Pick<
   | "exportArtifactCoverage"
   | "id"
   | "infinityCanvasCoverage"
+  | "infinityOverflowCoverage"
   | "layerCoverage"
   | "modelImportCoverage"
   | "motionReferenceCoverage"
@@ -206,6 +207,7 @@ function deriveUnqualifiedToolcraftBrowserRuntimeRequirements(
     if (
       baseEvidenceType &&
       entry.renderScaleCoverage === undefined &&
+      entry.infinityOverflowCoverage === undefined &&
       exportArtifactCoverage.length === 0
     ) {
       evidenceTypes.push(baseEvidenceType);
@@ -239,6 +241,9 @@ function deriveUnqualifiedToolcraftBrowserRuntimeRequirements(
       evidenceTypes.push(
         infinityCanvasEvidenceTypeByCoverage[entry.infinityCanvasCoverage],
       );
+    }
+    if (entry.infinityOverflowCoverage) {
+      evidenceTypes.push("infinity-output-overflow");
     }
     if (
       entry.referenceCoverage ||

@@ -38,6 +38,11 @@ export type ToolcraftRenderPassOutput =
 
 export type ToolcraftRenderPassQuality = "preview" | "full" | "retina" | "export";
 
+export type ToolcraftRenderPassSceneBounds =
+  /** Authored finite domain, never an incidental generation/processing buffer. */
+  | Readonly<{ kind: "intrinsic"; reason: string }>
+  | Readonly<{ kind: "content"; proofIds: readonly string[] }>;
+
 export type ToolcraftRenderPass = Readonly<{
   cacheKey?: readonly string[];
   cost?: ToolcraftRenderPassCost;
@@ -50,6 +55,8 @@ export type ToolcraftRenderPass = Readonly<{
   output: ToolcraftRenderPassOutput;
   quality: ToolcraftRenderPassQuality;
   runsOn: ToolcraftRenderPassRunLocation;
+  /** Required by editable-product acceptance for source, intermediate and preview output. */
+  sceneBounds?: ToolcraftRenderPassSceneBounds;
 }>;
 
 export type ToolcraftPipelineInteraction =
@@ -132,7 +139,10 @@ export type ToolcraftCompiledRendererPipelinePass<
     : Readonly<{ gpu?: never }>) &
   (Pass extends { lifecycle: ToolcraftRenderPassLifecycle }
     ? Readonly<{ lifecycle: ToolcraftRenderPassLifecycle }>
-    : Readonly<{ lifecycle?: never }>);
+    : Readonly<{ lifecycle?: never }>) &
+  (Pass extends { sceneBounds: ToolcraftRenderPassSceneBounds }
+    ? Readonly<{ sceneBounds: ToolcraftRenderPassSceneBounds }>
+    : Readonly<{ sceneBounds?: never }>);
 
 export type NormalizedPasses<Passes extends readonly ToolcraftRenderPass[]> =
   Readonly<{

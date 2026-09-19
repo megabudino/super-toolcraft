@@ -117,7 +117,7 @@ export function createToolcraftVgpuTargetPresentation({
         "The VGPU target-readback presentation was disposed before the frame committed.",
       );
     }
-    const pixels = await retainedTarget.read();
+    const pixels = await retainedTarget.color.read({ mipLevel: 0, region: "all" });
     if (disposed) {
       throw new Error(
         "The VGPU target-readback presentation was disposed before the frame committed.",

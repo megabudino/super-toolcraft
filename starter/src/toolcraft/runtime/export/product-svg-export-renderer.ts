@@ -1,6 +1,7 @@
 import type { ToolcraftRendererPipelineClient } from "../rendering";
 import type { ReadonlyToolcraftState } from "../state/readonly-state";
 import type { ToolcraftExportFrame } from "./export-frame";
+import type { ToolcraftProductExportBoundsProvider } from "./product-export-bounds";
 
 export type ToolcraftProductSvgExportFrameContext = Readonly<{
   container: SVGGElement;
@@ -18,5 +19,6 @@ export type ToolcraftProductSvgExportFrameRenderer = (
 
 export type ToolcraftProductSvgExportRenderer = Readonly<{
   baseFileName: string;
+  getContentBounds?: ToolcraftProductExportBoundsProvider;
   renderFrame: ToolcraftProductSvgExportFrameRenderer;
 }>;

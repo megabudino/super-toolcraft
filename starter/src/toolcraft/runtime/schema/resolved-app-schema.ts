@@ -1,4 +1,5 @@
 import type { ResolvedProductModulePlan } from "../modules/contract/module-plan";
+import type { ToolcraftAuthoredStateMigration } from "./authored-state-migration";
 import type { ToolcraftResolvedWorkspaceDefaults } from "./workspace-defaults-types";
 import type {
   ResolvedToolcraftAppIdentity,
@@ -30,6 +31,7 @@ type ToolcraftMaterializedAppSchema = {
   settingsTransfer: ResolvedToolcraftSettingsTransferSchema;
   toolbar: Required<ToolcraftToolbarSchema>;
   sourceDefaults?: ToolcraftResolvedWorkspaceDefaults;
+  authoredStateMigration?: ToolcraftAuthoredStateMigration;
 };
 
 export type ResolvedToolcraftAppSchema = Readonly<

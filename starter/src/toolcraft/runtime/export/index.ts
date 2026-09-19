@@ -36,6 +36,10 @@ export type {
   ToolcraftVideoExportSizeOptions,
 } from "./export-sizing";
 export type {
+  ToolcraftProductExportBoundsContext,
+  ToolcraftProductExportBoundsProvider,
+} from "./product-export-bounds";
+export type {
   ToolcraftProductExportFrameContext,
   ToolcraftProductExportFrameRenderer,
   ToolcraftProductExportRenderer,

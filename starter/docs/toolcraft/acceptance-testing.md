@@ -1,8 +1,8 @@
 # Acceptance Testing
 
-> Reading route: start with `workflow.md`. Core generated-app rules live in `core/*`; this file is a focused acceptance reference for the topic below.
+> Reading route: `workflow.md` first; core generated-app rules are in `core/*`. This file covers acceptance.
 
-Every visible product entity must prove it works. Tests prove interaction changes state and output, a command side effect, timeline frame, layer result, media lifecycle, or viewport.
+Prove every visible entity through state/output changes, command effects, timeline frames, layers, media lifecycle or viewport behavior.
 
 ## Required Files
 
@@ -17,11 +17,11 @@ Every visible product entity must prove it works. Tests prove interaction change
 - `e2e/app-kernel-benchmarks.ts`
 - `e2e/product-observable-helpers.ts`
 
-Lifecycle execution is defined under **Proof Boundaries**. Performance complaint authority adds one targeted iteration; explicit full-audit authority permits `pnpm verify:perf`.
+See **Proof Boundaries** for lifecycle execution. A performance complaint authorizes one targeted iteration; an explicit full audit permits `pnpm verify:perf`.
 
 ## Product Readiness
 
-The exported starter may keep `appProductReadiness.mode: "starter"` only while it is still a neutral template. A real product must switch it to `mode: "product"` and fill:
+Only neutral templates keep `appProductReadiness.mode: "starter"`. Products use `mode: "product"` and declare:
 
 - `productName`;
 - `productSummary`;
@@ -36,25 +36,25 @@ The exported starter may keep `appProductReadiness.mode: "starter"` only while i
 fixed/timeline modes require the positive typed authority detailed under
 Orientation Gizmo. Static frames prove composition, not locked interaction.
 
-Product readiness also requires product surface: controls, layers, timeline, `canvasContent`, `infiniteCanvasContent`, `renderDefaultCanvasMedia: false`, or acceptance coverage. Folder names never establish readiness.
+Product readiness also requires product surface: controls, layers, timeline, `canvasContent`, `infiniteCanvasContent`, `renderDefaultCanvasMedia: false`, or acceptance coverage. Folder names do not prove readiness.
 
 ## Implementation Worklog
 
-Update `docs/toolcraft/agent-worklog.md` before delivery and after material decisions. Record renderer, view, timeline, layers, controls, export, and performance choices.
+Record renderer, view, timeline, layers, controls, export and performance choices in `docs/toolcraft/agent-worklog.md` after material decisions and before delivery.
 
 The worklog declares `Mode: product`. Initial `Decision Trail` entries record `Request:`, `Task type:`, `User-visible result:`, `Source/reference checked:`, `Reference inputs:`, `Docs/contracts read:`, `Contract rules applied:`, `View interaction intent:`, `Interaction ownership:`, `Decision:`, `Alternatives rejected:`, `State/output mapping:`, result-narrative `Verification:`, and `Risks:`. Focused entries: see `workflow.md`. Reference inputs list every asset or `None`; state/output mapping links state to output or export.
 
 The `Renderer`, `View Interaction`, `Interaction Ownership`, `Timeline`, `Layers`, `Controls`, `Export`, and `Performance` sections each include `Decision:`, `Reason:`, and `Evidence:`. View interaction adds mode, source, alternatives, and targets. Performance adds workload, lifecycle, assessment, paths, and for complaints exact `Performance request evidence:` plus unique canonical `Performance paths:`.
 
-Protected receipts own changed files, plan, checks, reports, measurements, and results. Decision Trails do not duplicate them or supply command-shaped authority. `Risks` uses `Risk:` entries or `None:` with a reason.
+Protected receipts own files, plans, checks, reports, measurements and results. Decision Trails neither duplicate nor authorize them. `Risks` lists `Risk:` entries or `None:` with a reason.
 
-The acceptance gate fails if the worklog is missing, still says `Mode: starter`, or lacks concrete decision evidence.
+Missing worklogs, `Mode: starter` and absent decision evidence fail acceptance.
 
 ## Acceptance Rows
 
-Every visible schema control, custom renderer feature, media lifecycle, timeline behavior, layer behavior, canvas sizing behavior, toolbar command, sticky action, and product editing handle needs an acceptance row.
+Acceptance rows cover every visible control, custom renderer feature, media lifecycle, timeline, layer, canvas sizing behavior, toolbar command, sticky action and product editing handle.
 
-Each row should name:
+Rows name:
 
 - stable `id`;
 - `kind`;
@@ -105,7 +105,7 @@ Slider and range slider rows must prove live behavior. Browser tests should drag
 
 ## Infinity Canvas Coverage
 
-Editable output proves `infinityCanvasCoverage: "mode-continuity-and-restoration"`; its dedicated evidence is `infinity-mode-continuity`. Both toggles prove only boundary, clipping, and size controls change. View, world frames, renderer identity, `useToolcraftProductSceneFrame` backing, and provider rect stay stable; disabling restores size/clipping without centering. Live/export share that rect; fallback is finite-only. Source pixels are not image scene geometry. Infinity export proves contributor-union crop and typed failures.
+Continuity proves frame, view and identity. Each `content` pass requires `infinityOverflowCoverage` proof: actual edge pixels, branch values, pass execution, Background on/off and finite crop. See the [typed inventory and protected recipe](core/runtime-boundary.md#intermediate-output-bounds). Still-image/SVG proofs verify complete Infinity composition; video retains saved-artboard parity. See [export invariants](core/setup-export.md#infinity-canvas).
 
 ## Render Scale Coverage
 
@@ -230,11 +230,11 @@ Every video-enabled app exercises two video formats and resolutions. It proves r
 
 Footer action acceptance must not include Reset. Reset is already available in the controls panel header and uses schema `defaultValue`; duplicating it in sticky `panelActions` fails acceptance.
 
-Local `actions` acceptance clicks every action and proves nearby runtime state or product output changed. A single-button label adds context instead of duplicating its button. Visual acceptance rejects side labels and puts labels above the two-column grid.
+Local `actions` acceptance clicks every action and proves nearby runtime state or product output changed. A single-button label adds context instead of duplicating its button. Visual acceptance rejects side labels and puts labels above the grid or compact navigator. Action grids above four resolved rows use previous/dropdown/next; prove the four/five-row boundary, equal 28px heights, both navigation directions, end states, keyboard activation, repeated menu commands, and unchanged command/Undo effects.
 
 `collectionActions` keeps parts `collectionActions.add`, `collectionActions.remove`, `collectionActions.items`. Prove limits, full-default add, sibling-preserving edit, preview/export, and whole-record removal. For compound records, `collectionItemKeyframeCoverage` exactly matches `keyframeable: true` fields and derives one `timeline-keyframes` requirement per field; selected scope binds the exact `selectionTarget` and proves two-entity isolation. `sourceCollection` proves source count, item edit, output, and no add/remove.
 
-Image export proves background changes in preview/artifact/Infinity. Background off restores finite mode, disables Infinity, removes the runtime finite layer, and makes PNG transparent while JPEG/video stay opaque; restoring it only restores Infinity availability. Media-enabled apps declare `finite-media-stacking` and prove the evaluated background stays below visible runtime media and the transparent product foreground. Artifact proof decodes real type, dimensions, product pixels/bounds, and hash; bytes or dimensions alone are insufficient.
+Image export proves background changes in preview/artifact/Infinity. Background off preserves the active mode, removes runtime background fill, and makes PNG transparent while JPEG/video stay opaque; restoring it restores fill in the same mode. Media-enabled apps prove `finite-media-stacking` for actual visible contributors: Background → product for input-only images, Background → media → product for visible layers. Expected media presence and observed order must agree. Artifact proof decodes real type, dimensions, product pixels/bounds, and hash; bytes or dimensions alone are insufficient.
 
 Hard acceptance semantics are typed, not inferred from prose. Both selector roles come from required `finiteSelectors`. Applicability cases come only from a `branch` selector's exact `affectedTargets` plus explicit `applicability` predicates; no section-wide fanout exists. A `parameter` still proves its own accepted outcome and option coverage but adds no peer cases. Predicate owners are branches, preserving missing-predicate detection. Non-matches prove absence; matches and declared branch peers prove presence plus the row's existing product outcomes under canonical case-suffixed requirement IDs. The `export.includeBackground` row separately declares `backgroundOutputCoverage` for preview exclusion, transparent image alpha, and preserved video background when exposed. Its protected recipe verifies those preview and artifact semantics. `expectedObservable` and `userAction` remain human-readable context; words such as “hidden”, “PNG”, or “video” never satisfy evidence by themselves.
 

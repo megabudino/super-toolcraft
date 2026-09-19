@@ -71,11 +71,11 @@ Prove each declared mode through the existing applicability browser cases: activ
 - Scroll is a workspace preference, not undo/redo, settings import/export, or Reset controls state. The runtime preserves it across panel collapse/remount, restores without animation, and clamps to the nearest valid position if content is shorter. User scrolling takes priority over delayed restoration. `persistence.storage: "none"` disables reload persistence, including panel scroll.
 - Ordinary section headers expose the runtime section reset action before the collapse button.
 - Section reset dispatches `controls.resetTargets` and restores only that section's targets to schema `defaultValue`. This includes controls hidden by applicability, such as an inactive tab; switching tabs alone preserves their values.
-- Runtime `Settings` follows ordinary section collapse and scoped reset behavior. The separate local defaults action block and sticky footer export sections are not collapsible.
+- Runtime `Settings` follows ordinary section collapse and scoped reset behavior. The separate settings file/defaults action block and sticky footer export sections are not collapsible.
 
 ## Section Spacing
 
-- The local defaults action block uses the public technical spacing: 12px on all sides. Settings uses ordinary section spacing and its standard header, like other body sections: the body keeps 8px top and 24px bottom spacing.
+- The settings file/defaults action block uses the public technical spacing: 12px on all sides. Settings uses ordinary section spacing and its standard header, like other body sections: the body keeps 8px top and 24px bottom spacing.
 - Sticky footer action sections keep their dedicated spacing.
 - Do not add custom padding in generated apps to compensate for a local section issue. Fix the shared layout rule.
 
@@ -124,8 +124,8 @@ Prove each declared mode through the existing applicability browser cases: activ
 - If an `actions` control has a visible label, the label is above the buttons.
 - One action button occupies the left 50% cell.
 - Two action buttons fill one row.
-- Larger groups continue in two columns.
-- Odd trailing actions stay in the left 50% cell.
+- Groups continue in two columns up to four rows. Above four rows, use the shared previous/dropdown/next action navigator; count rows using the resolved column count. All three controls use the standard 28px height.
+- Odd trailing actions in grid mode stay in the left 50% cell. Compact navigation preserves command callbacks, allows repeat selection, skips disabled/loading items, and disables arrows at list ends. The dropdown records only the last invoked command and does not claim that Undo or other edits still match that command.
 - Sticky footer `panelActions` use the sticky footer action layout, where a final odd action can span the full row.
 
 ## Colors In Rows

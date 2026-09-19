@@ -1,9 +1,6 @@
 "use client";
-
 import * as React from "react";
 import { Panel, type ControlChangeMeta } from "@/toolcraft/ui";
-import { toolcraftRuntimeDefaultsSectionId } from "../../schema/runtime-defaults-section";
-import { useToolcraftDefaultsAuthoring } from "../app-shell/toolcraft-defaults-authoring";
 
 import type {
   ResolvedToolcraftControlSectionSchema,
@@ -67,6 +64,10 @@ export type ControlsPanelProps = {
   onPanelStateChange?: PanelStateChange;
   panelPlacement?: PanelPlacement;
   panelState?: ToolcraftPanelState;
+  /** A host presentation selects sections without replacing the canonical schema. */
+  sections?: readonly ResolvedToolcraftControlSectionSchema[];
+  resetTargets?: readonly string[];
+  keyframeControls?: boolean;
   sceneExport?: ToolcraftControlsSceneExport;
 };
 
@@ -195,17 +196,24 @@ export function ControlsPanel({
   onPanelStateChange,
   panelPlacement,
   panelState,
+  sections,
+  resetTargets,
+  keyframeControls = true,
   sceneExport,
 }: ControlsPanelProps): React.JSX.Element | null {
   const dispatch = useToolcraftDispatch();
   const store = useToolcraftStore();
   const theme = React.useContext(ToolcraftThemeContext);
-  const defaultsAuthoring = useToolcraftDefaultsAuthoring();
   const contentRef = useControlsPanelScroll();
   const schema = store.getCommittedState().schema;
-  const controlsPanel = schema.panels.controls;
+  const controlsPanel = React.useMemo(
+    () => schema.panels.controls && sections
+      ? { ...schema.panels.controls, sections }
+      : schema.panels.controls,
+    [schema.panels.controls, sections],
+  );
   const keyframesSupported =
-    schema.assembly.capabilities.includes("timeline.keyframes");
+    keyframeControls && schema.assembly.capabilities.includes("timeline.keyframes");
   const dependencies = React.useMemo(
     () => getPanelDependencies({ controlsPanel, keyframesSupported }),
     [controlsPanel, keyframesSupported],
@@ -251,9 +259,11 @@ export function ControlsPanel({
 
   const dispatchCommand = React.useCallback(
     (command: ToolcraftCommand): void => {
-      dispatch(command);
+      dispatch(command.type === "controls.resetTargets" && resetTargets
+        ? { ...command, targets: command.targets.filter((target) => resetTargets.includes(target)) }
+        : command);
     },
-    [dispatch],
+    [dispatch, resetTargets],
   );
   const setControlValue = React.useCallback<ControlsPanelSetControlValue>(
     (target, value, label, meta?: ControlChangeMeta): void => {
@@ -281,9 +291,6 @@ export function ControlsPanel({
 
   const placement = panelPlacement ?? (framed ? "frame" : "surface");
   const renderedSections = selection.visibleSections
-    .filter(({ section }) =>
-      section.id !== toolcraftRuntimeDefaultsSectionId || defaultsAuthoring !== null,
-    )
     .map(({ entries, section }) => ({
       entries,
       navigationId: `toolcraft-controls-section-${section.id}`,
@@ -319,8 +326,10 @@ export function ControlsPanel({
         }
         onResetControls={() => {
           const savedTheme = store.getCommittedState().schema.sourceDefaults?.theme;
-          if (savedTheme) theme?.setThemePreference(savedTheme);
-          dispatchCommand({ type: "controls.reset" });
+          if (!resetTargets && savedTheme) theme?.setThemePreference(savedTheme);
+          dispatchCommand(resetTargets
+            ? { type: "controls.resetTargets", targets: [...resetTargets] }
+            : { type: "controls.reset" });
         }}
         stickyFooterActive={stickyFooterActive}
         stickyFooterProgress={stickyFooterProgress}

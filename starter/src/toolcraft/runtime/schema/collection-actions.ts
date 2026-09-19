@@ -125,6 +125,10 @@ export function assertToolcraftCollectionControlTargets(
       );
     }
 
+    if (control.identityField !== undefined && (control.type !== "collectionActions" || !control.itemControls || control.identityField !== "id" || Object.hasOwn(control.itemControls, "id"))) {
+      throw new Error(`Toolcraft collection identity validation for "${control.target}": identityField requires compound items and reserves hidden field "id".`);
+    }
+
     if (control.selectionTarget === undefined) {
       continue;
     }

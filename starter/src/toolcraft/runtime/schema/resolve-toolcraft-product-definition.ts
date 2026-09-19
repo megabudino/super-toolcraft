@@ -5,10 +5,7 @@ import {
   type ResolvedToolcraftProductModules,
 } from "../modules/resolution/resolve-product-modules";
 import { resolveRequiredToolcraftAppIdentity } from "./app-identity";
-import type {
-  ToolcraftControlsPanelSchema,
-  ToolcraftPanelsSchema,
-} from "./types";
+import type { ToolcraftControlsPanelSchema, ToolcraftPanelsSchema } from "./types";
 import type { ToolcraftProductDefinition } from "./product-base";
 import {
   getToolcraftProductBaseSemanticValidationErrors,
@@ -18,10 +15,7 @@ import { getToolcraftStandardCapabilityOwnershipErrors } from "./product-standar
 import type { ResolvedToolcraftAppSchema } from "./resolved-app-schema";
 import { resolveToolcraftMaterializedSchema } from "./resolve-toolcraft-materialized-schema";
 
-function cloneProductValue<Value>(
-  value: Value,
-  seen = new WeakMap<object, object>(),
-): Value {
+function cloneProductValue<Value>(value: Value, seen = new WeakMap<object, object>()): Value {
   if (value === null || typeof value !== "object") return value;
   const prototype = Object.getPrototypeOf(value);
   const isArray = Array.isArray(value);
@@ -119,8 +113,7 @@ function assertPersistenceRequirements(
   schema: ResolvedToolcraftAppSchema,
   resolution: ResolvedToolcraftProductModules,
 ): void {
-  for (const slice of resolution.contributionResolution
-    .persistenceRequirements) {
+  for (const slice of resolution.contributionResolution.persistenceRequirements) {
     const count =
       schema.persistence.storage === "localStorage"
         ? schema.persistence.include.filter((value) => value === slice).length
@@ -136,6 +129,9 @@ function assertPersistenceRequirements(
 export function resolveToolcraftProductDefinition(
   definition: ToolcraftProductDefinition,
 ): ResolvedToolcraftAppSchema {
+  if (definition.authoredStateMigration !== undefined && typeof definition.authoredStateMigration !== "function") {
+    throw new Error("authoredStateMigration must be a synchronous function.");
+  }
   const declarations = Object.freeze([...definition.modules]);
   const resolution = resolveToolcraftProductModules(declarations, toolcraftCoreModuleCatalog);
   const base = cloneProductValue(definition.base);
@@ -158,11 +154,11 @@ export function resolveToolcraftProductDefinition(
     ...resolveToolcraftMaterializedSchema({
       identity,
       persistence: base.persistence,
-      requiredPersistenceSlices:
-        resolution.contributionResolution.persistenceRequirements,
+      requiredPersistenceSlices: resolution.contributionResolution.persistenceRequirements,
       schema: materializedSchema,
     }),
     modulePlan: resolution.plan,
+    ...(definition.authoredStateMigration ? { authoredStateMigration: definition.authoredStateMigration } : {}),
   });
   assertPersistenceRequirements(schema, resolution);
 

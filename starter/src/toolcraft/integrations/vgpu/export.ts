@@ -133,7 +133,7 @@ export async function renderToolcraftVgpuExportFrame({
         if (renderAttempt.failed) {
           throw renderAttempt.error;
         }
-        const readback = await output.read();
+        const readback = await output.color.read({ mipLevel: 0, region: "all" });
         if (readback.byteLength !== expectedByteLength) {
           throw new RangeError(
             `VGPU export readback returned ${readback.byteLength} bytes; expected ${expectedByteLength}.`,

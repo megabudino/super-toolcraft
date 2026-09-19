@@ -22,6 +22,7 @@ export const TOOLCRAFT_BUILT_IN_MODULE_CATALOG: readonly ToolcraftBuiltInModuleC
   Object.freeze([
     Object.freeze({ contractVersion: 2, id: "canvas-editing" }),
     Object.freeze({ contractVersion: 2, id: "image-export" }),
+    Object.freeze({ contractVersion: 2, id: "masks" }),
     Object.freeze({ contractVersion: 2, id: "layers" }),
     Object.freeze({ contractVersion: 2, id: "media-source" }),
     Object.freeze({ contractVersion: 2, id: "model-3d" }),

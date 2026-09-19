@@ -15,9 +15,9 @@ const imageDataConstructor = ImageDataDouble as unknown as typeof ImageData;
 function targetDisposingAfterRead(dispose: () => void): typeof createTarget {
   return (owner, options) => {
     const target = createTarget(owner, options);
-    const read = target.read.bind(target);
-    target.read = async () => {
-      const pixels = await read();
+    const read = target.color.read.bind(target.color);
+    target.color.read = async (options) => {
+      const pixels = await read(options);
       dispose();
       return pixels;
     };

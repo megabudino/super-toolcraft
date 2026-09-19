@@ -9,10 +9,7 @@ import { readValues } from "../state/persistence-reader-values";
 
 function pickPersistedValues(
   state: ToolcraftState,
-  persistence: Extract<
-    ResolvedToolcraftAppSchema["persistence"],
-    { storage: "localStorage"; }
-  >,
+  persistence: Extract<ResolvedToolcraftAppSchema["persistence"], { storage: "localStorage" }>,
 ): Record<string, unknown> | undefined {
   const values: Record<string, unknown> = {};
   const targets = getToolcraftPersistedValueTargets(
@@ -29,21 +26,41 @@ function pickPersistedValues(
   return Object.keys(values).length > 0 ? values : undefined;
 }
 
-
 export const documentPersistenceCodecs = {
   values: {
     fields: ["values", "controlRanges"],
-    read: (schema, data) => { const values = readValues(schema, data.values); return { ...(values ? { values } : {}), ...(data.controlRanges === undefined ? {} : { controlRanges: readToolcraftControlRanges(schema, data.controlRanges) }) }; },
-    write: (state, schema) => ({ ...(Object.keys(state.controlRanges).length ? { controlRanges: state.controlRanges } : {}), values: schema.persistence.storage === "localStorage" ? pickPersistedValues(state, schema.persistence) : undefined }),
+    read: (schema, data) => {
+      const values = readValues(schema, data.values);
+      return {
+        ...(values ? { values } : {}),
+        ...(data.controlRanges === undefined
+          ? {}
+          : { controlRanges: readToolcraftControlRanges(schema, data.controlRanges) }),
+      };
+    },
+    write: (state, schema) => ({
+      ...(Object.keys(state.controlRanges).length ? { controlRanges: state.controlRanges } : {}),
+      values:
+        schema.persistence.storage === "localStorage"
+          ? pickPersistedValues(state, schema.persistence)
+          : undefined,
+    }),
   },
   canvas: {
     fields: ["canvas"],
-    read: (_schema, data) => { const canvas = readCanvas(data.canvas); return canvas ? { canvas } : undefined; },
-    write: state => ({ canvas: state.canvas }),
+    read: (_schema, data) => {
+      const canvas = readCanvas(data.canvas);
+      return canvas ? { canvas } : undefined;
+    },
+    // Persist the visible frame as a restoration hint, never pending measurements.
+    write: ({ canvas }) => ({ canvas }),
   },
   panels: {
     fields: ["panels"],
-    read: (schema, data) => { const panels = readPanels(schema, data.panels); return panels ? { panels } : undefined; },
-    write: state => ({ panels: state.panels }),
+    read: (schema, data) => {
+      const panels = readPanels(schema, data.panels);
+      return panels ? { panels } : undefined;
+    },
+    write: (state) => ({ panels: state.panels }),
   },
 } satisfies Record<string, ToolcraftWorkspaceSliceCodec>;

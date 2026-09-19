@@ -4,6 +4,7 @@ import { isToolcraftRuntimeOwnedTarget } from "./runtime-targets";
 import { getToolcraftValueControls, normalizeToolcraftControlValue } from "../state/control-value-normalization";
 import { cloneToolcraftJsonValue } from "../state/control-value-codecs";
 import { readCanvasSize } from "../state/persistence-reader-primitives";
+import { migrateToolcraftAuthoredState } from "../state/authored-state-migration";
 import { parseToolcraftWorkspaceDefaults, readToolcraftWorkspaceDefaults, writeToolcraftWorkspaceDefaults } from "../composition/workspace-defaults";
 import type { ToolcraftWorkspaceDefaults, ToolcraftDefaultResource } from "./workspace-defaults-types";
 export type ToolcraftAppDefaults = ToolcraftParameterDefaults | ToolcraftWorkspaceDefaults;
@@ -34,15 +35,6 @@ export function parseToolcraftAppDefaults(
       value.version !== 1 || value.appId !== schema.identity.id || !isRecord(value.values)) {
     throw new Error("Invalid application defaults or application identity.");
   }
-  const controls = getToolcraftValueControls(schema);
-  const values: Record<string, unknown> = {};
-  for (const [target, candidate] of Object.entries(value.values)) {
-    const control = controls.get(target);
-    if (!control || !parameterControl(control)) throw new Error(`Defaults cannot own ${target}.`);
-    const normalized = normalizeToolcraftControlValue(control, candidate);
-    if (!normalized.accepted) throw new Error(`Invalid default for ${target}.`);
-    values[target] = cloneToolcraftJsonValue(normalized.value);
-  }
   let canvas: ToolcraftParameterDefaults["canvas"] = null;
   if (value.canvas !== null) {
     if (!isRecord(value.canvas) || Object.keys(value.canvas).sort().join() !== "mode,size" ||
@@ -54,6 +46,24 @@ export function parseToolcraftAppDefaults(
     const size = readCanvasSize(value.canvas.size);
     if (!size || size.width <= 0 || size.height <= 0) throw new Error("Invalid default canvas size.");
     canvas = { mode: value.canvas.mode, size };
+  }
+  const migrated = migrateToolcraftAuthoredState(schema, { values: value.values, canvas }, "defaults", value.version);
+  const controls = getToolcraftValueControls(schema);
+  const migratedAdditionalTargets = new Set(schema.authoredStateMigration ? [
+    ...(schema.persistence.storage === "localStorage" ? schema.persistence.additionalValueTargets : []),
+    ...schema.settingsTransfer.additionalValueTargets,
+  ] : []);
+  const values: Record<string, unknown> = {};
+  for (const [target, candidate] of Object.entries(migrated.values as Record<string, unknown>)) {
+    const control = controls.get(target);
+    if (!control && migratedAdditionalTargets.has(target)) {
+      values[target] = cloneToolcraftJsonValue(candidate);
+      continue;
+    }
+    if (!control || !parameterControl(control)) throw new Error(`Defaults cannot own ${target}.`);
+    const normalized = normalizeToolcraftControlValue(control, candidate);
+    if (!normalized.accepted) throw new Error(`Invalid default for ${target}.`);
+    values[target] = cloneToolcraftJsonValue(normalized.value);
   }
   return { version: 1, appId: schema.identity.id, values, canvas };
 }
@@ -75,8 +85,14 @@ export function applyToolcraftAppDefaults(
   if (source === undefined || source === null) return schema;
   const parsed = parseToolcraftAppDefaults(schema, source);
   const defaults = parsed.version === 1 ? parsed : { values: parsed.state.values, canvas: parsed.state.canvas };
+  const controls = getToolcraftValueControls(schema);
+  const additionalDefaults = parsed.version === 1
+    ? Object.fromEntries(Object.entries(parsed.values).filter(([target]) => !controls.has(target)))
+    : {};
   const sourceDefaults = parsed.version === 2 ? {
     initialState: readToolcraftWorkspaceDefaults(schema, parsed), resources: parsed.resources, theme: parsed.theme,
+  } : Object.keys(additionalDefaults).length ? {
+    initialState: { values: additionalDefaults }, resources: [], scope: "parameters" as const,
   } : undefined;
   const canvas = defaults.canvas && schema.canvas.sizing.mode === "editable-output"
     ? { ...schema.canvas, size: defaults.canvas.size, sizeSource: "app" as const,

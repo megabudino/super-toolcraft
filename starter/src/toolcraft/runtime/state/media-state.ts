@@ -44,7 +44,8 @@ export function getToolcraftResetMediaPatch(
     return null;
   }
 
-  const defaultMediaState = state.schema.sourceDefaults ? createToolcraftState(state.schema) : createToolcraftDefaultMediaState(
+  const hasWorkspaceDefaults = state.schema.sourceDefaults !== undefined && state.schema.sourceDefaults.scope !== "parameters";
+  const defaultMediaState = hasWorkspaceDefaults ? createToolcraftState(state.schema) : createToolcraftDefaultMediaState(
     state.schema,
     state.canvas,
   );
@@ -63,7 +64,7 @@ export function getToolcraftResetMediaPatch(
         return !fileDropTargets.has(asset.sourceTarget);
       }
 
-      return state.schema.sourceDefaults !== undefined;
+      return hasWorkspaceDefaults;
     }),
     ...cloneToolcraftMediaAssets(defaultTargetMediaAssets),
   ];
@@ -81,7 +82,7 @@ export function getToolcraftResetMediaPatch(
       : (layers[0]?.id ?? null);
 
   if (
-    (!state.schema.sourceDefaults || (areToolcraftControlValuesEqual(mediaAssets, state.mediaAssets) && areToolcraftControlValuesEqual(layers, state.layers))) &&
+    (!hasWorkspaceDefaults || (areToolcraftControlValuesEqual(mediaAssets, state.mediaAssets) && areToolcraftControlValuesEqual(layers, state.layers))) &&
     mediaAssets.length === state.mediaAssets.length &&
     mediaAssets.every((asset, index) => asset.id === state.mediaAssets[index]?.id) &&
     layers.length === state.layers.length &&

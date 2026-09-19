@@ -59,6 +59,9 @@ export function resolveToolcraftMaterializedSchema(
     schema,
   } = input;
   const canvasEnabled = schema.canvas.enabled;
+  if (schema.canvas.infinityBackgroundPolicy !== undefined && !["required", "optional"].includes(schema.canvas.infinityBackgroundPolicy)) {
+    throw new Error("Invalid Infinity background policy.");
+  }
   const canvasSize = schema.canvas.size;
   const canvasRenderScale = resolveToolcraftCanvasRenderScale(
     schema.canvas.renderScale,
@@ -75,6 +78,7 @@ export function resolveToolcraftMaterializedSchema(
   });
   const canvas = {
     ...schema.canvas,
+    infinityBackgroundPolicy: schema.canvas.infinityBackgroundPolicy ?? "optional",
     draggable: canvasEnabled ? (schema.canvas.draggable ?? true) : false,
     renderScale: canvasRenderScale,
     size: canvasSize ?? defaultToolcraftCanvasSize,

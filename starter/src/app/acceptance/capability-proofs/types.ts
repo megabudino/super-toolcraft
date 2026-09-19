@@ -19,6 +19,7 @@ export type ToolcraftCapabilityProofOwnerId =
   | "artifact-export"
   | "canvas-editing"
   | "layers"
+  | "masks"
   | "media-source"
   | "model-3d"
   | "spatial-view"
@@ -32,6 +33,7 @@ type ToolcraftCapabilityProofDescriptorByOwner = {
   }>;
   "canvas-editing": Readonly<{ kind: "canvas-editing" }>;
   layers: Readonly<{ kind: "layers" }>;
+  masks: Readonly<{ kind: "masks" }>;
   "media-source": Readonly<{
     kind: "media-source";
     persistenceSlice: ToolcraftPersistableStateSlice;

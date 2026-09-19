@@ -9,6 +9,7 @@ import type { ToolcraftExportRequestEvidence } from "./artifact-export-request-e
 import type {
   ToolcraftCanvasSizingCoverage,
   ToolcraftInfinityCanvasCoverage,
+  ToolcraftInfinityOverflowCoverage,
   ToolcraftRenderScaleCoverage,
 } from "./canvas-coverage";
 import type { ToolcraftModelImportCoverage } from "./model-import-coverage";
@@ -28,6 +29,7 @@ export type { ToolcraftExportRequestEvidence } from "./artifact-export-request-e
 export type {
   ToolcraftCanvasSizingCoverage,
   ToolcraftInfinityCanvasCoverage,
+  ToolcraftInfinityOverflowCoverage,
   ToolcraftRenderScaleCoverage,
   ToolcraftRenderScaleState,
 } from "./canvas-coverage";
@@ -260,6 +262,7 @@ export type ToolcraftComponentAcceptance = {
   kind: "canvas-handle" | "control" | "runtime";
   canvasSizingCoverage?: ToolcraftCanvasSizingCoverage;
   infinityCanvasCoverage?: ToolcraftInfinityCanvasCoverage;
+  infinityOverflowCoverage?: ToolcraftInfinityOverflowCoverage;
   layerCoverage?: ToolcraftLayerCoverage;
   mediaLifecycleCoverage?: readonly ToolcraftMediaLifecycleCoverage[];
   modelImportCoverage?:

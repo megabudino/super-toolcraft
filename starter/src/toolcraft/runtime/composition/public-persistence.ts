@@ -4,6 +4,7 @@ import type { ResolvedToolcraftAppSchema } from "../schema/resolved-app-schema";
 import { readMediaAssets } from "../state/persistence-reader-media";
 import { workspacePersistenceCodec } from "./workspace-persistence-codec";
 import { isToolcraftPersistenceRecord } from "../state/persistence-shared";
+import { migrateToolcraftAuthoredState } from "../state/authored-state-migration";
 import type { ToolcraftInitialState } from "../state/types";
 
 export type { ToolcraftPersistencePayload } from "../state/persistence-shared";
@@ -57,10 +58,16 @@ export function parseToolcraftPersistenceSnapshotResult(
     return { kind: "invalid" };
   }
 
+  let candidate: Record<string, unknown>;
+  try {
+    candidate = migrateToolcraftAuthoredState(schema, payload.state, "persistence", payload.version);
+  } catch {
+    return { kind: "invalid" };
+  }
   const state =
     workspacePersistenceCodec.read(
       schema,
-      payload.state,
+      candidate,
       new Set(persistence.include),
     ) ?? {};
 

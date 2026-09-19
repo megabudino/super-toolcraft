@@ -196,6 +196,7 @@ describe("Toolcraft acceptance capability pipeline integration", () => {
           "../canvas-handle-acceptance.ts",
         ],
         ["getToolcraftLayerCoverageErrors", "../runtime-coverage.ts"],
+        ["getToolcraftMasksProofErrors", "./masks.ts"],
         ["getToolcraftMediaSourceProofErrors", "../media-upload.ts"],
         ["getToolcraftModel3dProofErrors", "../model-import-coverage.ts"],
         [

@@ -86,6 +86,11 @@ function ToolcraftAppContent({
   const modelRendererStatus = useToolcraftModelRenderPreparationStatus();
   const persistenceStatus = useToolcraftPersistenceStatus();
 
+  const controlsPanel = surfaces.panels.controls?.enabled ? (
+    <ControlsPanel controlRenderers={controlRenderers} onPanelAction={onPanelAction}
+      panelPlacement="floating" sceneExport={sceneExport} />
+  ) : null;
+
   return (
     <div
       className={cn(
@@ -115,14 +120,7 @@ function ToolcraftAppContent({
       ) : null}
       {modulePanels.filter(({ binding }) => binding.slot === "before-controls")
         .map(panel => <React.Fragment key={panel.moduleId}>{panel.binding.render()}</React.Fragment>)}
-      {surfaces.panels.controls?.enabled ? (
-        <ControlsPanel
-          controlRenderers={controlRenderers}
-          onPanelAction={onPanelAction}
-          panelPlacement="floating"
-          sceneExport={sceneExport}
-        />
-      ) : null}
+      {controlsPanel}
       {modulePanels.filter(({ binding }) => binding.slot === "after-controls")
         .map(panel => <React.Fragment key={panel.moduleId}>{panel.binding.render()}</React.Fragment>)}
       {surfaces.panels.toolbar.enabled ? (

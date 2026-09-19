@@ -1,3 +1,4 @@
+import { getToolcraftCollectionItemIdentity, isToolcraftCollectionItemId, resolveToolcraftCollectionItemIndex } from "../schema/collection-identity";
 import {
   getToolcraftCollectionActionsControls,
   isToolcraftCollectionItemControlAddress,
@@ -59,13 +60,8 @@ export function normalizeToolcraftCollectionSelections({
     if (!target) continue;
     const items = nextValues[control.target];
     const selection = nextValues[target];
-    nextValues[target] =
-      Array.isArray(items) &&
-      Number.isSafeInteger(selection) &&
-      (selection as number) >= 0 &&
-      (selection as number) < items.length
-        ? selection
-        : null;
+    nextValues[target] = Array.isArray(items) && resolveToolcraftCollectionItemIndex(control, items,
+      control.identityField ? { itemId: selection as string | null } : { itemIndex: selection as number | null }) >= 0 ? selection : null;
   }
   return nextValues;
 }
@@ -87,7 +83,11 @@ export function applyToolcraftCollectionParentReplacements({
   );
   let timeline = state.timeline;
   for (const target of collectionTargets) {
-    timeline = pruneToolcraftCollectionKeyframes(timeline, target);
+    const control = controls.get(target)!;
+    const items = values[target];
+    const keep = control.identityField && Array.isArray(items)
+      ? new Set(items.map((item, index) => getToolcraftCollectionItemIdentity(control, item, index) as string)) : 0;
+    timeline = pruneToolcraftCollectionKeyframes(timeline, target, keep);
   }
   return {
     timeline,
@@ -107,10 +107,12 @@ export function createToolcraftCollectionItem(
 
 function createCanonicalCollectionItem(
   control: ResolvedToolcraftControlSchema,
+  itemId?: string,
 ): unknown {
   const draft = createToolcraftCollectionItem(control);
   if (draft === undefined) return undefined;
-  const normalized = normalizeToolcraftControlValue(control, [draft]);
+  const candidate = control.identityField && draft && typeof draft === "object" ? { ...draft, [control.identityField]: itemId } : draft;
+  const normalized = normalizeToolcraftControlValue(control, [candidate]);
   return normalized.accepted && Array.isArray(normalized.value)
     ? normalized.value[0]
     : undefined;
@@ -138,14 +140,14 @@ export function decodeToolcraftCollectionFieldValue(
 
 export function getToolcraftCollectionFieldAddress(
   control: ResolvedToolcraftControlSchema,
-  index: number,
+  identity: number | string,
   fieldId: string,
 ): string | null {
   const field = control.itemControls?.[fieldId];
   if (!field || !isToolcraftCollectionFieldKeyframeable(field)) return null;
   return getToolcraftCollectionItemControlAddress(
     control.target,
-    index,
+    identity,
     fieldId,
   );
 }
@@ -153,7 +155,7 @@ export function getToolcraftCollectionFieldAddress(
 export function pruneToolcraftCollectionKeyframes(
   timeline: ToolcraftTimelineState,
   collectionTarget: string,
-  keepItemCount = 0,
+  keep: number | ReadonlySet<string> = 0,
 ): ToolcraftTimelineState {
   const removedIds = new Set<string>();
   const keyframeGroups = timeline.keyframeGroups.filter((group) => {
@@ -162,7 +164,7 @@ export function pruneToolcraftCollectionKeyframes(
     );
     const remove =
       address?.collectionTarget === collectionTarget &&
-      address.index >= keepItemCount;
+      (typeof keep === "number" ? address.itemId !== undefined || address.index >= keep : address.itemId === undefined || !keep.has(address.itemId));
     if (remove) {
       for (const keyframe of group.keyframes) removedIds.add(keyframe.id);
     }
@@ -203,7 +205,7 @@ export function normalizeToolcraftCollectionKeyframeGroups({
     if (
       !control ||
       !Array.isArray(items) ||
-      address.index >= items.length ||
+      resolveToolcraftCollectionItemIndex(control, items, { itemId: address.itemId, itemIndex: address.index }) < 0 ||
       !field ||
       !isToolcraftCollectionFieldKeyframeable(field)
     )
@@ -249,13 +251,14 @@ export function reduceToolcraftCollectionCommand(
     case "controls.addCollectionItem": {
       const hardMax = control.hardMaxItems;
       if (typeof hardMax === "number" && items.length >= hardMax) return state;
-      const item = createCanonicalCollectionItem(control);
+      if (control.identityField && (!isToolcraftCollectionItemId(command.itemId) || items.some(item => (item as Record<string, unknown>)[control.identityField!] === command.itemId))) return state;
+      const item = createCanonicalCollectionItem(control, command.itemId);
       if (item === undefined) return state;
       const nextItems = [...items, item];
       const selectionTarget = control.selectionTarget;
       const after = {
         [control.target]: nextItems,
-        ...(selectionTarget ? { [selectionTarget]: nextItems.length - 1 } : {}),
+        ...(selectionTarget ? { [selectionTarget]: getToolcraftCollectionItemIdentity(control, item, nextItems.length - 1) } : {}),
       };
       return commitToolcraftControlStateReplacement(
         state,
@@ -270,21 +273,21 @@ export function reduceToolcraftCollectionCommand(
     case "controls.removeCollectionItem": {
       const minItems = control.minItems ?? 0;
       if (items.length <= minItems) return state;
-      const removedIndex = items.length - 1;
-      const nextItems = items.slice(0, -1);
+      const removedIndex = control.identityField
+        ? resolveToolcraftCollectionItemIndex(control, items, { itemId: command.itemId })
+        : command.itemId === undefined ? items.length - 1 : -1;
+      if (removedIndex < 0) return state;
+      const nextItems = items.filter((_, index) => index !== removedIndex);
       const timeline = pruneToolcraftCollectionKeyframes(
-        state.timeline,
-        control.target,
-        nextItems.length,
+        state.timeline, control.target, control.identityField
+          ? new Set(nextItems.map((item, index) => getToolcraftCollectionItemIdentity(control, item, index) as string))
+          : nextItems.length,
       );
       const selectionTarget = control.selectionTarget;
-      const selection = selectionTarget
-        ? getNextSelectionAfterRemoval(
-            state.values[selectionTarget],
-            removedIndex,
-            nextItems.length,
-          )
-        : null;
+      const priorSelection = selectionTarget ? state.values[selectionTarget] : null;
+      const selection = control.identityField
+        ? priorSelection === command.itemId ? (nextItems.length ? getToolcraftCollectionItemIdentity(control, nextItems[nextItems.length - 1], nextItems.length - 1) : null) : priorSelection
+        : getNextSelectionAfterRemoval(priorSelection, removedIndex, nextItems.length);
       return commitToolcraftControlStateReplacement(
         state,
         {
@@ -302,42 +305,32 @@ export function reduceToolcraftCollectionCommand(
     case "controls.selectCollectionItem": {
       const selectionTarget = control.selectionTarget;
       if (!selectionTarget) return state;
-      const index = command.itemIndex;
-      if (
-        index !== null &&
-        (!Number.isSafeInteger(index) || index < 0 || index >= items.length)
-      )
-        return state;
-      if (Object.is(state.values[selectionTarget], index)) return state;
-      return {
-        ...state,
-        values: { ...state.values, [selectionTarget]: index },
-      };
+      const selection = control.identityField ? command.itemId : command.itemIndex;
+      if (control.identityField ? command.itemIndex !== undefined : command.itemId !== undefined) return state;
+      if (selection !== null && resolveToolcraftCollectionItemIndex(control, items, command) < 0) return state;
+      if (Object.is(state.values[selectionTarget], selection)) return state;
+      return { ...state, values: { ...state.values, [selectionTarget]: selection } };
     }
 
     case "controls.setCollectionItemField": {
-      if (
-        !Number.isSafeInteger(command.itemIndex) ||
-        command.itemIndex < 0 ||
-        command.itemIndex >= items.length
-      )
-        return state;
+      const itemIndex = resolveToolcraftCollectionItemIndex(control, items, command);
+      if (itemIndex < 0) return state;
       const decoded = decodeToolcraftCollectionFieldValue(
         control,
         command.fieldId,
         command.value,
       );
       if (!decoded.accepted) return state;
-      const currentItem = items[command.itemIndex];
+      const currentItem = items[itemIndex];
       if (!currentItem || typeof currentItem !== "object") return state;
       const nextItems = items.map((item, index) =>
-        index === command.itemIndex
+        index === itemIndex
           ? { ...currentItem, [command.fieldId]: decoded.value }
           : item,
       );
       const address = getToolcraftCollectionFieldAddress(
         control,
-        command.itemIndex,
+        getToolcraftCollectionItemIdentity(control, currentItem, itemIndex),
         command.fieldId,
       );
       const hasTrack = address

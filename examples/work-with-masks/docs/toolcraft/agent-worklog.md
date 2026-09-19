@@ -402,3 +402,8 @@ bare delivery verification for the merged product.
 - Performance intent: No new performance iteration or measurement; no renderer lifecycle or workload envelope changes.
 - Verification tier: Tier 2, later focused. One filtered Vitest invocation passed four exact defaults/reset/timeline assertions. The defaults test covers all supplied values and the new duration. No full suite, build, browser/GPU, reload, aggregate delivery or performance checks, following the user's explicit minimal-check request. No browser certification claimed.
 - Risks: Existing saved sessions keep their own settings; this edit intentionally does not overwrite them. Runtime-owned initial playback remains unchanged.
+
+## Deployment isolation — 2026-09-17
+
+- Removed `.git` from the app's `.vercelignore`. Vercel logs for `5058ab27` confirmed this override deleted Git metadata before the folder comparison and caused an unchanged app to rebuild.
+- The repository deployment tests pass for app-only, website-only, shared-runtime, and multi-commit changes. This app-only correction will be checked against Vercel's native affected-project detection; product code and pinned dependencies are unchanged.

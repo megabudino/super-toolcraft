@@ -1,4 +1,5 @@
 import { getToolcraftControlRangeResetPatch } from "./control-ranges";
+import { resetToolcraftTargetsFromSource } from "./source-reset";
 import { createToolcraftState } from "./create-template-state";
 import {
   isToolcraftTimelinePanelExtendedTarget,
@@ -23,6 +24,7 @@ import { areToolcraftControlValuesEqual } from "./control-value-codecs";
 import { commitToolcraftControlStateReplacement } from "./control-state-replacement";
 import {
   getToolcraftValueControls,
+  getInvalidToolcraftKeyedCollectionTarget,
   normalizeToolcraftControlValue,
   normalizeToolcraftLiveControlValue,
 } from "./control-value-normalization";
@@ -162,6 +164,7 @@ export function reduceToolcraftControlsCommand(
     case "controls.apply": {
       if (command.values === undefined) return state;
       const controls = getToolcraftValueControls(state.schema);
+      if (getInvalidToolcraftKeyedCollectionTarget(controls, command.values)) return state;
       const additionalTargets = new Set([
         ...state.schema.settingsTransfer.additionalValueTargets,
         ...(state.schema.persistence.storage === "localStorage"
@@ -199,7 +202,7 @@ export function reduceToolcraftControlsCommand(
     }
 
     case "controls.reset": {
-      if (state.schema.sourceDefaults) {
+      if (state.schema.sourceDefaults && state.schema.sourceDefaults.scope !== "parameters") {
         const fresh = createToolcraftState(state.schema);
         const fields = ["controlRanges", "canvas", "panels", "timeline", "layers", "mediaAssets", "selectedLayerId"] as const;
         return commitToolcraftStatePatch(state, tagToolcraftWorkspaceResetHistoryPatch(tagToolcraftControlsResetHistoryPatch(
@@ -270,6 +273,7 @@ export function reduceToolcraftControlsCommand(
     }
 
     case "controls.resetTargets": {
+      if (command.baseline) return resetToolcraftTargetsFromSource(state, command);
       const targetSet = new Set(command.targets);
       const defaults = Object.fromEntries(
         [...targetSet]

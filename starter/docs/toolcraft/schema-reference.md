@@ -6,7 +6,7 @@ Edit `src/app/app-schema.ts` as the public product surface. Use only `defineTool
 
 ## Runtime Shape
 
-Top-level product-definition fields are `base`, `modules` and optional source `defaults`. Preserve the generated `app-defaults.json` import and `defaults: appDefaults` input; [Save App Defaults](./core/setup-export.md#save-app-defaults) defines capture, validation and Reset semantics. Product-owned schema fields live under `base`:
+Top-level product-definition fields are `base`, `modules`, optional source `defaults` and optional `authoredStateMigration`. Preserve the generated `app-defaults.json` import and `defaults: appDefaults` input; [Save App Defaults](./core/setup-export.md#save-app-defaults) defines capture, validation and Reset semantics. Product-owned schema fields live under `base`:
 
 | Field              | Purpose                                                                              | Detailed rules                                                             |
 | ------------------ | ------------------------------------------------------------------------------------ | -------------------------------------------------------------------------- |
@@ -21,11 +21,12 @@ Top-level product-definition fields are `base`, `modules` and optional source `d
 
 Schema controls always bind to a `target`, use `defaultValue` for reset behavior, and include `performanceRole` / `performanceReason` on visible non-action controls. Use built-in control `type` values before `controls.renderers`. Built-in targets have one canonical runtime value model through defaults, seeded/live state, undo/reset, persistence, settings transfer, and keyframes; renderers never decode React callback shapes. `color` state is an expanded uppercase `#RRGGBB` string even though Color emits `{ hex }`. Compound/collection values keep their documented models; ordinary `fileDrop` bytes stay outside `state.values`.
 
+Representation changes use the pure [authored-state migration](./authored-state-migration.md) hook before canonical defaults, persistence and settings readers.
 ## Canvas
 
 Canvas sizing modes:
 
-- `editable-output`: product/export apps. Runtime `Setup` shows Background beside Infinity canvas, then Background color beside the Blanc/Dots workspace selector, `Aspect ratio`, `Canvas width`, `Canvas height`, optional `Resolution scale`, and finally optional `Timeline`. With the standard Background pair, Background off restores finite mode and disables Infinity; an enabled infinite viewport uses the selected Background color.
+- `editable-output`: product/export apps. Runtime `Setup` shows Background beside Infinity canvas, then Background color beside the Blanc/Dots workspace selector, `Aspect ratio`, `Canvas width`, `Canvas height`, optional `Resolution scale`, and finally optional `Timeline`. Background and Infinity are independent by default; an enabled background fills the infinite viewport with the selected color.
 - `intrinsic-media`: explicit media-viewer/source-native products where imported media intentionally owns `canvas.size`.
 - `fixed-output`: non-product/internal fixtures where users must not edit output size.
 
@@ -49,7 +50,7 @@ export const appComposition = composeToolcraftApp(appSchema, {
 });
 ```
 
-The provider returns world-space `{ x, y, width, height }` rectangles for one exact state in both finite and infinite modes. Runtime uses the same provider rect for live product output and product export. Finite output remains the centered artboard boundary; Infinity export crops the outward-rounded union of visible product, image, and model contributors, and video resolves every scheduled state before forming one stable envelope. Without a provider, only finite mode may fall back to the artboard rect. Canvas 2D, WebGL, and WebGPU product output calls `useToolcraftProductSceneFrame()` inside `canvasContent` for the canonical product rect, backing size, and world-to-local translation without remounting or reallocating solely for a mode toggle. Product code does not read DOM bounds, infer image scene geometry from source pixels, or author a time-range envelope.
+The provider returns world-space `{ x, y, width, height }` rectangles for one exact state in both finite and infinite modes. Runtime uses the same provider rect for live product output and product export. Finite still export crops to the saved artboard. Infinity still export unions visible image/model/product bounds and optional renderer `getContentBounds` overflow, independently of Background. Video retains its saved-artboard boundary and evaluates each scheduled state once without a union prepass. Without a provider, only finite mode may fall back to the artboard rect. Canvas 2D, WebGL, and WebGPU product output calls `useToolcraftProductSceneFrame()` inside `canvasContent` for the canonical product rect, backing size, and world-to-local translation without remounting or reallocating solely for a mode toggle. Product code does not read DOM bounds, infer image scene geometry from source pixels, or author a time-range envelope.
 
 Use `canvas.renderScale: true` or `canvas.renderScale: { step }` only for non-vector raster previews such as Canvas 2D, WebGL, or WebGPU. For this field, product code may customize only the slider step; authored schema cannot set `enabled`, `min`, `defaultValue`, or `max`. Runtime resolves enabled render scale to `{ enabled: true, min: 1, defaultValue: 2, max: 2, step }`, using `0.25` when no step is authored. A custom step must be finite, between `0.01` and `1`, and evenly partition the canonical `1..2` range so `2` remains reachable; invalid input fails fast. Do not enable it for DOM/SVG/vector-native previews. Enabling it requires one browser runtime acceptance row targeting `canvas.renderScale` with `renderScaleCoverage.kind: "selected-backing-pixels"` and exact sorted states `["interaction", "steady"]`, plus `"playback"` when timeline is enabled. The fixed `canvas-render-scale-backing` recipe proves actual backing pixels rather than timing.
 

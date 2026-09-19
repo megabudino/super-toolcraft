@@ -1,3 +1,4 @@
+import { expectToolcraftInfinityArtifactFrameParity, type ToolcraftInfinityExportEvidenceOptions } from "./browser-infinity-artifact-parity";
 import { expect } from "@playwright/test";
 
 import { attachToolcraftBrowserRuntimeEvidence } from "./browser-runtime-evidence";
@@ -236,15 +237,16 @@ export async function expectToolcraftInfinityCanvasBackgroundEvidence(
   });
   expect(observations.backgroundExcluded).toMatchObject({
     backgroundEnabled: false,
-    canvasMode: "finite",
-    infinityDisabled: true,
+    canvasMode: "infinite",
+    infinityDisabled: false,
     runtimeBackgroundColor: null,
   });
   expect(observations.backgroundRestored).toMatchObject({
     backgroundEnabled: true,
-    canvasMode: "finite",
+    canvasMode: "infinite",
     infinityDisabled: false,
-    runtimeBackgroundColor: null,
+    runtimeBackgroundColor: options.expectedBackgroundColor,
+    viewportMatchesRuntimeColor: true,
   });
 
   await attachToolcraftBrowserRuntimeEvidence({
@@ -256,27 +258,14 @@ export async function expectToolcraftInfinityCanvasBackgroundEvidence(
 
 export async function expectToolcraftInfinityCanvasImageExportEvidence(
   artifacts: Readonly<{
-    finite: Readonly<{ byteLength: number; height: number; width: number }>;
-    infinite: Readonly<{ byteLength: number; height: number; width: number }>;
+    finite: Readonly<{ byteLength: number; decodedPixelHash: string; height: number; width: number }>;
+    infinite: Readonly<{ byteLength: number; decodedPixelHash: string; height: number; width: number }>;
   }>,
-  options: Readonly<{
-    expectedFiniteSize: Readonly<{ height: number; width: number }>;
-    expectedInfiniteSize: Readonly<{ height: number; width: number }>;
-    requirementId: string;
-    target: string;
-  }>,
+  options: ToolcraftInfinityExportEvidenceOptions,
 ): Promise<void> {
-  expect(artifacts.finite).toMatchObject(options.expectedFiniteSize);
-  expect(artifacts.infinite).toMatchObject(options.expectedInfiniteSize);
-  expect(artifacts.finite.byteLength).toBeGreaterThan(100);
-  expect(artifacts.infinite.byteLength).toBeGreaterThan(100);
-  expect({
-    height: artifacts.infinite.height,
-    width: artifacts.infinite.width,
-  }).not.toEqual({
-    height: artifacts.finite.height,
-    width: artifacts.finite.width,
-  });
+  expectToolcraftInfinityArtifactFrameParity(artifacts, options.expectedSize);
+  expect(artifacts.finite.decodedPixelHash).toMatch(/^[a-f0-9]{64}$/u);
+  expect(artifacts.infinite.decodedPixelHash).toBe(artifacts.finite.decodedPixelHash);
 
   await attachToolcraftBrowserRuntimeEvidence({
     evidenceType: "exported-artifact",
@@ -295,36 +284,30 @@ export async function expectToolcraftInfinityCanvasVideoExportEvidence(
     finite: Readonly<{
       byteLength: number;
       durationMs: number;
+      frameCount: number;
+      samplePixelHashes: readonly string[];
       height: number;
       width: number;
     }>;
     infinite: Readonly<{
       byteLength: number;
       durationMs: number;
+      frameCount: number;
+      samplePixelHashes: readonly string[];
       height: number;
       width: number;
     }>;
   }>,
-  options: Readonly<{
-    expectedFiniteSize: Readonly<{ height: number; width: number }>;
-    expectedInfiniteSize: Readonly<{ height: number; width: number }>;
-    requirementId: string;
-    target: string;
-  }>,
+  options: ToolcraftInfinityExportEvidenceOptions,
 ): Promise<void> {
-  expect(artifacts.finite).toMatchObject(options.expectedFiniteSize);
-  expect(artifacts.infinite).toMatchObject(options.expectedInfiniteSize);
-  expect(artifacts.finite.byteLength).toBeGreaterThan(100);
-  expect(artifacts.infinite.byteLength).toBeGreaterThan(100);
+  expectToolcraftInfinityArtifactFrameParity(artifacts, options.expectedSize);
   expect(artifacts.finite.durationMs).toBeGreaterThan(0);
-  expect(artifacts.infinite.durationMs).toBeGreaterThan(0);
-  expect({
-    height: artifacts.infinite.height,
-    width: artifacts.infinite.width,
-  }).not.toEqual({
-    height: artifacts.finite.height,
-    width: artifacts.finite.width,
-  });
+  expect(artifacts.infinite.durationMs).toBe(artifacts.finite.durationMs);
+  expect(artifacts.finite.frameCount).toBeGreaterThan(0);
+  expect(artifacts.infinite.frameCount).toBe(artifacts.finite.frameCount);
+  expect(artifacts.finite.samplePixelHashes.length).toBeGreaterThan(0);
+  for (const hash of artifacts.finite.samplePixelHashes) expect(hash).toMatch(/^[a-f0-9]{64}$/u);
+  expect(artifacts.infinite.samplePixelHashes).toEqual(artifacts.finite.samplePixelHashes);
 
   await attachToolcraftBrowserRuntimeEvidence({
     evidenceType: "exported-artifact",

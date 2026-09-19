@@ -26,6 +26,7 @@ export const TOOLCRAFT_BROWSER_RUNTIME_EVIDENCE_TYPES = [
   "discrete-slider-layout",
   "exported-artifact",
   "infinity-mode-continuity",
+  "infinity-output-overflow",
   "infinity-scene-bounds-image-export",
   "infinity-scene-bounds-svg-export",
   "infinity-scene-bounds-video-export",

@@ -1,4 +1,5 @@
 import { TOOLCRAFT_CAPABILITY_PROOF_CATALOG } from "./catalog";
+import { getToolcraftMasksProofErrors } from "./masks";
 import { dispatchToolcraftCapabilityProofOwners } from "./owner-dispatch";
 import { getToolcraftCanvasEditingProofErrors } from "../canvas-handle-acceptance";
 import { getControlAcceptanceByTarget } from "../control-acceptance-context";
@@ -176,6 +177,13 @@ export const TOOLCRAFT_CAPABILITY_PROOF_OWNERS = Object.freeze({
         input.activeCapabilities,
         recipe.capabilityId,
       ),
+    });
+  },
+  masks: (input) => {
+    const recipe = getRequiredOwnerRecipe(input, "foreground.soft-ellipses", "masks", "masks");
+    return getToolcraftMasksProofErrors({
+      capabilityActive: hasActiveCapability(input.activeCapabilities, recipe.capabilityId),
+      context: input.context,
     });
   },
   "media-source": (input) => {

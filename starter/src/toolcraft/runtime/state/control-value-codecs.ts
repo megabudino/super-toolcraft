@@ -1,3 +1,5 @@
+import { isToolcraftCollectionItemId } from "../schema/collection-identity";
+import { clampCurveValue, normalizeCurvePoints } from "@/toolcraft/ui/lib/curve";
 import { getToolcraftNumericDomain, type ToolcraftEditableSliderRange } from "../schema/slider-range";
 import {
   isToolcraftBuiltInControlType,
@@ -21,12 +23,15 @@ export type ToolcraftControlValueDecodeResult<Value = unknown> =
 export type ToolcraftControlValueDescriptor = Readonly<{
   editableRange?: ToolcraftEditableSliderRange;
   defaultValue?: unknown;
+  identityField?: "id";
+  hardMaxItems?: number;
   itemControl?: ToolcraftControlValueDescriptor;
   itemControls?: Readonly<Record<string, ToolcraftControlValueDescriptor>>;
   items?: readonly { value: string }[];
   max?: number;
   min?: number;
   options?: readonly { value: string }[];
+  optionsSource?: "document-pages";
   type: string;
 }>;
 
@@ -517,6 +522,16 @@ function decodeCurves(
   ) {
     return reject();
   }
+  const selectedPointIndex = candidate.selectedPointIndex;
+  if (
+    selectedPointIndex !== undefined &&
+    (typeof selectedPointIndex !== "number" ||
+      !Number.isInteger(selectedPointIndex) ||
+      selectedPointIndex < 0)
+  ) {
+    return reject();
+  }
+  let normalizedSelection: number | undefined;
   const points: ToolcraftCurvesValue["points"] = {};
   for (const [channel, entries] of Object.entries(candidate.points)) {
     if (
@@ -537,24 +552,21 @@ function decodeCurves(
       }
       nextPoints.push({ x: point.x, y: point.y });
     }
-    points[channel] = nextPoints;
+    const normalized = normalizeCurvePoints(nextPoints);
+    if (normalized.length < 2) return reject();
+    points[channel] = normalized;
+    if (channel === candidate.activeChannel && selectedPointIndex !== undefined) {
+      const selected = nextPoints[selectedPointIndex];
+      if (selected) normalizedSelection = normalized.findIndex(point => point.x === clampCurveValue(selected.x));
+    }
   }
   if (!Object.hasOwn(points, candidate.activeChannel)) {
-    return reject();
-  }
-  const selectedPointIndex = candidate.selectedPointIndex;
-  if (
-    selectedPointIndex !== undefined &&
-    (typeof selectedPointIndex !== "number" ||
-      !Number.isInteger(selectedPointIndex) ||
-      selectedPointIndex < 0)
-  ) {
     return reject();
   }
   return accept({
     activeChannel: candidate.activeChannel,
     points,
-    ...(selectedPointIndex === undefined ? {} : { selectedPointIndex }),
+    ...(normalizedSelection === undefined ? {} : { selectedPointIndex: normalizedSelection }),
   });
 }
 
@@ -582,7 +594,7 @@ function decodeCollection(
 ): ToolcraftControlValueDecodeResult<
   ToolcraftBuiltInControlValueMap["collectionActions"]
 > {
-  if (!Array.isArray(candidate)) {
+  if (!Array.isArray(candidate) || (control.identityField && control.hardMaxItems !== undefined && candidate.length > control.hardMaxItems)) {
     return reject();
   }
   if (!control.itemControls) {
@@ -599,9 +611,15 @@ function decodeCollection(
   }
   if (control.itemControls) {
     const items: JsonRecord[] = [];
+    const identities = new Set<string>();
     for (const item of candidate) {
       if (!isRecord(item)) {
         return reject();
+      }
+      if (control.identityField) {
+        const id = item[control.identityField];
+        if (!isToolcraftCollectionItemId(id) || identities.has(id)) return reject();
+        identities.add(id);
       }
       const clonedItem = cloneToolcraftJsonValue(item);
       if (!isRecord(clonedItem)) {
@@ -698,7 +716,7 @@ export const TOOLCRAFT_CONTROL_VALUE_CODEC_REGISTRY = {
   rangeInput: { codec: decodeRangeInput, kind: "codec" },
   rangeSlider: { codec: decodeRangeSlider, kind: "codec" },
   segmented: { codec: decodeOption, kind: "codec" },
-  select: { codec: decodeOption, kind: "codec" },
+  select: { codec: decodeOption, kind: "conditional-codec", ownsValue: (control: ToolcraftControlValueDescriptor) => control.optionsSource === undefined },
   settingsTransfer: { kind: "no-value" },
   slider: {
     codec: decodeBoundedNumber,

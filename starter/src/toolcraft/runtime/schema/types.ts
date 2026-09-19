@@ -3,10 +3,7 @@ import type {
   ToolcraftControlLayoutGroupLayout,
   ToolcraftSectionLayout,
 } from "../contracts/types";
-import type {
-  ToolcraftControlSchema,
-  ResolvedToolcraftControlSchema,
-} from "./control-schema";
+import type { ToolcraftControlSchema, ResolvedToolcraftControlSchema } from "./control-schema";
 import type {
   ToolcraftColorOpacityValue,
   ToolcraftFontPickerValue,
@@ -199,6 +196,8 @@ export type ToolcraftAssemblyContract = {
 };
 
 export type ToolcraftCanvasSchema = {
+  /** Background is independent by default; required explicitly couples it to Infinity. */
+  infinityBackgroundPolicy?: "required" | "optional";
   draggable?: boolean;
   enabled: boolean;
   renderScale?: ToolcraftCanvasRenderScaleSchema;
@@ -312,13 +311,7 @@ export type ToolcraftActionSchema = {
   label?: string;
   role?: ToolcraftActionRole;
   value: string;
-  variant?:
-    | "default"
-    | "destructive"
-    | "ghost"
-    | "link"
-    | "outline"
-    | "secondary";
+  variant?: "default" | "destructive" | "ghost" | "link" | "outline" | "secondary";
 };
 
 export type ToolcraftImagePickerItemSchema = {
@@ -346,13 +339,7 @@ export type ToolcraftSliderValueKind = "continuous" | "discrete";
 
 export type ToolcraftTextValueKind = "multiline" | "single-line" | "structured";
 
-export type ToolcraftModelFormat =
-  | "fbx"
-  | "glb"
-  | "gltf"
-  | "obj"
-  | "ply"
-  | "stl";
+export type ToolcraftModelFormat = "fbx" | "glb" | "gltf" | "obj" | "ply" | "stl";
 
 export type ToolcraftModelTopologyProfile = "realtime-mesh" | "solid-mesh";
 
@@ -401,31 +388,28 @@ type ToolcraftDefaultBinaryAssetSchema = {
   sourceTarget?: string;
 };
 
-export type ToolcraftDefaultFileAssetSchema =
-  ToolcraftDefaultBinaryAssetSchema & {
-    assetKind: "file";
-    position?: ToolcraftMediaPositionSchema;
-  };
+export type ToolcraftDefaultFileAssetSchema = ToolcraftDefaultBinaryAssetSchema & {
+  assetKind: "file";
+  position?: ToolcraftMediaPositionSchema;
+};
 
-export type ToolcraftDefaultPreparedImageAssetSchema =
-  ToolcraftDefaultBinaryAssetSchema & {
-    assetKind?: "image";
-    ingressPolicy: "prepared-source";
-    position: ToolcraftMediaPositionSchema;
-    size?: never;
-    sourceSize: ToolcraftCanvasSize;
-    transform?: ToolcraftMediaTransformSchema;
-  };
+export type ToolcraftDefaultPreparedImageAssetSchema = ToolcraftDefaultBinaryAssetSchema & {
+  assetKind?: "image";
+  ingressPolicy: "prepared-source";
+  position: ToolcraftMediaPositionSchema;
+  size?: never;
+  sourceSize: ToolcraftCanvasSize;
+  transform?: ToolcraftMediaTransformSchema;
+};
 
-export type ToolcraftDefaultCanonicalImageAssetSchema =
-  ToolcraftDefaultBinaryAssetSchema & {
-    assetKind?: "image";
-    ingressPolicy: "canonical-runtime";
-    position: ToolcraftMediaPositionSchema;
-    size: ToolcraftCanvasSize;
-    sourceSize: ToolcraftCanvasSize;
-    transform?: ToolcraftMediaTransformSchema;
-  };
+export type ToolcraftDefaultCanonicalImageAssetSchema = ToolcraftDefaultBinaryAssetSchema & {
+  assetKind?: "image";
+  ingressPolicy: "canonical-runtime";
+  position: ToolcraftMediaPositionSchema;
+  size: ToolcraftCanvasSize;
+  sourceSize: ToolcraftCanvasSize;
+  transform?: ToolcraftMediaTransformSchema;
+};
 
 export type ToolcraftDefaultImageOrFileAssetSchema =
   | ToolcraftDefaultCanonicalImageAssetSchema
@@ -491,19 +475,12 @@ export type ToolcraftResolvedControlApplicabilitySchema =
       origin: "explicit";
     }>;
 
-export type ToolcraftControlDisabledConditionSchema =
-  ToolcraftControlConditionSchema;
+export type ToolcraftControlDisabledConditionSchema = ToolcraftControlConditionSchema;
 
-export type ToolcraftColorOpacityValueSchema = Pick<
-  ToolcraftColorOpacityValue,
-  "hex"
-> &
+export type ToolcraftColorOpacityValueSchema = Pick<ToolcraftColorOpacityValue, "hex"> &
   Partial<Pick<ToolcraftColorOpacityValue, "opacity">>;
 
-export type ToolcraftFontPickerValueSchema = Pick<
-  ToolcraftFontPickerValue,
-  "fontId"
-> &
+export type ToolcraftFontPickerValueSchema = Pick<ToolcraftFontPickerValue, "fontId"> &
   Partial<Omit<ToolcraftFontPickerValue, "fontId">>;
 
 export type ToolcraftCurveInterpolation = "monotone" | "smooth";
@@ -518,9 +495,7 @@ export type ToolcraftControlLayoutGroupSchema = {
   layout: ToolcraftControlLayoutGroupLayout;
 };
 
-export type ToolcraftControlSectionSchemaBase<
-  TControl extends ToolcraftControlSchema,
-> = {
+export type ToolcraftControlSectionSchemaBase<TControl extends ToolcraftControlSchema> = {
   actionGroup?: "primary" | "secondary";
   controls: Record<string, TControl>;
   /** Tooltip-only product context shown by the runtime-owned section help icon. */
@@ -537,27 +512,23 @@ export type ToolcraftControlSectionSchema =
     id: string;
   };
 
-export type ToolcraftControlSectionSchemaFor<
-  TControl extends ToolcraftControlSchema,
-> = ToolcraftControlSectionSchemaBase<TControl> & {
-  /** Stable lowercase ASCII segments separated by `.`, `_`, or `-`; runtime/internal namespaces are reserved. */
-  id: string;
-};
+export type ToolcraftControlSectionSchemaFor<TControl extends ToolcraftControlSchema> =
+  ToolcraftControlSectionSchemaBase<TControl> & {
+    /** Stable lowercase ASCII segments separated by `.`, `_`, or `-`; runtime/internal namespaces are reserved. */
+    id: string;
+  };
 
 export type ResolvedToolcraftControlSectionSchema =
   ToolcraftControlSectionSchemaBase<ResolvedToolcraftControlSchema> & {
     id: string;
   };
 
-export type ToolcraftControlsPanelSchemaFor<
-  TControl extends ToolcraftControlSchema,
-> = {
+export type ToolcraftControlsPanelSchemaFor<TControl extends ToolcraftControlSchema> = {
   sections: readonly ToolcraftControlSectionSchemaFor<TControl>[];
   title: string;
 };
 
-export type ToolcraftControlsPanelSchema =
-  ToolcraftControlsPanelSchemaFor<ToolcraftControlSchema>;
+export type ToolcraftControlsPanelSchema = ToolcraftControlsPanelSchemaFor<ToolcraftControlSchema>;
 
 export type ResolvedToolcraftControlsPanelSchema = {
   sections: readonly ResolvedToolcraftControlSectionSchema[];

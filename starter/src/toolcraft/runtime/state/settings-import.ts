@@ -1,6 +1,6 @@
 import { reduceToolcraftCanvasCommand } from "./canvas-reducer";
 import { reduceToolcraftControlsCommand } from "./controls-reducer";
-import { getToolcraftValueControls } from "./control-value-normalization";
+import { getToolcraftValueControls, getInvalidToolcraftKeyedCollectionTarget } from "./control-value-normalization";
 import { isToolcraftPersistenceRecord } from "./persistence-shared";
 import { commitToolcraftStatePatch } from "./history-patches";
 import {
@@ -33,6 +33,7 @@ export function applyToolcraftSettingsState(
   state: ToolcraftState,
   settings: ToolcraftSettingsState,
 ): ToolcraftState {
+  if (getInvalidToolcraftKeyedCollectionTarget(getToolcraftValueControls(state.schema), settings.values)) return state;
   let next = reduceToolcraftControlsCommand(state, {
     type: "controls.apply",
     history: "skip",

@@ -40,12 +40,28 @@ const CommandWindowFrame = React.forwardRef<
 );
 CommandWindowFrame.displayName = "CommandWindowFrame";
 
+type CommandItemGroup<ItemValue> = { items: readonly ItemValue[] };
+
+// Match Autocomplete's item shape so each overload retains the leaf callback type.
+function hasGroupedCommandItems<ItemValue>(
+  items: readonly ItemValue[] | readonly CommandItemGroup<ItemValue>[],
+): items is readonly CommandItemGroup<ItemValue>[] {
+  const first = items[0];
+  return (
+    typeof first === "object" &&
+    first !== null &&
+    "items" in first &&
+    Array.isArray(first.items)
+  );
+}
+
 /** Inline action search. Items and search state follow Base UI Autocomplete. */
 function Command<ItemValue>({
   className,
   style,
   ref,
   children,
+  items,
   ...props
 }: Omit<CommandPrimitive.Root.Props<ItemValue>, "open" | "defaultOpen" | "inline" | "items"> & {
   items: NonNullable<CommandPrimitive.Root.Props<ItemValue>["items"]>;
@@ -53,28 +69,46 @@ function Command<ItemValue>({
   style?: React.CSSProperties;
   ref?: React.Ref<HTMLDivElement>;
 }) {
+  const content = (
+    <div
+      data-slot="command"
+      className={cn(
+        "floating-popup-fill flex w-full min-h-0 flex-col overflow-hidden rounded-3xl text-[color:var(--popover-foreground)]",
+        className,
+      )}
+      ref={ref}
+      style={style}
+    >
+      {children}
+    </div>
+  );
   return (
     <CommandReadOnlyContext.Provider value={props.readOnly ?? false}>
-      <CommandPrimitive.Root
-        autoHighlight="always"
-        keepHighlight
-        loopFocus={false}
-        {...props}
-        open
-        inline
-      >
-        <div
-          data-slot="command"
-          className={cn(
-            "floating-popup-fill flex w-full min-h-0 flex-col overflow-hidden rounded-3xl text-[color:var(--popover-foreground)]",
-            className,
-          )}
-          ref={ref}
-          style={style}
+      {hasGroupedCommandItems(items) ? (
+        <CommandPrimitive.Root
+          autoHighlight="always"
+          keepHighlight
+          loopFocus={false}
+          {...props}
+          items={items}
+          open
+          inline
         >
-          {children}
-        </div>
-      </CommandPrimitive.Root>
+          {content}
+        </CommandPrimitive.Root>
+      ) : (
+        <CommandPrimitive.Root<ItemValue>
+          autoHighlight="always"
+          keepHighlight
+          loopFocus={false}
+          {...props}
+          items={items}
+          open
+          inline
+        >
+          {content}
+        </CommandPrimitive.Root>
+      )}
     </CommandReadOnlyContext.Provider>
   );
 }

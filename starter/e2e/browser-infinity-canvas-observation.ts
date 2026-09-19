@@ -11,6 +11,7 @@ export type InfinityCanvasObservation = Readonly<{
     width: boolean;
   }>;
   overflow: string;
+  productClipping: readonly string[];
   productScene: Readonly<{
     output: InfinityCanvasOutputObservation | null;
     viewportRect: InfinityCanvasRect | null;
@@ -190,7 +191,36 @@ export async function observeInfinityCanvas(
     // A raster surface always retains its backing proof, even beside SVG output.
     const productSvg = productScene?.querySelector<SVGSVGElement>(
       "svg[data-toolcraft-product-output]",
-    );
+    ) ?? productScene?.querySelector<SVGSVGElement>("svg");
+    // Inspect transport chains for every visible output surface. Internal SVG
+    // viewports/masks are geometry; a canvas bitmap's own overflow is intrinsic.
+    const presentationNodes = new Set<Element>();
+    for (const output of productScene?.querySelectorAll("svg, canvas") ?? []) {
+      if (output.parentElement?.closest("svg")) continue;
+      const bounds = output.getBoundingClientRect();
+      if (bounds.width === 0 || bounds.height === 0) continue;
+      for (let node: Element | null = output; node && node !== surface; node = node.parentElement) {
+        presentationNodes.add(node);
+      }
+    }
+    const productClipping: string[] = [];
+    for (const node of presentationNodes) {
+      const style = getComputedStyle(node);
+      const bitmap = node instanceof HTMLCanvasElement;
+      if (!bitmap && (style.overflowX !== "visible" || style.overflowY !== "visible")) {
+        productClipping.push(`${node.tagName}: overflow ${style.overflowX}/${style.overflowY}`);
+      }
+      if (!bitmap && /\b(paint|strict|content)\b/u.test(style.contain)) {
+        productClipping.push(`${node.tagName}: contain ${style.contain}`);
+      }
+      for (const property of ["clip-path", "mask-image", "-webkit-mask-image", "clip"]) {
+        if (property === "clip" && style.position !== "absolute" && style.position !== "fixed") continue;
+        const value = style.getPropertyValue(property);
+        if (value && value !== "none" && value !== "auto") {
+          productClipping.push(`${node.tagName}: ${property} ${value}`);
+        }
+      }
+    }
     const toRect = (rect: DOMRect): InfinityCanvasRect => ({
       height: rect.height,
       width: rect.width,
@@ -237,6 +267,7 @@ export async function observeInfinityCanvas(
           : { height: controlHeight, width: controlWidth },
       finiteControlsPresent,
       overflow: surface ? getComputedStyle(surface).overflow : "missing",
+      productClipping,
       productScene: {
         output: observeOutput(),
         viewportRect,
@@ -287,6 +318,7 @@ export function expectInfiniteCanvasObservation(
     width: false,
   });
   expect(observation.overflow).toBe("visible");
+  expect(observation.productClipping, "Infinity product presentation must not clip its output roots or transport wrappers; the runtime artboard owns finite clipping.").toEqual([]);
   if (expectedSceneRect) {
     expect(observation.productSceneStatus).toBe("ready");
     expect(observation.productScene.worldRect).toEqual(expectedSceneRect);

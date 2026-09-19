@@ -11,7 +11,7 @@ import {
 import type { ToolcraftArtifactExportRequest } from "./artifact-export-request";
 import { resolveToolcraftImageExportSettings } from "./artifact-export-settings";
 import { renderToolcraftArtifactFrame } from "./artifact-frame-renderer";
-import { resolveToolcraftStillArtifactFrame } from "./artifact-scene-frame";
+import { resolveToolcraftStillArtifactContentFrame } from "./still-artifact-content-frame";
 import { createToolcraftArtifactFrameState } from "./artifact-frame-state";
 import {
   ToolcraftSceneExportError,
@@ -81,11 +81,14 @@ export async function exportToolcraftImageArtifact(
     request.state,
     request.state.timeline.currentTimeSeconds,
   );
-  const scenePlan = resolveToolcraftStillArtifactFrame({
+  const scenePlan = await resolveToolcraftStillArtifactContentFrame({
     boundsProvider: request.boundsProvider,
+    getContentBounds: request.exportRenderer?.getContentBounds,
+    rendererPipeline: request.rendererPipeline,
+    signal: request.signal,
+    visibility: request.visibility,
     productSceneRequired: request.exportRenderer !== undefined,
     state: frameState,
-    visibility: request.visibility,
   });
   const size = getToolcraftImageExportSize({
     frame: scenePlan.outputFrame,

@@ -71,6 +71,7 @@ export function ControlsPanelCollectionItemField({
   const shouldShowColorFieldLabel = () =>
     colorLabelMode === "authored" && control.label !== false;
   const commitCanonicalValue: ItemFieldChange = (nextValue, meta) => {
+    if (control.disabled) return;
     const decoded = decodeToolcraftBuiltInLiveValue(fieldSchema, nextValue);
     if (decoded?.accepted) {
       onChange(decoded.value, meta);

@@ -3,6 +3,7 @@ import type {
   ToolcraftDecisionDiagnosticSeverity,
   ToolcraftDecisionRuleId,
   ToolcraftTimelineMode,
+  ToolcraftRendererPipeline,
 } from "@/toolcraft/runtime";
 import { getToolcraftDecisionDiagnosticSeverity } from "@/toolcraft/runtime";
 
@@ -22,6 +23,7 @@ export type ToolcraftAcceptanceValidationContext = {
   layersEnabled: boolean;
   persistence: ToolcraftPersistenceCoverageResult;
   productReadiness: ToolcraftProductReadiness;
+  rendererPipeline?: ToolcraftRendererPipeline;
   schema: ResolvedToolcraftAppSchema;
   sectionInventory: readonly ToolcraftControlSectionInventoryEntry[];
   timelineMode: ToolcraftTimelineMode | null;
