@@ -186,7 +186,7 @@ export const TOOLCRAFT_DECISION_CONTRACT = [
     currentConstraint:
       "Timeline is optional only for animated products that have no video export and are explicitly classified as autonomous decorative output.",
     desiredBehavior:
-      "AI writes an Animation Intent Inventory before choosing no timeline, playback, keyframes, or custom reference timeline; user-requested product animation defaults to playback unless explicitly justified as autonomous output without video export. Export Video always requires a bottom Toolcraft timeline.",
+      "AI writes an Animation Intent Inventory before choosing no timeline, playback, keyframes, or custom reference timeline; user-requested product animation defaults to playback unless explicitly justified as autonomous output without video export. Export Video always requires a top Toolcraft timeline.",
     enforcement: ["starter-agents", "spec-checklist", "acceptance-validator"],
     id: "timeline-mode-choice",
     level: "heuristic",

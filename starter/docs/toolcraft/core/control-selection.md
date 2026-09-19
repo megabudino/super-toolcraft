@@ -140,7 +140,7 @@ renamed copy of the same capability is still duplication.
 - Actions use two columns by default: one button uses the left half and groups of up to four rows retain the grid. Above four rows, the shared control renders one previous button, a dropdown and one next button. The threshold uses the resolved column count, including explicit built-in layouts.
 - In grid mode, do not stretch an odd trailing action full-width or center it.
 - In compact mode, dropdown and arrow buttons share the default 28px height. Selecting any menu item (including the last invoked command) or stepping invokes the original action once. No action runs on mount; the dropdown initially says Choose action. Navigation skips disabled/loading items and stops at the ends. Its last-invoked label is local UI state, not a persisted product selection.
-- Keep final product actions in `panelActions`, keep timeline transport in the bottom timeline, and keep global reset in the controls panel header.
+- Keep final product actions in `panelActions`, keep timeline transport in the top timeline, and keep global reset in the controls panel header.
 
 ## Vector Ownership
 

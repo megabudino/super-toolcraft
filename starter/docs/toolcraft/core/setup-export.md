@@ -222,7 +222,7 @@ preview-only VGPU selection adds no VGPU export requirement.
 ## Video Export
 
 - Only products with video `user-requested` intent and non-empty explicit user-request evidence expose `Export Video`; animation and timeline behavior do not authorize it.
-- Any app with `Export Video` must enable the bottom Toolcraft timeline.
+- Any app with `Export Video` must enable the top Toolcraft timeline.
 - Apps with `Export Video` expose a separate `Video Export` section directly above sticky footer actions. When image export is also enabled, `Image Export` sits immediately before it.
 - `Video Export` uses two `select` controls in one compact two-column inline row by default:
   - `export.video.format`, default `mp4`, with baseline `MP4` and `WebM` options;

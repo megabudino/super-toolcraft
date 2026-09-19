@@ -237,19 +237,19 @@ test("toolcraft Infinity canvas background evidence proves viewport color and de
     {
       backgroundExcluded: {
         backgroundEnabled: false,
-        canvasMode: "finite",
-        infinityDisabled: true,
+        canvasMode: "infinite",
+        infinityDisabled: false,
         runtimeBackgroundColor: null,
         viewportBackgroundColor: "rgb(20, 20, 20)",
         viewportMatchesRuntimeColor: false,
       },
       backgroundRestored: {
         backgroundEnabled: true,
-        canvasMode: "finite",
+        canvasMode: "infinite",
         infinityDisabled: false,
-        runtimeBackgroundColor: null,
-        viewportBackgroundColor: "rgb(20, 20, 20)",
-        viewportMatchesRuntimeColor: false,
+        runtimeBackgroundColor: "#D4CECA",
+        viewportBackgroundColor: "rgb(212, 206, 202)",
+        viewportMatchesRuntimeColor: true,
       },
       infinite: {
         backgroundEnabled: true,
@@ -273,6 +273,26 @@ const imageArtifact = { byteLength: 1024, width: 640, height: 480, decodedPixelH
 
 test("Infinity image export accepts the same decoded composition", async () => {
   await expectToolcraftInfinityCanvasImageExportEvidence({ finite: imageArtifact, infinite: imageArtifact }, parityOptions);
+});
+
+test("Infinity image export accepts a distinct content-bounds frame", async () => {
+  await expectToolcraftInfinityCanvasImageExportEvidence(
+    {
+      finite: imageArtifact,
+      infinite: {
+        ...imageArtifact,
+        decodedPixelHash: "b".repeat(64),
+        height: 400,
+      },
+    },
+    {
+      ...parityOptions,
+      expectedSize: {
+        finite: { height: 480, width: 640 },
+        infinite: { height: 400, width: 640 },
+      },
+    },
+  );
 });
 
 test("Infinity image export rejects a resized or differently cropped composition", async () => {

@@ -336,15 +336,15 @@ export const TOOLCRAFT_RUNTIME_COMPONENT_CONTRACTS = {
     ...panel(
       "timelinePanel",
       "TimelinePanel",
-      "bottom",
+      "top",
       ["top", "bottom"],
       "panel",
     ),
     aiUsageRules: [
-      "Any product output animation must enable the bottom Toolcraft timeline; do not ship animated product output with only local requestAnimationFrame playback.",
+      "Any product output animation must enable the top Toolcraft timeline; do not ship animated product output with only local requestAnimationFrame playback.",
       "Before choosing no timeline for any animated product, write an Animation Intent Inventory: product transport, editable keyframes, or autonomous decorative output, plus the user-facing time behaviors present or intentionally absent.",
       'User-requested product animation defaults to panels.timeline mode "playback" unless the spec explicitly declares autonomous decorative/self-running output with no play, pause, scrub, duration, loop, export-at-time behavior, or video export.',
-      'Any product app with Export Video must enable the bottom Toolcraft timeline: use panels.timeline mode "playback" for product animation transport, or mode "keyframes" when exported animation is driven by keyframes.',
+      'Any product app with Export Video must enable the top Toolcraft timeline: use panels.timeline mode "playback" for product animation transport, or mode "keyframes" when exported animation is driven by keyframes.',
       'Export Video is valid only when productReadiness.exportIntent.video is "user-requested" with non-empty explicit user-request evidence; animation, playback, keyframes, and timeline presence never authorize video export.',
       'Use panels.timeline: { mode: "playback" } when the product needs user-facing play, pause, scrubbing, duration, loop, restart, time progress, export-at-time controls, or video export.',
       'When panels.timeline is enabled for a new Toolcraft app, appTransferMode.animationIntent must match it: mode "timeline-playback" for playback, or mode "timeline-keyframes" for keyframes.',
@@ -368,7 +368,7 @@ export const TOOLCRAFT_RUNTIME_COMPONENT_CONTRACTS = {
       "Keyframe renderers must not re-decode media or re-upload source textures on timeline ticks, scrubs, playback, or evaluated setting changes.",
       "Timeline-driven preview renderers must suspend or coalesce non-essential animation work during canvas drag, pan, pinch, zoom, and radar/center interactions without mutating the user's timeline play/pause state.",
       "Use keyframeable: false only on controls that are structurally unsupported by the shared keyframe capability helper; capable controls cannot opt out to hide broken animation wiring.",
-      "Right-panel animation controls may tune renderer parameters such as mode, intensity, speed, or stagger only after animation intent is declared; they must not replace bottom timeline transport.",
+      "Right-panel animation controls may tune renderer parameters such as mode, intensity, speed, or stagger only after animation intent is declared; they must not replace top timeline transport.",
       "Do not put Pause or Resume in panelActions; playback belongs to TimelinePanel transport controls.",
       "Do not replace TimelinePanel with an app-level playback, transport, or timeline panel to avoid runtime performance issues; fix the Toolcraft runtime clock/state path instead.",
       'Custom timeline UI is allowed only for explicit referenceTimeline.mode "custom-reference-timeline" transfers with browser-backed referenceTimelineCoverage.',
@@ -402,7 +402,7 @@ export const TOOLCRAFT_RUNTIME_COMPONENT_CONTRACTS = {
     ],
   },
   toolbar: {
-    ...panel("toolbar", "ToolbarPanel", "top", ["top", "bottom"], "panel"),
+    ...panel("toolbar", "ToolbarPanel", "bottom", ["top", "bottom"], "panel"),
     aiUsageRules: [
       "Toolbar history owns Undo and Redo buttons plus runtime keyboard shortcuts.",
       "Do not add app-level Cmd/Ctrl+Z, Cmd/Ctrl+Shift+Z, or Ctrl+Y listeners; use toolbar history and runtime commands.",

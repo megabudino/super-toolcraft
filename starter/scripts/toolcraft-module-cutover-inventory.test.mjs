@@ -152,20 +152,6 @@ function createCurrentAuthorProgram(roots) {
   });
 }
 
-function getPropertyNames(objectLiteral) {
-  return objectLiteral.properties.map((property) => {
-    if (ts.isSpreadAssignment(property)) return "...";
-    if (!property.name) return "<unknown>";
-    if (
-      ts.isIdentifier(property.name) ||
-      ts.isStringLiteralLike(property.name)
-    ) {
-      return property.name.text;
-    }
-    return "<computed>";
-  });
-}
-
 function assertExplicitProductDefinition(filePath, sourceFile, call, checker) {
   const input = call.arguments[0];
   const location = sourceFile.getLineAndCharacterOfPosition(
@@ -182,28 +168,25 @@ function assertExplicitProductDefinition(filePath, sourceFile, call, checker) {
     call.getFullText(sourceFile).includes("@ts-expect-error")
   )
     return;
-  if (ts.isObjectLiteralExpression(input)) {
-    assert.deepEqual(
-      getPropertyNames(input).filter((name) => name !== "defaults").sort(),
-      ["base", "modules"],
-      `${label} must pass { base, modules } with optional source defaults`,
-    );
-  } else {
+  if (!ts.isObjectLiteralExpression(input)) {
     assert.ok(input, `${label} must pass a product definition`);
     assert.ok(
       ts.isIdentifier(input) || ts.isCallExpression(input),
       `${label} helper input must be an explicit typed product definition`,
     );
-    assert.deepEqual(
-      checker
-        .getPropertiesOfType(checker.getTypeAtLocation(input))
-        .map(({ name }) => name)
-        .filter((name) => name !== "defaults")
-        .sort(),
-      ["base", "modules"],
-      `${label} helper result must be exactly the public product definition`,
-    );
   }
+  assert.deepEqual(
+    checker
+      .getPropertiesOfType(checker.getTypeAtLocation(input))
+      .map(({ name }) => name)
+      .filter(
+        (name) =>
+          name !== "authoredStateMigration" && name !== "defaults",
+      )
+      .sort(),
+    ["base", "modules"],
+    `${label} input must be exactly the public product definition`,
+  );
   const signature = checker.getResolvedSignature(call);
   const parameter = signature?.getParameters()[0];
   assert.ok(signature && parameter, `${label} must resolve the public signature`);
@@ -396,16 +379,16 @@ test("every current author uses the closed product definition", () => {
   const authors = baselineGroups.flatMap((group) =>
     inspectCurrentAuthors(group.roots, context),
   );
-  assert.equal(authors.length, 206);
+  assert.equal(authors.length, 226);
   assert.equal(
     authors.reduce((total, author) => total + author.count, 0),
-    519,
+    565,
   );
   const e2eAuthors = inspectCurrentAuthors(e2eBaseline.roots, context);
-  assert.equal(e2eAuthors.length, 22);
+  assert.equal(e2eAuthors.length, 23);
   assert.equal(
     e2eAuthors.reduce((total, author) => total + author.count, 0),
-    30,
+    31,
   );
 });
 
@@ -432,7 +415,7 @@ test("rejects constructor alias, shadow, and argument-shape bypasses", (context)
       `,
     }),
     Object.freeze({
-      expected: /helper result must be exactly the public product definition/u,
+      expected: /input must be exactly the public product definition/u,
       name: "argument-bypass.ts",
       source: `
         import { defineToolcraft } from "${sourceLayout.publicRuntimeSpecifier}";

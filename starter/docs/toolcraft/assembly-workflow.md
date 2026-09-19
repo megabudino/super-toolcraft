@@ -122,7 +122,7 @@ When porting an existing app, use `transferMode: "reference-runtime-clone"` unle
 
 ## Timeline And Animation
 
-Before adding animation controls, write an Animation Intent Inventory. Product animation, keyframes, and playback use the bottom Toolcraft timeline. Explicitly requested video export also requires that timeline, but the timeline never authorizes video delivery. Autonomous no-timeline animation is allowed only for non-product decorative motion with no user-facing transport and no video export.
+Before adding animation controls, write an Animation Intent Inventory. Product animation, keyframes, and playback use the top Toolcraft timeline. Explicitly requested video export also requires that timeline, but the timeline never authorizes video delivery. Autonomous no-timeline animation is allowed only for non-product decorative motion with no user-facing transport and no video export.
 
 Use `core/timeline-animation.md` for timeline mode, compact/extended timeline, seamless forward loops, duration changes, keyframes, viewport interaction performance, and video export timing.
 

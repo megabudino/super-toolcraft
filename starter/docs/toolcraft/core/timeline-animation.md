@@ -15,9 +15,9 @@ Use no timeline only when the motion is explicitly autonomous decoration with no
 
 ## Timeline Requirement
 
-- Product animation uses the bottom playback timeline by default.
-- Any app with `Export Video` must enable the bottom Toolcraft timeline.
-- Do not add right-panel Play, Pause, Animate, Restart, or app-wide transport controls. Use the bottom timeline.
+- Product animation uses the top playback timeline by default.
+- Any app with `Export Video` must enable the top Toolcraft timeline.
+- Do not add right-panel Play, Pause, Animate, Restart, or app-wide transport controls. Use the top timeline.
 - Do not replace `TimelinePanel` with app-level playback, transport, or timeline UI to work around performance.
 - Custom timeline UI is allowed only when a reference app has non-Toolcraft timeline behavior and the reference timeline inventory proves it.
 

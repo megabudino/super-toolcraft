@@ -265,7 +265,19 @@ export async function expectToolcraftInfinityCanvasImageExportEvidence(
 ): Promise<void> {
   expectToolcraftInfinityArtifactFrameParity(artifacts, options.expectedSize);
   expect(artifacts.finite.decodedPixelHash).toMatch(/^[a-f0-9]{64}$/u);
-  expect(artifacts.infinite.decodedPixelHash).toBe(artifacts.finite.decodedPixelHash);
+  expect(artifacts.infinite.decodedPixelHash).toMatch(/^[a-f0-9]{64}$/u);
+  const hasMatchingFrame =
+    artifacts.finite.width === artifacts.infinite.width &&
+    artifacts.finite.height === artifacts.infinite.height;
+  if (hasMatchingFrame) {
+    expect(artifacts.infinite.decodedPixelHash).toBe(
+      artifacts.finite.decodedPixelHash,
+    );
+  } else {
+    expect(artifacts.infinite.decodedPixelHash).not.toBe(
+      artifacts.finite.decodedPixelHash,
+    );
+  }
 
   await attachToolcraftBrowserRuntimeEvidence({
     evidenceType: "exported-artifact",

@@ -206,7 +206,7 @@ export const TOOLCRAFT_CHOICE_COMPONENT_CONTRACTS = {
       acceptableAlternatives: [
         "Use panelActions for sticky product delivery actions.",
         "Use item-level icon buttons inside custom controls for local item remove/reorder commands.",
-        "Use the bottom TimelinePanel for animation transport commands.",
+        "Use the top TimelinePanel for animation transport commands.",
       ],
       layoutConstraints: [
         "Keep local actions close to the entity they affect.",
@@ -227,7 +227,7 @@ export const TOOLCRAFT_CHOICE_COMPONENT_CONTRACTS = {
       "Good Actions examples: Randomize palette, Normalize weights, Sort glyphs, Clear selection, Duplicate item, Reset current layer, Reset current stop, or Shuffle shades.",
       "Do not use Actions for final product delivery actions; use sticky panelActions for Export, Copy, Download, Generate, or Apply.",
       "Do not use Actions for global reset; the controls panel header owns global reset.",
-      "Do not use Actions for animation transport; Play, Pause, Resume, Restart, and Scrub belong to the bottom timeline when timeline behavior exists.",
+      "Do not use Actions for animation transport; Play, Pause, Resume, Restart, and Scrub belong to the top timeline when timeline behavior exists.",
       "For a single visible Actions button, the control label and button label must not be identical; make the control label a concise context and the button label the command.",
       "Render the Actions label above the buttons; do not put the label on the left with buttons on the right.",
       "Keep Actions grids through four rows; above four resolved rows use the shared previous/dropdown/next navigator. Menu selection and stepping invoke commands once, repeated selection still executes, disabled/loading actions are skipped, and arrows stop at list ends.",
@@ -389,7 +389,7 @@ export const TOOLCRAFT_CHOICE_COMPONENT_CONTRACTS = {
       "Protected SVG browser proof must inspect the exact downloaded bytes with strict XML parsing, namespace/vector-only policy, native decode, content hashing, and exact product vector expectations.",
       'Add Export Video only when productReadiness.exportIntent.video is "user-requested" with non-empty explicit user-request evidence.',
       'Animation, playback, keyframes, and timeline presence never add Export Video when productReadiness.exportIntent.video is "not-requested".',
-      "Any app with Export Video must enable the bottom Toolcraft timeline; video duration, loop, and rendered timestamps come from runtime timeline state.",
+      "Any app with Export Video must enable the top Toolcraft timeline; video duration, loop, and rendered timestamps come from runtime timeline state.",
       'Apps with Export Video must expose a separate "Video Export" controls section.',
       'Apps with both Export PNG and Export Video must expose both "Image Export" and "Video Export"; Image Export sits immediately before Video Export.',
       'Image-only apps place "Image Export" directly above sticky footer panelActions.',

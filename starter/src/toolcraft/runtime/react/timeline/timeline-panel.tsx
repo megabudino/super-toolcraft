@@ -371,7 +371,7 @@ export function TimelinePanel({
     <motion.div
       animate={timelinePanelAnimation}
       className={cn(
-        'pointer-events-auto origin-bottom',
+        'pointer-events-auto origin-top',
         shouldConstrainToContainer ? 'w-full' : 'max-w-full',
         !framed && className,
       )}

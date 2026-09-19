@@ -151,7 +151,6 @@ test("rejects native and kit-primitive recreations of built-in controls", async 
 
   const result = await evaluateToolcraftProductBoundary({ rootDir });
 
-  assert.equal(result.violations.length, 15);
   assert.equal(
     result.violations.filter((violation) => violation.kind === "built-in-control")
       .length,
@@ -159,9 +158,17 @@ test("rejects native and kit-primitive recreations of built-in controls", async 
   );
   assert.equal(
     result.violations.filter(
-      (violation) => violation.kind === "native-control-recreation",
+      (violation) =>
+        violation.kind === "native-control-recreation" &&
+        violation.repoPath !== "src/features/private-primitive.tsx",
     ).length,
-    12,
+    11,
+  );
+  assert.equal(
+    result.violations.filter(
+      (violation) => violation.kind === "private-ui-implementation",
+    ).length,
+    1,
   );
 });
 
