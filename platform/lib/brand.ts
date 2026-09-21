@@ -1,1 +1,1 @@
-export const PLATFORM_NAME = process.env.NEXT_PUBLIC_PLATFORM_NAME || "Studio";
+export const PLATFORM_NAME = process.env.NEXT_PUBLIC_PLATFORM_NAME || "Super Toolcraft";
