@@ -1,5 +1,7 @@
 # Super Toolcraft
 
+Disclaimer: this is an indipendent fork of https://github.com/pixel-point/toolcraft with no affiliation with the original authors or project.
+
 One private place for every app you build for your clients.
 
 Super Toolcraft hosts all your apps in a **single deployment**, behind an **invite-only login**, organized in **workspaces**. Each client sees only their own apps. Adding a new app is a prompt to your AI agent and a push: no new project, no new deploy, no new domain.
