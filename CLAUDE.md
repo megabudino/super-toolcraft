@@ -1,6 +1,6 @@
-# super-toolcraft
+# Super Toolcraft
 
-Fork of `pixel-point/toolcraft` (remote `upstream`) turned into **one deployment that hosts every client app**, behind invite-only auth with workspaces.
+**One deployment that hosts every client app**, behind invite-only auth with workspaces. It started as a fork of `pixel-point/toolcraft` (remote `upstream`) but is its own project now and is never merged back: only `starter/` and `examples/` still come from upstream.
 
 ## Repo map
 
@@ -10,7 +10,7 @@ Fork of `pixel-point/toolcraft` (remote `upstream`) turned into **one deployment
 | `apps/<slug>/` | us | One Toolcraft app per client project. Standalone Vite app + `platform.json`. |
 | `platform/` | us | Next.js host: auth (Turso/libSQL + Drizzle), workspaces, admin, serves app builds at `/a/<slug>/`. |
 | `scripts/` (root) | us | `new-app.mjs`, `build-all.mjs`, `platform-init.mjs`, shared `platform-lib.mjs`. |
-| `README.md` | upstream | Don't edit (merge conflicts). Platform docs live in `PLATFORM.md`. |
+| `README.md`, `PLATFORM.md` | us | Product overview and technical guide. They describe this project, not Toolcraft. |
 
 ## Creating a client app
 
@@ -37,4 +37,4 @@ Never scaffold by copying `starter/` by hand: `src/app/app-identity.ts` and othe
 ## Git
 
 - Work on a branch; the user pushes/deploys (a push to `main` deploys to Vercel).
-- Upstream sync: `git fetch upstream && git merge upstream/main`. Conflicts should only ever touch `starter/`, `examples/` or `README.md` → take theirs.
+- Upstream sync (optional, only to refresh the templates): `git fetch upstream && git merge upstream/main`. Take theirs for `starter/` and `examples/`; keep ours for everything else (`README.md`, root files, `platform/`, `apps/`, `scripts/`).

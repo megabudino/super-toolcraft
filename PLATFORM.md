@@ -1,12 +1,12 @@
 # Platform: every app in one deployment
 
-This fork adds a single host to Toolcraft (`platform/`, Next.js on Vercel). The host serves every client app (`apps/<slug>/`) at `/a/<slug>/`, behind an invite-only login, and groups the apps into workspaces.
+Technical guide for Super Toolcraft. A single host (`platform/`, Next.js on Vercel) serves every client app (`apps/<slug>/`) at `/a/<slug>/`, behind an invite-only login, and groups the apps into workspaces.
 
 ```
 apps/<slug>/        standalone Toolcraft app (one per project) + platform.json
 platform/           Next.js: login, setup, invites, admin, protected /a/<slug>/ route
 scripts/            new-app.mjs · build-all.mjs · platform-init.mjs
-starter/, examples/ upstream templates: never edit
+starter/, examples/ templates for new apps (from upstream Toolcraft): never edit
 ```
 
 ## First-time setup
@@ -54,7 +54,7 @@ The platform looks like the apps it hosts: same dark theme tokens (from `toolcra
 - **Apps**: cards with a generated cover; admins use **Manage apps** to toggle deployed apps for the workspace.
 - **Invites**: a dialog that creates the link and copies it, alone or with a ready-to-send message.
 - **Inside an app**: a small "Your apps" pill (top left, collapses to an icon) takes you back to the last workspace.
-- The name in the UI comes from `NEXT_PUBLIC_PLATFORM_NAME` (default "Studio").
+- The name in the UI comes from `NEXT_PUBLIC_PLATFORM_NAME` (default "Super Toolcraft").
 
 ## Access model
 
