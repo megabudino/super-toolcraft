@@ -1,0 +1,6 @@
+packages:
+  - platform
+  - apps/*
+onlyBuiltDependencies:
+  - esbuild
+sharedWorkspaceLockfile: false
