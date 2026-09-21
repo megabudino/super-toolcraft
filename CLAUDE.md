@@ -11,6 +11,7 @@
 | `platform/` | us | Next.js host: auth (Turso/libSQL + Drizzle), workspaces, admin, serves app builds at `/a/<slug>/`. |
 | `scripts/` (root) | us | `new-app.mjs`, `build-all.mjs`, `platform-init.mjs`, shared `platform-lib.mjs`. |
 | `README.md`, `PLATFORM.md` | us | Product overview and technical guide. They describe this project, not Toolcraft. |
+| `LICENSE.md`, `NOTICE.md` | us | Keep both copyright lines (Pixel Point and Davide Ruggeri) and never remove `LICENSE.md`/`NOTICE.md` from apps. |
 
 ## Creating a client app
 

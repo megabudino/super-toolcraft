@@ -1,6 +1,6 @@
 # Super Toolcraft
 
-Disclaimer: this is an indipendent fork of https://github.com/pixel-point/toolcraft with no affiliation with the original authors or project.
+Disclaimer: this is an independent fork of https://github.com/pixel-point/toolcraft with no affiliation with the original authors or project.
 
 One private place for every app you build for your clients.
 
@@ -146,4 +146,6 @@ Yes. Each app in `apps/` is a standalone project: `cd apps/<slug> && pnpm dev`.
 
 ## License
 
-[MIT](LICENSE.md). The app starter and templates are based on [Toolcraft](https://github.com/pixel-point/toolcraft) by Pixel Point.
+[MIT](LICENSE.md) © Pixel Point and Davide Ruggeri.
+
+The app starter, the templates and the runtime inside every app come from [Toolcraft](https://github.com/pixel-point/toolcraft) by Pixel Point, under the MIT License. The platform layer (`platform/`, `scripts/`, skills) is by Davide Ruggeri, also under MIT. See [NOTICE.md](NOTICE.md) for what comes from where, including third-party components.
