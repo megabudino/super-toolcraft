@@ -35,3 +35,10 @@ Thumbs.db
 .vscode/*
 !.vscode/extensions.json
 !.vscode/settings.json
+
+# Platform
+platform/.app-builds
+platform/*.db
+platform/*.db-*
+platform/next-env.d.ts
+.vercel
